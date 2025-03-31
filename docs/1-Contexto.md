@@ -1,61 +1,45 @@
 # Introdução
 
 ## Problema
-> Nesse momento você deve apresentar o problema que a sua aplicação deve
-> resolver. No entanto, não é a hora de comentar sobre a aplicação.
-> Descreva também o contexto em que essa aplicação será usada, se
-> houver: empresa, tecnologias, etc. Novamente, descreva apenas o que de
-> fato existir, pois ainda não é a hora de apresentar requisitos
-> detalhados ou projetos.
->
-> Nesse momento, o grupo pode optar por fazer uso
-> de ferramentas como Design Thinking, que permite um olhar de ponta a
-> ponta para o problema.
->
-> **Links Úteis**:
-> - [Objetivos, Problema de pesquisa e Justificativa](https://medium.com/@versioparole/objetivos-problema-de-pesquisa-e-justificativa-c98c8233b9c3)
-> - [Matriz Certezas, Suposições e Dúvidas](https://medium.com/educa%C3%A7%C3%A3o-fora-da-caixa/matriz-certezas-suposi%C3%A7%C3%B5es-e-d%C3%BAvidas-fa2263633655)
-> - [Brainstorming](https://www.euax.com.br/2018/09/brainstorming/)
+Atualmente, encontrar profissionais freelancers qualificados pode ser um desafio tanto para empresas quanto para clientes individuais. A falta de um canal organizado e eficiente para conectar profissionais a oportunidades de trabalho compromete a agilidade e a confiabilidade do processo de contratação.
+
+Nosso projeto visa solucionar essa dificuldade por meio de uma plataforma que facilita a conexão entre freelancers e clientes, proporcionando um ambiente intuitivo e seguro para negociação e execução de serviços. A aplicação permitirá que os freelancers criem perfis, exibam portfólios, filtrem oportunidades e se comuniquem com potenciais clientes.
+
+Com um sistema eficiente de pesquisa, avaliação e suporte, nossa solução busca otimizar a intermediação de serviços e garantir experiências mais satisfatórias para ambas as partes.
 
 ## Objetivos
 
-> Aqui você deve descrever os objetivos do trabalho indicando que o
-> objetivo geral é desenvolver um software para solucionar o problema
-> apresentado acima. Apresente também alguns (pelo menos 2) objetivos
-> específicos dependendo de onde você vai querer concentrar a sua
-> prática investigativa, ou como você vai aprofundar no seu trabalho.
-> 
-> **Links Úteis**:
-> - [Objetivo geral e objetivo específico: como fazer e quais verbos utilizar](https://blog.mettzer.com/diferenca-entre-objetivo-geral-e-objetivo-especifico/)
+O principal objetivo do projeto é desenvolver uma plataforma online que conecte freelancers e clientes de maneira eficiente e segura.
+
+### Objetivo Geral:
+
+Criar um site funcional que permita a interação entre clientes e profissionais freelancers de diversas áreas.
+
+### Objetivos Específicos:
+
+Desenvolver um sistema de login e perfis personalizados para freelancers.
+
+Implementar um mecanismo de busca e filtragem de serviços.
+
+Criar um sistema de avaliação e portfólio para aumentar a confiabilidade da plataforma.
+
+Desenvolver um chat para facilitar a comunicação entre contratantes e freelancers.
+
+Garantir segurança nos pagamentos através de um sistema integrado.
 
 ## Justificativa
 
-> Descreva a importância ou a motivação para trabalhar com esta aplicação
-> que você escolheu. Indique as razões pelas quais você escolheu seus
-> objetivos específicos ou as razões para aprofundar em certos aspectos
-> do software.
-> 
-> O grupo de trabalho pode fazer uso de questionários, entrevistas e
-> dados estatísticos, que podem ser apresentados, com o objetivo de
-> esclarecer detalhes do problema que será abordado pelo grupo.
->
-> **Links Úteis**:
-> - [Como montar a justificativa](https://guiadamonografia.com.br/como-montar-justificativa-do-tcc/)
+A crescente demanda por profissionais autônomos e a popularização do trabalho remoto reforçam a necessidade de uma plataforma confiável para conectar freelancers e clientes. Muitas soluções existentes são limitadas, complexas ou cobram taxas elevadas, dificultando o acesso de pequenos profissionais e empresas.
+
+Nosso projeto visa suprir essa lacuna, proporcionando uma interface intuitiva, segurança nas transações e uma experiência eficiente tanto para quem busca serviços quanto para quem os oferece.
+
+Com um mercado cada vez mais dinâmico e digital, garantir um espaço acessível para freelancers pode contribuir significativamente para a economia e para a evolução da prestação de serviços.
 
 ## Público-Alvo
 
-> Descreva quem serão as pessoas que usarão a sua aplicação indicando os
-> diferentes perfis. O objetivo aqui não é definir quem serão os
-> clientes ou quais serão os papéis dos usuários na aplicação. A ideia
-> é, dentro do possível, conhecer um pouco mais sobre o perfil dos
-> usuários: conhecimentos prévios, relação com a tecnologia, relações
-> hierárquicas, etc.
->
-> Adicione informações sobre o público-alvo por meio de uma descrição
-> textual, ou diagramas de personas, mapa de stakeholders, ou como o
-> grupo achar mais conveniente.
-> 
-> **Links Úteis**:
-> - [Público-alvo: o que é, tipos, como definir seu público e exemplos](https://klickpages.com.br/blog/publico-alvo-o-que-e/)
-> - [Qual a diferença entre público-alvo e persona?](https://rockcontent.com/blog/diferenca-publico-alvo-e-persona/)
+A plataforma será voltada para dois grupos principais de usuários:
+
+Freelancers: Profissionais autônomos de diversas áreas, como design, programação, redação, marketing e tradução. Esses usuários terão a possibilidade de divulgar seus trabalhos, negociar propostas e gerenciar suas entregas de forma eficiente.
+
+Clientes: Empresas e indivíduos que necessitam de serviços pontuais ou recorrentes, buscando freelancers qualificados para suas demandas. Esses usuários poderão pesquisar profissionais, avaliar portfólios e contratar serviços com segurança.
  
