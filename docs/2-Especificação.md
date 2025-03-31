@@ -1,54 +1,45 @@
-# Especificações Do Projeto
+# Especificações do Projeto
 
-<span style="color:red">Pré-requisitos: <a href="1-Contexto.md"> Documentação de Contexto</a></span>
-
-> Apresente uma visão geral do que será abordado nesta parte do
-> documento, enumerando as técnicas e/ou ferramentas utilizadas para
-> realizar a especificações do projeto
+A especificação do projeto, é resultado do processo de "Design Thinking" que consiste em buscar entender os requisitos e criar funcionalidades focadas na experiência do usuário. Nesta etapa, realizamos a identificação dos diversos perfis de possíveis usuários das plataformas e como estes poderão interagir com o produto, enumerando as necessidades, dificuldades e restrições que irão guiar a implementação das funcionalidades necessárias e o design.
 
 ## Personas
 
-Pedro Paulo tem 26 anos, é arquiteto recém-formado e autônomo. Pensa em
-se desenvolver profissionalmente através de um mestrado fora do país,
-pois adora viajar, é solteiro e sempre quis fazer um intercâmbio. Está
-buscando uma agência que o ajude a encontrar universidades na Europa
-que aceitem alunos estrangeiros.
+As personas são perfis pré-definidos de possíveis usuários e sobre o que buscam na plataforma. Abaixo, estão 3 exemplos de personas e como elas podem auxiliar o a fórmula do produto e seus desafios.
 
+### 👨🏽‍💼 Gabriel Souza
 
-> Enumere e detalhe as personas da sua solução. Para
-> tanto, baseie-se tanto nos documentos disponibilizados na disciplina
-> e/ou nos seguintes links:
->
-> **Links Úteis**:
-> - [Rock Content](https://rockcontent.com/blog/personas/)
-> - [Hotmart](https://blog.hotmart.com/pt-br/como-criar-persona-negocio/)
-> - [O que é persona?](https://resultadosdigitais.com.br/blog/persona-o-que-e/)
-> - [Persona x Público-alvo](https://flammo.com.br/blog/persona-e-publico-alvo-qual-a-diferenca/)
-> - [Mapa de Empatia](https://resultadosdigitais.com.br/blog/mapa-da-empatia/)
-> - [Mapa de Stalkeholders](https://www.racecomunicacao.com.br/blog/como-fazer-o-mapeamento-de-stakeholders/)
->
-> Lembre-se que você deve ser enumerar e descrever precisamente e
-> personalizada todos os clientes ideais que sua solução almeja.
+Gabriel Souza, um jovem de 19 anos, é um freelancer criativo e curioso, apaixonado por design gráfico e edição de vídeos. Além de explorar hobbies como jogos online, fotografia urbana e criação de conteúdo para redes sociais, seu objetivo é alcançar independência financeira e construir um portfólio atraente, enquanto trabalha com plataformas intuitivas e clientes que valorizem seu trabalho. Motivado pelo desafio e reconhecimento, sonha em viver do que ama, viajar pelo mundo e se destacar no mercado criativo, equilibrando sua personalidade extrovertida com momentos de introspecção. Essa persona simboliza a maior parte dos freelancers atualmente que utilizam as redes sociais para oferecer os seus serviços já que possuem um alcance mais amplo.
+
+### 👨🏻‍🏫 Heitor Morais
+
+Heitor Morais é alguém experiente e determinado, que combina sua paixão por fotografia com sua ocupação de professor, equilibrando trabalho e freelancing. Aos 49 anos, utiliza principalmente smartphones para comunicação diária, e emprega câmeras digitais para seus serviços de fotografia. Seu sonho é conquistar uma casa na praia e uma aposentadoria confortável com o fruto de seu trabalho. Heitor representa uma pessoa simples que não tem familiaridade com plataformas digitais e a maior parte do tempo no virtual são apps de comunicação.
+
+### 👨🏻‍💼 João Gomes
+
+João Gomes, aos 26 anos, é o proprietário de uma casa de assados e defumados, com uma personalidade calma e focada no trabalho. Nos fins de semana, relaxa jogando futebol e assistindo filmes, enquanto sua ambição é alcançar sucesso profissional até os 30. Ele utiliza WhatsApp e Instagram para comunicação e marketing, além de LinkedIn para objetivos profissionais. João se encaixa no produto quando se facilita a contratação de novos funcionários, priorizando agilidade e simplicidade, condizentes com as demandas do mundo moderno.
+
 
 ## Histórias de Usuários
 
 Com base na análise das personas forma identificadas as seguintes histórias de usuários:
 
-|EU COMO... `PERSONA`| QUERO/PRECISO ... `FUNCIONALIDADE` |PARA ... `MOTIVO/VALOR`                 |
-|--------------------|------------------------------------|----------------------------------------|
-|Usuário do sistema  | Registrar minhas tarefas           | Não esquecer de fazê-las               |
-|Administrador       | Alterar permissões                 | Permitir que possam administrar contas |
-
-> Apresente aqui as histórias de usuário que são relevantes para o
-> projeto de sua solução. As Histórias de Usuário consistem em uma
-> ferramenta poderosa para a compreensão e elicitação dos requisitos
-> funcionais e não funcionais da sua aplicação. Se possível, agrupe as
-> histórias de usuário por contexto, para facilitar consultas
-> recorrentes à essa parte do documento.
->
-> **Links Úteis**:
-> - [Histórias de usuários com exemplos e template](https://www.atlassian.com/br/agile/project-management/user-stories)
-> - [Como escrever boas histórias de usuário (User Stories)](https://medium.com/vertice/como-escrever-boas-users-stories-hist%C3%B3rias-de-usu%C3%A1rios-b29c75043fac)
+| Histórias de Usuários |
+|:--|
+| Como freelancer, eu quero criar um anúncio, para que poder meus serviços. |
+| Como cliente, quero visualizar os serviços disponíveis, para identificar se encaixam nas minhas necessidades. |
+| Como cliente, quero visualizar o portfólio do contratado, para identificar se o serviço prestado é de qualidade. |
+| Como cliente, quero poder verificar históricos de serviços prestados pelo contratante, para identificar se houve algum inconveniente na prestação do serviço. |
+| Como cliente, quero poder filtrar as opções disponíveis para encontrar opções mais diversas ou mais especificas de acordo com as necessidades. |
+| Como usuário, desejo poder visualizar a nota de um outro usuário para que evite cair em golpes.|
+| Como cliente, desejo poder criar um anúncio de procura de serviço para que outros usuários possam oferecer um orçamento. |
+| Como usuário, desejo poder realizar avaliações em serviços contratados para informar sobre registrar reclamações ou elogios. |
+| Como usuário, desejo que haja um meio de se comunicar com outro usuário para poder fazer orçamentos, negociações ou retirar dúvidas. |
+| Como usuário, gostaria que houvesse algum meio de garantia no pagamento para evitar golpes. |
+| Como freelancer, quero oferecer serviços já precificados, para facilitar a visualização e análise de um possível cliente. |
+| Como freelancer, quero receber notificações sobre projetos que correspondem às minhas habilidades, para que eu possa candidatar-me rapidamente. |
+| Como administrador, quero poder visualizar comentários inadequados para tornar a plataforma mais segura. |
+| Como freelancer, gostaria de poder visualizar serviços mais requisitados para conseguir um número maior de clientes. |
+| Como usuário, gostaria de visualizar semelhantes a um anúncio para considerar mais de uma opção.|
 
 ## Requisitos
 
@@ -58,34 +49,34 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 
 |ID    | Descrição do Requisito  | Prioridade |
 |------|-----------------------------------------|----|
-|RF-001| Permitir que o usuário cadastre tarefas | ALTA | 
-|RF-002| Emitir um relatório de tarefas no mês   | MÉDIA |
-
+|RF-001|Permitir que usuários possam se cadastrar.|ALTA|
+|RF-002|Permitir que o usuário cadastre serviços.|ALTA|
+|RF-003|Permitir que o usuário visualize serviços.|ALTA|
+|RF-004|Permitir que o usuário pesquise por serviços.|MÉDIA|
+|RF-005|Permitir que o usuário possa visualizar ou solicitar amentos.|MÉDIA|
+|RF-006|Permitir que o usuário possa configurar preços por seus viços.|BAIXA|
+|RF-007|Criar tags ou categorias de serviços.|BAIXA|
+|RF-008|Permitir que o usuário utilize filtros para pesquisar viços<br>como local, habilidades e preço.|BAIXA|
+|RF-009|Criar uma interface de informação sobre os serviços tratados.|ALTA|
+|RF-010|Criar uma interface de informação sobre todos os viços<br>prestados pelo usuário.|ALTA|
+|RF-011|Adicionar uma aba de avaliações/comentários por serviço.|MÉDIA|
+|RF-012|Adicionar uma aba de avaliações/comentários por usuário.|BAIXA|
+|RF-013|Criar uma interface de histórico de serviços contratados.|BAIXA|
+|RF-014|Criar uma interface de portfólio do usuário.|MÉDIA|
+|RF-015|Adicionar um meio de comunicação entre usuários.|BAIXA|
+|RF-016|Criar um sistema de moderação de comentários.|BAIXA|
+|RF-017|Emitir um relatório de serviços por demanda.|BAIXA|
+|RF-018|Criar um sistema de recomendação de serviços semelhantes.|BAIXA|
+|RF-019|Criar um sistema de pagamento.|EXTRA|
 
 ### Requisitos não Funcionais
 
 |ID     | Descrição do Requisito  |Prioridade |
 |-------|-------------------------|----|
-|RNF-001| O sistema deve ser responsivo para rodar em um dispositivos móvel | MÉDIA | 
-|RNF-002| Deve processar requisições do usuário em no máximo 3s |  BAIXA | 
-
-> Com base nas Histórias de Usuário, enumere os requisitos da sua
-> solução. Classifique esses requisitos em dois grupos:
->
-> - [Requisitos Funcionais
->   (RF)](https://pt.wikipedia.org/wiki/Requisito_funcional):
->   correspondem a uma funcionalidade que deve estar presente na
->   plataforma (ex: cadastro de usuário).
->
-> - [Requisitos Não Funcionais
->   (RNF)](https://pt.wikipedia.org/wiki/Requisito_n%C3%A3o_funcional):
->   correspondem a uma característica técnica, seja de usabilidade,
->   desempenho, confiabilidade, segurança ou outro (ex: suporte a
->   dispositivos iOS e Android).
->
-> Lembre-se que cada requisito deve corresponder à uma e somente uma
-> característica alvo da sua solução. Além disso, certifique-se de que
-> todos os aspectos capturados nas Histórias de Usuário foram cobertos.
+| RNF-001 | O sistema deve utilizar o sistema fluido para se adaptar a<br>diversos dispositivos|ALTA|
+| RNF-002 | O sistema deve manter uma interface intuitiva|MÉDIA|
+| RNF-003 | O sistema deve exigir autenticação para cadastro de serviços|ALTA|
+| RNF-004 | O sistema pode utilizar de ferramentas de localização para melhorar o uso|BAIXA|
 
 ## Restrições
 
@@ -93,13 +84,6 @@ O projeto está restrito pelos itens apresentados na tabela a seguir.
 
 |ID| Restrição                                             |
 |--|-------------------------------------------------------|
-|01| O projeto deverá ser entregue até o final do semestre |
-|02| Não pode ser desenvolvido um módulo de backend        |
-
-
-> Enumere as restrições à sua solução. Lembre-se de que as restrições
-> geralmente limitam a solução candidata.
-> 
-> **Links Úteis**:
-> - [O que são Requisitos Funcionais e Requisitos Não Funcionais?](https://codificar.com.br/requisitos-funcionais-nao-funcionais/)
-> - [O que são requisitos funcionais e requisitos não funcionais?](https://analisederequisitos.com.br/requisitos-funcionais-e-requisitos-nao-funcionais-o-que-sao/)
+|01| O projeto deverá ser entregue até o final do semestre. |
+|02| Não pode ser desenvolvido um módulo de backend.        |
+|03| Não criar interfaces complicadas de uso.              |
