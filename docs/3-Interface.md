@@ -1,36 +1,75 @@
 
 # Projeto de Interface
 
-<span style="color:red">Pré-requisitos: <a href="2-Especificação.md"> Documentação de Especificação</a></span>
+<!-- TODO: Reescrever após alinhas as telas de wireframe -->
 
-> Apresente as principais a interface da plataforma. Discuta como ela
-> foi elaborada de forma a atender os requisitos funcionais, não
-> funcionais e histórias de usuário abordados nas [Especificações do
-> Projeto](2-Especificação.md).
+A criação de interfaces é um processo que combina design visual, experiência do usuário (UX) e desenvolvimento técnico. Primeiro, é realizado um levantamento dos requisitos e objetivos, compreendendo as necessidades dos usuários e as funções do produto. Em seguida, inicia-se o planejamento com wireframes e protótipos que ajudam a estruturar a interface e mapear sua funcionalidade. No momento, as interfaces foram projetada para ser simples, conectando clientes a profissionais qualificados de forma rápida.
 
 ## User Flow
 
-![Exemplo de UserFlow](images/userflow.jpg)
+O fluxo de usuário (User Flow) é uma técnica que permite ao desenvolvedor mapear todo fluxo de telas do site ou app.
 
-> Fluxo de usuário (User Flow) é uma técnica que permite ao desenvolvedor
-> mapear todo fluxo de telas do site ou app. Essa técnica funciona
-> para alinhar os caminhos e as possíveis ações que o usuário pode
-> fazer junto com os membros de sua equipe.
->
-> **Links Úteis**:
-> - [User Flow: O Quê É e Como Fazer?](https://medium.com/7bits/fluxo-de-usu%C3%A1rio-user-flow-o-que-%C3%A9-como-fazer-79d965872534)
-> - [User Flow vs Site Maps](http://designr.com.br/sitemap-e-user-flow-quais-as-diferencas-e-quando-usar-cada-um/)
-
+![Exemplo de UserFlow](images/userflow.png)
 
 ## Wireframes
 
-![Exemplo de Wireframe](images/wireframe-example.png)
+<!-- INFO: As wireframes foram realizadas por pessoas diferentes, portanto, atualmente apresentam um designs destintos -->
+<!-- TODO: Alinhas as wireframes com um mesmo estilo -->
 
-> São protótipos usados em design de interface para sugerir a
-> estrutura de um site web e seu relacionamentos entre suas
-> páginas. Um wireframe web é uma ilustração semelhante do
-> layout de elementos fundamentais na interface.
-> 
-> **Links Úteis**:
-> - [Ferramentas de Wireframes](https://rockcontent.com/blog/wireframes/)
-> - [MarvelApp](https://marvelapp.com/developers/documentation/tutorials/)
+Os Wireframes são protótipos usados em design de interface para sugerir a estrutura de um site web e seu relacionamentos entre suas páginas. Um wireframe web é uma ilustração semelhante do layout de elementos fundamentais na interface.
+
+### T01: Tela Inicial
+
+![Exemplo de Wireframe](images/wireframes/wireframeT01.Tela.Inicial.png)
+
+### T02A: Login
+
+![Exemplo de Wireframe](images/wireframes/wireframeT02A.Login.Cadastro.png)
+
+### T02B: Cadastro
+
+![Exemplo de Wireframe](images/wireframes/wireframeT02B.Login.Cadastro.png)
+
+### T03: Criação de Perfil
+
+![Exemplo de Wireframe](images/wireframes/wireframeT03.Criacao.de.Perfil.png)
+
+### T04: Home Page
+
+![Exemplo de Wireframe](images/wireframes/wireframeT04.Home.Page.png)
+
+### T05: Cadastro de Serviços/Projetos
+
+![Exemplo de Wireframe](images/wireframes/wireframeT05.Cadastro.de.Projetos.png)
+
+### T06: Resultados da Pesquisa
+
+![Exemplo de Wireframe](images/wireframes/wireframeT06.Resultados.da.Pesquisa.png)
+
+### T07: Chat
+
+![Exemplo de Wireframe](images/wireframes/wireframeT07.Chat.png)
+
+### T08: Andamento do Serviço
+
+![Exemplo de Wireframe](images/wireframes/wireframeT08.Andamento.do.Servico.png)
+
+### T09: Perfil
+
+![Exemplo de Wireframe](images/wireframes/wireframeT09.Perfil.png)
+
+### T10: Pagamento
+
+![Exemplo de Wireframe](images/wireframes/wireframeT10.Pagamento.png)
+
+### T11: Portfólio
+
+![Exemplo de Wireframe](images/wireframes/wireframeT11.Portfolio.png)
+
+### T12: Avaliação
+
+![Exemplo de Wireframe](images/wireframes/wireframeT12.Avaliacao.png)
+
+### T13: Suporte
+
+![Exemplo de Wireframe](images/wireframes/wireframeT13.Suporte.png)
