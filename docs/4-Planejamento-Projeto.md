@@ -1,90 +1,80 @@
-# Planejamento do Projeto
+# 📌 Planejamento do Projeto
 
 > Aqui será feito o gerenciamento das tarefas de implementação do projeto.
 
-## Divisão de Papéis
+## 📌 Divisão de Papéis
 
-> Apresente a divisão de papéis entre os membros do grupo em cada sprint. O desejável é que, em cada sprint, o aluno assuma papéis diferentes na disciplina. Siga o modelo do exemplo abaixo:
-
-  
 ### Sprint 1
-- _Scrum master_: AlunaX
-- Protótipos: AlunoY
-- Testes: AlunoK
-- Documentação: AlunaZ
+- 🏆 **Scrum Master:** Ramon Jorge
+- 🎯 **Product Owner:** Mateus Junior
+- 📝 **Documentação:** Ramon Jorge, Mateus Junior
+- 💻 **Desenvolvimento Front-end:** Arthur Melo
+- 🔧 **Desenvolvimento Back-end:** Davi de Oliveira, Davy Geremias, Lucas Imparato, Marcelo Antonino
 
 ### Sprint 2
-- _Scrum master_: AlunaY
-- Desenvolvedor _front-end_: AlunoX
-- Desenvolvedor _back-end_: AlunoK
-- Testes: AlunaZ
-- 
+- 🏆 **Scrum Master:** Ramon Jorge
+- 🎯 **Product Owner:** Mateus Junior
+- 📝 **Documentação:** Ramon Jorge, Mateus Junior
+- 💻 **Desenvolvimento Front-end:** Arthur Melo
+- 🔧 **Desenvolvimento Back-end:** Davi de Oliveira, Davy Geremias, Lucas Imparato, Marcelo Antonino
+
 ### Sprint 3
-- _Scrum master_: AlunaY
-- Desenvolvedor _front-end_: AlunoX
-- Desenvolvedor _back-end_: AlunoK
-- Testes: AlunaZ
+- 🏆 **Scrum Master:** Ramon Jorge
+- 🎯 **Product Owner:** Mateus Junior
+- 📝 **Documentação:** Ramon Jorge, Mateus Junior
+- 💻 **Desenvolvimento Front-end:** Arthur Melo
+- 🔧 **Desenvolvimento Back-end:** Davi de Oliveira, Davy Geremias, Lucas Imparato, Marcelo Antonino
 
-  
-## Quadro de tarefas
+---
 
-> Apresente a divisão de tarefas entre os membros do grupo e o acompanhamento da execução, conforme exemplo abaixo.
+## 📌 Quadro de Tarefas
 
+### 🏁 Sprint 1
 
+| 👤 Responsável    | 📌 Tarefa/Requisito     | 🚀 Início    | ⏳ Prazo      | 📊 Status | ✅ Concluído |
+|------------------|----------------------|------------|------------|---------|------------|
+| Ramon Jorge     | Introdução           | 01/03/2025 | 07/03/2025 | ✔️ Concluído | 05/03/2025 |
+| Mateus Junior   | Objetivos            | 03/03/2025 | 10/03/2025 | ✔️ Concluído | 06/03/2025 |
+| Arthur Melo     | Histórias de usuário | 01/03/2025 | 07/03/2025 | ✔️ Concluído | 08/03/2025 |
+| Davi Oliveira   | Personas 1           | 01/03/2025 | 12/03/2025 | ✔️ Concluído | 10/03/2025 |
+### 🏁 Sprint 2
 
-## Sprint 1
+| 👤 Responsável    | 📌 Tarefa/Requisito    | 🚀 Início    | ⏳ Prazo      | 📊 Status | ✅ Concluído |
+|------------------|---------------------|------------|------------|---------|------------|
+| Ramon Jorge     | Home-Page           | 28/03/2025 | 02/04/2025| ✔️ Concluído | 02/04/2025 |
+| Mateus Junior   | Documentação      | 28/03/2025 | 02/04/2025 | ✔️ Concluído | 02/04/2025 |
+| Arthur Melo     | Página de login     | 28/03/2025 | 02/04/2025 | ✔️ Concluído | 02/04/2025 |
+| Davi Oliveira   | Página de Chat     | 28/03/2025 | 02/04/2025 | ✔️ Concluído | 02/04/2025 |
 
-Atualizado em: 21/04/2024
+### 🏁 Sprint 3
 
-| Responsável   | Tarefa/Requisito | Iniciado em    | Prazo      | Status | Terminado em    |
-| :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
-| AlunaX        | Introdução | 01/02/2024     | 07/02/2024 | ✔️    | 05/01/2005      |
-| AlunaZ        | Objetivos    | 03/02/2024     | 10/02/2024 | 📝    |                 |
-| AlunoY        | Histórias de usuário  | 01/01/2024     | 07/01/2005 | ⌛     |                 |
-| AlunoK        | Personas 1  |    01/01/2024        | 12/02/2005 | ❌    |       |
+| 👤 Responsável    | 📌 Tarefa/Requisito    | 🚀 Início    | ⏳ Prazo      | 📊 Status | ✅ Concluído |
+|------------------|---------------------|------------|------------|---------|------------|
+| Ramon Jorge     | Testes de Usabilidade | 03/04/2025 | 25/04/2025 | 📝 Em andamento | - |
+| Mateus Junior   | Ajustes na Documentação | 03/04/2025 | 27/04/2025 | 📝 Em andamento | - |
+| Arthur Melo     | Responsividade       | 03/04/2025 | 26/04/2025 | ❌ Não iniciado | - |
+| Davi Oliveira   | Segurança de Dados   | 03/04/2025 | 30/04/2025 | ❌ Não iniciado | - |
 
-## Sprint 2
+### 📌 Legenda
+- ✔️: **Concluído**
+- 📝: **Em andamento**
+- ⌛: **Atrasado**
+- ❌: **Não iniciado**
 
-Atualizado em: 21/04/2024
+---
 
-| Responsável   | Tarefa/Requisito | Iniciado em    | Prazo      | Status | Terminado em    |
-| :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
-| AlunaX        | Home-Page        | 01/02/2024     | 07/03/2024 | ✔️    | 05/01/2005      |
-| AlunaZ        | CSS Unificado    | 03/02/2024     | 10/03/2024 | 📝    |                 |
-| AlunoY        | Página de login  | 01/02/2024     | 07/03/2024 | ⌛     |                 |
-| AlunoK        | Script de login  |  01/01/2024    | 12/03/2024 | ❌    |       |
-
-## Sprint 3
-
-Atualizado em: 21/04/2024
-
-| Responsável   | Tarefa/Requisito | Iniciado em    | Prazo      | Status | Terminado em    |
-| :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
-| AlunaX        | Introdução | 01/02/2024     | 07/02/2024 | ✔️    | 05/01/2005      |
-| AlunaZ        | Objetivos    | 03/02/2024     | 10/02/2024 | 📝    |                 |
-| AlunoY        | Histórias de usuário  | 01/01/2024     | 07/01/2005 | ⌛     |                 |
-| AlunoK        | Personas 1  |    01/01/2024        | 12/02/2005 | ❌    |       |
-
-Legenda:
-- ✔️: terminado
-- 📝: em execução
-- ⌛: atrasado
-- ❌: não iniciado
-
-## Ferramentas
-
-> Liste quais ferramentas foram empregadas no desenvolvimento do  projeto, justificando a escolha de cada uma delas. Use o formato abaixo como exemplo.
+## 🛠️ Ferramentas Utilizadas
 
 As ferramentas empregadas no projeto são:
 
-- Editor de código.
-- Ferramentas de diagramação.
-- Frameworks 
-- Outras ferramentas externas
+- 📝 **Editor de Código:** Visual Studio Code
+- 🎨 **Ferramenta de Design:** Figma
+- 📂 **Gerenciamento de Código:** GitHub
+- 📌 **Gerenciamento de Projetos:** GitHub
 
+---
 
-## Links Úteis
-> - [11 Passos Essenciais para Implantar Scrum no seu Projeto](https://mindmaster.com.br/scrum-11-passos/)
-> - [Scrum em 9 minutos](https://www.youtube.com/watch?v=XfvQWnRgxG0)
+## 🔗 Links Úteis
 
-
+- 📖 [11 Passos Essenciais para Implantar Scrum no seu Projeto](https://mindmaster.com.br/scrum-11-passos/)
+- 🎥 [Scrum em 9 minutos](https://www.youtube.com/watch?v=XfvQWnRgxG0)
