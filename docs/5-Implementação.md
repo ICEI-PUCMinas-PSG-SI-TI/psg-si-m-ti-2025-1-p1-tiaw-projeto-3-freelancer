@@ -1,4 +1,4 @@
-# 🚀 Projeto FrelaX
+# 🚀 Projeto Lucre+
 
 Plataforma de intermediação entre freelancers e clientes que busca facilitar a contratação de serviços com segurança, praticidade e transparência.
 
@@ -6,7 +6,7 @@ Plataforma de intermediação entre freelancers e clientes que busca facilitar a
 
 ## ✅ Pré-requisitos: Ambiente e Ferramentas de Trabalho
 
-Para o desenvolvimento da solução **FrelaX**, utilizamos as seguintes tecnologias, ferramentas e ambientes:
+Para o desenvolvimento da solução **Lucre+**, utilizamos as seguintes tecnologias, ferramentas e ambientes:
 
 ---
 
@@ -22,7 +22,7 @@ Para o desenvolvimento da solução **FrelaX**, utilizamos as seguintes tecnolog
 
 ## 🔁 Fluxo de Interação do Usuário
 
-```mermaid
+## mermaid
 graph TD
     A[Usuário acessa a plataforma] --> B[Login/Cadastro]
     B --> C[Busca por serviços]
@@ -36,37 +36,37 @@ graph TD
 
 ### 🏠 Tela Principal
 
-![image](https://github.com/user-attachments/assets/f259c020-4bf4-4015-9cbd-2803b9d5e43b)
+![Wireframe Tela Inicial](docs/images/wireframes/wireframeT01.Tela.Inicial.png)
 
 Exibe uma visão geral dos serviços oferecidos com opção de busca por palavras-chave,
 seleção de categorias e botão de acesso rápido às áreas de login e cadastro.
 
 ### Telas de Acesso
 
-Tela de Cadastro
+![Wireframe Tela de Login/Cadastro](docs/images/wireframes/wireframeT02A.Login.Cadastro.png)
 
-Tela de Login
-
-Recuperação de Senha
+Tela de CadastroPermite a criação de contas com campos como nome, e-mail, senha e tipo de usuário (freelancer ou contratante).
 
 ### Perfil do Freelancer
 
-Portfólio
+![Wireframe Tela de Avaliação](docs/images/wireframes/wireframeT12.Avaliacao.png)
 
-Avaliações
-
-Botão para iniciar chat ou contratar
+AvaliaçõesExibe notas e comentários deixados por clientes anteriores.
 
 ### Sistema de Chat
 
-Histórico de mensagens
+![Wireframe Tela de Chat](docs/images/wireframes/wireframeT07.Chat.png)
 
-Simulação de conversa
+Simulação de conversaInterface de bate-papo com envio de texto e suporte a notificações.
 
 ### Busca de Serviços
+
+![Wireframe Resultados da Pesquisa](docs/images/wireframes/wireframeT06.Resultados.da.Pesquisa.png)
 
 Filtros por categoria
 
 Filtros por preço
 
 Filtros por avaliação
+
+Página dedicada para localizar serviços, com opções avançadas de filtragem e classificação por relevância.
