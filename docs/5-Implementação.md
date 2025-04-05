@@ -1,69 +1,72 @@
-# Projeto da Solução
+# 🚀 Projeto FrelaX
 
-<span style="color:red">Pré-requisitos: <a href="4-Gestão-Configuração.md"> Ambiente e Ferramentas de Trabalho</a></span>
+Plataforma de intermediação entre freelancers e clientes que busca facilitar a contratação de serviços com segurança, praticidade e transparência.
 
-## Tecnologias Utilizadas
+---
 
-> Descreva aqui qual(is) tecnologias você vai usar para resolver o seu
-> problema, ou seja, implementar a sua solução. Liste todas as
-> tecnologias envolvidas, linguagens a serem utilizadas, serviços web,
-> frameworks, bibliotecas, IDEs de desenvolvimento, e ferramentas.
-> Apresente também uma figura explicando como as tecnologias estão
-> relacionadas ou como uma interação do usuário com o sistema vai ser
-> conduzida, por onde ela passa até retornar uma resposta ao usuário.
-> 
-> Inclua os diagramas de User Flow, esboços criados pelo grupo
-> (stoyboards), além dos protótipos de telas (wireframes). Descreva cada
-> item textualmente comentando e complementando o que está apresentado
-> nas imagens.
+## ✅ Pré-requisitos: Ambiente e Ferramentas de Trabalho
 
-## Arquitetura da solução
+Para o desenvolvimento da solução **FrelaX**, utilizamos as seguintes tecnologias, ferramentas e ambientes:
 
+---
 
-......  COLOQUE AQUI O SEU TEXTO E O DIAGRAMA DE ARQUITETURA .......
+## 🛠️ Tecnologias Utilizadas
 
- Inclua um diagrama da solução e descreva os módulos e as tecnologias
- que fazem parte da solução. Discorra sobre o diagrama.
- 
- **Exemplo do diagrama de Arquitetura**:
- 
- ![Exemplo de Arquitetura](./images/arquitetura-exemplo.png)
+- **Linguagens**: JavaScript, HTML, CSS  
+- **Editor de Código**: Visual Studio Code  
+- **Controle de Versão**: Git e GitHub  
+- **Protótipos**: Figma  
+- **Gerenciamento do Projeto**: GitHub Projects (Kanban)
 
+---
 
+## 🔁 Fluxo de Interação do Usuário
 
+```mermaid
+graph TD
+    A[Usuário acessa a plataforma] --> B[Login/Cadastro]
+    B --> C[Busca por serviços]
+    C --> D[Visualiza perfil do freelancer]
+    D --> E[Inicia negociação no chat]
+    E --> F[Contrata freelancer e realiza pagamento]
+    F --> G[Freelancer executa serviço]
+    G --> H[Avaliação do serviço]
 
-# Interface do Sistema
+## 💻 Interface do Sistema
 
+### 🏠 Tela Principal
 
-_Visão geral da interação do usuário por meio das telas do sistema. Apresente as principais interfaces da plataforma._
+![image](https://github.com/user-attachments/assets/f259c020-4bf4-4015-9cbd-2803b9d5e43b)
 
-## Tela principal do sistema
+Exibe uma visão geral dos serviços oferecidos com opção de busca por palavras-chave,
+seleção de categorias e botão de acesso rápido às áreas de login e cadastro.
 
-_Descrição da tela principal do sistema._
+### Telas de Acesso
 
-[`Tela principal do sistema`](images/)
+Tela de Cadastro
 
+Tela de Login
 
-## Telas do requisito 1
+Recuperação de Senha
 
-_Descrição da tela relativa à atividade 1._
+### Perfil do Freelancer
 
-[`Tela da atividade 1`](images/)
+Portfólio
 
-_Descrição da tela relativa à atividade 2._
+Avaliações
 
-[`Tela da atividade 2`](images/)
+Botão para iniciar chat ou contratar
 
+### Sistema de Chat
 
-## Telas do requisito 2
+Histórico de mensagens
 
-_Descrição da tela relativa à atividade 1._
+Simulação de conversa
 
-[`Tela da atividade 1`](images/)
+### Busca de Serviços
 
-_Descrição da tela relativa à atividade 2._
+Filtros por categoria
 
-[`Tela da atividade 2`](images/)
+Filtros por preço
 
-
-
+Filtros por avaliação
