@@ -1,16 +1,8 @@
-# 🚀 Projeto Lucre+
-
-Plataforma de intermediação entre freelancers e clientes que busca facilitar a contratação de serviços com segurança, praticidade e transparência.
-
----
-
-## ✅ Pré-requisitos: Ambiente e Ferramentas de Trabalho
-
-Para o desenvolvimento da solução **Lucre+**, utilizamos as seguintes tecnologias, ferramentas e ambientes:
-
----
+# 🚀 5. Implementação
 
 ## 🛠️ Tecnologias Utilizadas
+
+Para o desenvolvimento da solução **Lucre+**, utilizamos as seguintes tecnologias, ferramentas e ambientes de trabalho:
 
 - **Linguagens**: JavaScript, HTML, CSS  
 - **Editor de Código**: Visual Studio Code  
@@ -18,11 +10,9 @@ Para o desenvolvimento da solução **Lucre+**, utilizamos as seguintes tecnolog
 - **Protótipos**: Figma  
 - **Gerenciamento do Projeto**: GitHub Projects (Kanban)
 
----
-
 ## 🔁 Fluxo de Interação do Usuário
 
-## mermaid
+```mermaid
 graph TD
     A[Usuário acessa a plataforma] --> B[Login/Cadastro]
     B --> C[Busca por serviços]
@@ -31,42 +21,41 @@ graph TD
     E --> F[Contrata freelancer e realiza pagamento]
     F --> G[Freelancer executa serviço]
     G --> H[Avaliação do serviço]
+```
 
 ## 💻 Interface do Sistema
 
 ### 🏠 Tela Principal
 
-![Wireframe Tela Inicial](docs/images/wireframes/wireframeT01.Tela.Inicial.png)
+![Wireframe Tela Inicial](images/wireframes/wireframeT01.Tela.Inicial.png)
 
-Exibe uma visão geral dos serviços oferecidos com opção de busca por palavras-chave,
-seleção de categorias e botão de acesso rápido às áreas de login e cadastro.
+Exibe uma visão geral dos serviços oferecidos com opção de busca por palavras-chave, seleção de categorias e botão de acesso rápido às áreas de login e cadastro.
 
-### Telas de Acesso
+### Telas de Acesso/Cadastro
 
-![Wireframe Tela de Login/Cadastro](docs/images/wireframes/wireframeT02A.Login.Cadastro.png)
+![Wireframe Tela de Login/Cadastro](images/wireframes/wireframeT02A.Login.Cadastro.png)
 
-Tela de CadastroPermite a criação de contas com campos como nome, e-mail, senha e tipo de usuário (freelancer ou contratante).
+Permite a criação de contas com campos como nome, e-mail, senha e tipo de usuário (freelancer ou contratante).
 
 ### Perfil do Freelancer
 
-![Wireframe Tela de Avaliação](docs/images/wireframes/wireframeT12.Avaliacao.png)
+![Wireframe Tela de Avaliação](images/wireframes/wireframeT12.Avaliacao.png)
 
-AvaliaçõesExibe notas e comentários deixados por clientes anteriores.
+Exibe notas e comentários deixados por clientes anteriores.
 
 ### Sistema de Chat
 
-![Wireframe Tela de Chat](docs/images/wireframes/wireframeT07.Chat.png)
+![Wireframe Tela de Chat](images/wireframes/wireframeT07.Chat.png)
 
-Simulação de conversaInterface de bate-papo com envio de texto e suporte a notificações.
+Interface de bate-papo com envio de texto e suporte a notificações.
 
 ### Busca de Serviços
 
-![Wireframe Resultados da Pesquisa](docs/images/wireframes/wireframeT06.Resultados.da.Pesquisa.png)
-
-Filtros por categoria
-
-Filtros por preço
-
-Filtros por avaliação
+![Wireframe Resultados da Pesquisa](images/wireframes/wireframeT06.Resultados.da.Pesquisa.png)
 
 Página dedicada para localizar serviços, com opções avançadas de filtragem e classificação por relevância.
+
+- Filtros por categoria
+- Filtros por preço
+- Filtros por avaliação
+- Filtros por localização

@@ -1,5 +1,4 @@
-
-# Projeto de Interface
+# 🖥️ 3. Projeto de Interface
 
 <!-- TODO: Reescrever após alinhas as telas de wireframe -->
 
@@ -9,12 +8,12 @@ A criação de interfaces é um processo que combina design visual, experiência
 
 O fluxo de usuário (User Flow) é uma técnica que permite ao desenvolvedor mapear todo fluxo de telas do site ou app.
 
-![Exemplo de UserFlow](images/userflow.png)
+![UserFlow](images/userflow.png)
 
 ## Wireframes
 
 <!-- INFO: As wireframes foram realizadas por pessoas diferentes, portanto, atualmente apresentam um designs destintos -->
-<!-- TODO: Alinhas as wireframes com um mesmo estilo -->
+<!-- TODO: Alinhar as wireframes com um mesmo estilo -->
 
 Os Wireframes são protótipos usados em design de interface para sugerir a estrutura de um site web e seu relacionamentos entre suas páginas. Um wireframe web é uma ilustração semelhante do layout de elementos fundamentais na interface.
 

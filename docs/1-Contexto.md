@@ -1,6 +1,7 @@
-# Introdução
+# ℹ️ 1. Introdução
 
 ## Problema
+
 Atualmente, encontrar profissionais freelancers qualificados pode ser um desafio tanto para empresas quanto para clientes individuais. A falta de um canal organizado e eficiente para conectar profissionais a oportunidades de trabalho compromete a agilidade e a confiabilidade do processo de contratação.
 
 Nosso projeto visa solucionar essa dificuldade por meio de uma plataforma que facilita a conexão entre freelancers e clientes, proporcionando um ambiente intuitivo e seguro para negociação e execução de serviços. A aplicação permitirá que os freelancers criem perfis, exibam portfólios, filtrem oportunidades e se comuniquem com potenciais clientes.
@@ -11,11 +12,11 @@ Com um sistema eficiente de pesquisa, avaliação e suporte, nossa solução bus
 
 O principal objetivo do projeto é desenvolver uma plataforma online que conecte freelancers e clientes de maneira eficiente e segura.
 
-### Objetivo Geral:
+### Objetivo Geral
 
 Criar um site funcional que permita a interação entre clientes e profissionais freelancers de diversas áreas.
 
-### Objetivos Específicos:
+### Objetivos Específicos
 
 Desenvolver um sistema de login e perfis personalizados para freelancers.
 
@@ -42,4 +43,3 @@ A plataforma será voltada para dois grupos principais de usuários:
 Freelancers: Profissionais autônomos de diversas áreas, como design, programação, redação, marketing e tradução. Esses usuários terão a possibilidade de divulgar seus trabalhos, negociar propostas e gerenciar suas entregas de forma eficiente.
 
 Clientes: Empresas e indivíduos que necessitam de serviços pontuais ou recorrentes, buscando freelancers qualificados para suas demandas. Esses usuários poderão pesquisar profissionais, avaliar portfólios e contratar serviços com segurança.
- 

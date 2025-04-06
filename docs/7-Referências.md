@@ -1,12 +1,13 @@
-## 📚 Referências
+# 📚 7. Referências
 
 Incluímos abaixo as principais fontes utilizadas no desenvolvimento do projeto, considerando materiais de apoio, artigos, sites e ferramentas.
 
-### 🔗 Links Úteis
+## 🔗 Links Úteis
+
 - [Formato ABNT - Normas Técnicas](https://www.normastecnicas.com/abnt/trabalhos-academicos/referencias/)
 - [Referências Bibliográficas da ABNT - Rock Content](https://comunidade.rockcontent.com/referencia-bibliografica-abnt/)
 
-### 📖 Referências Utilizadas
+## 📖 Referências Utilizadas
 
 - BEECH, John. **Metodologia de pesquisa: um guia prático para estudantes de turismo e hotelaria**. São Paulo: Cengage Learning, 2010.
 - PRESSMAN, Roger S. **Engenharia de Software**. 8. ed. São Paulo: McGraw Hill Brasil, 2016.

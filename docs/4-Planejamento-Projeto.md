@@ -1,10 +1,11 @@
-# 📌 Planejamento do Projeto
+# 📌 4. Planejamento do Projeto
 
 > Aqui será feito o gerenciamento das tarefas de implementação do projeto.
 
 ## 📌 Divisão de Papéis
 
 ### Sprint 1
+
 - 🏆 **Scrum Master:** Ramon Jorge
 - 🎯 **Product Owner:** Mateus Junior
 - 📝 **Documentação:** Ramon Jorge, Mateus Junior
@@ -12,6 +13,7 @@
 - 🔧 **Desenvolvimento Back-end:** Davi de Oliveira, Davy Geremias, Lucas Imparato, Marcelo Antonino
 
 ### Sprint 2
+
 - 🏆 **Scrum Master:** Ramon Jorge
 - 🎯 **Product Owner:** Mateus Junior
 - 📝 **Documentação:** Ramon Jorge, Mateus Junior
@@ -19,6 +21,7 @@
 - 🔧 **Desenvolvimento Back-end:** Davi de Oliveira, Davy Geremias, Lucas Imparato, Marcelo Antonino
 
 ### Sprint 3
+
 - 🏆 **Scrum Master:** Ramon Jorge
 - 🎯 **Product Owner:** Mateus Junior
 - 📝 **Documentação:** Ramon Jorge, Mateus Junior
@@ -37,6 +40,7 @@
 | Mateus Junior   | Objetivos            | 03/03/2025 | 10/03/2025 | ✔️ Concluído | 06/03/2025 |
 | Arthur Melo     | Histórias de usuário | 01/03/2025 | 07/03/2025 | ✔️ Concluído | 08/03/2025 |
 | Davi Oliveira   | Personas 1           | 01/03/2025 | 12/03/2025 | ✔️ Concluído | 10/03/2025 |
+
 ### 🏁 Sprint 2
 
 | 👤 Responsável    | 📌 Tarefa/Requisito    | 🚀 Início    | ⏳ Prazo      | 📊 Status | ✅ Concluído |
@@ -56,6 +60,7 @@
 | Davi Oliveira   | Segurança de Dados   | 03/04/2025 | 30/04/2025 | ❌ Não iniciado | - |
 
 ### 📌 Legenda
+
 - ✔️: **Concluído**
 - 📝: **Em andamento**
 - ⌛: **Atrasado**

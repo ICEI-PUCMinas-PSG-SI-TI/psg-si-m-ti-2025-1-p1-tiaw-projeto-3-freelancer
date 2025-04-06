@@ -1,15 +1,10 @@
 # Informações do Projeto
 
-`TÍTULO DO PROJETO`  
-
-<!-- TODO: Alterar nome -->
-Trabalho Interdisciplinar - Aplicacões Web - Projeto Freelancer
+`TÍTULO DO PROJETO:` **Lucre+**
 
 `CURSO`: Sistemas de Informação
 
 `SEMESTRE:` 1º Semestre
-
-`OBJETIVO ODS:` > Inclua os numeros e a descrição do(s) objetivo(s) ODS da ONU que o Projeto vai atender.
 
 ## Participantes
 
@@ -37,18 +32,8 @@ Os membros do grupo são:
 
 Esta pasta arquiva a documentação dos projetos.
 
-Na pasta `docs`, há uma subpasta `images` que deve arquivar todas as
-imagens utilizadas para a elaboração do documento.
-
 ## Pasta src
 
 Este diretório armazena o código fonte do projeto e adota uma hierarquia
 básica de projetos Web simples, que utilizam as tecnologias HTML, CSS e
 JavaScript.
-
-### Links Úteis
-
-Aprenda Markdown e use-o para documentar o projeto  
-
-- [Sintaxe básica de gravação e formatação no GitHub](https://guides.github.com/features/mastering-markdown/)
-- [Suporte Github](https://help.github.com/pt/github/writing-on-github/getting-started-with-writing-and-formatting-on-github)

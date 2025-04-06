@@ -1,6 +1,6 @@
-# Especificações do Projeto
+# 📋 2. Especificações do Projeto
 
-A especificação do projeto, é resultado do processo de "Design Thinking" que consiste em buscar entender os requisitos e criar funcionalidades focadas na experiência do usuário. Nesta etapa, realizamos a identificação dos diversos perfis de possíveis usuários das plataformas e como estes poderão interagir com o produto, enumerando as necessidades, dificuldades e restrições que irão guiar a implementação das funcionalidades necessárias e o design.
+As especificações do projeto, são resultado do processo de "Design Thinking" que consiste em buscar entender os requisitos e criar funcionalidades focadas na experiência do usuário. Nesta etapa, realizamos a identificação dos diversos perfis de possíveis usuários das plataformas e como estes poderão interagir com o produto, enumerando as necessidades, dificuldades e restrições que irão guiar a implementação das funcionalidades necessárias e o design.
 
 ## Personas
 
@@ -18,28 +18,27 @@ Heitor Morais é alguém experiente e determinado, que combina sua paixão por f
 
 João Gomes, aos 26 anos, é o proprietário de uma casa de assados e defumados, com uma personalidade calma e focada no trabalho. Nos fins de semana, relaxa jogando futebol e assistindo filmes, enquanto sua ambição é alcançar sucesso profissional até os 30. Ele utiliza WhatsApp e Instagram para comunicação e marketing, além de LinkedIn para objetivos profissionais. João se encaixa no produto quando se facilita a contratação de novos funcionários, priorizando agilidade e simplicidade, condizentes com as demandas do mundo moderno.
 
-
 ## Histórias de Usuários
 
 Com base na análise das personas forma identificadas as seguintes histórias de usuários:
 
 | Histórias de Usuários |
 |:--|
-| Como freelancer, eu quero criar um anúncio, para que poder meus serviços. |
+| Como freelancer, eu quero criar um anúncio, para oferecer meus serviços. |
 | Como cliente, quero visualizar os serviços disponíveis, para identificar se encaixam nas minhas necessidades. |
 | Como cliente, quero visualizar o portfólio do contratado, para identificar se o serviço prestado é de qualidade. |
 | Como cliente, quero poder verificar históricos de serviços prestados pelo contratante, para identificar se houve algum inconveniente na prestação do serviço. |
 | Como cliente, quero poder filtrar as opções disponíveis para encontrar opções mais diversas ou mais especificas de acordo com as necessidades. |
 | Como usuário, desejo poder visualizar a nota de um outro usuário para que evite cair em golpes.|
 | Como cliente, desejo poder criar um anúncio de procura de serviço para que outros usuários possam oferecer um orçamento. |
-| Como usuário, desejo poder realizar avaliações em serviços contratados para informar sobre registrar reclamações ou elogios. |
+| Como usuário, desejo poder realizar avaliações em serviços contratados para registrar reclamações ou elogios. |
 | Como usuário, desejo que haja um meio de se comunicar com outro usuário para poder fazer orçamentos, negociações ou retirar dúvidas. |
 | Como usuário, gostaria que houvesse algum meio de garantia no pagamento para evitar golpes. |
 | Como freelancer, quero oferecer serviços já precificados, para facilitar a visualização e análise de um possível cliente. |
 | Como freelancer, quero receber notificações sobre projetos que correspondem às minhas habilidades, para que eu possa candidatar-me rapidamente. |
 | Como administrador, quero poder visualizar comentários inadequados para tornar a plataforma mais segura. |
 | Como freelancer, gostaria de poder visualizar serviços mais requisitados para conseguir um número maior de clientes. |
-| Como usuário, gostaria de visualizar semelhantes a um anúncio para considerar mais de uma opção.|
+| Como usuário, gostaria de visualizar em um anúncio freelancers semelhantes para considerar mais de uma opção.|
 
 ## Requisitos
 
@@ -53,12 +52,12 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 |RF-002|Permitir que o usuário cadastre serviços.|ALTA|
 |RF-003|Permitir que o usuário visualize serviços.|ALTA|
 |RF-004|Permitir que o usuário pesquise por serviços.|MÉDIA|
-|RF-005|Permitir que o usuário possa visualizar ou solicitar amentos.|MÉDIA|
-|RF-006|Permitir que o usuário possa configurar preços por seus viços.|BAIXA|
+|RF-005|Permitir que o usuário possa visualizar ou solicitar orçamentos.|MÉDIA|
+|RF-006|Permitir que o usuário possa configurar preços por seus serviços.|BAIXA|
 |RF-007|Criar tags ou categorias de serviços.|BAIXA|
-|RF-008|Permitir que o usuário utilize filtros para pesquisar viços<br>como local, habilidades e preço.|BAIXA|
+|RF-008|Permitir que o usuário utilize filtros para pesquisar serviços<br>como local, habilidades e preço.|BAIXA|
 |RF-009|Criar uma interface de informação sobre os serviços tratados.|ALTA|
-|RF-010|Criar uma interface de informação sobre todos os viços<br>prestados pelo usuário.|ALTA|
+|RF-010|Criar uma interface de informação sobre todos os serviços<br>prestados pelo usuário.|ALTA|
 |RF-011|Adicionar uma aba de avaliações/comentários por serviço.|MÉDIA|
 |RF-012|Adicionar uma aba de avaliações/comentários por usuário.|BAIXA|
 |RF-013|Criar uma interface de histórico de serviços contratados.|BAIXA|
@@ -73,7 +72,7 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 
 |ID     | Descrição do Requisito  |Prioridade |
 |-------|-------------------------|----|
-| RNF-001 | O sistema deve utilizar o sistema fluido para se adaptar a<br>diversos dispositivos|ALTA|
+| RNF-001 | O sistema deve utilizar uma interface fluido para se adaptar a<br>diversos dispositivos|ALTA|
 | RNF-002 | O sistema deve manter uma interface intuitiva|MÉDIA|
 | RNF-003 | O sistema deve exigir autenticação para cadastro de serviços|ALTA|
 | RNF-004 | O sistema pode utilizar de ferramentas de localização para melhorar o uso|BAIXA|
