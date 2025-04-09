@@ -49,8 +49,10 @@ Após alternar para branch `feature-tela-perfil`, desenvolver o código necessá
 > Viu um erro em outro arquivo que esta fora do escopo da branch (por exemplo na tela de login)? Você pode:
 >
 > - Opção 1: Criar uma 3º branch separada e realizar um commit com **APENAS** as alterações feitas para resolver esse erro.
-> - Opção 2: deixar pra resolver depois.
-> - Opção 3: informar ao Scrum Master ou o Project Owner.
+> - Opção 2: Informar ao Scrum Master ou o Project Owner.
+> - Opção 3: Deixar pra resolver após finalizar a branch.
+
+Também é importante que as suas alterações não causem problemas em outras partes do código, por exemplo remover uma imagem que esta sendo utilizada por outra tela ou recurso do site.
 
 ## Pull Request
 
@@ -72,34 +74,38 @@ Todos os arquivos referente ao site são inseridos dentro da pasta "src". Dentro
 ```txt
 📁 src
 ├── 📁 .template
+│  ├── 📄 index.html
+│  ├── 🎨 styles.css
+│  └── 🚀 script.js
+├── 📁 static
 │  ├── 🖼️ logo.png
 │  ├── 🖼️ icone_instagram.svg
 │  └── 🖼️ foto_generica.jpeg
-├── 📁 static
-│  ├── 📄 index.html
-│  └── 🎨 styles.css
 ├── 📁 login
 │  ├── 📄 index.html
-│  └── 🎨 styles.css
+│  ├── 🎨 styles.css
+│  └── 🚀 script.js
 ├── 📁 perfil
 │  ├── 📄 index.html
-│  └── 🎨 styles.css
-├── 📁 index.html
-└── 📁 styles.css
+│  ├── 🎨 styles.css
+│  └── 🚀 script.js
+├── 📄 index.html
+├── 🎨 styles.css
+└── 🚀 script.js
 ```
 
-Há uma pasta chamada `src/.template/`, nela haverá arquivos HTML e CSS modelos para criar as paginas. Elas serão utilizadas para reservar espaços como cabeçalho e rodapé ou estilos pré definidos.
+Há uma pasta chamada `src/.template/`, nela haverá arquivos HTML, CSS e JavaScript modelos para criar as paginas. Elas serão utilizadas para reservar espaços como cabeçalho e rodapé ou estilos pré definidos.
 
 Os arquivos de imagem devem ficar todos na pasta `src/static/` e ao utilizar as imagens no HTML, colocar como abaixo:
 
 ```html
 <!-- Para arquivos que estão em sub-pastas dentro da pasta src -->
 <!-- Como exemplo: src/login/index.html -->
-<img src="../static/imagem.jpg" >
+<img src="../static/imagem.png" >
 
 <!-- Para arquivos dentro da pasta src -->
 <!-- Como exemplo: src/index.html -->
-<img src="static/imagem.jpg" >
+<img src="static/imagem.png" >
 ```
 
 <!--
