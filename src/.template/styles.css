@@ -38,3 +38,12 @@ body {
 .body-footer {
     padding: 8px;
 }
+
+.dark-toggle {
+    width: 16px;
+    height: 16px;
+}
+
+[data-bs-theme="dark"] .dark-toggle {
+    filter: invert();
+}
