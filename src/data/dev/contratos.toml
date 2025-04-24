@@ -1,0 +1,32 @@
+# 
+# Lista dos serviços contratados por usuários
+# Esse valor será usado nos seguintes artefatos:
+# ?
+# 
+
+# [[contratos]]
+# id = ID do contrato
+# contratadoId = ID do usuário que ofereceu o serviço
+# contratanteId = ID do usuário que contratou o serviço
+# data = "1970-01-01T00:00:00.000Z-03:00"
+
+# TODO:
+# valor = Valor combinado (int)
+
+[[contratos]]
+id = 0
+contratadoId = 0
+contratanteId = 1
+data = "1970-01-01T00:00:00.000Z-03:00"
+
+[[contratos]]
+id = 1
+contratadoId = 0
+contratanteId = 2
+data = "1970-01-01T00:00:00.000Z-03:00"
+
+[[contratos]]
+id = 2
+contratadoId = 0
+contratanteId = 3
+data = "1970-01-01T00:00:00.000Z-03:00"
