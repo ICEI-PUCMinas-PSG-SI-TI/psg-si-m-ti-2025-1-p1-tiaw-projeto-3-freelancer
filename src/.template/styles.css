@@ -1,20 +1,13 @@
-/* Váriaveis de cores, etc ... */
-
-:root {
-    --background: #1e1e1e;
-    --bg-header: #1e1e1e;
-    --bg-content: #1e1e1e;
-    --bg-footer: #1e1e1e;
-}
+/* Variáveis de cores, etc ... */
 
 /* Configura o espaço de margens e paddings ocupar o espaço interno
-    Desabilitado pois já esta incluido no bootstrap
+    Desabilitado pois já esta incluído no bootstrap
 * { 
     box-sizing: border-box;
 }*/
 
 body {
-    /* Configura o elelemento para ocupar 100% do espaço vertical */
+    /* Configura o elemento para ocupar 100% do espaço vertical */
     width: 100%;
     /* Retira todos os espaços */
     margin: 0 !important;
@@ -27,28 +20,21 @@ body {
 }
 
 .body-section {
-    /* Configura o elelemento para ocupar 100% do espaço vertical */
+    /* Configura o elemento para ocupar 100% do espaço vertical */
     width: 100%;
     display: flex;
-}
-
-/* Set all text white */
-.body-section h1,
-.body-section h2,
-.body-section p {
-    color: white;
+    background-color: var(--bs-body-bg);
 }
 
 .body-header {
     padding: 8px;
-    background-color: var(--bg-header);
 }
 
+/*
 .body-content {
-    background-color: var(--bg-content);
 }
+*/
 
 .body-footer {
     padding: 8px;
-    background-color: var(--bg-footer);
 }

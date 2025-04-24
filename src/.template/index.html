@@ -8,7 +8,7 @@
     <!-- TODO: Atualizar sempre com o título da pagina -->
     <title>Título da página</title>
     <!-- Favicon -->
-     <link rel="icon" href="../static/favicon.ico">
+    <link rel="icon" href="../static/favicon.ico">
     <!-- CSS -->
     <link rel="stylesheet" href="styles.css" type="text/css">
     <!-- Bootstrap -->
@@ -17,9 +17,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous">
     </script>
+    <!-- Project Scripts -->
+    <script src="../static/js/darkmode.js"></script>
 </head>
 
-<body>
+<body data-bs-theme="dark">
     <!-- Cabeçalho -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
@@ -55,14 +57,22 @@
                         <a class="nav-link disabled" aria-disabled="true">Disabled</a>
                     </li>
                 </ul>
+                <div id="toggleDarkDiv" style="display: none"
+                    class="d-flex p-2 flex-row justify-content-center align-items-center">
+                    <img src="../static/dark.svg" width="16px" height="16px">
+                    <div class="form-check form-switch form-check-reverse">
+                        <input id="toggleDark" class="form-check-input" type="checkbox" id="switchCheckReverse">
+                        <label class="form-check-label" for="switchCheckReverse"></label>
+                    </div>
+                </div>
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
             </div>
-    </div>
+        </div>
     </nav>
-    
+
     <!-- Conteúdo da página -->
     <div class="body-section body-content">
         <!-- CONTEÚDO -->
