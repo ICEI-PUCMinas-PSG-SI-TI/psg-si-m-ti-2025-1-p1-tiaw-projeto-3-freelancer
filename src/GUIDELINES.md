@@ -16,7 +16,7 @@ Diretrizes para os desenvolvedores do projeto.
 
 O desenvolvimento em branches funciona da seguinte forma: Suponhamos que será desenvolvido a tela de perfil do usuário, primeiramente, em um terminal criamos uma branch separada e alternamos para ela:
 
-<!-- TODO: Colocar prints ou gifs do vscode para auxiliar -->
+<!-- TODO: Colocar prints ou GIFs do vscode para auxiliar -->
 
 ```shell
 # Para criar a branch, utilizar `git branch`
@@ -58,7 +58,7 @@ Também é importante que as suas alterações não causem problemas em outras p
 
 Sempre que terminar uma feature ou um fix, abrir um terminal e envie a branch para o github:
 
-<!-- TODO: Colocar prints ou gifs do vscode para auxiliar -->
+<!-- TODO: Colocar prints ou GIFs do vscode para auxiliar -->
 
 ```shell
 git pull origin nome-da-branch

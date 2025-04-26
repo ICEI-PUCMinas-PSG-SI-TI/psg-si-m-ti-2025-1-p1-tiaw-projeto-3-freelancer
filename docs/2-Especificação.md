@@ -56,7 +56,7 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 |RF-006|Permitir que o usuário possa configurar preços por seus serviços.|BAIXA|
 |RF-007|Criar tags ou categorias de serviços.|BAIXA|
 |RF-008|Permitir que o usuário utilize filtros para pesquisar serviços<br>como local, habilidades e preço.|BAIXA|
-|RF-009|Criar uma interface de informação sobre os serviços tratados.|ALTA|
+|RF-009|Criar uma interface de informação sobre os serviços contratados.|ALTA|
 |RF-010|Criar uma interface de informação sobre todos os serviços<br>prestados pelo usuário.|ALTA|
 |RF-011|Adicionar uma aba de avaliações/comentários por serviço.|MÉDIA|
 |RF-012|Adicionar uma aba de avaliações/comentários por usuário.|BAIXA|

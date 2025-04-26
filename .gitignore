@@ -1,3 +1,5 @@
 # IDEs
 *.swp
 *.swo
+.vscode/
+.vs/
