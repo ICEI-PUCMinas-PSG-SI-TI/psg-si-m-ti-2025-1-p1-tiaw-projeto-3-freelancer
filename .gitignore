@@ -1,3 +1,4 @@
 # IDEs
 *.swp
 *.swo
+_temp/

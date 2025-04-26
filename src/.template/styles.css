@@ -1,10 +1,7 @@
 /* Variáveis de cores, etc ... */
-
-/* Configura o espaço de margens e paddings ocupar o espaço interno
-    Desabilitado pois já esta incluído no bootstrap
-* { 
-    box-sizing: border-box;
-}*/
+:root {
+    --nav-bar-size: 64px;
+}
 
 body {
     /* Configura o elemento para ocupar 100% do espaço vertical */
@@ -17,26 +14,36 @@ body {
     overflow-x: hidden;
 
     background-color: var(--background);
-}
 
-.body-section {
-    /* Configura o elemento para ocupar 100% do espaço vertical */
-    width: 100%;
+    /* Flexbox */
     display: flex;
-    background-color: var(--bs-body-bg);
+    flex-direction: column;
+    min-height: 100vh;
 }
 
+/* Seção */
+.body-section {
+    width: 100%;
+}
+
+/* Seção: Cabeçalho */
 .body-header {
-    padding: 8px;
+    max-height: var(--nav-bar-size);
 }
 
-/*
+/* Seção: Conteúdo */
 .body-content {
+    /* Flexbox */
+    flex: 1;
 }
-*/
 
-.body-footer {
-    padding: 8px;
+/* Seção: Rodapé */
+/* .body-footer {} */
+
+/* Inverte a cor dos ícones no modo escuro */
+[data-bs-theme="dark"] .dark-toggle,
+[data-bs-theme="dark"] .social-icon {
+    filter: invert();
 }
 
 .dark-toggle {
@@ -44,6 +51,7 @@ body {
     height: 16px;
 }
 
-[data-bs-theme="dark"] .dark-toggle {
-    filter: invert();
+.social-icon {
+    width: 32px;
+    height: 32px;
 }
