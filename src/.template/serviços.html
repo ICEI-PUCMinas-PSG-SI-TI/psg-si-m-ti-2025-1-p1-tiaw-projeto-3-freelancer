@@ -71,7 +71,7 @@
 
     <!-- Conteúdo da página -->
     <div class="body-section body-content d-flex flex-column">
-        
+
         <h2 class="mb-4">Cadastro de Serviço</h2>
 
     <form id="form-servico" class="row g-3">
@@ -102,10 +102,10 @@
         </div>
 
         <div class="col-12">
-            <label for="imagens" class="form-label">URLs das Imagens (separe por vírgulas)</label>
-            <input type="text" class="form-control" id="imagens"
-                placeholder="Ex: https://exemplo.com/geladeira0.jpg, https://exemplo.com/geladeira1.jpg">
+             <label for="imagens" class="form-label">Imagens do Serviço</label>
+             <input type="file" class="form-control" id="imagens" name="imagens" multiple accept="image/*">
         </div>
+
 
         <div class="col-12 d-flex justify-content-end">
             <button type="submit" class="btn btn-primary">Cadastrar Serviço</button>

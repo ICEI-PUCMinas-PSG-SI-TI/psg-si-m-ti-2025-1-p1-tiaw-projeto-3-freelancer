@@ -55,3 +55,43 @@ body {
     width: 32px;
     height: 32px;
 }
+
+/* Estilização do formulário de cadastro de serviço */
+#form-servico {
+    background-color: var(--bs-body-bg);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+#form-servico .form-label {
+    font-weight: 600;
+}
+
+#form-servico input,
+#form-servico textarea {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    border: 1px solid var(--bs-border-color-translucent);
+}
+
+#form-servico input:focus,
+#form-servico textarea:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Estilo específico para o campo de upload de imagem */
+#form-servico input[type="file"] {
+    padding: 0.45rem;
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    cursor: pointer;
+}
+
+#form-servico button {
+    padding: 0.6rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+}
