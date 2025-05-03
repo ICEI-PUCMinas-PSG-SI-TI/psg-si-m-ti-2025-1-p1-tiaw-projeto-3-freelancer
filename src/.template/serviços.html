@@ -74,43 +74,44 @@
 
         <h2 class="mb-4">Cadastro de Serviço</h2>
 
-    <form id="form-servico" class="row g-3">
-        <div class="col-md-6">
-            <label for="titulo" class="form-label">Título do Serviço</label>
-            <input type="text" class="form-control" id="titulo" placeholder="Ex: Conserto de Geladeira">
-        </div>
-
-        <div class="col-md-6">
-            <label for="contato" class="form-label">Contato</label>
-            <input type="text" class="form-control" id="contato" placeholder="Ex: (11) 91234-5678">
-        </div>
-
-        <div class="col-md-6">
-            <label for="categoriaId" class="form-label">Categoria ID</label>
-            <input type="number" class="form-control" id="categoriaId" placeholder="Ex: 0">
-        </div>
-
-        <div class="col-md-6">
-            <label for="usuarioId" class="form-label">Usuário ID</label>
-            <input type="number" class="form-control" id="usuarioId" placeholder="Ex: 1">
-        </div>
-
-        <div class="col-12">
-            <label for="descricao" class="form-label">Descrição</label>
-            <textarea class="form-control" id="descricao" rows="4"
-                placeholder="Descreva o serviço..."></textarea>
-        </div>
-
-        <div class="col-12">
-             <label for="imagens" class="form-label">Imagens do Serviço</label>
-             <input type="file" class="form-control" id="imagens" name="imagens" multiple accept="image/*">
-        </div>
-
-
-        <div class="col-12 d-flex justify-content-end">
+        <form id="form-servico" enctype="multipart/form-data" class="form-cadastro-servico">
+            <div class="mb-3">
+              <label for="imagem" class="form-label">Imagem</label>
+              <input type="file" class="form-control" id="imagem" accept="image/*" required>
+            </div>
+          
+            <div class="mb-3">
+              <label for="contato" class="form-label">Contato</label>
+              <input type="text" class="form-control" id="contato" required>
+            </div>
+          
+            <div class="mb-3">
+              <label for="titulo" class="form-label">Título do Serviço</label>
+              <input type="text" class="form-control" id="titulo" required>
+            </div>
+          
+            <div class="mb-3">
+              <label for="categoriaId" class="form-label">Categoria</label>
+              <select class="form-select" id="categoriaId" required>
+                <option value="0">Refrigeração</option>
+                <option value="1">Climatização</option>
+                <option value="2">Eletricista</option>
+                <option value="2">Outro</option>
+              </select>
+            </div>
+          
+            <div class="mb-3">
+              <label for="descricao" class="form-label">Descrição</label>
+              <textarea class="form-control" id="descricao" rows="3" required></textarea>
+            </div>
+          
             <button type="submit" class="btn btn-primary">Cadastrar Serviço</button>
-        </div>
-    </form>
+          </form>
+
+          <h3>Serviços Cadastrados</h3>
+            <ul id="lista-servicos" class="list-group">
+            <!-- Os serviços serão listados aqui -->
+            </ul>
 
     </div>
 
@@ -141,11 +142,10 @@
             <div class="col-12 d-flex justify-content-center align-items-center">
                 <p class="p-2 m-0 g-0">Copyright (c) Lucre+ 2025</p>
             </div>
-        </div>
-        
-        
+        </div> 
     </footer>
 
+    <script src="../static/js/serviços.js"></script>
 </body>
 
 </html>
