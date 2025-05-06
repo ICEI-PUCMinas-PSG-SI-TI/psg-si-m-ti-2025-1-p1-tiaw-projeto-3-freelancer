@@ -55,3 +55,89 @@ body {
     width: 32px;
     height: 32px;
 }
+
+/* Geral */
+.body-content {
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+/* Banner */
+.banner img {
+    object-fit: cover;
+    height: 400px;
+}
+
+/* Perfil */
+.profile-section {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 3px solid #007bff;
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.profile-title {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+.profile-location {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Estatísticas */
+.stats-section .stat-box {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+}
+
+.stat-box h4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.stat-box p {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+/* Introdução */
+.introduction-section .video-placeholder img {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Calculadora */
+.calculator-section {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.calculator-section h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.calculator-section p {
+    font-size: 1rem;
+    color: #6c757d;
+}
