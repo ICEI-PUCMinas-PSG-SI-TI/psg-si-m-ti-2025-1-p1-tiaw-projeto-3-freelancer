@@ -1,0 +1,152 @@
+{
+  "usuarios": [
+    {
+      "id": 0,
+      "ativo": true,
+      "foto": "base64_encoded || url",
+      "nome": "Admin",
+      "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
+      "email": "admin@lucremais.com",
+      "senha": "654321",
+      "contatos": [
+        {
+          "id": 0,
+          "contato": "(31) 970707070"
+        }
+      ],
+      "tipo": "admin",
+      "cpf_cnpj": "00.000.000/0001-00",
+      "cidade": "Belo Horizonte, MG",
+      "biografia": "Informações sobre o usuário"
+    },
+    {
+      "id": 1,
+      "ativo": true,
+      "foto": "base64_encoded || url",
+      "nome": "Empresa do João Silva",
+      "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
+      "email": "joao.silva@empresa-do-joao.com.br",
+      "senha": "123456",
+      "contatos": [
+        {
+          "id": 0,
+          "contato": "(31) 970707070"
+        },
+        {
+          "id": 1,
+          "contato": "(31) 970707071"
+        }
+      ],
+      "tipo": "profissional",
+      "cpf_cnpj": "12.345.678/0001-00",
+      "cidade": "Belo Horizonte, MG",
+      "biografia": "Informações sobre o usuário"
+    },
+    {
+      "id": 0,
+      "ativo": false,
+      "foto": "base64_encoded || url",
+      "nome": "Maria Oliveira",
+      "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
+      "email": "maria@email.com",
+      "senha": "654321",
+      "contatos": [
+        {
+          "id": 0,
+          "contato": "(31) 970707070"
+        }
+      ],
+      "tipo": "cliente",
+      "cpf_cnpj": "123.456.789-10",
+      "cidade": "São Paulo, SP",
+      "biografia": "Informações sobre o usuário"
+    }
+  ],
+  "servicos": [
+    {
+      "id": 0,
+      "imagens": [
+        {
+          "id": 0,
+          "source": "https://exemplo.com/geladeira0.jpg"
+        },
+        {
+          "id": 1,
+          "source": "https://exemplo.com/geladeira1.jpg"
+        }
+      ],
+      "contato": "(11) 91234-5678",
+      "titulo": "Conserto de Geladeira",
+      "categoriaId": 0,
+      "descricao": "Manutenção e conserto de geladeiras residenciais.",
+      "usuarioId": 1,
+      "avaliacoes": [
+        {
+          "id": 0,
+          "usuarioId": 1,
+          "nota": 10,
+          "comentario": "",
+          "imagems": [
+            {
+              "id": 0,
+              "source": "https://exemplo.com/avaliacao0.jpg"
+            },
+            {
+              "id": 1,
+              "source": "https://exemplo.com/avaliacao1.jpg"
+            }
+          ]
+        },
+        {
+          "id": 0,
+          "usuarioId": 2,
+          "nota": 10,
+          "comentario": "",
+          "imagems": [
+            {
+              "id": 0,
+              "source": "https://exemplo.com/avaliacao3.jpg"
+            },
+            {
+              "id": 1,
+              "source": "https://exemplo.com/avaliacao4.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "imagens": [
+        {
+          "id": 0,
+          "source": "https://exemplo.com/ar0.jpg"
+        },
+        {
+          "id": 1,
+          "source": "https://exemplo.com/ar1.jpg"
+        }
+      ],
+      "contato": "(11) 99876-5432",
+      "titulo": "Instalação de Ar-condicionado",
+      "categoriaId": 1,
+      "descricao": "Instalação rápida e segura de aparelhos split.",
+      "usuarioId": 1,
+      "avaliacoes": []
+    }
+  ],
+  "categorias": [
+    {
+      "id": 0,
+      "nome": "Refrigeração"
+    },
+    {
+      "id": 1,
+      "nome": "Climatização"
+    },
+    {
+      "id": 2,
+      "nome": "Eletricista"
+    }
+  ]
+}
