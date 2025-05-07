@@ -43,10 +43,13 @@ h6 {
     width: 100%;
 }
 
-/* Seção: Cabeçalho */
+/* Seção: Cabeçalho
+    Disabled for now
+    This setting causes expanded statusbar to not have a background
 .body-header {
     max-height: var(--nav-bar-size);
 }
+*/
 
 /* Seção: Conteúdo */
 .body-content {
