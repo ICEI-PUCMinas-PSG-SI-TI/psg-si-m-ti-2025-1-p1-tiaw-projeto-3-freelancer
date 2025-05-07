@@ -25,6 +25,19 @@ body {
     min-height: 100vh;
 }
 
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
 /* Seção */
 .body-section {
     width: 100%;
@@ -77,4 +90,11 @@ body {
 
 .avoid-large {
     max-width: 600px;
+}
+
+.navbar-brand p {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
 }
