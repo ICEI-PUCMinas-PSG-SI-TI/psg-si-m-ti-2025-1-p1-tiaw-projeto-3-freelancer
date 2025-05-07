@@ -1,3 +1,7 @@
+/*
+ * Nesse arquivo estão todos os estilos de css que são reutilizaveis em todas as páginas
+ */
+
 /* Variáveis de cores, etc ... */
 :root {
     --nav-bar-size: 64px;
@@ -42,19 +46,16 @@ body {
 /* .body-footer {} */
 
 /* Inverte a cor dos ícones no modo escuro */
+[data-bs-theme="dark"] .icon-dark,
 [data-bs-theme="dark"] .dark-toggle,
 [data-bs-theme="dark"] .social-icon {
     filter: invert();
 }
 
+.icon-16px,
 .dark-toggle {
     width: 16px;
     height: 16px;
-}
-
-.social-icon {
-    width: 32px;
-    height: 32px;
 }
 
 .icon-24px {
@@ -62,12 +63,12 @@ body {
     height: 24px;
 }
 
-.avoid-large {
-    max-width: 600px;
+.icon-32px,
+.social-icon {
+    width: 32px;
+    height: 32px;
 }
 
-.index-background {
-    background: url('/src/static/img/background.jpg');
-    background-position: center;
-    background-size: cover;
+.avoid-large {
+    max-width: 600px;
 }
