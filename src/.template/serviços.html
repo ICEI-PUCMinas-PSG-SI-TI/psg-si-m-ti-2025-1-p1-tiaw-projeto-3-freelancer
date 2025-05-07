@@ -30,8 +30,9 @@
                 <img class="m-2" src="../static/icon.png" width="32px" height="32px">
                 <a class="navbar-brand" href="#">Lucre+</a>
             </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -70,48 +71,63 @@
     </nav>
 
     <!-- Conteúdo da página -->
-    <div class="body-section body-content d-flex flex-column">
+    <div class="body-section body-content d-flex flex-column p-3">
 
-        <h2 class="mb-4">Cadastro de Serviço</h2>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="m-0 y-0">
+                    <strong>Cadastro de Serviço</strong>
+                </h5>
+            </div>
+        </div>
 
-        <form id="form-servico" enctype="multipart/form-data" class="form-cadastro-servico">
+        <form id="form-servico" enctype="multipart/form-data" class="form-cadastro-servico border rounded mb-3">
             <div class="mb-3">
-              <label for="imagem" class="form-label">Imagem</label>
-              <input type="file" class="form-control" id="imagem" accept="image/*" required>
+                <label for="imagem" class="form-label">Imagem</label>
+                <input type="file" class="form-control" id="imagem" accept="image/*" required>
             </div>
-          
+
             <div class="mb-3">
-              <label for="contato" class="form-label">Contato</label>
-              <input type="text" class="form-control" id="contato" required>
+                <label for="contato" class="form-label">Contato</label>
+                <input type="text" class="form-control" id="contato" required>
             </div>
-          
+
             <div class="mb-3">
-              <label for="titulo" class="form-label">Título do Serviço</label>
-              <input type="text" class="form-control" id="titulo" required>
+                <label for="titulo" class="form-label">Título do Serviço</label>
+                <input type="text" class="form-control" id="titulo" required>
             </div>
-          
+
+            <!-- TODO: preencher categorias dinamicamente -->
             <div class="mb-3">
-              <label for="categoriaId" class="form-label">Categoria</label>
-              <select class="form-select" id="categoriaId" required>
-                <option value="0">Refrigeração</option>
-                <option value="1">Climatização</option>
-                <option value="2">Eletricista</option>
-                <option value="2">Outro</option>
-              </select>
+                <label for="categoriaId" class="form-label">Categoria</label>
+                <select class="form-select" id="categoriaId" required>
+                    <option value="0">Refrigeração</option>
+                    <option value="1">Climatização</option>
+                    <option value="2">Eletricista</option>
+                    <option value="3">Outro</option>
+                </select>
             </div>
-          
+
             <div class="mb-3">
-              <label for="descricao" class="form-label">Descrição</label>
-              <textarea class="form-control" id="descricao" rows="3" required></textarea>
+                <label for="descricao" class="form-label">Descrição</label>
+                <textarea class="form-control" id="descricao" rows="3" required></textarea>
             </div>
-          
+
             <button type="submit" class="btn btn-primary">Cadastrar Serviço</button>
-          </form>
+        </form>
 
-          <h3>Serviços Cadastrados</h3>
-            <ul id="lista-servicos" class="list-group">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="m-0 y-0">
+                    <strong>Serviços Cadastrados</strong>
+                </h5>
+            </div>
+        </div>
+
+
+        <ul id="lista-servicos" class="list-group">
             <!-- Os serviços serão listados aqui -->
-            </ul>
+        </ul>
 
     </div>
 
@@ -142,7 +158,7 @@
             <div class="col-12 d-flex justify-content-center align-items-center">
                 <p class="p-2 m-0 g-0">Copyright (c) Lucre+ 2025</p>
             </div>
-        </div> 
+        </div>
     </footer>
 
     <script src="../static/js/serviços.js"></script>
