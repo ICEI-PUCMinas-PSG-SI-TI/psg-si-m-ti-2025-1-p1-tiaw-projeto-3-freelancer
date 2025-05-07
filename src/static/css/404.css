@@ -1,0 +1,19 @@
+/*
+ * Nesse arquivo estão os estilos específicos da página /src/404.html
+ */
+
+.body-content {
+    min-height: 0;
+}
+
+.big-text {
+    font-size: 10rem;
+}
+
+#content-div {
+    background: repeating-linear-gradient(45deg,
+            var(--bs-secondary-bg),
+            var(--bs-secondary-bg) 10px,
+            var(--bs-body-bg) 10px,
+            var(--bs-body-bg) 20px);
+}

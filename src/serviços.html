@@ -8,9 +8,9 @@
     <!-- TODO: Atualizar sempre com o título da pagina -->
     <title>Título da página</title>
     <!-- Favicon -->
-    <link rel="icon" href="../static/favicon.ico">
+    <link rel="icon" href="static/favicon.ico">
     <!-- CSS -->
-    <link rel="stylesheet" href="styles.css" type="text/css">
+    <link rel="stylesheet" href="static/css/styles.css" type="text/css">
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
@@ -18,7 +18,7 @@
         integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous">
     </script>
     <!-- Project Scripts -->
-    <script src="../static/js/darkmode.js"></script>
+    <script src="static/js/darkmode.js"></script>
 </head>
 
 <body data-bs-theme="dark">
@@ -27,11 +27,12 @@
     <nav class="body-section body-header navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <div class="d-flex justify-content-center text-center align-items-center">
-                <img class="m-2" src="../static/icon.png" width="32px" height="32px">
+                <img class="m-2" src="static/icon.png" width="32px" height="32px">
                 <a class="navbar-brand" href="#">Lucre+</a>
             </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -45,13 +46,13 @@
                             Serviços
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="serviços.html">Cadastro de serviço</a></li>
+                            <li><a class="dropdown-item" href="#">Em andamento</a></li>
                         </ul>
                     </li>
                 </ul>
                 <div id="toggleDarkDiv" style="display: none"
                     class="d-flex p-2 flex-row justify-content-center align-items-center">
-                    <img class="dark-toggle" src="../static/dark.svg">
+                    <img class="dark-toggle" src="static/dark.svg">
                     <div class="form-check form-switch form-check-reverse">
                         <input id="toggleDark" class="form-check-input" type="checkbox" id="switchCheckReverse">
                         <label class="form-check-label" for="switchCheckReverse"></label>
@@ -70,10 +71,64 @@
     </nav>
 
     <!-- Conteúdo da página -->
-    <div class="body-section body-content d-flex flex-column">
-        <!-- CONTEÚDO -->
-        <img class="img-fluid p-4" src="https://picsum.photos/seed/lucremais/1600/900">
-        <img class="img-fluid p-4" src="https://picsum.photos/seed/lucremais/1600/900">
+    <div class="body-section body-content d-flex flex-column p-3">
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="m-0 y-0">
+                    <strong>Cadastro de Serviço</strong>
+                </h5>
+            </div>
+        </div>
+
+        <form id="form-servico" enctype="multipart/form-data" class="form-cadastro-servico border rounded mb-3">
+            <div class="mb-3">
+                <label for="imagem" class="form-label">Imagem</label>
+                <input type="file" class="form-control" id="imagem" accept="image/*" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="contato" class="form-label">Contato</label>
+                <input type="text" class="form-control" id="contato" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="titulo" class="form-label">Título do Serviço</label>
+                <input type="text" class="form-control" id="titulo" required>
+            </div>
+
+            <!-- TODO: preencher categorias dinamicamente -->
+            <div class="mb-3">
+                <label for="categoriaId" class="form-label">Categoria</label>
+                <select class="form-select" id="categoriaId" required>
+                    <option value="0">Refrigeração</option>
+                    <option value="1">Climatização</option>
+                    <option value="2">Eletricista</option>
+                    <option value="3">Outro</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="descricao" class="form-label">Descrição</label>
+                <textarea class="form-control" id="descricao" rows="3" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Cadastrar Serviço</button>
+        </form>
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="m-0 y-0">
+                    <strong>Serviços Cadastrados</strong>
+                </h5>
+            </div>
+        </div>
+
+
+        <ul id="lista-servicos" class="list-group">
+            <!-- Os serviços serão listados aqui -->
+        </ul>
+
     </div>
 
     <!-- Rodapé -->
@@ -104,10 +159,9 @@
                 <p class="p-2 m-0 g-0">Copyright (c) Lucre+ 2025</p>
             </div>
         </div>
-        
-        
     </footer>
 
+    <script src="static/js/serviços.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,9 @@
+/*
+ * Nesse arquivo estão os estilos específicos da página /src/index.html
+ */
+
+#content-div {
+    background-image: url('../img/background.jpg');
+    background-position: center;
+    background-size: cover;
+}

@@ -1,3 +1,7 @@
+/*
+ * Nesse arquivo estão todos os estilos de css que são reutilizaveis em todas as páginas
+ */
+
 /* Variáveis de cores, etc ... */
 :root {
     --nav-bar-size: 64px;
@@ -21,6 +25,19 @@ body {
     min-height: 100vh;
 }
 
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
 /* Seção */
 .body-section {
     width: 100%;
@@ -35,22 +52,31 @@ body {
 .body-content {
     /* Flexbox */
     flex: 1;
+    min-height: calc(100vh - var(--nav-bar-size));
 }
 
 /* Seção: Rodapé */
 /* .body-footer {} */
 
 /* Inverte a cor dos ícones no modo escuro */
+[data-bs-theme="dark"] .icon-dark,
 [data-bs-theme="dark"] .dark-toggle,
 [data-bs-theme="dark"] .social-icon {
     filter: invert();
 }
 
+.icon-16px,
 .dark-toggle {
     width: 16px;
     height: 16px;
 }
 
+.icon-24px {
+    width: 24px;
+    height: 24px;
+}
+
+.icon-32px,
 .social-icon {
     width: 32px;
     height: 32px;
@@ -94,4 +120,21 @@ body {
     font-size: 1rem;
     font-weight: 500;
     border-radius: 0.5rem;
+}
+
+.profile-picture {
+    width: 32px;
+    height: 32px;
+    background-color: var(--bs-secondary-bg);
+}
+
+.avoid-large {
+    max-width: 600px;
+}
+
+.navbar-brand p {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
 }
