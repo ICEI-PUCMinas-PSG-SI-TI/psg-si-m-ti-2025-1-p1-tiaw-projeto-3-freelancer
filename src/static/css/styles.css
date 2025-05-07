@@ -69,6 +69,12 @@ body {
     height: 32px;
 }
 
+.profile-picture {
+    width: 32px;
+    height: 32px;
+    background-color: var(--bs-secondary-bg);
+}
+
 .avoid-large {
     max-width: 600px;
 }
