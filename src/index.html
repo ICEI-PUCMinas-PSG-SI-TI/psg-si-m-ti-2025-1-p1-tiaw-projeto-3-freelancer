@@ -44,14 +44,8 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <div class="navbar-nav me-auto mb-2 mb-lg-0"></div>
                 <!-- FIX: A cor de fundo some ao expandir o menu em layouts pequenos -->
-                <!-- TODO: Verificar um metodo de adicionar esse bloco dinamicamente sem liberar evento DOMContentLoaded novamente -->
-                <div id="toggleDarkDiv" style="display: none"
-                    class="d-flex p-2 flex-row justify-content-center align-items-center">
-                    <img class="dark-toggle" src="static/dark.svg">
-                    <div class="form-check form-switch form-check-reverse">
-                        <input id="toggleDark" class="form-check-input" type="checkbox">
-                    </div>
-                </div>
+                <!-- Layout será modificado por js/darkmode.js -->
+                <div class="d-none" id="toggleDarkDiv"></div>
                 <!-- TODO: Inserir dinamicamente <login-cadastre_se|search-profile_picture> -->
                 <a role="button" aria-disabled="true" class="btn btn-primary mx-2" href="404.html">Cadastrar-se</a>
                 <a role="button" aria-disabled="true" class="btn btn-primary mx-2" href="404.html">Entrar</a>
@@ -70,16 +64,17 @@
                 </h3>
 
                 <div class="w-50 d-grid gap-2 mt-4">
-                    <button class="btn btn-primary d-flex align-items-center justify-content-center" type="button">
+                    <a class="btn btn-primary d-flex align-items-center justify-content-center" type="button" href="404.html">
                         <img class="icon-24px pe-2" src="static/social/google.svg">
                         Entrar com Google
-                    </button>
-                    <button class="btn btn-primary d-flex align-items-center justify-content-center" type="button">
+                    </a>
+                    <a class="btn btn-primary d-flex align-items-center justify-content-center" type="button" href="404.html">
                         <img class="icon-24px pe-2" src="static/social/facebook.svg">
                         Entrar com Facebook
-                    </button>
+                    </a>
                 </div>
 
+                <!-- TODO: Verificar a necessidade de validar se o campo esta vazio e inserir um botão de continuar -->
                 <div class="w-50 mt-3 p-0 g-0 mb-4">
                     <p classs="d-inline w-100 p-0 g-0 m-0">OU</p>
                     <div class="input-group flex-nowrap">
@@ -122,15 +117,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- TODO: Verificar um metodo de adicionar esse bloco dinamicamente sem liberar evento DOMContentLoaded novamente -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-body">
-                Essa página ainda não foi implementada!
-            </div>
-        </div>
-    </div>
 
 </body>
 
