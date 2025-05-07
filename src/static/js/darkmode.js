@@ -1,14 +1,29 @@
-document.addEventListener("DOMContentLoaded", () => {
+//@ts-check
+
+/*
+ * Esse script adiciona um configuração de tema claro/escuro
+ *
+ */
+
+function setupDarkMode(){
     let toggleDarkDiv = document.getElementById("toggleDarkDiv");
+    if(!toggleDarkDiv){
+        return;
+    }
+
+    /** @type { HTMLInputElement | null } */
+    // @ts-ignore: HTMLInputElement é derivado de HTMLElement
+    let input = document.getElementById("toggleDark");
+    if (!input) {
+        return;
+    }
+
     toggleDarkDiv.style.display = "block";
+    const theme_key = "data-bs-theme";
 
-    var body = document.getElementsByTagName('body')[0];
-    var input = document.getElementById("toggleDark");
-    var theme_key = "data-bs-theme";
-    input.addEventListener("click", onDarkToggleSwitch);
-
-    // read theme
-    setDarkTheme(localStorage.getItem(theme_key) === "dark");
+    function isDarkTheme(){
+        return localStorage.getItem(theme_key) === "dark"
+    }
 
     function setDarkTheme(darkEnabled, storeConfig) {
         let themeCfg = "light";
@@ -20,15 +35,23 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem(theme_key, themeCfg);
         }
 
-        input.checked = darkEnabled;
-        body.setAttribute(theme_key, themeCfg);
+        if(input){
+            input.checked = darkEnabled;
+            document.body.setAttribute(theme_key, themeCfg);
+        }
     }
 
-    function onDarkToggleSwitch() {
-        if (localStorage.getItem(theme_key) === "dark") {
+    // read theme
+    setDarkTheme(isDarkTheme());
+
+    // onDarkToggleSwitch
+    input.addEventListener("click", function () {
+        if (isDarkTheme()) {
             setDarkTheme(false, true);
         } else {
             setDarkTheme(true, true);
         }
-    }
-});
+    });
+}
+
+setupDarkMode();
