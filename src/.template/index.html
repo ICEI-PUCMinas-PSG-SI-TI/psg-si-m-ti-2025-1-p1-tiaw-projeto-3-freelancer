@@ -5,7 +5,6 @@
     <!-- Metadata -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- TODO: Atualizar sempre com o título da pagina -->
     <title>Título da página</title>
     <!-- Favicon -->
     <link rel="icon" href="../static/favicon.ico">
@@ -19,6 +18,7 @@
     </script>
     <!-- Project Scripts -->
     <script src="../static/js/darkmode.js"></script>
+    <script src="../static/js/script.js"></script>
 </head>
 
 <body data-bs-theme="dark">
@@ -62,7 +62,7 @@
                     <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
                 </form>
                 <div class="m-2 me-0 rounded d-flex justify-content-center">
-                    <img class="rounded" src="https://dummyjson.com/icon/lucremais/32" width="32" height="32"
+                    <img class="rounded" src="https://picsum.photos/32" width="32" height="32"
                         style="background-color: var(--bs-secondary-bg);">
                 </div>
             </div>
@@ -71,63 +71,76 @@
 
     <!-- Conteúdo da página -->
     <div class="body-section body-content d-flex flex-column align-items-center">
-    <!-- Banner -->
-    <div class="banner w-100">
-        <img class="img-fluid w-100" src="https://picsum.photos/1600/400" alt="Banner">
-    </div>
-
-    <!-- Perfil -->
-    <div class="profile-section container text-center mt-4">
-        <div class="profile-header d-flex flex-column align-items-center">
-            <img class="profile-picture rounded-circle mb-3" src="https://via.placeholder.com/150" alt="Profile Picture">
-            <h2 class="profile-name">Arthur Melo</h2>
-            <p class="profile-title">Analista Financeiro.</p>
-            <p class="profile-location">Belo Horizonte, MG</p>
+        <!-- Banner -->
+        <div class="banner w-100">
+            <img class="img-fluid w-100" src="https://picsum.photos/1600/400" alt="Banner">
         </div>
-        <div class="profile-contact d-flex justify-content-center gap-3 mt-3">
-            <a href="tel:+7910018830" class="btn btn-outline-primary">+55 (31) 123456789</a>
-            <a href="mailto:kevin.smith@stripe.com" class="btn btn-outline-secondary">arthur.andrade@gmail.com</a>
-        </div>
-    </div>
 
-    <!-- Estatísticas -->
-    <div class="stats-section container text-center mt-4">
-        <div class="row">
-            <div class="col-12 col-md-4">
-                <div class="stat-box">
-                    <h4>4.5</h4>
-                    <p>Nota</p>
-                </div>
+        <!-- Perfil -->
+        <div class="profile-section container text-center mt-4">
+            <div class="profile-header d-flex flex-column align-items-center">
+                <img class="profile-picture rounded-circle mb-3" src="https://picsum.photos/150" alt="Profile Picture">
+                <h2 class="profile-name">Arthur Melo</h2>
+                <p class="profile-title">Analista Financeiro.</p>
+                <p class="profile-location">Belo Horizonte, MG</p>
             </div>
-            <div class="col-12 col-md-4">
-                <div class="stat-box">
-                    <h4>153</h4>
-                    <p>Avaliações</p>
-                </div>
-            </div>
-            <div class="col-12 col-md-4">
-                <div class="stat-box">
-                    <button class="btn btn-primary">Chat</button>
-                </div>
+            <div class="profile-contact d-flex justify-content-center gap-3 mt-3">
+                <a href="tel:+7910018830" class="btn btn-outline-primary">+55 (31) 123456789</a>
+                <a href="mailto:kevin.smith@stripe.com" class="btn btn-outline-secondary">arthur.andrade@gmail.com</a>
             </div>
         </div>
-    </div>
 
-    <!-- Seção de Introdução -->
-    <div class="introduction-section container text-center mt-4">
-        <h3>Introdução</h3>
-        <div class="video-placeholder mt-3">
-            <img class="img-fluid" src="https://via.placeholder.com/600x300" alt="Video Placeholder">
+        <!-- Estatísticas -->
+        <div class="stats-section container text-center mt-4">
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    <div class="stat-box">
+                        <h4>4.5</h4>
+                        <p>Nota</p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="stat-box">
+                        <h4>153</h4>
+                        <p>Avaliações</p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="stat-box">
+                        <button class="btn btn-primary">Chat</button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Calculadora -->
-    <div class="calculator-section container text-center mt-4">
-        <h3>Calculadora de Emprestimos</h3>
-        <p>Obtenha ótimas taxas e um fechamento sem esforço.</p>
-        <button class="btn btn-outline-primary">Calculate</button>
-    </div>
-</div>
+        <!-- Seção de Introdução -->
+        <div class="introduction-section container text-center mt-4">
+            <h3>Introdução</h3>
+            <div class="video-placeholder mt-3">
+                <img class="img-fluid" src="https://picsum.photos/600/300" alt="Video Placeholder">
+            </div>
+        </div>
+
+        <!-- Calculadora -->
+        <div class="calculator-section container text-center mt-4">
+            <h3>Calculadora de Empregados</h3>
+            <p>Calcule as horas trabalhadas e o salário total.</p>
+            <form id="calculatorForm" class="mt-3">
+                <div class="mb-3">
+                    <label for="hoursWorked" class="form-label">Horas Trabalhadas</label>
+                    <input type="number" class="form-control" id="hoursWorked" placeholder="Digite as horas trabalhadas">
+                </div>
+                <div class="mb-3">
+                    <label for="hourlyRate" class="form-label">Salário por Hora (R$)</label>
+                    <input type="number" class="form-control" id="hourlyRate" placeholder="Digite o salário por hora">
+                </div>
+                <div class="mb-3">
+                    <label for="totalSalary" class="form-label">Salário Total (R$)</label>
+                    <input type="text" class="form-control" id="totalSalary" readonly>
+                </div>
+                <button type="button" class="btn btn-primary" id="calculateSalary">Calcular</button>
+            </form>
+        </div>
 
     <!-- Rodapé -->
     <footer class="body-section body-footer container-fluid border-top m-0 p-0 g-0">
@@ -157,8 +170,6 @@
                 <p class="p-2 m-0 g-0">Copyright (c) Lucre+ 2025</p>
             </div>
         </div>
-        
-        
     </footer>
 
 </body>

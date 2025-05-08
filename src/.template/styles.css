@@ -1,6 +1,18 @@
 /* Variáveis de cores, etc ... */
 :root {
     --nav-bar-size: 64px;
+
+    /* Modo claro */
+    --background-light: #f8f9fa;
+    --text-light: #212529;
+    --card-light: #ffffff;
+    --shadow-light: rgba(0, 0, 0, 0.1);
+
+    /* Modo escuro */
+    --background-dark: #212529;
+    --text-dark: #f8f9fa;
+    --card-dark: #343a40;
+    --shadow-dark: rgba(255, 255, 255, 0.1);
 }
 
 body {
@@ -13,12 +25,37 @@ body {
     /* Esconde o conteúdo fora da janela (horizontalmente) */
     overflow-x: hidden;
 
-    background-color: var(--background);
+    background-color: var(--background-light);
+    color: var(--text-light);
 
     /* Flexbox */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+}
+
+/* Alterna para modo escuro */
+[data-bs-theme="dark"] {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+}
+
+[data-bs-theme="dark"] .body-section {
+    background-color: var(--background-dark);
+}
+
+[data-bs-theme="dark"] .profile-section,
+[data-bs-theme="dark"] .stats-section .stat-box,
+[data-bs-theme="dark"] .calculator-section {
+    background-color: var(--card-dark);
+    box-shadow: 0 4px 6px var(--shadow-dark);
+}
+
+[data-bs-theme="dark"] .profile-title,
+[data-bs-theme="dark"] .profile-location,
+[data-bs-theme="dark"] .stat-box p,
+[data-bs-theme="dark"] .calculator-section p {
+    color: var(--text-dark);
 }
 
 /* Seção */
@@ -33,12 +70,20 @@ body {
 
 /* Seção: Conteúdo */
 .body-content {
-    /* Flexbox */
     flex: 1;
+    padding: 20px;
+    background-color: var(--background-light);
+}
+
+[data-bs-theme="dark"] .body-content {
+    background-color: var(--background-dark);
 }
 
 /* Seção: Rodapé */
-/* .body-footer {} */
+[data-bs-theme="dark"] .body-footer {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+}
 
 /* Inverte a cor dos ícones no modo escuro */
 [data-bs-theme="dark"] .dark-toggle,
@@ -56,12 +101,6 @@ body {
     height: 32px;
 }
 
-/* Geral */
-.body-content {
-    padding: 20px;
-    background-color: #f8f9fa;
-}
-
 /* Banner */
 .banner img {
     object-fit: cover;
@@ -70,10 +109,10 @@ body {
 
 /* Perfil */
 .profile-section {
-    background-color: #ffffff;
+    background-color: var(--card-light);
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px var(--shadow-light);
 }
 
 .profile-picture {
@@ -100,10 +139,10 @@ body {
 
 /* Estatísticas */
 .stats-section .stat-box {
-    background-color: #ffffff;
+    background-color: var(--card-light);
     border-radius: 10px;
     padding: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px var(--shadow-light);
     margin: 10px;
 }
 
@@ -121,15 +160,15 @@ body {
 /* Introdução */
 .introduction-section .video-placeholder img {
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px var(--shadow-light);
 }
 
 /* Calculadora */
 .calculator-section {
-    background-color: #ffffff;
+    background-color: var(--card-light);
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px var(--shadow-light);
 }
 
 .calculator-section h3 {
@@ -140,4 +179,21 @@ body {
 .calculator-section p {
     font-size: 1rem;
     color: #6c757d;
+}
+
+#totalSalary {
+    background-color: #e9ecef;
+    color: #495057;
+    font-weight: bold;
+}
+
+/* Modo escuro */
+[data-bs-theme="dark"] .calculator-section {
+    background-color: var(--card-dark);
+    color: var(--text-dark);
+}
+
+[data-bs-theme="dark"] #totalSalary {
+    background-color: #495057;
+    color: #f8f9fa;
 }
