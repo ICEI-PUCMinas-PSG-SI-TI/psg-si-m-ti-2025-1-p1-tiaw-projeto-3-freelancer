@@ -1,14 +1,14 @@
+import * as JSONQL from "./jsonql.mjs";
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("form-servico");
   const lista = document.getElementById("lista-servicos");
   let editIndex = null;
 
-  const getServicos = () => JSON.parse(localStorage.getItem("servicos") || "[]");
-  const salvarServicos = (servicos) => localStorage.setItem("servicos", JSON.stringify(servicos));
-
   const render = () => {
     lista.innerHTML = "";
-    getServicos().forEach((servico, index) => {
+
+    JSONQL.readServicos()?.forEach((servico, index) => {
       const li = document.createElement("li");
       li.className = "list-group-item d-flex justify-content-between align-items-center flex-wrap";
 
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.editarServico = (index) => {
-    const servico = getServicos()[index];
+    let servico = JSONQL.readServicos(index)[0];
     document.getElementById("titulo").value = servico.titulo;
     document.getElementById("contato").value = servico.contato;
     document.getElementById("categoriaId").value = servico.categoriaId;
@@ -39,9 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.deletarServico = (index) => {
-    const servicos = getServicos();
-    servicos.splice(index, 1);
-    salvarServicos(servicos);
+    JSONQL.deleteServicos(index);
     render();
   };
 
@@ -49,28 +47,18 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     const titulo = document.getElementById("titulo").value.trim();
     const contato = document.getElementById("contato").value.trim();
-    const categoriaId = document.getElementById("categoriaId").value;
+    const categoriaId = document.getElementById("categoriaId").selectedIndex;
     const descricao = document.getElementById("descricao").value.trim();
-    const categoria = document.getElementById("categoriaId").selectedOptions[0].text;
 
-    const novoServico = {
-      titulo,
-      contato,
-      categoriaId,
-      categoria,
-      descricao
-    };
-
-    const servicos = getServicos();
+    let novo_servico = JSONQL.factoryServicos(titulo, categoriaId, descricao, contato);
 
     if (editIndex !== null) {
-      servicos[editIndex] = novoServico;
+      JSONQL.updateServicos(novo_servico);
       editIndex = null;
     } else {
-      servicos.push(novoServico);
+      JSONQL.createServicos(novo_servico);
     }
 
-    salvarServicos(servicos);
     form.reset();
     render();
   });
