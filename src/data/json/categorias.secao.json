@@ -1,0 +1,16 @@
+{
+    "categorias_secao": [
+        {
+            "id": 0,
+            "nome": "Imagens"
+        },
+        {
+            "id": 1,
+            "nome": "Avaliações"
+        },
+        {
+            "id": 2,
+            "nome": "Links Externos"
+        }
+    ]
+}

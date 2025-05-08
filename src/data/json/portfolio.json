@@ -1,0 +1,50 @@
+{
+    "portfolios": [
+        {
+            "id": 0,
+            "usuarioId": 0,
+            "secao": [
+                {
+                    "ordem": 0,
+                    "categoriaId": 1
+                },
+                {
+                    "ordem": 1,
+                    "categoriaId": 0,
+                    "contents": [
+                        {
+                            "blob": "imagemId",
+                            "descricao": "Foto"
+                        },
+                        {
+                            "blob": "imagemId",
+                            "descricao": "Foto"
+                        },
+                        {
+                            "blob": "imagemId",
+                            "descricao": "Foto"
+                        }
+                    ]
+                },
+                {
+                    "ordem": 2,
+                    "categoriaId": 2,
+                    "contents": [
+                        {
+                            "blob": "https://example.com",
+                            "descricao": "GitLab"
+                        },
+                        {
+                            "blob": "https://example.com",
+                            "descricao": "GitHub"
+                        },
+                        {
+                            "blob": "https://example.com",
+                            "descricao": "LinkedIn"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
