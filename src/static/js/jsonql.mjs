@@ -3,6 +3,8 @@
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
  *
+ * JavaScript Object Notation Query Language
+ * 
  */
 
 // Ferramentas para CRUD
@@ -31,6 +33,7 @@ const setAvaliacoes = (avaliacoes) => localStorage.setItem(KEY_AVALIACOES, JSON.
 // const setContratos = (contratos) => localStorage.setItem(KEY_CONTRATOS, JSON.stringify(contratos));
 // const setPortfolios = (portfolios) => localStorage.setItem(KEY_PORTFOLIOS, JSON.stringify(portfolios));
 
+// Struct de exemplo, pode ser clonada com Object.assign(source, destination)
 const StructServico = {
     id: 0,
     titulo: "null",
@@ -40,12 +43,56 @@ const StructServico = {
 }
 
 /**
+ * Cria um objeto com as informações do serviço
+ * 
+ * @param {string} titulo Título do serviço 
+ * @param {number} categoriaId ID da categoria do serviço 
+ * @param {string} descricao Descrição do serviço 
+ * @param {string} contato Descrição do serviço 
+ * @returns {object|null} Array com informações sobre os serviço
+ */
+export function factoryServicos(titulo, categoriaId, descricao, contato) {
+
+    if (!titulo) {
+        console.log("factoryServicos: tiulo não foi informado");
+        return null
+    }
+
+    if (!categoriaId && categoriaId != 0) {
+        console.log("factoryServicos: categoriaId não foi informado");
+        return null
+    }
+
+    if (!descricao) {
+        console.log("factoryServicos: descricao não foi informada");
+        return null
+    }
+
+    if (!contato) {
+        console.log("factoryServicos: contato não foi informada");
+        return null
+    }
+
+    let servico = {};
+
+    Object.assign(servico, StructServico)
+
+    delete servico.id;
+    servico.titulo = titulo;
+    servico.categoriaId = categoriaId;
+    servico.descricao = descricao;
+    servico.contato = contato;
+
+    return validateServicos(servico);
+}
+
+/**
  * Validação da struct dos serviços
  * 
  * @param  {...any} servico Informações do serviço
- * @returns {any|null} Array com informações sobre os serviço
+ * @returns {object|null} Array com informações sobre os serviço
  */
-function validateServicos(servico) {
+export function validateServicos(servico) {
     // ID Opcional
     if (servico.id && typeof (servico.id) != "string") {
         console.log("validateServicos: id não é valido")
@@ -82,11 +129,15 @@ function validateServicos(servico) {
  * @returns {Array|null} Array com informações sobre os serviço
  */
 export function readServicos(...servicos_id) {
-    if (!servicos_id)
+    if (!servicos_id) {
+        console.log("readServicos: nulo");
         return null
+    }
 
-    if (!Array.isArray(servicos_id))
+    if (!Array.isArray(servicos_id)) {
+        console.log("readServicos: não é um array");
         return null
+    }
 
     let servicos = getServicos();
 
@@ -121,10 +172,12 @@ export function readServicos(...servicos_id) {
  * 
  * @returns {Number | null} ID do último serviço cadastrado 
  */
-function getIdLastServico() {
+export function getIdLastServico() {
     let servicos = readServicos();
+
+    // Se não há serviços cadastrados, retorna o valor 0
     if (!servicos)
-        return null
+        return 0
 
     let last_id = 0;
 
@@ -145,7 +198,7 @@ function getIdLastServico() {
  * @param {any} servico_new Informações do serviço para ser atualizado
  * @returns {boolean | null} Retorna true se as informações foram cadastradas corretamente 
  */
-function updateServicos(servico_id, servico_new) {
+export function updateServicos(servico_id, servico_new) {
     if (!servico_id)
         return null
 
@@ -181,7 +234,7 @@ function updateServicos(servico_id, servico_new) {
  * @param {Number} servico_id ID do serviço a ser atualizado
  * @returns {boolean | null} Retorna true se as informações foram encontradas e deletadas 
  */
-function deleteServicos(servico_id) {
+export function deleteServicos(servico_id) {
     if (!servico_id)
         return null
 
@@ -211,20 +264,30 @@ function deleteServicos(servico_id) {
  * @param {any} servico_new Informações do serviço a ser cadastrado
  * @returns {Number | null} Retorna o ID do serviço se as informações foram cadastradas corretamente 
  */
-function createServicos(servico_new) {
-    if (!servico_new)
+export function createServicos(servico_new) {
+    if (!servico_new) {
+        console.log("createServicos: Não há argumentos");
         return null
+    }
 
     let servicos = readServicos();
 
     // Verifica se as informações no serviço são validas
-    if (!validateServicos(servico_new))
+    if (!validateServicos(servico_new)) {
+        console.log("createServicos: Não foi possível validar os argumentos");
         return null
+    }
 
     if (!servicos)
         servicos = []
 
     servico_new.id = getIdLastServico()
+    if (typeof (servico_new.id) != "number")
+        return null
+
+    // Incrementa a ID
+    servico_new.id += 1;
+
     servicos.push(servico_new);
 
     setServicos(servicos);
