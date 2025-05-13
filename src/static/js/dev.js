@@ -46,8 +46,12 @@ async function createNUsers(number) {
     if (!number)
         number = 10;
 
-    const json = await getExemplos();
-    const exemplos = json.exemplos
+    // TODO: Make a single call
+    if (!exemplos) {
+        const json = await getExemplos();
+        var exemplos = json.exemplos
+    }
+
     let usuarios = [];
 
     for (let index = 0; index < number; index++) {
@@ -77,6 +81,45 @@ async function createNUsers(number) {
             cidade: cidade, // string
             biografia: biografia, // string
             contatos: contatos // Array
+        }
+
+        usuarios.push(element);
+    }
+
+    return usuarios;
+}
+
+/**
+ * Cria N serviços 
+ */
+async function createNServicos(number) {
+    // TODO: Does this work? Does this validate something?
+    if (!number)
+        number = 10;
+
+    // TODO: Make a single call
+    if(!exemplos){
+        const json = await getExemplos();
+        var exemplos = json.exemplos
+    }
+
+    let usuarios = [];
+
+    for (let index = 0; index < number; index++) {
+
+        let titulo = exemplos.categorias_servicos[genRandomNumber(exemplos.categorias_servicos.length)]
+        // TODO: categorias_servicos
+        let categoriaId = genRandomNumber(exemplos.categorias_servicos.length)
+        let categoria = exemplos.categorias_servicos[genRandomNumber(exemplos.categorias_servicos.length)]
+        let contato = exemplos.contatos[genRandomNumber(exemplos.contatos.length)]
+        let descricao = exemplos.descricoes[genRandomNumber(exemplos.descricoes.length)]
+        
+        const element = {
+            titulo: titulo,
+            categoriaId: categoriaId,
+            categoria: categoria,
+            contato: contato,
+            descricao: descricao
         }
 
         usuarios.push(element);
@@ -146,7 +189,7 @@ function setupDevTools() {
         if (JSONQL_U.deleteUsuario(id_int)) {
             console.log(`dev_delete_usuarios: usuário ${id_int} foi deletado!`);
         } else {
-            console.log(`dev_delete_usuarios: Não foi possível encontrar ou usuário ou ocorreu um erro.`);
+            console.log(`dev_delete_usuarios: Não foi possível encontrar o usuário ou ocorreu um erro.`);
         }
     })
 
@@ -154,17 +197,40 @@ function setupDevTools() {
 
     // Serviços
 
-    dev_create_usuarios?.addEventListener('click', () => {})
-    dev_delete_usuarios?.addEventListener('click', () => {})
-    dev_delete_usuarios_all?.addEventListener('click', () => {})
-    // dev_read_usuarios?.addEventListener('click', () => console.log(JSONQL.readUsuarios()))
+    dev_create_servicos?.addEventListener('click', async () => {
+        let quantidade = dev_create_servicos_n?.value;
+        let servicos = await createNServicos(quantidade);
+        servicos.forEach((value) => JSONQL.createServicos(value));
+    })
+
+    dev_delete_servicos_all?.addEventListener('click', JSONQL.clearServicos)
+
+    dev_delete_servicos?.addEventListener('click', () => {
+        const id = dev_delete_servicos_id?.value;
+        if (!id) {
+            console.log("dev_delete_servicos: id é null");
+            return
+        }
+
+        const id_int = parseInt(id);
+
+        if (typeof (id_int) != "number") {
+            console.log("dev_delete_servicos: Não foi possível realizar o parse do id");
+            return
+        }
+
+        if (JSONQL.deleteServicos(id_int)) {
+            console.log(`dev_delete_servicos: serviço ${id_int} foi deletado!`);
+        } else {
+            console.log(`dev_delete_servicos: Não foi possível encontrar o serviço ou ocorreu um erro.`);
+        }
+    })
+
+    dev_read_servicos?.addEventListener('click', () => console.log(JSONQL.readServicos()))
 
     // Avaliações
 
-    dev_create_usuarios?.addEventListener('click', () => {})
-    dev_delete_usuarios?.addEventListener('click', () => {})
-    dev_delete_usuarios_all?.addEventListener('click', () => {})
-    // dev_read_usuarios?.addEventListener('click', () => console.log(JSONQL.readUsuarios()))
+    // TODO: *
 
 }
 

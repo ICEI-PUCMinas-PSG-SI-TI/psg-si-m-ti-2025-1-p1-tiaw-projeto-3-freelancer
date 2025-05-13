@@ -48,7 +48,7 @@ const StructServico = {
  * @param {string} contato Descrição do serviço 
  * @returns {object|null} Array com informações sobre os serviço
  */
-export function factoryServicos(titulo, categoriaId, descricao, contato) {
+export function factoryServicos(titulo, categoriaId, descricao, contato, categoria) {
 
     if (!titulo) {
         console.log("factoryServicos: tiulo não foi informado");
@@ -59,6 +59,14 @@ export function factoryServicos(titulo, categoriaId, descricao, contato) {
         console.log("factoryServicos: categoriaId não foi informado");
         return null
     }
+
+    // TODO: campo temporario, remover depois
+    /*
+    if (!categoria) {
+        console.log("factoryServicos: categoria não foi informado");
+        return null
+    }
+    */
 
     if (!descricao) {
         console.log("factoryServicos: descricao não foi informada");
@@ -76,6 +84,8 @@ export function factoryServicos(titulo, categoriaId, descricao, contato) {
 
     delete servico.id;
     servico.titulo = titulo;
+    // TODO: campo temporario, remover depois
+    servico.categoria = categoria;
     servico.categoriaId = categoriaId;
     servico.descricao = descricao;
     servico.contato = contato;
@@ -98,6 +108,12 @@ export function validateServicos(servico) {
 
     if (typeof (servico.titulo) != "string") {
         console.log("validateServicos: titulo não é valido")
+        return null
+    }
+
+    // TODO: campo temporario, remover depois
+    if (typeof (servico.categoria) != "string") {
+        console.log("validateServicos: categoria não é valido")
         return null
     }
 
