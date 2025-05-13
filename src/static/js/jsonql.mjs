@@ -8,28 +8,25 @@
  */
 
 // Ferramentas para CRUD
-// Create / Criar
-// Read / Ler
-// Update / Atualizar
-// Delete / Deletar
-
+// CRUD = Create, Read, Update, Delete
+// CLAD = Criar, Ler, Atualizar, Deletar
 // VEIA = Visualizar, Excluir, Incluir, Alterar
 
 const KEY_SERVICOS = "servicos";
-const KEY_USUARIOS = "usuarios"
-const KEY_AVALIACOES = "avaliacoes"
+// const KEY_USUARIOS = "usuarios"
+// const KEY_AVALIACOES = "avaliacoes"
 // const KEY_CONTRATOS = "contratos" 
 // const KEY_PORTFOLIOS = "portfolios" 
 
 const getServicos = () => JSON.parse(localStorage.getItem(KEY_SERVICOS) || "[]");
-const getUsuarios = () => JSON.parse(localStorage.getItem(KEY_USUARIOS) || "[]");
-const getAvaliacoes = () => JSON.parse(localStorage.getItem(KEY_AVALIACOES) || "[]");
+// const getUsuarios = () => JSON.parse(localStorage.getItem(KEY_USUARIOS) || "[]");
+// const getAvaliacoes = () => JSON.parse(localStorage.getItem(KEY_AVALIACOES) || "[]");
 // const getContratos = () => JSON.parse(localStorage.getItem(KEY_CONTRATOS) || "[]");
 // const getPortfolios = () => JSON.parse(localStorage.getItem(KEY_PORTFOLIOS) || "[]");
 
 const setServicos = (servicos) => localStorage.setItem(KEY_SERVICOS, JSON.stringify(servicos));
-const setUsuarios = (usuarios) => localStorage.setItem(KEY_USUARIOS, JSON.stringify(usuarios));
-const setAvaliacoes = (avaliacoes) => localStorage.setItem(KEY_AVALIACOES, JSON.stringify(avaliacoes));
+// const setUsuarios = (usuarios) => localStorage.setItem(KEY_USUARIOS, JSON.stringify(usuarios));
+// const setAvaliacoes = (avaliacoes) => localStorage.setItem(KEY_AVALIACOES, JSON.stringify(avaliacoes));
 // const setContratos = (contratos) => localStorage.setItem(KEY_CONTRATOS, JSON.stringify(contratos));
 // const setPortfolios = (portfolios) => localStorage.setItem(KEY_PORTFOLIOS, JSON.stringify(portfolios));
 
@@ -235,6 +232,8 @@ export function updateServicos(servico_id, servico_new) {
  * @returns {boolean | null} Retorna true se as informações foram encontradas e deletadas 
  */
 export function deleteServicos(servico_id) {
+    // TODO: Receber array
+
     if (!servico_id)
         return null
 
@@ -246,16 +245,28 @@ export function deleteServicos(servico_id) {
     if (!servicos)
         return null
 
+    let encontrado = false;
     servicos.forEach((servico, index, object) => {
         if (servico_id === parseInt(servico.id)) {
             // Remove o servico da lista
             servicos.splice(index, 1);
+            // TODO: break forEach
+            encontrado = true;
         }
     })
 
     setServicos(servicos);
 
     return true;
+}
+
+/**
+ * Limpa todas as informações dos serviços do localStorage
+ *  
+ * @returns {void}
+ */
+export function clearServicos() {
+    return setServicos([]);
 }
 
 /**

@@ -319,7 +319,7 @@ export function deleteUsuario(usuario_id) {
 }
 
 /**
- * Limpa todas as informações de um usuário do localStorage
+ * Limpa todas as informações dos usuários do localStorage
  *  
  * @returns {void}
  */
