@@ -303,16 +303,28 @@ export function deleteUsuario(usuario_id) {
     if (!usuarios)
         return null
 
+    let encontrado = false;
     usuarios.forEach((usuario, index) => {
         if (usuario_id === parseInt(usuario.id)) {
             // Remove o usuário da lista
             usuarios.splice(index, 1);
+            // TODO: break forEach
+            encontrado = true;
         }
     })
 
     setUsuarios(usuarios);
 
-    return true;
+    return encontrado;
+}
+
+/**
+ * Limpa todas as informações de um usuário do localStorage
+ *  
+ * @returns {void}
+ */
+export function clearUsuarios() {
+    return setUsuarios([]);
 }
 
 /**
