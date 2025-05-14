@@ -107,124 +107,174 @@
         </div>
 
 
-        <div class="card mb-3">
-            <div class="card-body">
-                <h4 class="my-3">Usuários</h4>
-                <hr>
-                <p><strong>Criar n usuários com dados aleatórios</strong></p>
-                <input id="dev-create-usuarios-n" placeholder="Quantidade">
-                <button id="dev-create-usuarios">Gerar</button>
-                <hr>
-                <p><strong>Deletar todos os usuários</strong></p>
-                <p>Observação: Isso também ira deletar os serviços ou qualquer outras informações associadas aos
-                    usuários deletados.</p>
-                <button id="dev-delete-usuarios-all">Deletar</button>
-                <hr>
-                <p><strong>Deletar usuários por ID</strong></p>
-                <p>Observação: Isso também ira deletar os serviços ou qualquer outras informações associadas aos
-                    usuários deletados.</p>
-                <input id="dev-delete-usuarios-id" placeholder="ID">
-                <button id="dev-delete-usuarios">Deletar</button>
-                <hr>
-                <p><strong>Outros</strong></p>
-                <button id="dev-read-usuarios">Mostrar usuário no console</button>
+        <div class="accordion" id="accordionPanelsStayOpen">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseUsuarios" aria-expanded="true"
+                        aria-controls="panelsStayOpen-collapseUsuarios">
+                        Usuários
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapseUsuarios" class="accordion-collapse collapse">
+                    <div class="accordion-body p-4">
+                        <p><strong>Criar n usuários com dados aleatórios</strong></p>
+                        <input type="number" min="0" class="form-control w-auto mb-1"
+                            aria-describedby="addon-wrapping" id="dev-create-usuarios-n" placeholder="Quantidade">
+                        <button class="btn btn-success" id="dev-create-usuarios">Gerar</button>
+                        <hr>
+                        <p><strong>Deletar todos os usuários</strong></p>
+                        <p>Observação: Isso também ira deletar os serviços ou qualquer outras informações associadas aos
+                            usuários deletados.</p>
+                        <button class="btn btn-danger" id="dev-delete-usuarios-all">Deletar</button>
+                        <hr>
+                        <p><strong>Deletar usuários por ID</strong></p>
+                        <p>Observação: Isso também ira deletar os serviços ou qualquer outras informações associadas aos
+                            usuários deletados.</p>
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping" id="dev-delete-usuarios-id" placeholder="ID">
+                        <button class="btn btn-danger" id="dev-delete-usuarios">Deletar</button>
+                        <hr>
+                        <p><strong>Outros</strong></p>
+                        <button class="btn btn-primary" id="dev-read-usuarios">Mostrar usuário no console</button>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseServicos" aria-expanded="false"
+                        aria-controls="panelsStayOpen-collapseServicos">
+                        Serviços
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapseServicos" class="accordion-collapse collapse">
+                    <div class="accordion-body p-4">
+                        <p><strong>Criar n serviços com dados aleatórios</strong></p>
+                        <p>Observação: Os usuários que oferecem os serviços também serão
+                            escolhidos
+                            aleatoriamente</p>
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping" id="dev-create-servicos-n" placeholder="Quantidade">
+                        <button class="btn btn-success" id="dev-create-servicos">Gerar</button>
+                        <hr>
+                        <p><strong>Deletar todos os serviços</strong></p>
+                        <p>Observação: Isso também ira deletar os avaliações ou qualquer outras
+                            informações associadas aos
+                            serviços deletados.</p>
+                        <button class="btn btn-danger" id="dev-delete-servicos-all">Deletar</button>
+                        <hr>
+                        <p><strong>Deletar serviços por ID</strong></p>
+                        <p>Observação: Isso também ira deletar as avaliações ou qualquer outras
+                            informações associadas aos
+                            serviços deletados.</p>
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping" id="dev-delete-servicos-id" placeholder="ID">
+                        <button class="btn btn-danger" id="dev-delete-servicos">Deletar</button>
+                        <hr>
+                        <p><strong>Outros</strong></p>
+                        <button class="btn btn-primary" id="dev-read-servicos">Mostrar serviços no console</button>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseContratos" aria-expanded="false"
+                        aria-controls="panelsStayOpen-collapseContratos">
+                        Contratos
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapseContratos" class="accordion-collapse collapse">
+                    <div class="accordion-body p-4">
+                        <p><strong>Criar n contratos com dados aleatórios</strong></p>
+                        <p>Observação: Os serviços e usuários que fazem parte do contrato serão escolhidos
+                            aleatoriamente</p>
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping" id="dev-create-contratos-n" placeholder="Quantidade">
+                        <button class="btn btn-success" id="dev-create-contratos">Gerar</button>
+                        <hr>
+                        <p><strong>Deletar todos os contratos</strong></p>
+                        <p>Observação: Isso também ira deletar os avaliações ou qualquer outras informações associadas
+                            aos
+                            contratos deletados.</p>
+                        <button class="btn btn-danger" id="dev-delete-contratos-all">Deletar</button>
+                        <hr>
+                        <p><strong>Deletar contratos por ID</strong></p>
+                        <p>Observação: Isso também ira deletar as avaliações ou qualquer outras informações associadas
+                            aos
+                            contratos deletados.</p>
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping" id="dev-delete-contratos-id" placeholder="ID">
+                        <button class="btn btn-danger" id="dev-delete-contratos">Deletar</button>
+                        <hr>
+                        <p><strong>Outros</strong></p>
+                        <button class="btn btn-primary" id="dev-read-contratos">Mostrar contratos no console</button>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseAvaliacoes" aria-expanded="true"
+                        aria-controls="panelsStayOpen-collapseAvaliacoes">
+                        Avaliações
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapseAvaliacoes" class="accordion-collapse collapse">
+                    <div class="accordion-body p-4">
+                        <p><strong>Criar n avaliações com dados aleatórios</strong></p>
+                        <p>Observação: Os serviços para avaliação e usuários que oferecem os serviços também serão
+                            escolhidos
+                            aleatoriamente
+                        </p>
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping" id="dev-create-avaliacoes-n" placeholder="Quantidade">
+                        <button class="btn btn-success" id="dev-create-avaliacoes">Gerar</button>
+                        <hr>
+                        <p><strong>Deletar todos as avaliações</strong></p>
+                        <p>Observação: Isso também ira deletar os avaliações ou qualquer outras informações associadas
+                            aos
+                            serviços deletados.</p>
+                        <button class="btn btn-danger" id="dev-delete-avaliacoes-all">Deletar</button>
+                        <hr>
+                        <p><strong>Deletar avaliações por ID</strong></p>
+                        <p>Observação: Isso também ira deletar as avaliações ou qualquer outras informações associadas
+                            aos
+                            serviços deletados.</p>
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping" id="dev-delete-avaliacoes-id" placeholder="ID">
+                        <button class="btn btn-danger" id="dev-delete-avaliacoes">Deletar</button>
+                        <hr>
+                        <p><strong>Outros</strong></p>
+                        <button class="btn btn-primary" id="dev-read-avaliacoes">Mostrar avaliações no console</button>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapsePortfolio" aria-expanded="false"
+                        aria-controls="panelsStayOpen-collapsePortfolio">
+                        Portfólio
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapsePortfolio" class="accordion-collapse collapse">
+                    <div class="accordion-body p-4">
+                        <p>// TODO</p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseOutros" aria-expanded="false"
+                        aria-controls="panelsStayOpen-collapseOutros">
+                        Outros
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapseOutros" class="accordion-collapse collapse">
+                    <div class="accordion-body p-4">
+                        <p>Limpar todas as informações armazenadas no localStorage como dados ou configurações.
+                        </p>
+                        <button class="btn btn-danger" id="dev-outros-clear">Limpar localStorage</button>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="card mb-3">
-            <div class="card-body">
-                <h4 class="my-3">Serviços</h4>
-                <hr>
-                <p><strong>Criar n serviços com dados aleatórios</strong></p>
-                <p>Observação: Os usuários que oferecem os serviços também serão escolhidos aleatoriamente</p>
-                <input id="dev-create-servicos-n" placeholder="Quantidade">
-                <button id="dev-create-servicos">Gerar</button>
-                <hr>
-                <p><strong>Deletar todos os serviços</strong></p>
-                <p>Observação: Isso também ira deletar os avaliações ou qualquer outras informações associadas aos
-                    serviços deletados.</p>
-                <button id="dev-delete-servicos-all">Deletar</button>
-                <hr>
-                <p><strong>Deletar serviços por ID</strong></p>
-                <p>Observação: Isso também ira deletar as avaliações ou qualquer outras informações associadas aos
-                    serviços deletados.</p>
-                <input id="dev-delete-servicos-id" placeholder="ID">
-                <button id="dev-delete-servicos">Deletar</button>
-                <hr>
-                <p><strong>Outros</strong></p>
-                <button id="dev-read-servicos">Mostrar serviços no console</button>
-            </div>
-        </div>
-
-        <div class="card mb-3">
-            <div class="card-body">
-                <h4 class="my-3">Contratos</h4>
-
-                <hr>
-                <p><strong>Criar n contratos com dados aleatórios</strong></p>
-                <p>Observação: Os serviços e usuários que fazem parte do contrato serão escolhidos aleatoriamente</p>
-                <input id="dev-create-contratos-n" placeholder="Quantidade">
-                <button id="dev-create-contratos">Gerar</button>
-                <hr>
-                <p><strong>Deletar todos os contratos</strong></p>
-                <p>Observação: Isso também ira deletar os avaliações ou qualquer outras informações associadas aos
-                    contratos deletados.</p>
-                <button id="dev-delete-contratos-all">Deletar</button>
-                <hr>
-                <p><strong>Deletar contratos por ID</strong></p>
-                <p>Observação: Isso também ira deletar as avaliações ou qualquer outras informações associadas aos
-                    contratos deletados.</p>
-                <input id="dev-delete-contratos-id" placeholder="ID">
-                <button id="dev-delete-contratos">Deletar</button>
-                <hr>
-                <p><strong>Outros</strong></p>
-                <button id="dev-read-contratos">Mostrar contratos no console</button>
-            </div>
-        </div>
-
-        <div class="card mb-3">
-            <div class="card-body">
-                <h4 class="my-3">Avaliações</h4>
-                <hr>
-                <p><strong>Criar n avaliações com dados aleatórios</strong></p>
-                <p>Observação: Os serviços para avaliação e usuários que oferecem os serviços também serão escolhidos
-                    aleatoriamente
-                </p>
-                <input id="dev-create-avaliacoes-n" placeholder="Quantidade">
-                <button id="dev-create-avaliacoes">Gerar</button>
-                <hr>
-                <p><strong>Deletar todos as avaliações</strong></p>
-                <p>Observação: Isso também ira deletar os avaliações ou qualquer outras informações associadas aos
-                    serviços deletados.</p>
-                <button id="dev-delete-avaliacoes-all">Deletar</button>
-                <hr>
-                <p><strong>Deletar avaliações por ID</strong></p>
-                <p>Observação: Isso também ira deletar as avaliações ou qualquer outras informações associadas aos
-                    serviços deletados.</p>
-                <input id="dev-delete-avaliacoes-id" placeholder="ID">
-                <button id="dev-delete-avaliacoes">Deletar</button>
-                <hr>
-                <p><strong>Outros</strong></p>
-                <button id="dev-read-avaliacoes">Mostrar avaliações no console</button>
-            </div>
-        </div>
-
-        <div class="card mb-3">
-            <div class="card-body">
-                <h4 class="my-3">Portfólio</h4>
-
-                <p>// TODO</p>
-            </div>
-        </div>
-
-        <div class="card mb-3">
-            <div class="card-body">
-                <h4 class="my-3">Outros</h4>
-                <p>Limpar todas as informações armazenadas no localStorage como dados ou configurações.</p>
-                <button id="dev-outros-clear">Limpar localStorage</button>
-            </div>
-        </div>
-
     </div>
 
     <!-- Rodapé -->
