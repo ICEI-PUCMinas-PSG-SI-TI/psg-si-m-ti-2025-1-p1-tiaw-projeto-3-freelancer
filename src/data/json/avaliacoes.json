@@ -1,39 +1,39 @@
 {
     "avaliacoes": [
         {
+            "comentario": "Um comentário simples sobre o serviço de id {id}",
+            "contratanteId": 5,
+            "contratoId": 0,
             "id": 0,
-            "usuarioId": 5,
-            "servicoId": 0,
-            "nota": 5,
-            "comentario": "Um comentário simples sobre o serviço de id {id}"
+            "nota": 5
         },
         {
+            "comentario": "Um comentário simples sobre o serviço de id {id}",
+            "contratanteId": 4,
+            "contratoId": 0,
             "id": 1,
-            "usuarioId": 4,
-            "servicoId": 0,
-            "nota": 1,
-            "comentario": "Um comentário simples sobre o serviço de id {id}"
+            "nota": 1
         },
         {
+            "comentario": "Um comentário simples sobre o serviço de id {id}",
+            "contratanteId": 3,
+            "contratoId": 1,
             "id": 2,
-            "servicoId": 1,
-            "usuarioId": 3,
-            "nota": 2,
-            "comentario": "Um comentário simples sobre o serviço de id {id}"
+            "nota": 2
         },
         {
+            "comentario": "Um comentário simples sobre o serviço de id {id}",
+            "contratanteId": 2,
+            "contratoId": 1,
             "id": 3,
-            "servicoId": 1,
-            "usuarioId": 2,
-            "nota": 8,
-            "comentario": "Um comentário simples sobre o serviço de id {id}"
+            "nota": 8
         },
         {
+            "comentario": "Um comentário simples sobre o serviço de id {id}",
+            "contratanteId": 2,
+            "contratoId": 1,
             "id": 4,
-            "usuarioId": 1,
-            "servicoId": 2,
-            "nota": 10,
-            "comentario": "Um comentário simples sobre o serviço de id {id}"
+            "nota": 10
         }
     ]
 }

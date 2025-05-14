@@ -2,6 +2,7 @@
 import * as JSONQL from "./jsonql.mjs";
 import * as JSONQL_U from "./jsonql.user.mjs";
 import * as JSONQL_C from "./jsonql.contracts.mjs";
+import * as JSONQL_A from "./jsonql.review.mjs";
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -98,6 +99,57 @@ async function createNContratos(number) {
     }
 
     return contratos;
+}
+
+/**
+ * Cria N usuários 
+ */
+async function createNAvaliacoes(number) {
+    // TODO: Does this work? Does this validate something?
+    let number_int = ensureInteger(number)
+    if (!number_int)
+        number_int = 10
+
+    // TODO: Make a single call
+    if (!exemplos) {
+        const json = await getExemplos();
+        var exemplos = json.exemplos
+    }
+
+    let avaliacoes = [];
+
+    for (let index = 0; index < number; index++) {
+        
+        // TODO: Otimizar query de serviços
+        const contrato = JSONQL_C.readContratos();
+        if (!contrato?.length) {
+            console.log("createNContratos: Não há contrato criados");
+            return null
+        }
+
+        const usuarios = JSONQL_U.readUsuarios();
+        if (!usuarios?.length) {
+            console.log("createNContratos: Não há usuários criados");
+            return null
+        }
+
+        // TODO: Evitar que contratadoId === contratanteId
+        let contratoId = contrato[genRandomNumber(contrato.length)].id // number
+        let contratanteId = usuarios[genRandomNumber(usuarios.length)].id // number
+        let nota = genRandomNumber(11) // number
+        let comentario = exemplos.avaliacoes[genRandomNumber(exemplos.avaliacoes.length)] // string
+
+        const element = {
+            contratoId: contratoId, // number
+            contratanteId: contratanteId, // number
+            nota: nota, // number
+            comentario: comentario // string
+        }
+
+        avaliacoes.push(element);
+    }
+
+    return avaliacoes;
 }
 
 /**
@@ -359,7 +411,35 @@ function setupDevTools() {
 
     // Avaliações
 
-    // TODO: *
+    dev_create_avaliacoes?.addEventListener('click', async () => {
+        let quantidade = dev_create_avaliacoes_n?.value;
+        const quantidade_int = ensureInteger(quantidade)
+        if (!quantidade_int) {
+            console.log("dev_create_avaliacoes: Não foi possível realizar o parse da quantidade");
+            return
+        }
+        let avaliacoes = await createNAvaliacoes(quantidade_int);
+        avaliacoes?.forEach((value) => JSONQL_A.createAvaliacao(value));
+    })
+
+    dev_delete_avaliacoes_all?.addEventListener('click', JSONQL_A.clearAvaliacoes)
+
+    dev_delete_avaliacoes?.addEventListener('click', () => {
+        const id = dev_delete_avaliacoes_id?.value;
+        const id_int = ensureInteger(id)
+        if (!id_int) {
+            console.log("dev_delete_avaliacoes: Não foi possível realizar o parse do id");
+            return
+        }
+
+        if (JSONQL_A.deleteAvaliacao(id_int)) {
+            console.log(`dev_delete_avaliacoes: contrato ${id_int} foi deletado!`);
+        } else {
+            console.log(`dev_delete_avaliacoes: Não foi possível encontrar o serviço ou ocorreu um erro.`);
+        }
+    })
+
+    dev_read_avaliacoes?.addEventListener('click', () => console.log(JSONQL_A.readAvaliacoes()))
 
     // Portfólio
 

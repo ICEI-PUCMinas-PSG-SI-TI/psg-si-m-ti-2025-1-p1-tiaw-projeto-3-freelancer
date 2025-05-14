@@ -252,7 +252,7 @@ export function deleteContrato(contrato_id) {
 }
 
 /**
- * Limpa todas as informações dos usuários do localStorage
+ * Limpa todas as informações de contratos do localStorage
  *  
  * @returns {void}
  */
