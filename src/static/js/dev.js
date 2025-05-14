@@ -257,6 +257,8 @@ function setupDevTools() {
     let dev_delete_avaliacoes = document.getElementById('dev-delete-avaliacoes');
     let dev_read_avaliacoes = document.getElementById('dev-read-avaliacoes');
 
+    let dev_outros_clear = document.getElementById('dev-outros-clear');
+
     // Usuários
 
     dev_create_usuarios?.addEventListener('click', async () => {
@@ -358,6 +360,15 @@ function setupDevTools() {
     // Avaliações
 
     // TODO: *
+
+    // Outros
+
+    dev_outros_clear?.addEventListener('click', () => {
+        // Limpa todas as informações do localStorage
+        localStorage.clear()
+        // Recarrega a página
+        location.reload();
+    })
 
 }
 
