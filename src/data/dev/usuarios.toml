@@ -23,7 +23,7 @@
 # biografia = Informações breves sobre o usuário
 # contatos = Lista de contatos do usuário
 
-# TODO:
+# TODO: Armazenar novos parametros (não importantes no momento):
 # data_cadastro = Data de cadastro do usuário (ISO-8601)
 # username = username do usuário, útil para links
 # apelido = apelido, útil para empresas (Nome Fantasia)

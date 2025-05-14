@@ -17,7 +17,7 @@
 # comentario = Comentário realizado pelo usuário
 # imagemId = Lista de IDs das imagens quer o usuário deixou na avaliação
 
-# TODO:
+# TODO: Armazenar novos parametros (não importantes no momento):
 # data = Data da avaliação
 
 [[avaliacoes]]

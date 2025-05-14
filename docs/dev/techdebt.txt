@@ -1,0 +1,44 @@
+src\404.html:                <!-- TODO: Inserir função onClick para voltar a página anterior -->
+src\dev.html:                <!-- TODO: Inserir dinamicamente <login-cadastre_se|search-profile_picture> -->
+src\index.html:                <!-- TODO: Inserir dinamicamente <login-cadastre_se|search-profile_picture> -->
+src\index.html:                <!-- TODO: Verificar a necessidade de validar se o campo esta vazio e inserir um botão de continuar -->
+src\GUIDELINES.md:<!-- TODO: Colocar prints ou GIFs do vscode para auxiliar -->
+src\GUIDELINES.md:<!-- TODO: Colocar prints ou GIFs do vscode para auxiliar -->
+src\GUIDELINES.md:<!-- TODO: Colocar prints do github para ilustrar -->
+src\GUIDELINES.md:TODO: ## Estrutura do HTML e CSS
+src\serviços.html:                <!-- TODO: Inserir dinamicamente <login-cadastre_se|search-profile_picture> -->
+src\serviços.html:            <!-- TODO: preencher categorias dinamicamente -->
+src\_template.html:    <!-- TODO: Atualizar sempre com o título da pagina -->
+src\_template.html:                <!-- TODO: Inserir dinamicamente <login-cadastre_se|search-profile_picture> -->
+docs\3-Interface.md:<!-- TODO: Reescrever após alinhas as telas de wireframe -->
+docs\3-Interface.md:<!-- TODO: Alinhar as wireframes com um mesmo estilo -->
+src\static\js\dev.js:        // TODO: why convert to string? avoid IDE warning
+src\static\js\dev.js:    // TODO: Does this work? Does this validate something?
+src\static\js\dev.js:    // TODO: Make a single call
+src\static\js\dev.js:        // TODO: Otimizar query de serviços
+src\static\js\dev.js:        // TODO: Evitar que contratadoId === contratanteId
+src\static\js\dev.js:    // TODO: Does this work? Does this validate something?
+src\static\js\dev.js:    // TODO: Make a single call
+src\static\js\dev.js:    // TODO: Does this work? Does this validate something?
+src\static\js\dev.js:    // TODO: Make a single call
+src\static\js\dev.js:        // TODO: categorias_servicos -> array, use id only
+src\static\js\dev.js:    // TODO: *
+src\data\dev\avaliacoes.toml:# TODO: Armazenar novos parametros (não importantes no momento):
+src\data\dev\categorias.servicos.toml:# TODO: Cadastro de categorias via UI (admin)
+src\data\dev\categorias.secao.toml:# TODO: Cadastro de categorias via UI (admin)
+src\static\js\jsonql.mjs:    // TODO: campo temporario, remover depois
+src\static\js\jsonql.mjs:    // TODO: campo temporario, remover depois
+src\static\js\jsonql.mjs:    // TODO: campo temporario, remover depois
+src\static\js\jsonql.mjs:    // TODO: Receber array
+src\static\js\jsonql.mjs:            // TODO: break forEach
+src\static\js\jsonql.user.mjs:    /* TODO: Validate if bool exists
+src\static\js\jsonql.user.mjs:    // TODO: Check if is object
+src\static\js\jsonql.user.mjs:                // TODO: Remove porque? Não é pra adicionar?
+src\static\js\jsonql.user.mjs:    // TODO: Receber array
+src\static\js\jsonql.user.mjs:            // TODO: break forEach
+src\static\js\jsonql.contracts.mjs:    // TODO: Check if is object
+src\static\js\jsonql.contracts.mjs:    // TODO: Receber array
+src\static\js\jsonql.contracts.mjs:            // TODO: break forEach
+src\data\dev\servicos.toml:# TODO: Armazenar novos parametros (não importantes no momento):
+src\data\dev\usuarios.toml:# TODO: Cadastro de categorias via UI
+src\data\dev\usuarios.toml:# TODO: Armazenar novos parametros (não importantes no momento):

@@ -18,7 +18,7 @@
 # usuarioId = ID do usuário que publicou o serviço
 # imagemId = Lista de IDs das imagens relacionadas ao serviço
 
-# TODO:
+# TODO: Armazenar novos parametros (não importantes no momento):
 # valor = Valor do orçamento para um tipo de serviço
 
 [[servicos]]
