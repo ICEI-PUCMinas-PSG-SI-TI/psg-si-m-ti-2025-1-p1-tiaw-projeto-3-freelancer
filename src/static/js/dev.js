@@ -83,7 +83,7 @@ async function createNContratos(number) {
         // TODO: Evitar que contratadoId === contratanteId
         let contratadoId = usuarios[genRandomNumber(usuarios.length)].id // number
         let contratanteId = usuarios[genRandomNumber(usuarios.length)].id // number
-        let data = genRandomNumber(28) + "/" + genRandomNumber(12) + "/" + genRandomNumber(2026, 1970)
+        let data = genRandomNumber(28) + "/" + genRandomNumber(12) + "/" + genRandomNumber(2006, 1970)
         let valor = genRandomNumber(5000, 100) // number
 
         const element = {
@@ -358,6 +358,10 @@ function setupDevTools() {
     dev_read_contratos?.addEventListener('click', () => console.log(JSONQL_C.readContratos()))
 
     // Avaliações
+
+    // TODO: *
+
+    // Portfólio
 
     // TODO: *
 

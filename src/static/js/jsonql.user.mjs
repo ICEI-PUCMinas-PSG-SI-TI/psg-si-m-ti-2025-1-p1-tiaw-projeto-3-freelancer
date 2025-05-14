@@ -1,23 +1,51 @@
 //@ts-check
 
-const KEY_USUARIOS = "usuarios"
+/*
+ * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
+ * 
+ * Ferramentas para CRUD referentes aos [ USUÁRIOS ]
+ * 
+ * CRUD = Create, Read, Update, Delete
+ * CLAD = Criar, Ler, Atualizar, Deletar
+ * VEIA = Visualizar, Excluir, Incluir, Alterar
+ * 
+ * JavaScript Object Notation Query Language
+ * 
+ */
 
+const KEY_USUARIOS = "usuarios"
 const getUsuarios = () => JSON.parse(localStorage.getItem(KEY_USUARIOS) || "[]");
 const setUsuarios = (usuarios) => localStorage.setItem(KEY_USUARIOS, JSON.stringify(usuarios));
 
-// Struct de exemplo, pode ser clonada com Object.assign(source, destination)
-const StructUsuarios = {
-    id: 0, // number
-    ativo: true, // bool
-    nome: "null", // string
-    data_nascimento: "null", // string
-    email: "null", // string
-    senha: "null", // string
-    tipo: "null", // string
-    cpf_cnpj: "null", // string
-    cidade: "null", // string
-    biografia: "null", // string
-    contatos: [] // Array
+/**
+ * Retorna null e printa o que estiver em value no console
+ * 
+ * @param {string} value console.log(value)
+ * 
+ * @return {null} 
+ */
+// TODO: Export to module and reuse
+function returnError(value) {
+    if (typeof (value) === "string")
+        console.log(value)
+
+    return null;
+}
+
+/**
+ * Retorna true se o tipo do objeto passado como parametro é igual ao tipo desejado
+ * 
+ * @param {any} value Objeto para comparação
+ * @param {string} type Tipo para comparação
+ * 
+ * @return {boolean} 
+ */
+// TODO: Export to module and reuse
+function ensureType(value, type) {
+    if (typeof (type) !== "string")
+        return false
+
+    return typeof (value) === type;
 }
 
 /**
@@ -36,75 +64,22 @@ const StructUsuarios = {
  * @returns {object|null} Se valido, retorna o objeto com as informações do usuário
  */
 export function factoryUsuario(ativo, nome, data_nascimento, email, senha, tipo, cpf_cnpj, cidade, biografia, contatos) {
-
-    /* TODO: Validate if bool exists
-    if (!ativo) {
-        console.log("factoryUsuario: ativo não foi informado");
-        return null
-    }
-    */
-
-    if (!nome) {
-        console.log("factoryUsuario: nome não foi informado(a)");
-        return null
-    }
-
-    if (!data_nascimento) {
-        console.log("factoryUsuario: data_nascimento não foi informado(a)");
-        return null
+    // Struct :: Usuário
+    function Usuario(id, ativo, nome, data_nascimento, email, senha, tipo, cpf_cnpj, cidade, biografia, contatos) {
+        this.id = id;
+        this.ativo = ativo;
+        this.nome = nome;
+        this.data_nascimento = data_nascimento;
+        this.email = email;
+        this.senha = senha;
+        this.tipo = tipo;
+        this.cpf_cnpj = cpf_cnpj;
+        this.cidade = cidade;
+        this.biografia = biografia;
+        this.contatos = contatos;
     }
 
-    if (!email) {
-        console.log("factoryUsuario: email não foi informado(a)");
-        return null
-    }
-
-    if (!senha) {
-        console.log("factoryUsuario: senha não foi informado(a)");
-        return null
-    }
-
-    if (!tipo) {
-        console.log("factoryUsuario: tipo não foi informado(a)");
-        return null
-    }
-
-    if (!cpf_cnpj) {
-        console.log("factoryUsuario: cpf_cnpj não foi informado(a)");
-        return null
-    }
-
-    if (!cidade) {
-        console.log("factoryUsuario: cidade não foi informado(a)");
-        return null
-    }
-
-    if (!biografia) {
-        console.log("factoryUsuario: biografia não foi informado(a)");
-        return null
-    }
-
-    if (!contatos) {
-        console.log("factoryUsuario: contatos não foi informado(a)");
-        return null
-    }
-
-    let usuario = {};
-
-    Object.assign(usuario, StructUsuarios)
-
-    delete usuario.id;
-    usuario.ativo = ativo;
-    usuario.nome = nome;
-    usuario.data_nascimento = data_nascimento;
-    usuario.email = email;
-    usuario.senha = senha;
-    usuario.tipo = tipo;
-    usuario.cpf_cnpj = cpf_cnpj;
-    usuario.cidade = cidade;
-    usuario.biografia = biografia;
-    usuario.contatos = contatos;
-
+    const usuario = new Usuario(null, ativo, nome, data_nascimento, email, senha, tipo, cpf_cnpj, cidade, biografia, contatos)
     return validateUsuario(usuario);
 }
 
@@ -118,59 +93,48 @@ export function validateUsuario(usuario) {
     // TODO: Check if is object
 
     // ID Opcional
-    if (usuario.id && typeof (usuario.id) != "string") {
-        console.log("validateUsuario: id não é valido(a)")
-        return null
+    if (usuario.id && !(ensureType(usuario.id, "number") || ensureType(usuario.id, "string"))) {
+        return returnError("validateUsuario: id não é valido(a)")
     }
 
-    if (typeof (usuario.ativo) != "boolean") {
-        console.log("validateUsuario: ativo não é valido(a)")
-        return null
+    if (!ensureType(usuario.ativo, "boolean")) {
+        return returnError("validateUsuario: ativo não é valido(a)")
     }
 
-    if (typeof (usuario.nome) != "string") {
-        console.log("validateUsuario: nome não é valido(a)")
-        return null
+    if (!ensureType(usuario.nome, "string")) {
+        return returnError("validateUsuario: nome não é valido(a)")
     }
 
-    if (typeof (usuario.data_nascimento) != "string") {
-        console.log("validateUsuario: data_nascimento não é valido(a)")
-        return null
+    if (!ensureType(usuario.data_nascimento, "string")) {
+        return returnError("validateUsuario: data_nascimento não é valido(a)")
     }
 
-    if (typeof (usuario.email) != "string") {
-        console.log("validateUsuario: email não é valido(a)")
-        return null
+    if (!ensureType(usuario.email, "string")) {
+        return returnError("validateUsuario: email não é valido(a)")
     }
 
-    if (typeof (usuario.senha) != "string") {
-        console.log("validateUsuario: senha não é valido(a)")
-        return null
+    if (!ensureType(usuario.senha, "string")) {
+        return returnError("validateUsuario: senha não é valido(a)")
     }
 
-    if (typeof (usuario.tipo) != "string") {
-        console.log("validateUsuario: tipo não é valido(a)")
-        return null
+    if (!ensureType(usuario.tipo, "string")) {
+        return returnError("validateUsuario: tipo não é valido(a)")
     }
 
-    if (typeof (usuario.cpf_cnpj) != "string") {
-        console.log("validateUsuario: cpf_cnpj não é valido(a)")
-        return null
+    if (!ensureType(usuario.cpf_cnpj, "string")) {
+        return returnError("validateUsuario: cpf_cnpj não é valido(a)")
     }
 
-    if (typeof (usuario.cidade) != "string") {
-        console.log("validateUsuario: cidade não é valido(a)")
-        return null
+    if (!ensureType(usuario.cidade, "string")) {
+        return returnError("validateUsuario: cidade não é valido(a)")
     }
 
-    if (typeof (usuario.biografia) != "string") {
-        console.log("validateUsuario: biografia não é valido(a)")
-        return null
+    if (!ensureType(usuario.biografia, "string")) {
+        return returnError("validateUsuario: biografia não é valido(a)")
     }
 
-    if (typeof (usuario.contatos) != "object") {
-        console.log("validateUsuario: contatos não é valido(a)")
-        return null
+    if (!ensureType(usuario.contatos, "object")) {
+        return returnError("validateUsuario: contatos não é valido(a)")
     }
 
     return usuario
@@ -184,13 +148,11 @@ export function validateUsuario(usuario) {
  */
 export function readUsuarios(...usuarios_id) {
     if (!usuarios_id) {
-        console.log("readUsuarios: nulo");
-        return null
+        return returnError("readUsuarios: nulo");
     }
 
     if (!Array.isArray(usuarios_id)) {
-        console.log("readUsuarios: não é um array");
-        return null
+        return returnError("readUsuarios: não é um array");
     }
 
     let usuarios = getUsuarios();
@@ -254,10 +216,13 @@ export function getIdLastUsuario() {
  * @returns {boolean | null} Retorna true se as informações foram cadastradas corretamente 
  */
 export function updateUsuario(usuario_id, usuario_new) {
-    if (!usuario_id)
+    // TODO: Create a validateId func
+    // 1. check if number (accept string to number)
+    // 2. ensure number > 0
+    if (!ensureType(usuario_id, "number"))
         return null
 
-    if (typeof (usuario_id) != "number")
+    if (usuario_id < 1)
         return null
 
     // Verifica se as informações do usuário são validas
@@ -266,21 +231,22 @@ export function updateUsuario(usuario_id, usuario_new) {
 
     let usuarios = readUsuarios();
 
-    if (!usuarios)
-        return null
+    if (!usuarios?.length)
+        return false
 
-    usuarios.forEach((usuario, index, object) => {
-        if (usuario_id === parseInt(usuario.id)) {
+    for (let index = 0; index < usuarios.length; index++) {
+        const element = usuarios[index];
+        if (usuario_id === parseInt(element.id)) {
             // Remove o usuário da lista
             usuarios.splice(index, 1);
-            // Adiciona o usuário com as novas informações
-            object.push(usuario_new);
+            // Adiciona o usuário com as novas informações, salva no localStorage, retorna true
+            usuarios.push(usuario_new);
+            setUsuarios(usuarios);
+            return true;
         }
-    })
+    }    
 
-    setUsuarios(usuarios);
-
-    return true;
+    return false;
 }
 
 /**
@@ -289,33 +255,31 @@ export function updateUsuario(usuario_id, usuario_new) {
  * @param {Number} usuario_id ID do usuário a ser atualizado
  * @returns {boolean | null} Retorna true se as informações foram encontradas e deletadas 
  */
+// TODO: Receber array
 export function deleteUsuario(usuario_id) {
-    // TODO: Receber array
-
-    if (!usuario_id)
+    if (!ensureType(usuario_id, "number"))
         return null
 
-    if (typeof (usuario_id) != "number")
+    if (usuario_id < 1)
         return null
 
     let usuarios = readUsuarios();
 
-    if (!usuarios)
-        return null
+    if (!usuarios?.length)
+        return false
 
-    let encontrado = false;
-    usuarios.forEach((usuario, index) => {
-        if (usuario_id === parseInt(usuario.id)) {
+    for (let index = 0; index < usuarios.length; index++) {
+        const element = usuarios[index];
+        if (usuario_id === parseInt(element.id, 10)) {
             // Remove o usuário da lista
             usuarios.splice(index, 1);
-            // TODO: break forEach
-            encontrado = true;
+            // Após remover o usuário, armazena a nova lista e retorna true
+            setUsuarios(usuarios);
+            return true;
         }
-    })
+    }
 
-    setUsuarios(usuarios);
-
-    return encontrado;
+    return false;
 }
 
 /**
@@ -335,23 +299,22 @@ export function clearUsuarios() {
  */
 export function createUsuario(usuario_new) {
     if (!usuario_new) {
-        console.log("createUsuario: Não há argumentos");
-        return null
+        return returnError("createUsuario: Não há argumentos");
     }
 
     let usuarios = readUsuarios();
 
     // Verifica se as informações no usuário são validas
     if (!validateUsuario(usuario_new)) {
-        console.log("createUsuario: Não foi possível validar os argumentos");
-        return null
+        return returnError("createUsuario: Não foi possível validar os argumentos");
     }
 
     if (!usuarios)
         usuarios = []
 
     usuario_new.id = getIdLastUsuario()
-    if (typeof (usuario_new.id) != "number")
+
+    if (!ensureType(usuario_new.id, "number"))
         return null
 
     // Incrementa a ID
