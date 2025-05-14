@@ -1,6 +1,7 @@
 //@ts-check
 import * as JSONQL from "./jsonql.mjs";
 import * as JSONQL_U from "./jsonql.user.mjs";
+import * as JSONQL_C from "./jsonql.contracts.mjs";
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -9,10 +10,18 @@ import * as JSONQL_U from "./jsonql.user.mjs";
 
 /**
  * Retorna um número aleatório entre 0 e max, o min é opcional
+ * Valor máximo
+ * @param {number} max Valor máximo
+ * @param {number} [min] Valor mínimo (opcional = 0)
+ * 
+ * @returns {number} Retorna um número aleatório
  */
 function genRandomNumber(max, min) {
     if (min) {
-        return parseInt(Math.random() * (max - min) + min);
+        let val = (Math.random() * (max - min) + min)
+        // TODO: why convert to string? avoid IDE warning
+        // Avoid double values
+        return parseInt(val.toString(), 10);
     }
 
     if (!max)
@@ -36,6 +45,59 @@ async function getExemplos() {
     }
 
     return null;
+}
+
+/**
+ * Cria N contratos 
+ */
+async function createNContratos(number) {
+    // TODO: Does this work? Does this validate something?
+    let number_int = ensureInteger(number)
+    if (!number_int)
+        number_int = 10
+
+    // TODO: Make a single call
+    if (!exemplos) {
+        const json = await getExemplos();
+        var exemplos = json.exemplos
+    }
+
+    let contratos = [];
+
+    for (let index = 0; index < number; index++) {
+
+        // TODO: Otimizar query de serviços
+        const servicos = JSONQL.readServicos();
+        if (!servicos){
+            console.log("createNContratos: Não há serviços criados");
+            return null
+        }
+
+        const usuarios = JSONQL_U.readUsuarios();
+        if (!usuarios) {
+            console.log("createNContratos: Não há usuários criados");
+            return null
+        }
+
+        let servicoId = servicos[genRandomNumber(servicos.length)].id // number
+        // TODO: Evitar que contratadoId === contratanteId
+        let contratadoId = usuarios[genRandomNumber(usuarios.length)].id // number
+        let contratanteId = usuarios[genRandomNumber(usuarios.length)].id // number
+        let data = genRandomNumber(28) + "/" + genRandomNumber(12) + "/" + genRandomNumber(2026, 1970)
+        let valor = genRandomNumber(5000, 100) // number
+
+        const element = {
+            servicoId: servicoId, // number
+            contratadoId: contratadoId, // number
+            contratanteId: contratanteId, // number
+            data: data, // string
+            valor: valor // number
+        }
+
+        contratos.push(element);
+    }
+
+    return contratos;
 }
 
 /**
@@ -175,6 +237,17 @@ function setupDevTools() {
 
     /** @type { HTMLInputElement | null } */
     // @ts-ignore: HTMLInputElement é derivado de HTMLElement
+    let dev_create_contratos_n = document.getElementById('dev-create-contratos-n');
+    let dev_create_contratos = document.getElementById('dev-create-contratos');
+    let dev_delete_contratos_all = document.getElementById('dev-delete-contratos-all');
+    /** @type { HTMLInputElement | null } */
+    // @ts-ignore: HTMLInputElement é derivado de HTMLElement
+    let dev_delete_contratos_id = document.getElementById('dev-delete-contratos-id');
+    let dev_delete_contratos = document.getElementById('dev-delete-contratos');
+    let dev_read_contratos = document.getElementById('dev-read-contratos');
+
+    /** @type { HTMLInputElement | null } */
+    // @ts-ignore: HTMLInputElement é derivado de HTMLElement
     let dev_create_avaliacoes_n = document.getElementById('dev-create-avaliacoes-n');
     let dev_create_avaliacoes = document.getElementById('dev-create-avaliacoes');
     let dev_delete_avaliacoes_all = document.getElementById('dev-delete-avaliacoes-all');
@@ -249,6 +322,38 @@ function setupDevTools() {
     })
 
     dev_read_servicos?.addEventListener('click', () => console.log(JSONQL.readServicos()))
+
+    // Contratos
+
+    dev_create_contratos?.addEventListener('click', async () => {
+        let quantidade = dev_create_contratos_n?.value;
+        const quantidade_int = ensureInteger(quantidade)
+        if (!quantidade_int) {
+            console.log("dev_create_contratos: Não foi possível realizar o parse da quantidade");
+            return
+        }
+        let contratos = await createNContratos(quantidade_int);
+        contratos?.forEach((value) => JSONQL_C.createContrato(value));
+    })
+
+    dev_delete_contratos_all?.addEventListener('click', JSONQL_C.clearContratos)
+
+    dev_delete_contratos?.addEventListener('click', () => {
+        const id = dev_delete_contratos_id?.value;
+        const id_int = ensureInteger(id)
+        if (!id_int) {
+            console.log("dev_delete_contratos: Não foi possível realizar o parse do id");
+            return
+        }
+
+        if (JSONQL_C.deleteContrato(id_int)) {
+            console.log(`dev_delete_contratos: contrato ${id_int} foi deletado!`);
+        } else {
+            console.log(`dev_delete_contratos: Não foi possível encontrar o serviço ou ocorreu um erro.`);
+        }
+    })
+
+    dev_read_contratos?.addEventListener('click', () => console.log(JSONQL_C.readContratos()))
 
     // Avaliações
 

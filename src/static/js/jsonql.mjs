@@ -46,7 +46,7 @@ const StructServico = {
  * @param {number} categoriaId ID da categoria do serviço 
  * @param {string} descricao Descrição do serviço 
  * @param {string} contato Descrição do serviço 
- * @returns {object|null} Array com informações sobre os serviço
+ * @returns {object|null} Se valido, retorna o objeto com as informações do serviço
  */
 export function factoryServicos(titulo, categoriaId, descricao, contato, categoria) {
 
@@ -96,8 +96,8 @@ export function factoryServicos(titulo, categoriaId, descricao, contato, categor
 /**
  * Validação da struct dos serviços
  * 
- * @param  {...any} servico Informações do serviço
- * @returns {object|null} Array com informações sobre os serviço
+ * @param {object} servico Objeto com as informações do serviço
+ * @returns {object|null} Se valido, retorna o objeto com as informações do serviço
  */
 export function validateServicos(servico) {
     // ID Opcional
@@ -183,7 +183,7 @@ export function readServicos(...servicos_id) {
 /**
  * Retorna a ID do último serviço cadastrado
  * 
- * @returns {Number | null} ID do último serviço cadastrado 
+ * @returns {Number} ID do último serviço cadastrado 
  */
 export function getIdLastServico() {
     let servicos = readServicos();

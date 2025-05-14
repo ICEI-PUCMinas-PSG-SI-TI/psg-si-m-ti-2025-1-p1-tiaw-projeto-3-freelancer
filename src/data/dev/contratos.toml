@@ -6,27 +6,32 @@
 
 # [[contratos]]
 # id = ID do contrato
+# servicoId = ID do serviço que foi contratado
 # contratadoId = ID do usuário que ofereceu o serviço
 # contratanteId = ID do usuário que contratou o serviço
-# data = "1970-01-01T00:00:00.000Z-03:00"
-
-# TODO:
+# data = Data do contrato do serviço
 # valor = Valor combinado (int)
 
 [[contratos]]
 id = 0
+servicoId = 0
 contratadoId = 0
 contratanteId = 1
 data = "1970-01-01T00:00:00.000Z-03:00"
+valor = 300
 
 [[contratos]]
 id = 1
+servicoId = 2
 contratadoId = 0
 contratanteId = 2
 data = "1970-01-01T00:00:00.000Z-03:00"
+valor = 552
 
 [[contratos]]
 id = 2
+servicoId = 1
 contratadoId = 0
 contratanteId = 3
 data = "1970-01-01T00:00:00.000Z-03:00"
+valor = 4896

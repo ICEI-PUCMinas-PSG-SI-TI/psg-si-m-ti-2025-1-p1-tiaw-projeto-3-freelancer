@@ -33,7 +33,7 @@ const StructUsuarios = {
  * @param {string} cidade Localização do usuário
  * @param {string} biografia Informações breves sobre o usuário
  * @param {Array} contatos Lista de contatos do usuário
- * @returns {object|null} Array com informações sobre os 
+ * @returns {object|null} Se valido, retorna o objeto com as informações do usuário
  */
 export function factoryUsuario(ativo, nome, data_nascimento, email, senha, tipo, cpf_cnpj, cidade, biografia, contatos) {
 
@@ -111,8 +111,8 @@ export function factoryUsuario(ativo, nome, data_nascimento, email, senha, tipo,
 /**
  * Validação da struct dos usuários
  * 
- * @param  {object} usuario Informações do usuários
- * @returns {object|null} Array com informações sobre os usuários
+ * @param  {object} usuario Objeto com as informações do usuários
+ * @returns {object | null} Se valido, retorna o objeto com as informações do usuário
  */
 export function validateUsuario(usuario) {
     // TODO: Check if is object
@@ -225,7 +225,7 @@ export function readUsuarios(...usuarios_id) {
 /**
  * Retorna a ID do último usuário cadastrado
  * 
- * @returns {Number | null} ID do último usuário cadastrado 
+ * @returns {Number} ID do último usuário cadastrado 
  */
 export function getIdLastUsuario() {
     let usuarios = readUsuarios();

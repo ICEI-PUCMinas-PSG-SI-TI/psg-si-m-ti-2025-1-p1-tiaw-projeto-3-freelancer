@@ -100,7 +100,8 @@
                 <p>Aqui estão listadas varias ferramentas para facilitar os testes da aplicação.</p>
                 <p>Dentre as funções, estão algumas ferramentas para criação de usuários, serviços ou outras
                     informações com parâmetros aleatórios, isso agiliza o cadastro.</p>
-                <p>O proposito desta página é apenas realizar testes, portanto na aplicação final, esta página será desabilitada
+                <p>O proposito desta página é apenas realizar testes, portanto na aplicação final, esta página será
+                    desabilitada
                     ou limitada apenas para usuários administradores.</p>
             </div>
         </div>
@@ -157,6 +158,32 @@
 
         <div class="card mb-3">
             <div class="card-body">
+                <h4 class="my-3">Contratos</h4>
+
+                <hr>
+                <p><strong>Criar n contratos com dados aleatórios</strong></p>
+                <p>Observação: Os serviços e usuários que fazem parte do contrato serão escolhidos aleatoriamente</p>
+                <input id="dev-create-contratos-n" placeholder="Quantidade">
+                <button id="dev-create-contratos">Gerar</button>
+                <hr>
+                <p><strong>Deletar todos os contratos</strong></p>
+                <p>Observação: Isso também ira deletar os avaliações ou qualquer outras informações associadas aos
+                    contratos deletados.</p>
+                <button id="dev-delete-contratos-all">Deletar</button>
+                <hr>
+                <p><strong>Deletar contratos por ID</strong></p>
+                <p>Observação: Isso também ira deletar as avaliações ou qualquer outras informações associadas aos
+                    contratos deletados.</p>
+                <input id="dev-delete-contratos-id" placeholder="ID">
+                <button id="dev-delete-contratos">Deletar</button>
+                <hr>
+                <p><strong>Outros</strong></p>
+                <button id="dev-read-contratos">Mostrar contratos no console</button>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body">
                 <h4 class="my-3">Avaliações</h4>
                 <hr>
                 <p><strong>Criar n avaliações com dados aleatórios</strong></p>
@@ -185,14 +212,6 @@
         <div class="card mb-3">
             <div class="card-body">
                 <h4 class="my-3">Portfólio</h4>
-
-                <p>// TODO</p>
-            </div>
-        </div>
-
-        <div class="card mb-3">
-            <div class="card-body">
-                <h4 class="my-3">Contratos</h4>
 
                 <p>// TODO</p>
             </div>
