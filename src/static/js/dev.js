@@ -43,8 +43,9 @@ async function getExemplos() {
  */
 async function createNUsers(number) {
     // TODO: Does this work? Does this validate something?
-    if (!number)
-        number = 10;
+    let number_int = ensureInteger(number)
+    if (!number_int)
+        number_int = 10
 
     // TODO: Make a single call
     if (!exemplos) {
@@ -65,10 +66,10 @@ async function createNUsers(number) {
         let cpf_cnpj = exemplos.cpf_cnpj[genRandomNumber(exemplos.cpf_cnpj.length)] // string
         let cidade = exemplos.cidades[genRandomNumber(exemplos.cidades.length)] // string
         let biografia = exemplos.biografia[genRandomNumber(exemplos.biografia.length)] // string
-        let contatos = [
+        let contatos = [ // Array
             exemplos.contatos[genRandomNumber(exemplos.contatos.length)],
             exemplos.contatos[genRandomNumber(exemplos.contatos.length)]
-        ] // Array
+        ] 
 
         const element = {
             ativo: ativo, // bool
@@ -94,8 +95,9 @@ async function createNUsers(number) {
  */
 async function createNServicos(number) {
     // TODO: Does this work? Does this validate something?
-    if (!number)
-        number = 10;
+    let number_int = ensureInteger(number)
+    if(!number_int)
+        number_int = 10
 
     // TODO: Make a single call
     if(!exemplos){
@@ -108,7 +110,7 @@ async function createNServicos(number) {
     for (let index = 0; index < number; index++) {
 
         let titulo = exemplos.categorias_servicos[genRandomNumber(exemplos.categorias_servicos.length)]
-        // TODO: categorias_servicos
+        // TODO: categorias_servicos -> array, use id only
         let categoriaId = genRandomNumber(exemplos.categorias_servicos.length)
         let categoria = exemplos.categorias_servicos[genRandomNumber(exemplos.categorias_servicos.length)]
         let contato = exemplos.contatos[genRandomNumber(exemplos.contatos.length)]
@@ -126,6 +128,26 @@ async function createNServicos(number) {
     }
 
     return usuarios;
+}
+
+
+/**
+ * Verifica se o parametro é um número e retorna
+ * 
+ * @param {any} value - O valor para verificar
+ * @returns {number | null} - Retorna o número ou null se não foi possível confirmar que é um número
+ */
+function ensureInteger(value) {
+    if (typeof (value) === "number" && Number.isInteger(value)) {
+        return value;
+    }
+
+    if (typeof value === 'string') {
+        const parsed = Number.parseInt(value, 10);
+        return Number.isNaN(parsed) ? null : parsed;
+    }
+
+    return null;
 }
 
 function setupDevTools() {
@@ -165,8 +187,14 @@ function setupDevTools() {
     // Usuários
 
     dev_create_usuarios?.addEventListener('click', async () => {
-        let quantidade = dev_create_usuarios_n?.value;
-        let usuarios = await createNUsers(quantidade);
+        const quantidade = dev_create_usuarios_n?.value;
+        const quantidade_int = ensureInteger(quantidade)
+        if (!quantidade_int){
+            console.log("dev_create_usuarios: Não foi possível realizar o parse da quantidade");
+            return
+        }
+
+        const usuarios = await createNUsers(quantidade_int);
         usuarios.forEach((value) => JSONQL_U.createUsuario(value));
     })
 
@@ -174,14 +202,9 @@ function setupDevTools() {
 
     dev_delete_usuarios?.addEventListener('click', () => {
         const id = dev_delete_usuarios_id?.value;
-        if (!id) {
-            console.log("dev_delete_usuarios: id é null");
-            return
-        }
+        const id_int = ensureInteger(id)
 
-        const id_int = parseInt(id);
-
-        if (typeof (id_int) != "number") {
+        if (!id_int) {
             console.log("dev_delete_usuarios: Não foi possível realizar o parse do id");
             return
         }
@@ -199,7 +222,12 @@ function setupDevTools() {
 
     dev_create_servicos?.addEventListener('click', async () => {
         let quantidade = dev_create_servicos_n?.value;
-        let servicos = await createNServicos(quantidade);
+        const quantidade_int = ensureInteger(quantidade)
+        if (!quantidade_int) {
+            console.log("dev_create_servicos: Não foi possível realizar o parse da quantidade");
+            return
+        }
+        let servicos = await createNServicos(quantidade_int);
         servicos.forEach((value) => JSONQL.createServicos(value));
     })
 
@@ -207,14 +235,8 @@ function setupDevTools() {
 
     dev_delete_servicos?.addEventListener('click', () => {
         const id = dev_delete_servicos_id?.value;
-        if (!id) {
-            console.log("dev_delete_servicos: id é null");
-            return
-        }
-
-        const id_int = parseInt(id);
-
-        if (typeof (id_int) != "number") {
+        const id_int = ensureInteger(id)
+        if (!id_int) {
             console.log("dev_delete_servicos: Não foi possível realizar o parse do id");
             return
         }
