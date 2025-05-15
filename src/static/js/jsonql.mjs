@@ -214,7 +214,7 @@ export function updateServicos(servico_id, servico_new) {
             return true;
         }
     }
-    
+
     return false;
 }
 
@@ -236,7 +236,7 @@ export function deleteServicos(servico_id) {
 
     if (!servicos?.length)
         return false
-    
+
     for (let index = 0; index < servicos.length; index++) {
         const element = servicos[index];
         if (servico_id === parseInt(element.id, 10)) {

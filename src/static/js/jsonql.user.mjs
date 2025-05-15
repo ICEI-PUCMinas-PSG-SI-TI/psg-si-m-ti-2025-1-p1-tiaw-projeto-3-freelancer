@@ -244,7 +244,7 @@ export function updateUsuario(usuario_id, usuario_new) {
             setUsuarios(usuarios);
             return true;
         }
-    }    
+    }
 
     return false;
 }

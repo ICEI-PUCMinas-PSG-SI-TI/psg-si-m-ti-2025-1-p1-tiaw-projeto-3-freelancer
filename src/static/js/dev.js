@@ -69,13 +69,13 @@ async function createNContratos(number) {
 
         // TODO: Otimizar query de serviços
         const servicos = JSONQL.readServicos();
-        if (!servicos){
+        if (!servicos?.length) {
             console.log("createNContratos: Não há serviços criados");
             return null
         }
 
         const usuarios = JSONQL_U.readUsuarios();
-        if (!usuarios) {
+        if (!usuarios?.length) {
             console.log("createNContratos: Não há usuários criados");
             return null
         }
@@ -102,7 +102,7 @@ async function createNContratos(number) {
 }
 
 /**
- * Cria N usuários 
+ * Cria N avaliações 
  */
 async function createNAvaliacoes(number) {
     // TODO: Does this work? Does this validate something?
@@ -119,7 +119,7 @@ async function createNAvaliacoes(number) {
     let avaliacoes = [];
 
     for (let index = 0; index < number; index++) {
-        
+
         // TODO: Otimizar query de serviços
         const contrato = JSONQL_C.readContratos();
         if (!contrato?.length) {
@@ -183,7 +183,7 @@ async function createNUsers(number) {
         let contatos = [ // Array
             exemplos.contatos[genRandomNumber(exemplos.contatos.length)],
             exemplos.contatos[genRandomNumber(exemplos.contatos.length)]
-        ] 
+        ]
 
         const element = {
             ativo: ativo, // bool
@@ -210,11 +210,11 @@ async function createNUsers(number) {
 async function createNServicos(number) {
     // TODO: Does this work? Does this validate something?
     let number_int = ensureInteger(number)
-    if(!number_int)
+    if (!number_int)
         number_int = 10
 
     // TODO: Make a single call
-    if(!exemplos){
+    if (!exemplos) {
         const json = await getExemplos();
         var exemplos = json.exemplos
     }
@@ -229,7 +229,7 @@ async function createNServicos(number) {
         let categoria = exemplos.categorias_servicos[genRandomNumber(exemplos.categorias_servicos.length)]
         let contato = exemplos.contatos[genRandomNumber(exemplos.contatos.length)]
         let descricao = exemplos.descricoes[genRandomNumber(exemplos.descricoes.length)]
-        
+
         const element = {
             titulo: titulo,
             categoriaId: categoriaId,
@@ -316,7 +316,7 @@ function setupDevTools() {
     dev_create_usuarios?.addEventListener('click', async () => {
         const quantidade = dev_create_usuarios_n?.value;
         const quantidade_int = ensureInteger(quantidade)
-        if (!quantidade_int){
+        if (!quantidade_int) {
             console.log("dev_create_usuarios: Não foi possível realizar o parse da quantidade");
             return
         }
@@ -403,7 +403,7 @@ function setupDevTools() {
         if (JSONQL_C.deleteContrato(id_int)) {
             console.log(`dev_delete_contratos: contrato ${id_int} foi deletado!`);
         } else {
-            console.log(`dev_delete_contratos: Não foi possível encontrar o serviço ou ocorreu um erro.`);
+            console.log(`dev_delete_contratos: Não foi possível encontrar o contrato ou ocorreu um erro.`);
         }
     })
 
@@ -433,9 +433,9 @@ function setupDevTools() {
         }
 
         if (JSONQL_A.deleteAvaliacao(id_int)) {
-            console.log(`dev_delete_avaliacoes: contrato ${id_int} foi deletado!`);
+            console.log(`dev_delete_avaliacoes: avaliação ${id_int} foi deletado!`);
         } else {
-            console.log(`dev_delete_avaliacoes: Não foi possível encontrar o serviço ou ocorreu um erro.`);
+            console.log(`dev_delete_avaliacoes: Não foi possível encontrar a avaliação ou ocorreu um erro.`);
         }
     })
 

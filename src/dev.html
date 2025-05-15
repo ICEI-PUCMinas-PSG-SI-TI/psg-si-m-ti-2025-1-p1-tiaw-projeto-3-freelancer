@@ -89,24 +89,20 @@
     <!-- Conteúdo da página -->
     <div id="content-div" class="body-section body-content d-flex flex-column p-3">
         <!-- CONTEÚDO -->
-        <div class="card mb-3 p-0">
-            <div class="card-body">
-                <h2 class="m-0 p-0 g-0">Ferramentas de Desenvolvedor/Testes</h2>
+        <div class="card  mb-3 p-0">
+            <div class="card-header">
+                <h2 class="m-2 p-0 g-0">Ferramentas de Desenvolvedor/Testes</h2>
             </div>
-        </div>
-
-        <div class="card mb-3">
             <div class="card-body">
                 <p>Aqui estão listadas varias ferramentas para facilitar os testes da aplicação.</p>
                 <p>Dentre as funções, estão algumas ferramentas para criação de usuários, serviços ou outras
                     informações com parâmetros aleatórios, isso agiliza o cadastro.</p>
                 <p>O proposito desta página é apenas realizar testes, portanto na aplicação final, esta página será
-                    desabilitada
-                    ou limitada apenas para usuários administradores.</p>
+                    desabilitada ou limitada apenas para usuários administradores.</p>
             </div>
         </div>
 
-
+        <!-- TODO: Reset forms when reloading page -->
         <div class="accordion" id="accordionPanelsStayOpen">
             <div class="accordion-item">
                 <h2 class="accordion-header">
@@ -119,8 +115,8 @@
                 <div id="panelsStayOpen-collapseUsuarios" class="accordion-collapse collapse">
                     <div class="accordion-body p-4">
                         <p><strong>Criar n usuários com dados aleatórios</strong></p>
-                        <input type="number" min="0" class="form-control w-auto mb-1"
-                            aria-describedby="addon-wrapping" id="dev-create-usuarios-n" placeholder="Quantidade">
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping"
+                            id="dev-create-usuarios-n" placeholder="Quantidade">
                         <button class="btn btn-success" id="dev-create-usuarios">Gerar</button>
                         <hr>
                         <p><strong>Deletar todos os usuários</strong></p>
@@ -131,7 +127,8 @@
                         <p><strong>Deletar usuários por ID</strong></p>
                         <p>Observação: Isso também ira deletar os serviços ou qualquer outras informações associadas aos
                             usuários deletados.</p>
-                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping" id="dev-delete-usuarios-id" placeholder="ID">
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping"
+                            id="dev-delete-usuarios-id" placeholder="ID">
                         <button class="btn btn-danger" id="dev-delete-usuarios">Deletar</button>
                         <hr>
                         <p><strong>Outros</strong></p>
@@ -153,7 +150,8 @@
                         <p>Observação: Os usuários que oferecem os serviços também serão
                             escolhidos
                             aleatoriamente</p>
-                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping" id="dev-create-servicos-n" placeholder="Quantidade">
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping"
+                            id="dev-create-servicos-n" placeholder="Quantidade">
                         <button class="btn btn-success" id="dev-create-servicos">Gerar</button>
                         <hr>
                         <p><strong>Deletar todos os serviços</strong></p>
@@ -166,7 +164,8 @@
                         <p>Observação: Isso também ira deletar as avaliações ou qualquer outras
                             informações associadas aos
                             serviços deletados.</p>
-                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping" id="dev-delete-servicos-id" placeholder="ID">
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping"
+                            id="dev-delete-servicos-id" placeholder="ID">
                         <button class="btn btn-danger" id="dev-delete-servicos">Deletar</button>
                         <hr>
                         <p><strong>Outros</strong></p>
@@ -185,9 +184,11 @@
                 <div id="panelsStayOpen-collapseContratos" class="accordion-collapse collapse">
                     <div class="accordion-body p-4">
                         <p><strong>Criar n contratos com dados aleatórios</strong></p>
+                        <!-- TODO: Adicionar uma checkbox para adicionar dependencias -->
                         <p>Observação: Os serviços e usuários que fazem parte do contrato serão escolhidos
                             aleatoriamente</p>
-                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping" id="dev-create-contratos-n" placeholder="Quantidade">
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping"
+                            id="dev-create-contratos-n" placeholder="Quantidade">
                         <button class="btn btn-success" id="dev-create-contratos">Gerar</button>
                         <hr>
                         <p><strong>Deletar todos os contratos</strong></p>
@@ -200,7 +201,8 @@
                         <p>Observação: Isso também ira deletar as avaliações ou qualquer outras informações associadas
                             aos
                             contratos deletados.</p>
-                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping" id="dev-delete-contratos-id" placeholder="ID">
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping"
+                            id="dev-delete-contratos-id" placeholder="ID">
                         <button class="btn btn-danger" id="dev-delete-contratos">Deletar</button>
                         <hr>
                         <p><strong>Outros</strong></p>
@@ -219,11 +221,13 @@
                 <div id="panelsStayOpen-collapseAvaliacoes" class="accordion-collapse collapse">
                     <div class="accordion-body p-4">
                         <p><strong>Criar n avaliações com dados aleatórios</strong></p>
+                        <!-- TODO: Adicionar uma checkbox para adicionar dependencias -->
                         <p>Observação: Os serviços para avaliação e usuários que oferecem os serviços também serão
                             escolhidos
                             aleatoriamente
                         </p>
-                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping" id="dev-create-avaliacoes-n" placeholder="Quantidade">
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping"
+                            id="dev-create-avaliacoes-n" placeholder="Quantidade">
                         <button class="btn btn-success" id="dev-create-avaliacoes">Gerar</button>
                         <hr>
                         <p><strong>Deletar todos as avaliações</strong></p>
@@ -236,7 +240,8 @@
                         <p>Observação: Isso também ira deletar as avaliações ou qualquer outras informações associadas
                             aos
                             serviços deletados.</p>
-                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping" id="dev-delete-avaliacoes-id" placeholder="ID">
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping"
+                            id="dev-delete-avaliacoes-id" placeholder="ID">
                         <button class="btn btn-danger" id="dev-delete-avaliacoes">Deletar</button>
                         <hr>
                         <p><strong>Outros</strong></p>
