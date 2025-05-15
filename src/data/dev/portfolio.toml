@@ -8,6 +8,7 @@
 # [[portfolios]]
 # id = ID do portfólio
 # usuarioId = ID do usuário do portfólio
+# secao.nome = Nome da seção
 # secao.ordem = Posição que a seção aparece
 # secao.categoriaId = Tipo de categoria da seção (categorias.secao.toml)
 # secao.contents = Lista de conteúdos da seção
@@ -18,11 +19,13 @@
 id = 0
 usuarioId = 0
 
-[[portfolios.secao]]
+[[portfolios.secoes]]
+nome = "Avaliações"
 ordem = 0
 categoriaId = 1
 
-[[portfolios.secao]]
+[[portfolios.secoes]]
+nome = "Fotos de trabalhos anteriores"
 ordem = 1
 categoriaId = 0
 contents = [
@@ -31,7 +34,8 @@ contents = [
     {blob = "imagemId", descricao = "Foto" }, 
 ]
 
-[[portfolios.secao]]
+[[portfolios.secoes]]
+nome = "Links Importantes"
 ordem = 2
 categoriaId = 2
 contents = [

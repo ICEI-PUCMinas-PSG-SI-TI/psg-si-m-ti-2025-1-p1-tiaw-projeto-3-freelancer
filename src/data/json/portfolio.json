@@ -2,14 +2,13 @@
     "portfolios": [
         {
             "id": 0,
-            "usuarioId": 0,
-            "secao": [
+            "secoes": [
                 {
-                    "ordem": 0,
-                    "categoriaId": 1
+                    "categoriaId": 1,
+                    "nome": "Avaliações",
+                    "ordem": 0
                 },
                 {
-                    "ordem": 1,
                     "categoriaId": 0,
                     "contents": [
                         {
@@ -24,10 +23,11 @@
                             "blob": "imagemId",
                             "descricao": "Foto"
                         }
-                    ]
+                    ],
+                    "nome": "Fotos de trabalhos anteriores",
+                    "ordem": 1
                 },
                 {
-                    "ordem": 2,
                     "categoriaId": 2,
                     "contents": [
                         {
@@ -42,9 +42,12 @@
                             "blob": "https://example.com",
                             "descricao": "LinkedIn"
                         }
-                    ]
+                    ],
+                    "nome": "Links Importantes",
+                    "ordem": 2
                 }
-            ]
+            ],
+            "usuarioId": 0
         }
     ]
 }
