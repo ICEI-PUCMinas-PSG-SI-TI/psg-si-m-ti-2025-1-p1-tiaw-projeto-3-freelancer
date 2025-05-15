@@ -1,9 +1,9 @@
 //@ts-check
-import * as JSONQL from "./jsonql.mjs";
-import * as JSONQL_U from "./jsonql.user.mjs";
-import * as JSONQL_C from "./jsonql.contracts.mjs";
-import * as JSONQL_A from "./jsonql.review.mjs";
-import * as JSONQL_P from "./jsonql.portfolio.mjs";
+import * as JSONQL_S from "./jsonql.service.mjs"; // Serviços
+import * as JSONQL_U from "./jsonql.user.mjs"; // Usuários
+import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
+import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
+import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -163,7 +163,7 @@ async function createNContratos(number) {
     for (let index = 0; index < number; index++) {
 
         // TODO: Otimizar query de serviços
-        const servicos = JSONQL.readServicos();
+        const servicos = JSONQL_S.readServicos();
         if (!servicos?.length) {
             console.log("createNContratos: Não há serviços criados");
             return null
@@ -461,10 +461,10 @@ function setupDevTools() {
             return
         }
         let servicos = await createNServicos(quantidade_int);
-        servicos.forEach((value) => JSONQL.createServicos(value));
+        servicos.forEach((value) => JSONQL_S.createServicos(value));
     })
 
-    dev_delete_servicos_all?.addEventListener('click', JSONQL.clearServicos)
+    dev_delete_servicos_all?.addEventListener('click', JSONQL_S.clearServicos)
 
     dev_delete_servicos?.addEventListener('click', () => {
         const id = dev_delete_servicos_id?.value;
@@ -474,14 +474,14 @@ function setupDevTools() {
             return
         }
 
-        if (JSONQL.deleteServicos(id_int)) {
+        if (JSONQL_S.deleteServicos(id_int)) {
             console.log(`dev_delete_servicos: serviço ${id_int} foi deletado!`);
         } else {
             console.log(`dev_delete_servicos: Não foi possível encontrar o serviço ou ocorreu um erro.`);
         }
     })
 
-    dev_read_servicos?.addEventListener('click', () => console.log(JSONQL.readServicos()))
+    dev_read_servicos?.addEventListener('click', () => console.log(JSONQL_S.readServicos()))
 
     // Contratos
 
