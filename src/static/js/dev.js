@@ -3,6 +3,7 @@ import * as JSONQL from "./jsonql.mjs";
 import * as JSONQL_U from "./jsonql.user.mjs";
 import * as JSONQL_C from "./jsonql.contracts.mjs";
 import * as JSONQL_A from "./jsonql.review.mjs";
+import * as JSONQL_P from "./jsonql.portfolio.mjs";
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -46,6 +47,100 @@ async function getExemplos() {
     }
 
     return null;
+}
+
+/**
+ * Cria N portfólios 
+ */
+async function createNPortfolios(number) {
+    // TODO: Does this work? Does this validate something?
+    let number_int = ensureInteger(number)
+    if (!number_int)
+        number_int = 10
+
+    // TODO: Make a single call
+    if (!exemplos) {
+        const json = await getExemplos();
+        var exemplos = json.exemplos
+    }
+
+    let portfolios = [];
+
+    for (let index = 0; index < number; index++) {
+        function createSecao(ordem) {
+            let ordem_int = ensureInteger(ordem)
+            let secao = {
+                ordem: ordem_int,
+                // TODO: Verificar dinamicamente as categorias possíveis
+                categoriaId: genRandomNumber(3),
+                // TODO: Verificar dinamicamente os nomes de acordo com a categoria
+                nome: "Seção de Informações",
+            }
+
+            // TODO: Criar dinamicamente
+            // categorias_secao.json
+            switch (secao.categoriaId) {
+                // 0: Imagens
+                case 0:
+                    // TODO: Adicionar imagens reais
+                    secao.contents = []
+                    for (let j = 0; j < genRandomNumber(10, 5); j++) {
+                        let linke = `https://picsum.photos/seed/${genRandomNumber(200)}/200`
+                        secao.contents.push({
+                            blob: linke, // portfolios.secao.contents.blob - string
+                            descricao: "Foto" // portfolios.secao.contents.descricao - string
+                        })
+                    }
+                    break;
+                    // 1: Avaliações
+                case 1:
+                    // Faz nada: Essa categoria deve ser controlada pela pagina que mostra as informações
+                    break;
+                    // 2: Links Externos
+                case 2:
+                    secao.contents = []
+                    for (let j = 0; j < genRandomNumber(6, 3); j++) {
+                        let linke = exemplos.links_externos[genRandomNumber(exemplos.links_externos.length)]
+                        secao.contents.push({
+                            blob: linke, // portfolios.secao.contents.blob - string
+                            descricao: "Link Externo" // portfolios.secao.contents.descricao - string
+                        })
+                    }
+                    break;
+                default:
+                    console.log("createNPortfolios: categoria informada não encontrada!");
+                    return null
+                    break;
+            }
+
+            return secao
+        }
+
+
+        const usuarios = JSONQL_U.readUsuarios();
+        if (!usuarios?.length) {
+            console.log("createNContratos: Não há usuários criados");
+            return null
+        }
+
+        // TODO: Avoid creating more than 1 portfolios per user
+        let usuarioId = usuarios[genRandomNumber(usuarios.length)].id // number
+        let secoes = [];
+
+        // Gera entre 2 e 5 seções para cada portfolio
+        for (let i = 0; i < genRandomNumber(5, 2); i++) {
+            secoes.push(createSecao(i));
+        }
+
+        const element = {
+            usuarioId: usuarioId,
+            secoes: secoes,
+        }
+
+        portfolios.push(element);
+    }
+
+    return portfolios;
 }
 
 /**
@@ -309,6 +404,17 @@ function setupDevTools() {
     let dev_delete_avaliacoes = document.getElementById('dev-delete-avaliacoes');
     let dev_read_avaliacoes = document.getElementById('dev-read-avaliacoes');
 
+    /** @type { HTMLInputElement | null } */
+    // @ts-ignore: HTMLInputElement é derivado de HTMLElement
+    let dev_create_portfolios_n = document.getElementById('dev-create-portfolios-n');
+    let dev_create_portfolios = document.getElementById('dev-create-portfolios');
+    let dev_delete_portfolios_all = document.getElementById('dev-delete-portfolios-all');
+    /** @type { HTMLInputElement | null } */
+    // @ts-ignore: HTMLInputElement é derivado de HTMLElement
+    let dev_delete_portfolios_id = document.getElementById('dev-delete-portfolios-id');
+    let dev_delete_portfolios = document.getElementById('dev-delete-portfolios');
+    let dev_read_portfolios = document.getElementById('dev-read-portfolios');
+
     let dev_outros_clear = document.getElementById('dev-outros-clear');
 
     // Usuários
@@ -443,7 +549,35 @@ function setupDevTools() {
 
     // Portfólio
 
-    // TODO: *
+    dev_create_portfolios?.addEventListener('click', async () => {
+        let quantidade = dev_create_portfolios_n?.value;
+        const quantidade_int = ensureInteger(quantidade)
+        if (!quantidade_int) {
+            console.log("dev_create_portfolios: Não foi possível realizar o parse da quantidade");
+            return
+        }
+        let portfolios = await createNPortfolios(quantidade_int);
+        portfolios?.forEach((value) => JSONQL_P.createPortfolio(value));
+    })
+
+    dev_delete_portfolios_all?.addEventListener('click', JSONQL_P.clearPortfolios)
+
+    dev_delete_portfolios?.addEventListener('click', () => {
+        const id = dev_delete_portfolios_id?.value;
+        const id_int = ensureInteger(id)
+        if (!id_int) {
+            console.log("dev_delete_portfolios: Não foi possível realizar o parse do id");
+            return
+        }
+
+        if (JSONQL_P.deletePortfolio(id_int)) {
+            console.log(`dev_delete_portfolios: portfolio ${id_int} foi deletado!`);
+        } else {
+            console.log(`dev_delete_portfolios: Não foi possível encontrar o portfolio ou ocorreu um erro.`);
+        }
+    })
+
+    dev_read_portfolios?.addEventListener('click', () => console.log(JSONQL_P.readPortfolios()))
 
     // Outros
 

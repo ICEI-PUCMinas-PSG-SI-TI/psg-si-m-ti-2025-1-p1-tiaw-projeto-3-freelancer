@@ -259,7 +259,24 @@
                 </h2>
                 <div id="panelsStayOpen-collapsePortfolio" class="accordion-collapse collapse">
                     <div class="accordion-body p-4">
-                        <p>// TODO</p>
+                        <p><strong>Criar n portfólios com dados aleatórios</strong></p>
+                        <!-- TODO: Adicionar uma checkbox para adicionar dependencias -->
+                        <p>Observação: Essa função possui dependencias de portfólios, usuários, serviços e contratos.
+                        </p>
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping"
+                            id="dev-create-portfolios-n" placeholder="Quantidade">
+                        <button class="btn btn-success" id="dev-create-portfolios">Gerar</button>
+                        <hr>
+                        <p><strong>Deletar todos os portfólios</strong></p>
+                        <button class="btn btn-danger" id="dev-delete-portfolios-all">Deletar</button>
+                        <hr>
+                        <p><strong>Deletar portfólio por ID</strong></p>
+                        <input type="number" min="0" class="form-control w-auto mb-1" aria-describedby="addon-wrapping"
+                            id="dev-delete-portfolios-id" placeholder="ID">
+                        <button class="btn btn-danger" id="dev-delete-portfolios">Deletar</button>
+                        <hr>
+                        <p><strong>Outros</strong></p>
+                        <button class="btn btn-primary" id="dev-read-portfolios">Mostrar portfólios no console</button>
                     </div>
                 </div>
             </div>
