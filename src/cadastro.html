@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <!-- Metadata -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cadastro de Usuário</title>
+  <!-- Favicon -->
+  <link rel="icon" href="static/favicon.ico">
+  <!-- CSS -->
+  <link rel="stylesheet" href="static/css/styles.css" type="text/css">
+  <link rel="stylesheet" href="static/css/cadastro.css" type="text/css">
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous">
+  </script>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3&display=swap" rel="stylesheet">
+  <!-- Project Scripts -->
+  <script defer src="static/js/cadastro.js"></script>
+  <script defer src="static/js/darkmode.js"></script>
+  <script defer src="static/js/404.js"></script>
+</head>
+
+<body data-bs-theme="dark">
+  <!-- Cabeçalho -->
+  <nav class="body-section body-header navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <!-- id.navbar.logo -->
+      <a class="d-flex justify-content-center text-center align-items-center text-decoration-none me-3" href="./">
+        <img class="m-2 icon-32px" src="static/icon.png">
+        <p class="navbar-brand p-0 m-0 g-0">Lucre+</p>
+      </a>
+      <!-- id.navbar.toggle -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <!-- id.navbar.navigation -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Serviços
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="404.html">Em andamento</a></li>
+            </ul>
+          </li>
+          <!-- id.navbar.navigation.pares -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Revisão por Pares
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="serviços.html">Cadastro de Serviços</a></li>
+              <li><a class="dropdown-item" href="cadastro.html">Cadastro de Usuários</a></li>
+            </ul>
+          </li>
+        </ul>
+        <!-- id.navbar.darkmode -->
+        <!-- Layout será modificado por js/darkmode.js -->
+        <div class="d-none" id="toggleDarkDiv"></div>
+        <!-- id.navbar.search -->
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Search">
+          <a class="btn btn-outline-primary" href="404.html">Pesquisar</a>
+          <!--
+          <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
+          -->
+        </form>
+        <!-- id.navbar.profile -->
+        <div class="m-2 me-0 rounded d-flex justify-content-center">
+          <img class="rounded profile-picture" src="static/img/placeholder_profile.png">
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- Conteúdo da página -->
+  <div id="content-div" class="body-section body-content d-flex flex-column align-items-center justify-content-center p-3">
+    <!-- Formulário -->
+    <form id="formCadastro" class="row g-4">
+      <div class="col-md-3 d-flex flex-column align-items-center">
+        <label for="foto" class="form-label">Foto de Perfil</label>
+        <input type="file" class="form-control mb-2" id="foto" name="foto" accept="image/*" onchange="previewFoto()" />
+        <img id="preview" src="https://www.w3schools.com/howto/img_avatar.png" class="img-thumbnail rounded-circle"
+          width="180" alt="Prévia da Foto">
+      </div>
+      <div class="col-md-9 row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Nome e sobrenome</label>
+          <input type="text" class="form-control" id="nome" name="nome" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Profissão</label>
+          <input type="text" class="form-control" id="profissao" name="profissao">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Contato</label>
+          <input type="tel" class="form-control" id="contato" name="contato">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Escolaridade</label>
+          <input type="text" class="form-control" id="escolaridade" name="escolaridade">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">CPF</label>
+          <input type="text" class="form-control" id="cpf" name="cpf_cnpj" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Endereço</label>
+          <input type="text" class="form-control" id="cidade" name="cidade">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Sexo</label>
+          <select class="form-select" id="sexo" name="sexo">
+            <option selected>Selecionar</option>
+            <option>Feminino</option>
+            <option>Masculino</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Data de Nascimento</label>
+          <input type="date" class="form-control" id="data_nascimento" name="data_nascimento">
+        </div>
+        <div class="form-group">
+          <label for="tipo">Tipo de Usuário</label>
+          <select id="tipo" name="tipo" required class="form-select">
+            <option value="">Selecione</option>
+            <option value="profissional">Profissional</option>
+            <option value="cliente">Cliente</option>
+          </select>
+        </div>
+        <div class="col-md-12">
+          <label class="form-label">Biografia</label>
+          <textarea class="form-control" id="biografia" name="biografia" rows="3"></textarea>
+        </div>
+        <div class="col-md-12">
+          <label class="form-label">Senha</label>
+          <input type="password" class="form-control" id="senha" name="senha" required>
+        </div>
+        <div class="col-md-12 d-flex justify-content-between">
+          <button type="submit" class="btn btn-success">SALVAR</button>
+          <button type="reset" class="btn btn-secondary">CANCELAR</button>
+        </div>
+        <div class="col-md-12 text-muted small">
+          Ao preencher o formulário acima você concorda com os nossos Termos de uso e nossa Política de privacidade.
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Rodapé -->
+  <footer class="body-section body-footer container-fluid border-top m-0 p-0 g-0">
+    <div class="row px-4 px-md-5 pt-4 pt-md-5">
+      <div class="col-12 col-sm-6 pb-3 pb-md-4">
+        <h5>Lucre+</h5>
+        <p>Conectando talentos ao sucesso, um projeto de cada vez.</p>
+        <div class="d-flex flex-row">
+          <a class="text-decoration-none"
+            href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer">
+            <img class="social-icon me-3" src="static/social/github.svg">
+          </a>
+        </div>
+      </div>
+      <hr class="col-12 d-block d-sm-none">
+      <!-- Social Links -->
+      <div class="col-12 col-sm-6 pb-3 pb-md-4 d-flex flex-column">
+        <h5 class="">Navegação</h5>
+        <a class="mb-1"
+          href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer">Projeto</a>
+        <a class="mb-1" href="404.html">Sobre o site</a>
+        <a class="mb-1" href="404.html">Suporte</a>
+        <a class="mb-1" href="404.html">FAQ</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 d-flex justify-content-center align-items-center">
+        <p class="p-3 m-0 g-0">Copyright (c) Lucre+ 2025</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>

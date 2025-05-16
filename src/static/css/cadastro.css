@@ -1,0 +1,71 @@
+/* Estilo para o formulário de cadastro */
+body {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+h2 {
+    font-weight: bold;
+    text-align: center;
+}
+
+form label {
+    font-weight: 500;
+}
+
+form .form-control,
+form .form-select {
+    background-color: #2c2c2c;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+form .form-control:focus,
+form .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: none;
+}
+
+textarea.form-control {
+    resize: none;
+}
+
+/* Botões */
+button[type="submit"],
+button[type="reset"] {
+    min-width: 120px;
+    font-weight: bold;
+}
+
+/* Imagem do avatar */
+.img-thumbnail {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Footer */
+footer {
+    border-top: 1px solid #333;
+}
+
+footer h5 {
+    font-weight: bold;
+}
+
+footer a {
+    text-decoration: none;
+    color: #fff;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Rodapé pequeno texto */
+.text-muted.small {
+    font-size: 0.75rem;
+    opacity: 0.6;
+}
+  
