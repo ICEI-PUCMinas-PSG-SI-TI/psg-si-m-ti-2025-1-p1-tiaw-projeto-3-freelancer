@@ -29,7 +29,10 @@ document.getElementById("formCadastro").addEventListener("submit", function (e) 
       data_nascimento,
       email,
       senha,
-      contatos: [{ id: 0, contato }],
+      contatos: [{
+        id: 0,
+        contato
+      }],
       tipo,
       cpf_cnpj,
       cidade,
