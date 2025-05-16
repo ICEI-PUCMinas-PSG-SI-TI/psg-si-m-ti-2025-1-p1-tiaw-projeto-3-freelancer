@@ -64,79 +64,79 @@
     </div>
 </nav>
   <!-- Formulário -->
-  <div class="container py-5">
-    <h2 class="text-center mb-4">É Novo? Cadastre-se Abaixo!</h2>
-    <form id="formCadastro" class="row g-4">
-      <div class="col-md-3 d-flex flex-column align-items-center">
-        <label for="foto" class="form-label">Foto de Perfil</label>
-        <input type="file" class="form-control mb-2" id="foto" accept="image/*" onchange="previewFoto()" />
-        <img id="preview" src="https://www.w3schools.com/howto/img_avatar.png" class="img-thumbnail rounded-circle" width="180" alt="Prévia da Foto">
-      </div>
-      <div class="col-md-9 row g-3">
-        <div class="col-md-6">
-          <label class="form-label">Nome e sobrenome</label>
-          <input type="text" class="form-control" required>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Profissão</label>
-          <input type="text" class="form-control">
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Contato</label>
-          <input type="tel" class="form-control">
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Escolaridade</label>
-          <input type="text" class="form-control">
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Email</label>
-          <input type="email" class="form-control" required>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">CPF</label>
-          <input type="text" class="form-control" required>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Endereço</label>
-          <input type="text" class="form-control">
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Sexo</label>
-          <select class="form-select">
-            <option selected>Selecionar</option>
-            <option>Feminino</option>
-            <option>Masculino</option>
-            <option>Outro</option>
-          </select>
-        </div>
-        
-        <div class="col-md-6">
-          <label class="form-label">Data de Nascimento</label>
-          <input type="date" class="form-control">
-        </div>
-        <div class="form-group">
-            <label for="tipo">Tipo de Usuário</label>
-            <select id="tipo" name="tipo" required>
-                <option value="">Selecione</option>
-                <option value="profissional">Profissional</option>
-                <option value="cliente">Cliente</option>
-            </select>
-        </div>
-        <div class="col-md-12">
-          <label class="form-label">Biografia</label>
-          <textarea class="form-control" rows="3"></textarea>
-        </div>
-        <div class="col-md-12 d-flex justify-content-between">
-          <button type="submit" class="btn btn-success">SALVAR</button>
-          <button type="reset" class="btn btn-secondary">CANCELAR</button>
-        </div>
-        <div class="col-md-12 text-muted small">
-          Ao preencher o formulário acima você concorda com os nossos Termos de uso e nossa Política de privacidade.
-        </div>
-      </div>
-    </form>
+<form id="formCadastro" class="row g-4">
+  <div class="col-md-3 d-flex flex-column align-items-center">
+    <label for="foto" class="form-label">Foto de Perfil</label>
+    <input type="file" class="form-control mb-2" id="foto" name="foto" accept="image/*" onchange="previewFoto()" />
+    <img id="preview" src="https://www.w3schools.com/howto/img_avatar.png" class="img-thumbnail rounded-circle" width="180" alt="Prévia da Foto">
   </div>
+  <div class="col-md-9 row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Nome e sobrenome</label>
+      <input type="text" class="form-control" id="nome" name="nome" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Profissão</label>
+      <input type="text" class="form-control" id="profissao" name="profissao">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Contato</label>
+      <input type="tel" class="form-control" id="contato" name="contato">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Escolaridade</label>
+      <input type="text" class="form-control" id="escolaridade" name="escolaridade">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">CPF</label>
+      <input type="text" class="form-control" id="cpf" name="cpf_cnpj" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Endereço</label>
+      <input type="text" class="form-control" id="cidade" name="cidade">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Sexo</label>
+      <select class="form-select" id="sexo" name="sexo">
+        <option selected>Selecionar</option>
+        <option>Feminino</option>
+        <option>Masculino</option>
+        <option>Outro</option>
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Data de Nascimento</label>
+      <input type="date" class="form-control" id="data_nascimento" name="data_nascimento">
+    </div>
+    <div class="form-group">
+      <label for="tipo">Tipo de Usuário</label>
+      <select id="tipo" name="tipo" required class="form-select">
+        <option value="">Selecione</option>
+        <option value="profissional">Profissional</option>
+        <option value="cliente">Cliente</option>
+      </select>
+    </div>
+    <div class="col-md-12">
+      <label class="form-label">Biografia</label>
+      <textarea class="form-control" id="biografia" name="biografia" rows="3"></textarea>
+    </div>
+    <div class="col-md-12">
+      <label class="form-label">Senha</label>
+      <input type="password" class="form-control" id="senha" name="senha" required>
+    </div>
+    <div class="col-md-12 d-flex justify-content-between">
+      <button type="submit" class="btn btn-success">SALVAR</button>
+      <button type="reset" class="btn btn-secondary">CANCELAR</button>
+    </div>
+    <div class="col-md-12 text-muted small">
+      Ao preencher o formulário acima você concorda com os nossos Termos de uso e nossa Política de privacidade.
+    </div>
+  </div>
+</form>
 
  <!-- Rodapé -->
  <footer class="body-section body-footer container-fluid border-top m-0 p-0 g-0">
