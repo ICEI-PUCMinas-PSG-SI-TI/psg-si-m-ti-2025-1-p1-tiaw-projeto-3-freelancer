@@ -1,0 +1,20 @@
+{
+    "categorias_servicos": [
+        {
+            "id": 0,
+            "nome": "Refrigeração"
+        },
+        {
+            "id": 1,
+            "nome": "Climatização"
+        },
+        {
+            "id": 2,
+            "nome": "Eletricista"
+        },
+        {
+            "id": 3,
+            "nome": "Outro"
+        }
+    ]
+}

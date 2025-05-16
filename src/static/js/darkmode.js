@@ -5,9 +5,9 @@
  *
  */
 
-function setupDarkMode(){
+function setupDarkMode() {
     let toggleDarkDiv = document.getElementById("toggleDarkDiv");
-    if(!toggleDarkDiv){
+    if (!toggleDarkDiv) {
         return;
     }
 
@@ -26,7 +26,7 @@ function setupDarkMode(){
 
     const theme_key = "data-bs-theme";
 
-    function isDarkTheme(){
+    function isDarkTheme() {
         return localStorage.getItem(theme_key) === "dark"
     }
 
@@ -40,7 +40,7 @@ function setupDarkMode(){
             localStorage.setItem(theme_key, themeCfg);
         }
 
-        if(input){
+        if (input) {
             input.checked = darkEnabled;
             document.body.setAttribute(theme_key, themeCfg);
         }

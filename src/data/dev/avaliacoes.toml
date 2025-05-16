@@ -1,0 +1,61 @@
+#
+# Lista de avaliações criadas pelos usuários
+# Esse valor será usado nos seguintes artefatos:
+# 1. Escrita: Avaliação do serviço
+# 2. Leitura: Filtro de pesquisa (Nota média)
+# 3. Leitura: Página inicial (Nota média)
+# 4. Leitura: Página de perfil (Nota média)
+# 5. Leitura: Página de portfólio (Nota média)
+# 6. Leitura: Página de informações do serviço
+#
+
+# [[avaliacoes]]
+# id = ID da avaliação
+# contratoId = ID do contrato que esta sendo avaliado
+# usuarioId = ID do usuário que fez a avaliação
+# nota = Nota que o usuário deu para o serviço
+# comentario = Comentário realizado pelo usuário
+
+# TODO: Armazenar novos parametros (não importantes no momento):
+# imagemId = Lista de IDs das imagens quer o usuário deixou na avaliação
+# data = Data da avaliação
+
+[[avaliacoes]]
+id = 0
+contratoId = 0
+contratanteId = 5
+nota = 5
+comentario = "Um comentário simples sobre o serviço de id {id}"
+# imagemId = [ 0, 1]
+
+[[avaliacoes]]
+id = 1
+contratoId = 0
+contratanteId = 4
+nota = 1
+comentario = "Um comentário simples sobre o serviço de id {id}"
+# imagemId = [ 0, 1]
+
+[[avaliacoes]]
+id = 2
+contratoId = 1
+contratanteId = 3
+nota = 2
+comentario = "Um comentário simples sobre o serviço de id {id}"
+# imagemId = [ 0, 1]
+
+[[avaliacoes]]
+id = 3
+contratoId = 1
+contratanteId = 2
+nota = 8
+comentario = "Um comentário simples sobre o serviço de id {id}"
+# imagemId = [ 0, 1]
+
+[[avaliacoes]]
+id = 4
+contratoId = 1
+contratanteId = 2
+nota = 10
+comentario = "Um comentário simples sobre o serviço de id {id}"
+# imagemId = [ 0, 1]

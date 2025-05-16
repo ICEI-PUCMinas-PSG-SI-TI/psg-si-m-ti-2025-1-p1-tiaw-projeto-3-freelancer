@@ -4,3 +4,4 @@
 .vscode/
 .vs/
 _temp/
+*_test.*
