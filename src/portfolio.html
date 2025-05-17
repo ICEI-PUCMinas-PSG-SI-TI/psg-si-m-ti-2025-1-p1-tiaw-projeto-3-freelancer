@@ -132,6 +132,43 @@
         </div>
     </div>
 
+    <!-- TODO: adicionar apenas se ?edit=true -->
+    <div id="popup-edit" class="d-flex popup-edit justify-content-center align-items-center d-none">
+        <div class="card position-relative w-100">
+            <button id="popup-edit-close"
+                class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+                <img class="icon-dark icon-24px" src="static/action-icons/close.svg">
+            </button>
+            <div class="card-body">
+                <div class="mb-3 w-100 d-flex justify-content-center">
+                    <img class="m-3 icon-32px" src="static/icons/link.svg">
+                </div>
+                <form id="popup-edit-form" class="d-flex justify-content-center flex-column">
+                    <div class="mb-3">
+                        <label for="basic-url" class="form-label">Nome da seção</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="popup-edit-name"
+                                aria-describedby="basic-addon3 basic-addon4">
+                        </div>
+                        <div class="form-text">O nome da seção de <span id="popup-edit-name-span">secao.content</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="basic-url" class="form-label">Descrição da Seção</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="popup-edit-description"
+                                aria-describedby="basic-addon3 basic-addon4">
+                        </div>
+                        <div class="form-text">O nome da seção de <span
+                                id="popup-edit-description-span">secao.content</span>
+                        </div>
+                    </div>
+                    <button id="popup-edit-confirm" type="button" class="btn btn-primary">Confirmar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Rodapé -->
     <footer class="body-section body-footer container-fluid border-top m-0 p-0 g-0">
         <div class="row px-4 px-md-5 pt-4 pt-md-5">

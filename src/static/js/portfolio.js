@@ -64,6 +64,45 @@ function getNota(userId) {
 }
 
 function setupPortfolioPage() {
+    let popup_edit = document.getElementById("popup-edit")
+    // Setup edit first
+    // TODO: Configurar edição apenas se necessário como ?edit=true
+    document.getElementById("popup-edit-close").addEventListener("click", () => {
+        popup_edit.classList.toggle("d-none")
+    })
+
+    document.getElementById("popup-edit-confirm").addEventListener("click", () => {
+        /** @type { HTMLFormElement | null } */
+        let form_id = globalThis.popup_edit_context.secao_id
+        let form_sec_ordem = globalThis.popup_edit_context.secao_ordem
+        let form_sec_name = document.getElementById("popup-edit-name").value
+        let form_sec_description = document.getElementById("popup-edit-description").value
+
+        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+        if (!form_porfolio) {
+            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+            return null
+        }
+
+        if (!form_porfolio.secoes.length) {
+            console.log("ID1: Erro ao editar categoria.");
+            return null
+        }
+
+        for (let k = 0; k < form_porfolio.secoes.length; k++) {
+            if (form_porfolio.secoes[k].ordem == form_sec_ordem) {
+                form_porfolio.secoes[k].nome = form_sec_name
+                form_porfolio.secoes[k].descricao = form_sec_description
+                break;
+            }
+        }
+
+        JSONQL_P.updatePortfolio(form_id, form_porfolio)
+        popup_edit.classList.toggle("d-none")
+        window.location.reload()
+    })
+
     // TODO: Utilizar ?id= da URI
     // INFO: Repo 14 escolhido para desenvolvimento porque contem as 3 categorias necessárias geradas aleatoriamente
     let portfolio = JSONQL_P.readPortfolios(14);
@@ -129,6 +168,8 @@ function setupPortfolioPage() {
     let aval_ja_adicionado = false;
     secoes.forEach(element => {
         let secao_nome = element.nome
+        // New
+        let secao_descricao = element.descricao
         let secao_ordem = element.ordem
         let secao_categoria = element.categoriaId
         // For categoriaId(0), content is optional
@@ -139,10 +180,6 @@ function setupPortfolioPage() {
             (!secao_ordem && typeof (secao_ordem) !== "number") ||
             (!secao_categoria && typeof (secao_categoria) !== "number")
         ) {
-            console.log(secao_nome);
-            console.log(secao_ordem);
-            console.log(secao_categoria);
-            console.log(secao_content);
             console.log("setupPortfolioPage: algo na seção não foi encontrado!");
             return null
         }
@@ -152,8 +189,6 @@ function setupPortfolioPage() {
             console.log("no portfolio-secoes id find");
             return null
         }
-
-
         switch (secao_categoria) {
             // categoriaId(1): Avaliações
             case 1: {
@@ -164,8 +199,9 @@ function setupPortfolioPage() {
 
                 let container_icon = "static/icons/star.svg"
                 let container_icon_class = "filter-star"
-                let container_title = "Avaliações"
-                let container_subtitle = "Clientes satisfeitos!"
+                // TODO: remove
+                let container_title = secao_nome || "Avaliações"
+                let container_subtitle = secao_descricao || "Clientes satisfeitos!"
 
                 let content_container = document.createElement("div")
                 content_container.classList.add("card", "w-100", "overflow-hidden", "p-0", "g-0", "g-0", "mb-3")
@@ -186,8 +222,21 @@ function setupPortfolioPage() {
                 content_button_edit.classList.add("button")
                 content_button_edit.setAttribute("type", "button")
                 content_button_edit.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/edit.svg">`
-                content_button_edit.addEventListener("click", () => {})
                 content_actions.appendChild(content_button_edit)
+                content_button_edit.addEventListener("click", () => {
+                    popup_edit.classList.toggle("d-none")
+
+                    if (!globalThis.popup_edit_context)
+                        globalThis.popup_edit_context = []
+
+                    globalThis.popup_edit_context.secao_id = portfolio.id
+                    globalThis.popup_edit_context.secao_ordem = secao_ordem
+                    globalThis.popup_edit_context.secao_nome = container_title
+                    globalThis.popup_edit_context.secao_descricao = container_subtitle
+
+                    document.getElementById("popup-edit-name").value = container_title
+                    document.getElementById("popup-edit-description").value = container_subtitle
+                })
 
                 let content_button_up = document.createElement("button")
                 content_button_up.classList.add("button")
@@ -225,7 +274,7 @@ function setupPortfolioPage() {
                     return null
 
                 // Lê todas as avaliações
-                avaliacoes.forEach(avaliacao_element => { 
+                avaliacoes.forEach(avaliacao_element => {
                     let comentario = avaliacao_element.comentario.substring(0, 200)
                     let nota = avaliacao_element.nota
                     let contratanteId = avaliacao_element.contratanteId
@@ -252,7 +301,7 @@ function setupPortfolioPage() {
 
                     // TODO: } Otimizar > Informações do serviço da avaliação
                     let servicos = JSONQL_S.readServicos();
-                    if(!servicos.length)
+                    if (!servicos.length)
                         return null
                     servicos = servicos[0]
 
@@ -260,7 +309,7 @@ function setupPortfolioPage() {
                     if (!usuarios.length)
                         return null
                     usuarios = usuarios[0]
-                    
+
                     // TODO: replace 'placeholder_profile'
                     content_blobs_scrool.innerHTML += `<div class="d-inline-block float-none me-3">
                         <a class="text-decoration-none m-0 p-0 g-0" href="#">
@@ -298,8 +347,9 @@ function setupPortfolioPage() {
 
                 let container_icon = "static/icons/images.svg"
                 let container_icon_class = "filter-images"
-                let container_title = "Imagens"
-                let container_subtitle = "Imagens de serviços realizados"
+                // TODO: remove
+                let container_title = secao_nome || "Imagens"
+                let container_subtitle = secao_descricao || "Imagens de serviços realizados"
 
                 let content_container = document.createElement("div")
                 content_container.classList.add("card", "w-100", "overflow-hidden", "p-0", "g-0", "g-0", "mb-3")
@@ -320,7 +370,20 @@ function setupPortfolioPage() {
                 content_button_edit.classList.add("button")
                 content_button_edit.setAttribute("type", "button")
                 content_button_edit.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/edit.svg">`
-                content_button_edit.addEventListener("click", () => {})
+                content_button_edit.addEventListener("click", () => {
+                    popup_edit.classList.toggle("d-none")
+
+                    if (!globalThis.popup_edit_context)
+                        globalThis.popup_edit_context = []
+
+                    globalThis.popup_edit_context.secao_id = portfolio.id
+                    globalThis.popup_edit_context.secao_ordem = secao_ordem
+                    globalThis.popup_edit_context.secao_nome = container_title
+                    globalThis.popup_edit_context.secao_descricao = container_subtitle
+
+                    document.getElementById("popup-edit-name").value = container_title
+                    document.getElementById("popup-edit-description").value = container_subtitle
+                })
 
                 let content_button_up = document.createElement("button")
                 content_button_up.classList.add("button")
@@ -375,8 +438,9 @@ function setupPortfolioPage() {
 
                 let container_icon = "static/icons/link.svg"
                 let container_icon_class = "filter-link"
-                let container_title = "Redes"
-                let container_subtitle = "Segue lá!"
+                // TODO: remove
+                let container_title = secao_nome || "Redes"
+                let container_subtitle = secao_descricao || "Segue lá!"
 
                 let content_container = document.createElement("div")
                 content_container.classList.add("card", "w-100", "overflow-hidden", "p-0", "g-0", "g-0", "mb-3")
@@ -397,7 +461,20 @@ function setupPortfolioPage() {
                 content_button_edit.classList.add("button")
                 content_button_edit.setAttribute("type", "button")
                 content_button_edit.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/edit.svg">`
-                content_button_edit.addEventListener("click", () => {})
+                content_button_edit.addEventListener("click", () => {
+                    popup_edit.classList.toggle("d-none")
+
+                    if (!globalThis.popup_edit_context)
+                        globalThis.popup_edit_context = []
+
+                    globalThis.popup_edit_context.secao_id = portfolio.id
+                    globalThis.popup_edit_context.secao_ordem = secao_ordem
+                    globalThis.popup_edit_context.secao_nome = container_title
+                    globalThis.popup_edit_context.secao_descricao = container_subtitle
+
+                    document.getElementById("popup-edit-name").value = container_title
+                    document.getElementById("popup-edit-description").value = container_subtitle
+                })
 
                 let content_button_up = document.createElement("button")
                 content_button_up.classList.add("button")

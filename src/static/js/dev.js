@@ -92,10 +92,14 @@ async function createNPortfolios(number) {
                             descricao: "Foto" // portfolios.secao.contents.descricao - string
                         })
                     }
+                    secao.nome = "Imagens"
+                    secao.descricao = "Imagens de serviços realizados"
                     break;
                     // 1: Avaliações
                 case 1:
                     // Faz nada: Essa categoria deve ser controlada pela pagina que mostra as informações
+                    secao.nome = "Avaliações"
+                    secao.descricao = "Cliente satisfeitos!"
                     break;
                     // 2: Links Externos
                 case 2:
@@ -106,6 +110,8 @@ async function createNPortfolios(number) {
                             blob: linke, // portfolios.secao.contents.blob - string
                             descricao: "Link Externo" // portfolios.secao.contents.descricao - string
                         })
+                        secao.nome = "Redes Sociais"
+                        secao.descricao = "Segue lá!"
                     }
                     break;
                 default:

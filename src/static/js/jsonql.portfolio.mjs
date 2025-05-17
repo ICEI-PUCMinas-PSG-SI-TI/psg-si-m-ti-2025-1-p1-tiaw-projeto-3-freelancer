@@ -129,7 +129,6 @@ export function validatePortfolio(portfolio) {
 
     // portfolio.secoes é opcional
     if (portfolio.secoes) {
-        console.log("vava");
         // !ensureType(portfolio.secoes, "object") &&
         if (!Array.isArray(portfolio.secoes))
             return null
