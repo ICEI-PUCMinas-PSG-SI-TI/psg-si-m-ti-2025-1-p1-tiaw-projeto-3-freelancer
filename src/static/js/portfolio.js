@@ -187,28 +187,27 @@ function setupPortfolioPage() {
                 content_button_edit.setAttribute("type", "button")
                 content_button_edit.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/edit.svg">`
                 content_button_edit.addEventListener("click", () => {})
+                content_actions.appendChild(content_button_edit)
 
                 let content_button_up = document.createElement("button")
                 content_button_up.classList.add("button")
                 content_button_up.setAttribute("type", "button")
                 content_button_up.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/up.svg">`
                 content_button_up.addEventListener("click", () => {})
+                content_actions.appendChild(content_button_up)
 
                 let content_button_down = document.createElement("button")
                 content_button_down.classList.add("button")
                 content_button_down.setAttribute("type", "button")
                 content_button_down.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/down.svg">`
                 content_button_down.addEventListener("click", () => {})
+                content_actions.appendChild(content_button_down)
 
                 let content_button_delete = document.createElement("button")
                 content_button_delete.classList.add("button")
                 content_button_delete.setAttribute("type", "button")
                 content_button_delete.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/delete.svg">`
                 content_button_delete.addEventListener("click", () => {})
-
-                content_actions.appendChild(content_button_edit)
-                content_actions.appendChild(content_button_up)
-                content_actions.appendChild(content_button_down)
                 content_actions.appendChild(content_button_delete)
 
                 content_header.appendChild(content_actions)
@@ -240,8 +239,6 @@ function setupPortfolioPage() {
                     if (!contrato.length)
                         return null
 
-                    console.log(contrato);
-
                     contrato = contrato[0]
                     let contratadoId = contrato.contratadoId
 
@@ -252,16 +249,14 @@ function setupPortfolioPage() {
                     if (contratadoId != id) {
                         return null
                     }
+
                     // TODO: } Otimizar > Informações do serviço da avaliação
                     let servicos = JSONQL_S.readServicos();
-                    // console.log(servicos);
                     if(!servicos.length)
                         return null
                     servicos = servicos[0]
 
-                    // TODO: } Otimizar > Informações do serviço da avaliação
                     let usuarios = JSONQL_U.readUsuarios(contratanteId);
-                    // console.log(servicos);
                     if (!usuarios.length)
                         return null
                     usuarios = usuarios[0]
