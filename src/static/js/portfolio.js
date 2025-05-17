@@ -152,8 +152,8 @@ function setupPortfolioPage() {
 
 
         switch (secao_categoria) {
-            // categoriaId(0): Avaliações
-            case 0: {
+            // categoriaId(1): Avaliações
+            case 1: {
                 if (aval_ja_adicionado)
                     return
 
@@ -237,8 +237,11 @@ function setupPortfolioPage() {
                 content_container.appendChild(content_blobs)
             }
             break;
-            // categoriaId(1): Fotos
-            case 1: {
+            // categoriaId(0): Fotos
+            case 0: {
+                if (!secao_content.length)
+                    return null
+
                 let container_icon = "static/icons/images.svg"
                 let container_icon_class = "filter-images"
                 let container_title = "Imagens"
@@ -298,9 +301,14 @@ function setupPortfolioPage() {
                 let content_blobs_scrool = document.createElement("div")
                 content_blobs_scrool.classList.add("px-3")
 
-                for (let i = genRandomNumber(15, 4); i >= 0; i--) {
-                    content_blobs_scrool.innerHTML += `<img class="img-thumbnail images me-3" src="static/img/placeholder_profile.png">`
-                }
+                // TODO: remove foreach?
+                secao_content.forEach(content_element => {
+                    if (!content_element.blob && !content_element.descricao)
+                        return null
+
+                    //${content_element.descricao}
+                    content_blobs_scrool.innerHTML += `<img class="img-thumbnail images me-3" src="${content_element.blob}">`
+                });
 
                 content_blobs.appendChild(content_blobs_scrool)
                 content_container.appendChild(content_blobs)
@@ -308,6 +316,9 @@ function setupPortfolioPage() {
             break;
             // categoriaId(2): Links
             case 2: {
+                if (!secao_content.length)
+                    return null
+
                 let container_icon = "static/icons/link.svg"
                 let container_icon_class = "filter-link"
                 let container_title = "Redes"
@@ -364,19 +375,21 @@ function setupPortfolioPage() {
                 let content_blobs = document.createElement("div")
                 content_blobs.classList.add("row", "w-100", "m-0", "g-3", "py-2", "px-3", "pb-4")
 
-                for (let i = genRandomNumber(7, 2); i >= 0; i--) {
+                // TODO: remove foreach?
+                secao_content.forEach(content_element => {
+                    if (!content_element.blob && !content_element.descricao)
+                        return null
+
                     content_blobs.innerHTML += `<div class="col-12 col-sm-6 col-xl-4">
-                        <button type="button" class="btn btn-primary w-100">
+                        <a class="btn btn-primary text-decoration-none w-100" href="${content_element.blob}" role="button">
                             <div class="d-flex justify-content-center m-2">
                                 <img class="icon-24px fixed-filter-invert me-2"
                                     src="static/action-icons/external.svg">
-                                <a class="text-decoration-none" href="https://instagram.com/vintageculture">
-                                    <p class="g-0 p-0 m-0">Instagram</p>
-                                </a>
+                                    <p class="g-0 p-0 m-0">${content_element.descricao}</p>
                             </div>
-                        </button>
+                        </a>
                     </div>`
-                }
+                });
 
                 content_container.appendChild(content_blobs)
             }
