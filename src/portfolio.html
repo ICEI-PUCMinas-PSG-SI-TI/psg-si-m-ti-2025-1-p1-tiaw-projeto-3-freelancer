@@ -127,7 +127,16 @@
                     </div>
                 </div>
 
-                <div id="portfolio-secoes" class="col-12 col-xl-9"></div>
+                <!-- TODO: adicionar apenas se ?edit=true -->
+                <div id="portfolio-secoes" class="col-12 col-xl-9">
+                    <button id="add-section" type="button" class="btn btn-outline-secondary mb-3 w-100">
+                        <div class="d-flex d-row justify-content-center align-items-center">
+                            <img class="icon-24px m-2 icon-dark" src="static/action-icons/add.svg">
+                            <p class="g-0 m-0 p-0">Adicionar Seção</p>
+                        </div>
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -150,8 +159,9 @@
                             <input type="text" class="form-control" id="popup-edit-name"
                                 aria-describedby="basic-addon3 basic-addon4">
                         </div>
-                        <div class="form-text">O nome da seção de <span id="popup-edit-name-span">secao.content</span>
-                        </div>
+                        <!-- TODO: Mudar dinamicamente -->
+                        <p class="form-text">O nome da seção de <span id="popup-edit-name-span">secao.content</span>
+                        </p>
                     </div>
                     <div class="mb-3">
                         <label for="basic-url" class="form-label">Descrição da Seção</label>
@@ -159,11 +169,55 @@
                             <input type="text" class="form-control" id="popup-edit-description"
                                 aria-describedby="basic-addon3 basic-addon4">
                         </div>
-                        <div class="form-text">O nome da seção de <span
+                        <!-- TODO: Mudar dinamicamente -->
+                        <p class="form-text">A descrição da seção de <span
                                 id="popup-edit-description-span">secao.content</span>
-                        </div>
+                        </p>
                     </div>
                     <button id="popup-edit-confirm" type="button" class="btn btn-primary">Confirmar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- TODO: adicionar apenas se ?edit=true -->
+    <div id="popup-add" class="d-flex popup-edit justify-content-center align-items-center d-none">
+        <div class="card position-relative w-100">
+            <button id="popup-add-close"
+                class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+                <img class="icon-dark icon-24px" src="static/action-icons/close.svg">
+            </button>
+            <div class="card-body">
+                <div class="mb-3 w-100 d-flex justify-content-center">
+                    <img class="m-3 icon-32px" src="static/action-icons/add.svg">
+                </div>
+                <form id="popup-add-form" class="d-flex justify-content-center flex-column">
+                    <div class="mb-3">
+                        <label for="basic-url" class="form-label">Nome da seção</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="popup-add-name"
+                                aria-describedby="basic-addon3 basic-addon4">
+                        </div>
+                        <p class="form-text">O nome da seção</p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="basic-url" class="form-label">Descrição da Seção</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="popup-add-description"
+                                aria-describedby="basic-addon3 basic-addon4">
+                        </div>
+                        <p class="form-text">A descrição da seção</p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="popup-add-categoria" class="form-label">Tipo de Seção</label>
+                        <select class="form-select" id="popup-add-categoria" required>
+                            <!-- TODO: Permitir apenas uma aba de avaliações -->
+                            <option value="0">Imagens</option>
+                            <option value="1">Avaliações</option>
+                            <option value="2">Links</option>
+                        </select>
+                    </div>
+                    <button id="popup-add-confirm" type="button" class="btn btn-primary">Confirmar</button>
                 </form>
             </div>
         </div>

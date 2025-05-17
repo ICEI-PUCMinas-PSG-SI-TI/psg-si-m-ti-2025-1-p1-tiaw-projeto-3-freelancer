@@ -65,11 +65,15 @@ function getNota(userId) {
 
 function setupPortfolioPage() {
     let popup_edit = document.getElementById("popup-edit")
+    let popup_add = document.getElementById("popup-add")
+    let add_section = document.getElementById("add-section")
     // Setup edit first
     // TODO: Configurar edição apenas se necessário como ?edit=true
-    document.getElementById("popup-edit-close").addEventListener("click", () => {
+    function togglePopupEdit() {
         popup_edit.classList.toggle("d-none")
-    })
+    }
+
+    document.getElementById("popup-edit-close").addEventListener("click", togglePopupEdit)
 
     document.getElementById("popup-edit-confirm").addEventListener("click", () => {
         /** @type { HTMLFormElement | null } */
@@ -99,7 +103,57 @@ function setupPortfolioPage() {
         }
 
         JSONQL_P.updatePortfolio(form_id, form_porfolio)
-        popup_edit.classList.toggle("d-none")
+        togglePopupEdit()
+        window.location.reload()
+    })
+
+    function togglePopupAdd() {
+        popup_add.classList.toggle("d-none")
+    }
+
+    document.getElementById("popup-add-close").addEventListener("click", togglePopupAdd)
+    add_section.addEventListener("click", togglePopupAdd)
+
+    document.getElementById("popup-add-confirm").addEventListener("click", () => {
+        /** @type { HTMLFormElement | null } */
+        let form_id = globalThis.popup_edit_context.portfolio_id
+        let form_sec_name = document.getElementById("popup-add-name").value
+        let form_sec_description = document.getElementById("popup-add-description").value
+        let form_sec_categoria = document.getElementById("popup-add-categoria").value
+
+        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+        if (!form_porfolio) {
+            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+            return null
+        }
+
+        if (!form_porfolio.secoes.length) {
+            console.log("ID1: Erro ao editar categoria.");
+            return null
+        }
+
+        // Verificar o maior valor para json.ordem
+        let maior = 0;
+        form_porfolio.secoes.forEach(element => {
+            if (parseInt(element.ordem) > maior)
+                maior = element.ordem;
+        });
+
+        maior++
+
+        let secao = {
+            ordem: parseInt(maior),
+            nome: form_sec_name,
+            descricao: form_sec_description,
+            categoriaId: parseInt(form_sec_categoria),
+            contents: []
+        }
+
+        form_porfolio.secoes.push(secao)
+
+        JSONQL_P.updatePortfolio(form_id, form_porfolio)
+        togglePopupAdd()
         window.location.reload()
     })
 
@@ -113,6 +167,10 @@ function setupPortfolioPage() {
 
     portfolio = portfolio[genRandomNumber(portfolio.length)]
     // portfolio = portfolio[genRandomNumber(portfolio.length)]
+    if (!globalThis.popup_edit_context) {
+        globalThis.popup_edit_context = []
+        globalThis.popup_edit_context.portfolio_id = portfolio.id
+    }
 
     let user = portfolio.usuarioId
     if (!user) {
@@ -224,7 +282,7 @@ function setupPortfolioPage() {
                 content_button_edit.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/edit.svg">`
                 content_actions.appendChild(content_button_edit)
                 content_button_edit.addEventListener("click", () => {
-                    popup_edit.classList.toggle("d-none")
+                    togglePopupEdit()
 
                     if (!globalThis.popup_edit_context)
                         globalThis.popup_edit_context = []
@@ -342,9 +400,6 @@ function setupPortfolioPage() {
             break;
             // categoriaId(0): Fotos
             case 0: {
-                if (!secao_content.length)
-                    return null
-
                 let container_icon = "static/icons/images.svg"
                 let container_icon_class = "filter-images"
                 // TODO: remove
@@ -371,7 +426,7 @@ function setupPortfolioPage() {
                 content_button_edit.setAttribute("type", "button")
                 content_button_edit.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/edit.svg">`
                 content_button_edit.addEventListener("click", () => {
-                    popup_edit.classList.toggle("d-none")
+                    togglePopupEdit()
 
                     if (!globalThis.popup_edit_context)
                         globalThis.popup_edit_context = []
@@ -418,14 +473,16 @@ function setupPortfolioPage() {
                 let content_blobs_scrool = document.createElement("div")
                 content_blobs_scrool.classList.add("px-3")
 
-                // TODO: remove foreach?
-                secao_content.forEach(content_element => {
-                    if (!content_element.blob && !content_element.descricao)
-                        return null
+                if (secao_content && secao_content.length) {
+                    // TODO: remove foreach?
+                    secao_content.forEach(content_element => {
+                        if (!content_element.blob && !content_element.descricao)
+                            return null
 
-                    //${content_element.descricao}
-                    content_blobs_scrool.innerHTML += `<img class="img-thumbnail images me-3" src="${content_element.blob}">`
-                });
+                        //${content_element.descricao}
+                        content_blobs_scrool.innerHTML += `<img class="img-thumbnail images me-3" src="${content_element.blob}">`
+                    });
+                }
 
                 content_blobs.appendChild(content_blobs_scrool)
                 content_container.appendChild(content_blobs)
@@ -433,9 +490,6 @@ function setupPortfolioPage() {
             break;
             // categoriaId(2): Links
             case 2: {
-                if (!secao_content.length)
-                    return null
-
                 let container_icon = "static/icons/link.svg"
                 let container_icon_class = "filter-link"
                 // TODO: remove
@@ -462,7 +516,7 @@ function setupPortfolioPage() {
                 content_button_edit.setAttribute("type", "button")
                 content_button_edit.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/edit.svg">`
                 content_button_edit.addEventListener("click", () => {
-                    popup_edit.classList.toggle("d-none")
+                    togglePopupEdit()
 
                     if (!globalThis.popup_edit_context)
                         globalThis.popup_edit_context = []
@@ -506,21 +560,23 @@ function setupPortfolioPage() {
                 let content_blobs = document.createElement("div")
                 content_blobs.classList.add("row", "w-100", "m-0", "g-3", "py-2", "px-3", "pb-4")
 
-                // TODO: remove foreach?
-                secao_content.forEach(content_element => {
-                    if (!content_element.blob && !content_element.descricao)
-                        return null
+                if (secao_content && secao_content.length){
+                    // TODO: remove foreach?
+                    secao_content.forEach(content_element => {
+                        if (!content_element.blob && !content_element.descricao)
+                            return null
 
-                    content_blobs.innerHTML += `<div class="col-12 col-sm-6 col-xl-4">
-                        <a class="btn btn-primary text-decoration-none w-100" href="${content_element.blob}" role="button">
-                            <div class="d-flex justify-content-center m-2">
-                                <img class="icon-24px fixed-filter-invert me-2"
-                                    src="static/action-icons/external.svg">
-                                    <p class="g-0 p-0 m-0">${content_element.descricao}</p>
-                            </div>
-                        </a>
-                    </div>`
-                });
+                        content_blobs.innerHTML += `<div class="col-12 col-sm-6 col-xl-4">
+                            <a class="btn btn-primary text-decoration-none w-100" href="${content_element.blob}" role="button">
+                                <div class="d-flex justify-content-center m-2">
+                                    <img class="icon-24px fixed-filter-invert me-2"
+                                        src="static/action-icons/external.svg">
+                                        <p class="g-0 p-0 m-0">${content_element.descricao}</p>
+                                </div>
+                            </a>
+                        </div>`
+                    });
+                }
 
                 content_container.appendChild(content_blobs)
             }
