@@ -26,6 +26,7 @@
     <!-- Project Scripts -->
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
+    <script defer type="module" src="static/js/portfolio.js"></script>
 </head>
 
 <body data-bs-theme="dark">
@@ -109,10 +110,14 @@
                                     </div>
                                     <div class="row-lg col-md-8 col-xl-12 p-2 m-0 g-0 avoid-wide rounded-end d-flex align-items-center
                                 align-items-md-start flex-column justify-content-center">
-                                        <h5>Nome do Usuário da Silva</h5>
-                                        <p class="mb-2">@username</p>
-                                        <p class="mb-2">⭐ 4,76</p>
-                                        <p class="p-0 m-0">Breve descrição do Usuário que vai conter informações de como
+                                        <!-- id.portfolio.secao.icon -->
+                                        <h5 id="portfolio-name">Nome do Usuário da Silva</h5>
+                                        <!-- id.portfolio.secao.icon -->
+                                        <p id="portfolio-username" class="mb-2">@username</p>
+                                        <!-- id.portfolio.secao.icon -->
+                                        <p class="mb-2">⭐ <span id="portfolio-nota">4,76</span></p>
+                                        <!-- id.portfolio.secao.icon -->
+                                        <p id="portfolio-descricao" class="p-0 m-0">Breve descrição do Usuário que vai conter informações de como
                                             ele
                                             trabalha ou etc, sei la
                                             man, coloca qualquer coisa ai por enquanto, ninguem vai ler isso aqui</p>
@@ -129,23 +134,30 @@
                         <!-- Section Header -->
                         <div class="card-header p-3 d-flex align-items-center justify-content-start">
                             <div>
+                                <!-- id.portfolio.secao.icon -->
                                 <img class="icon-32px me-3 filter-images" src="static/icons/images.svg">
                             </div>
                             <div>
+                                <!-- id.portfolio.secao.header -->
                                 <h5 class="card-title">Imagens</h5>
+                                <!-- id.portfolio.secao.descricao -->
                                 <h6 class="card-subtitle mb-0 pb-0 text-body-secondary">Imagens de serviços realizados
                                 </h6>
                             </div>
                             <div class="ms-auto">
+                                <!-- id.portfolio.secao.action.edit -->
                                 <button class="button" type="button">
                                     <img class="icon-dark icon-16px" src="static/action-icons/edit.svg">
                                 </button>
+                                <!-- id.portfolio.secao.action.up -->
                                 <button class="button" type="button">
                                     <img class="icon-dark icon-16px" src="static/action-icons/up.svg">
                                 </button>
+                                <!-- id.portfolio.secao.action.down -->
                                 <button class="button" type="button">
                                     <img class="icon-dark icon-16px" src="static/action-icons/down.svg">
                                 </button>
+                                <!-- id.portfolio.secao.action.delete -->
                                 <button class="button" type="button">
                                     <img class="icon-dark icon-16px" src="static/action-icons/delete.svg">
                                 </button>
@@ -153,6 +165,7 @@
                         </div>
                         <!-- Add icons to adjust positions -->
                         <div class="row py-3 m-0 g-0 w-100 scrool-container">
+                            <!-- id.portfolio.secao.content -->
                             <div class="px-3">
                                 <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
                                 <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
@@ -412,8 +425,6 @@
             </div>
         </div>
     </footer>
-
-    <script defer type="module" href="static/js/portfolio.js"></script>
 
 </body>
 
