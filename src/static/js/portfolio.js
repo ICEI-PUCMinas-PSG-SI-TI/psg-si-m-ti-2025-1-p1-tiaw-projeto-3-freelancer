@@ -87,6 +87,11 @@ function togglePopupAddLink() {
     document.getElementById("popup-add-link").classList.toggle("d-none")
 }
 
+function togglePopupDelete() {
+    preparePopup();
+    document.getElementById("popup-delete").classList.toggle("d-none")
+}
+
 function setupPortfolioPage() {
     let add_section = document.getElementById("add-section")
     // Setup edit first
@@ -180,7 +185,6 @@ function setupPortfolioPage() {
     document.getElementById("popup-add-link-close").addEventListener("click", togglePopupAddLink)
 
     document.getElementById("popup-add-link-confirm").addEventListener("click", () => {
-        console.log("Confirmado!");
         /** @type { HTMLFormElement | null } */
         let form_id = globalThis.popup_edit_context.secao_id
         let form_ordem = globalThis.popup_edit_context.secao_ordem
@@ -217,6 +221,43 @@ function setupPortfolioPage() {
 
         if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
             togglePopupAddLink()
+            notifySectionDataChanged()
+        } else {
+            console.log("Ocorreu um erro ao atualizar o objeto!");
+        }
+    })
+
+    document.getElementById("popup-delete-close").addEventListener("click", togglePopupDelete)
+    document.getElementById("popup-delete-cancel").addEventListener("click", togglePopupDelete)
+
+    document.getElementById("popup-delete-confirm").addEventListener("click", () => {
+        /** @type { HTMLFormElement | null } */
+        let form_id = globalThis.popup_edit_context.portfolio_id
+        let form_ordem = globalThis.popup_edit_context.secao_ordem
+
+        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+        if (!form_porfolio) {
+            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+            return null
+        }
+
+        if (!form_porfolio.secoes.length) {
+            console.log("ID1: Erro ao editar categoria.");
+            return null
+        }
+
+        for (let index = 0; index < form_porfolio.secoes.length; index++) {
+            if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                continue
+            }
+
+            form_porfolio.secoes.splice(index, 1)
+            break;
+        }
+
+        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+            togglePopupDelete()
             notifySectionDataChanged()
         } else {
             console.log("Ocorreu um erro ao atualizar o objeto!");
@@ -380,8 +421,20 @@ function setupPortfolioPage() {
                 content_button_delete.classList.add("button")
                 content_button_delete.setAttribute("type", "button")
                 content_button_delete.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/delete.svg">`
-                content_button_delete.addEventListener("click", () => {})
                 content_actions.appendChild(content_button_delete)
+                content_button_delete.addEventListener("click", () => {
+                    togglePopupDelete()
+
+                    if (!globalThis.popup_edit_context)
+                        globalThis.popup_edit_context = []
+
+                    globalThis.popup_edit_context.secao_id = portfolio.id
+                    globalThis.popup_edit_context.secao_ordem = secao_ordem
+
+                    // TODO: Isso aqui pode mudar com o tempo?
+                    document.getElementById("popup-delete-url").innerText = container_title
+                    document.getElementById("popup-delete-description").innerText = container_subtitle
+                })
 
                 content_header.appendChild(content_actions)
 
@@ -523,6 +576,18 @@ function setupPortfolioPage() {
                 content_button_delete.setAttribute("type", "button")
                 content_button_delete.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/delete.svg">`
                 content_button_delete.addEventListener("click", () => {})
+                content_button_delete.addEventListener("click", () => {
+                    togglePopupDelete()
+
+                    if (!globalThis.popup_edit_context)
+                        globalThis.popup_edit_context = []
+
+                    globalThis.popup_edit_context.secao_id = portfolio.id
+                    globalThis.popup_edit_context.secao_ordem = secao_ordem
+                    // TODO: Isso aqui pode mudar com o tempo?
+                    document.getElementById("popup-delete-url").innerText = container_title
+                    document.getElementById("popup-delete-description").innerText = container_subtitle
+                })
 
                 content_actions.appendChild(content_button_edit)
                 content_actions.appendChild(content_button_up)
@@ -626,7 +691,19 @@ function setupPortfolioPage() {
                 content_button_delete.classList.add("button")
                 content_button_delete.setAttribute("type", "button")
                 content_button_delete.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/delete.svg">`
-                content_button_delete.addEventListener("click", () => {})
+                content_button_delete.addEventListener("click", () => {
+                    togglePopupDelete()
+
+                    if (!globalThis.popup_edit_context)
+                        globalThis.popup_edit_context = []
+
+                    globalThis.popup_edit_context.secao_id = portfolio.id
+                    globalThis.popup_edit_context.secao_ordem = secao_ordem
+
+                    // TODO: Isso aqui pode mudar com o tempo?
+                    document.getElementById("popup-delete-url").innerText = container_title
+                    document.getElementById("popup-delete-description").innerText = container_subtitle
+                })
 
                 content_actions.appendChild(content_button_edit)
                 content_actions.appendChild(content_button_up)
