@@ -18,6 +18,7 @@ import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
  * 
  * @returns {number} Retorna um número aleatório
  */
+// TODO: Move to a module
 function genRandomNumber(max, min) {
     if (min) {
         let val = (Math.random() * (max - min) + min)
