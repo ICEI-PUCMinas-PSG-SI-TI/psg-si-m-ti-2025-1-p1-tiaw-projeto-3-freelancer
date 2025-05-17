@@ -122,6 +122,8 @@ function setupPortfolioPage() {
         return null
     }
 
+    // TODO: {Feratorar} Evitar que haja mais de um container de avaliação
+    let aval_ja_adicionado = false;
     secoes.forEach(element => {
         let secao_nome = element.nome
         let secao_ordem = element.ordem
@@ -148,284 +150,235 @@ function setupPortfolioPage() {
             return null
         }
 
-        // TODO: Evitar que haja mais de um container de avaliação
+
         switch (secao_categoria) {
             // categoriaId(0): Avaliações
             case 0: {
-                portfolio_secoes.innerHTML +=
-                    `<!-- Container de Avaliações -->
-                    <div class="card w-100 overflow-hidden p-0 g-0 g-0 mb-3">
-                        <div class="card-header p-3 d-flex align-items-center justify-content-start">
-                            <div>
-                                <img class="icon-32px me-3 filter-star" src="static/icons/star.svg">
-                            </div>
-                            <div>
-                                <h5 class="card-title">Avaliações</h5>
-                                <h6 class="card-subtitle mb-0 pb-0 text-body-secondary">Clientes satisfeitos!</h6>
-                            </div>
-                            <div class="ms-auto">
-                                <button class="button" type="button">
-                                    <img class="icon-dark icon-16px" src="static/action-icons/edit.svg">
-                                </button>
-                                <button class="button" type="button">
-                                    <img class="icon-dark icon-16px" src="static/action-icons/up.svg">
-                                </button>
-                                <button class="button" type="button">
-                                    <img class="icon-dark icon-16px" src="static/action-icons/down.svg">
-                                </button>
-                                <button class="button" type="button">
-                                    <img class="icon-dark icon-16px" src="static/action-icons/delete.svg">
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Add icons to adjust positions -->
-                        <div class="row py-3 m-0 g-0 w-100 scrool-container">
-                            <div class="px-3">
-                                <div class="d-inline-block float-none">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Special title treatment</h5>
-                                            <p class="card-text">With supporting text below as a natural lead-in to
-                                                additional
-                                                content.
-                                            </p>
-                                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="d-inline-block float-none">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Special title treatment</h5>
-                                            <p class="card-text">With supporting text below as a natural lead-in to
-                                                additional
-                                                content.
-                                            </p>
-                                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="d-inline-block float-none">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Special title treatment</h5>
-                                            <p class="card-text">With supporting text below as a natural lead-in to
-                                                additional
-                                                content.
-                                            </p>
-                                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="d-inline-block float-none">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Special title treatment</h5>
-                                            <p class="card-text">With supporting text below as a natural lead-in to
-                                                additional
-                                                content.
-                                            </p>
-                                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="d-inline-block float-none">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Special title treatment</h5>
-                                            <p class="card-text">With supporting text below as a natural lead-in to
-                                                additional
-                                                content.
-                                            </p>
-                                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- TODO: Remover me-3 -->
-                                <div class="d-inline-block float-none me-3">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Special title treatment</h5>
-                                            <p class="card-text">With supporting text below as a natural lead-in to
-                                                additional
-                                                content.
-                                            </p>
-                                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                                        </div>
-                                    </div>
-                                </div>
+                if (aval_ja_adicionado)
+                    return
+
+                aval_ja_adicionado = true
+
+                let container_icon = "static/icons/star.svg"
+                let container_icon_class = "filter-star"
+                let container_title = "Avaliações"
+                let container_subtitle = "Clientes satisfeitos!"
+
+                let content_container = document.createElement("div")
+                content_container.classList.add("card", "w-100", "overflow-hidden", "p-0", "g-0", "g-0", "mb-3")
+                let content_header = document.createElement("div")
+                content_header.classList.add("card-header", "p-3", "d-flex", "align-items-center", "justify-content-start")
+                content_header.innerHTML = `<div>
+                            <img class="icon-32px me-3 ${container_icon_class}" src="${container_icon}">
+                        </div><div>
+                            <h5 class="card-title">${container_title}</h5>
+                            <h6 class="card-subtitle mb-0 pb-0 text-body-secondary">${container_subtitle}</h6>
+                        </div>`
+                content_container.appendChild(content_header)
+
+                let content_actions = document.createElement("div")
+                content_actions.classList.add("ms-auto")
+
+                let content_button_edit = document.createElement("button")
+                content_button_edit.classList.add("button")
+                content_button_edit.setAttribute("type", "button")
+                content_button_edit.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/edit.svg">`
+                content_button_edit.addEventListener("click", () => {})
+
+                let content_button_up = document.createElement("button")
+                content_button_up.classList.add("button")
+                content_button_up.setAttribute("type", "button")
+                content_button_up.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/up.svg">`
+                content_button_up.addEventListener("click", () => {})
+
+                let content_button_down = document.createElement("button")
+                content_button_down.classList.add("button")
+                content_button_down.setAttribute("type", "button")
+                content_button_down.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/down.svg">`
+                content_button_down.addEventListener("click", () => {})
+
+                let content_button_delete = document.createElement("button")
+                content_button_delete.classList.add("button")
+                content_button_delete.setAttribute("type", "button")
+                content_button_delete.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/delete.svg">`
+                content_button_delete.addEventListener("click", () => {})
+
+                content_actions.appendChild(content_button_edit)
+                content_actions.appendChild(content_button_up)
+                content_actions.appendChild(content_button_down)
+                content_actions.appendChild(content_button_delete)
+
+                content_header.appendChild(content_actions)
+
+                portfolio_secoes.appendChild(content_container)
+
+                let content_blobs = document.createElement("div")
+                content_blobs.classList.add("row", "w-100", "m-0", "g-0", "py-3", "scrool-container")
+
+                let content_blobs_scrool = document.createElement("div")
+                content_blobs_scrool.classList.add("px-3")
+
+                for (let i = genRandomNumber(7, 2); i >= 0; i--) {
+                    content_blobs_scrool.innerHTML += `<div class="d-inline-block float-none me-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Special title treatment</h5>
+                                <p class="card-text">With supporting text below as a natural lead-in to
+                                    additional
+                                    content.
+                                </p>
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
                             </div>
                         </div>
                     </div>`
+                }
+
+                content_blobs.appendChild(content_blobs_scrool)
+                content_container.appendChild(content_blobs)
             }
             break;
             // categoriaId(1): Fotos
             case 1: {
-                portfolio_secoes.innerHTML +=
-                    `<div class="card w-100 overflow-hidden p-0 g-0 g-0 mb-3">
-                    <!-- Section Header -->
-                    <div class="card-header p-3 d-flex align-items-center justify-content-start">
-                        <div>
-                            <!-- id.portfolio.secao.icon -->
-                            <img class="icon-32px me-3 filter-images" src="static/icons/images.svg">
-                        </div>
-                        <div>
-                            <!-- id.portfolio.secao.header -->
-                            <h5 class="card-title">Imagens</h5>
-                            <!-- id.portfolio.secao.descricao -->
-                            <h6 class="card-subtitle mb-0 pb-0 text-body-secondary">Imagens de serviços realizados
-                            </h6>
-                        </div>
-                        <div class="ms-auto">
-                            <!-- id.portfolio.secao.action.edit -->
-                            <button class="button" type="button">
-                                <img class="icon-dark icon-16px" src="static/action-icons/edit.svg">
-                            </button>
-                            <!-- id.portfolio.secao.action.up -->
-                            <button class="button" type="button">
-                                <img class="icon-dark icon-16px" src="static/action-icons/up.svg">
-                            </button>
-                            <!-- id.portfolio.secao.action.down -->
-                            <button class="button" type="button">
-                                <img class="icon-dark icon-16px" src="static/action-icons/down.svg">
-                            </button>
-                            <!-- id.portfolio.secao.action.delete -->
-                            <button class="button" type="button">
-                                <img class="icon-dark icon-16px" src="static/action-icons/delete.svg">
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Add icons to adjust positions -->
-                    <div class="row py-3 m-0 g-0 w-100 scrool-container">
-                        <!-- id.portfolio.secao.content -->
-                        <div class="px-3">
-                            <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
-                            <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
-                            <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
-                            <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
-                            <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
-                            <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
-                            <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
-                            <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
-                            <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
-                            <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
-                            <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
-                            <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
-                            <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
-                            <img src="static/img/placeholder_profile.png" alt="..." class="img-thumbnail images">
-                        </div>
-                    </div>
-                </div>`
+                let container_icon = "static/icons/images.svg"
+                let container_icon_class = "filter-images"
+                let container_title = "Imagens"
+                let container_subtitle = "Imagens de serviços realizados"
+
+                let content_container = document.createElement("div")
+                content_container.classList.add("card", "w-100", "overflow-hidden", "p-0", "g-0", "g-0", "mb-3")
+                let content_header = document.createElement("div")
+                content_header.classList.add("card-header", "p-3", "d-flex", "align-items-center", "justify-content-start")
+                content_header.innerHTML = `<div>
+                            <img class="icon-32px me-3 ${container_icon_class}" src="${container_icon}">
+                        </div><div>
+                            <h5 class="card-title">${container_title}</h5>
+                            <h6 class="card-subtitle mb-0 pb-0 text-body-secondary">${container_subtitle}</h6>
+                        </div>`
+                content_container.appendChild(content_header)
+
+                let content_actions = document.createElement("div")
+                content_actions.classList.add("ms-auto")
+
+                let content_button_edit = document.createElement("button")
+                content_button_edit.classList.add("button")
+                content_button_edit.setAttribute("type", "button")
+                content_button_edit.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/edit.svg">`
+                content_button_edit.addEventListener("click", () => {})
+
+                let content_button_up = document.createElement("button")
+                content_button_up.classList.add("button")
+                content_button_up.setAttribute("type", "button")
+                content_button_up.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/up.svg">`
+                content_button_up.addEventListener("click", () => {})
+
+                let content_button_down = document.createElement("button")
+                content_button_down.classList.add("button")
+                content_button_down.setAttribute("type", "button")
+                content_button_down.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/down.svg">`
+                content_button_down.addEventListener("click", () => {})
+
+                let content_button_delete = document.createElement("button")
+                content_button_delete.classList.add("button")
+                content_button_delete.setAttribute("type", "button")
+                content_button_delete.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/delete.svg">`
+                content_button_delete.addEventListener("click", () => {})
+
+                content_actions.appendChild(content_button_edit)
+                content_actions.appendChild(content_button_up)
+                content_actions.appendChild(content_button_down)
+                content_actions.appendChild(content_button_delete)
+
+                content_header.appendChild(content_actions)
+
+                portfolio_secoes.appendChild(content_container)
+
+                let content_blobs = document.createElement("div")
+                content_blobs.classList.add("row", "w-100", "m-0", "g-0", "py-3", "scrool-container")
+
+                let content_blobs_scrool = document.createElement("div")
+                content_blobs_scrool.classList.add("px-3")
+
+                for (let i = genRandomNumber(15, 4); i >= 0; i--) {
+                    content_blobs_scrool.innerHTML += `<img class="img-thumbnail images me-3" src="static/img/placeholder_profile.png">`
+                }
+
+                content_blobs.appendChild(content_blobs_scrool)
+                content_container.appendChild(content_blobs)
             }
             break;
             // categoriaId(2): Links
             case 2: {
-                portfolio_secoes.innerHTML +=
-                    `<div class="card w-100 overflow-hidden p-0 g-0 g-0 mb-3">
-                        <div class="card-header p-3 d-flex align-items-center justify-content-start">
-                            <div>
-                                <img class="icon-32px me-3 filter-link" src="static/icons/link.svg">
+                let container_icon = "static/icons/link.svg"
+                let container_icon_class = "filter-link"
+                let container_title = "Redes"
+                let container_subtitle = "Segue lá!"
+
+                let content_container = document.createElement("div")
+                content_container.classList.add("card", "w-100", "overflow-hidden", "p-0", "g-0", "g-0", "mb-3")
+                let content_header = document.createElement("div")
+                content_header.classList.add("card-header", "p-3", "d-flex", "align-items-center", "justify-content-start")
+                content_header.innerHTML = `<div>
+                            <img class="icon-32px me-3 ${container_icon_class}" src="${container_icon}">
+                        </div><div>
+                            <h5 class="card-title">${container_title}</h5>
+                            <h6 class="card-subtitle mb-0 pb-0 text-body-secondary">${container_subtitle}</h6>
+                        </div>`
+                content_container.appendChild(content_header)
+
+                let content_actions = document.createElement("div")
+                content_actions.classList.add("ms-auto")
+
+                let content_button_edit = document.createElement("button")
+                content_button_edit.classList.add("button")
+                content_button_edit.setAttribute("type", "button")
+                content_button_edit.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/edit.svg">`
+                content_button_edit.addEventListener("click", () => {})
+
+                let content_button_up = document.createElement("button")
+                content_button_up.classList.add("button")
+                content_button_up.setAttribute("type", "button")
+                content_button_up.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/up.svg">`
+                content_button_up.addEventListener("click", () => {})
+
+                let content_button_down = document.createElement("button")
+                content_button_down.classList.add("button")
+                content_button_down.setAttribute("type", "button")
+                content_button_down.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/down.svg">`
+                content_button_down.addEventListener("click", () => {})
+
+                let content_button_delete = document.createElement("button")
+                content_button_delete.classList.add("button")
+                content_button_delete.setAttribute("type", "button")
+                content_button_delete.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/delete.svg">`
+                content_button_delete.addEventListener("click", () => {})
+
+                content_actions.appendChild(content_button_edit)
+                content_actions.appendChild(content_button_up)
+                content_actions.appendChild(content_button_down)
+                content_actions.appendChild(content_button_delete)
+
+                content_header.appendChild(content_actions)
+
+                portfolio_secoes.appendChild(content_container)
+
+                let content_blobs = document.createElement("div")
+                content_blobs.classList.add("row", "w-100", "m-0", "g-3", "py-2", "px-3", "pb-4")
+
+                for (let i = genRandomNumber(7, 2); i >= 0; i--) {
+                    content_blobs.innerHTML += `<div class="col-12 col-sm-6 col-xl-4">
+                        <button type="button" class="btn btn-primary w-100">
+                            <div class="d-flex justify-content-center m-2">
+                                <img class="icon-24px fixed-filter-invert me-2"
+                                    src="static/action-icons/external.svg">
+                                <a class="text-decoration-none" href="https://instagram.com/vintageculture">
+                                    <p class="g-0 p-0 m-0">Instagram</p>
+                                </a>
                             </div>
-                            <div>
-                                <h5 class="card-title">Redes</h5>
-                                <h6 class="card-subtitle mb-0 pb-0 text-body-secondary">Segue lá!</h6>
-                            </div>
-                            <div class="ms-auto">
-                                <button class="button" type="button">
-                                    <img class="icon-dark icon-16px" src="static/action-icons/edit.svg">
-                                </button>
-                                <button class="button" type="button">
-                                    <img class="icon-dark icon-16px" src="static/action-icons/up.svg">
-                                </button>
-                                <button class="button" type="button">
-                                    <img class="icon-dark icon-16px" src="static/action-icons/down.svg">
-                                </button>
-                                <button class="button" type="button">
-                                    <img class="icon-dark icon-16px" src="static/action-icons/delete.svg">
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Add icons to adjust positions -->
-                        <div class="row w-100 px-3 py-2 m-0 g-3 pb-4">
-                            <div class="col-12 col-sm-6 col-xl-4">
-                                <button type="button" class="btn btn-primary w-100">
-                                    <div class="d-flex justify-content-center m-2">
-                                        <img class="icon-24px fixed-filter-invert me-2"
-                                            src="static/action-icons/external.svg">
-                                        <a class="text-decoration-none" href="https://instagram.com/vintageculture">
-                                            <p class="g-0 p-0 m-0">Instagram</p>
-                                        </a>
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col-12 col-sm-6 col-xl-4">
-                                <button type="button" class="btn btn-primary w-100">
-                                    <div class="d-flex justify-content-center m-2">
-                                        <img class="icon-24px fixed-filter-invert me-2"
-                                            src="static/action-icons/external.svg">
-                                        <a class="text-decoration-none" href="https://instagram.com/vintageculture">
-                                            <p class="g-0 p-0 m-0">Instagram</p>
-                                        </a>
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col-12 col-sm-6 col-xl-4">
-                                <button type="button" class="btn btn-primary w-100">
-                                    <div class="d-flex justify-content-center m-2">
-                                        <img class="icon-24px fixed-filter-invert me-2"
-                                            src="static/action-icons/external.svg">
-                                        <a class="text-decoration-none" href="https://instagram.com/vintageculture">
-                                            <p class="g-0 p-0 m-0">Instagram</p>
-                                        </a>
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col-12 col-sm-6 col-xl-4">
-                                <button type="button" class="btn btn-primary w-100">
-                                    <div class="d-flex justify-content-center m-2">
-                                        <img class="icon-24px fixed-filter-invert me-2"
-                                            src="static/action-icons/external.svg">
-                                        <a class="text-decoration-none" href="https://instagram.com/vintageculture">
-                                            <p class="g-0 p-0 m-0">Instagram</p>
-                                        </a>
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col-12 col-sm-6 col-xl-4">
-                                <button type="button" class="btn btn-primary w-100">
-                                    <div class="d-flex justify-content-center m-2">
-                                        <img class="icon-24px fixed-filter-invert me-2"
-                                            src="static/action-icons/external.svg">
-                                        <a class="text-decoration-none" href="https://instagram.com/vintageculture">
-                                            <p class="g-0 p-0 m-0">Instagram</p>
-                                        </a>
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col-12 col-sm-6 col-xl-4">
-                                <button type="button" class="btn btn-primary w-100">
-                                    <div class="d-flex justify-content-center m-2">
-                                        <img class="icon-24px fixed-filter-invert me-2"
-                                            src="static/action-icons/external.svg">
-                                        <a class="text-decoration-none" href="https://instagram.com/vintageculture">
-                                            <p class="g-0 p-0 m-0">Instagram</p>
-                                        </a>
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col-12 col-sm-6 col-xl-4">
-                                <button type="button" class="btn btn-primary w-100">
-                                    <div class="d-flex justify-content-center m-2">
-                                        <img class="icon-24px fixed-filter-invert me-2"
-                                            src="static/action-icons/external.svg">
-                                        <a class="text-decoration-none" href="https://instagram.com/vintageculture">
-                                            <p class="g-0 p-0 m-0">Instagram</p>
-                                        </a>
-                                    </div>
-                                </button>
-                            </div>
-                        </div>
+                        </button>
                     </div>`
+                }
+
+                content_container.appendChild(content_blobs)
             }
             break;
         }
