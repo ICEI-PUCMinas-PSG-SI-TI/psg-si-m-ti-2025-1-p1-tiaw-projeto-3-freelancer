@@ -63,15 +63,34 @@ function getNota(userId) {
     return Math.round(media * 100) / 100;
 }
 
+function preparePopup() {
+    window.scrollTo(0, 0);
+}
+
+// TODO: Reload only needed information
+function notifySectionDataChanged() {
+    window.location.reload()
+}
+
+function togglePopupEdit() {
+    preparePopup()
+    document.getElementById("popup-edit").classList.toggle("d-none")
+}
+
+function togglePopupAdd() {
+    preparePopup()
+    document.getElementById("popup-add").classList.toggle("d-none")
+}
+
+function togglePopupAddLink() {
+    preparePopup();
+    document.getElementById("popup-add-link").classList.toggle("d-none")
+}
+
 function setupPortfolioPage() {
-    let popup_edit = document.getElementById("popup-edit")
-    let popup_add = document.getElementById("popup-add")
     let add_section = document.getElementById("add-section")
     // Setup edit first
     // TODO: Configurar edição apenas se necessário como ?edit=true
-    function togglePopupEdit() {
-        popup_edit.classList.toggle("d-none")
-    }
 
     document.getElementById("popup-edit-close").addEventListener("click", togglePopupEdit)
 
@@ -101,15 +120,13 @@ function setupPortfolioPage() {
                 break;
             }
         }
-
-        JSONQL_P.updatePortfolio(form_id, form_porfolio)
-        togglePopupEdit()
-        window.location.reload()
+        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+            togglePopupEdit()
+            notifySectionDataChanged()
+        } else {
+            console.log("Ocorreu um erro ao atualizar o objeto!");
+        }
     })
-
-    function togglePopupAdd() {
-        popup_add.classList.toggle("d-none")
-    }
 
     document.getElementById("popup-add-close").addEventListener("click", togglePopupAdd)
     add_section.addEventListener("click", togglePopupAdd)
@@ -152,9 +169,58 @@ function setupPortfolioPage() {
 
         form_porfolio.secoes.push(secao)
 
-        JSONQL_P.updatePortfolio(form_id, form_porfolio)
-        togglePopupAdd()
-        window.location.reload()
+        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+            togglePopupAdd()
+            notifySectionDataChanged()
+        } else {
+            console.log("Ocorreu um erro ao atualizar o objeto!");
+        }
+    })
+
+    document.getElementById("popup-add-link-close").addEventListener("click", togglePopupAddLink)
+
+    document.getElementById("popup-add-link-confirm").addEventListener("click", () => {
+        console.log("Confirmado!");
+        /** @type { HTMLFormElement | null } */
+        let form_id = globalThis.popup_edit_context.secao_id
+        let form_ordem = globalThis.popup_edit_context.secao_ordem
+        let form_sec_url = document.getElementById("popup-add-link-url").value
+        let form_sec_description = document.getElementById("popup-add-link-description").value
+
+        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+        if (!form_porfolio) {
+            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+            return null
+        }
+
+        if (!form_porfolio.secoes.length) {
+            console.log("ID1: Erro ao editar categoria.");
+            return null
+        }
+
+        // Verificar o maior valor para json.ordem
+        let maior = 0;
+        for (let index = 0; index < form_porfolio.secoes.length; index++) {
+            if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                continue
+            }
+
+            let content_tv = {
+                blob: form_sec_url,
+                descricao: form_sec_description
+            }
+
+            form_porfolio.secoes[index].contents.push(content_tv)
+            break;
+        }
+
+        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+            togglePopupAddLink()
+            notifySectionDataChanged()
+        } else {
+            console.log("Ocorreu um erro ao atualizar o objeto!");
+        }
     })
 
     // TODO: Utilizar ?id= da URI
@@ -486,6 +552,20 @@ function setupPortfolioPage() {
 
                 content_blobs.appendChild(content_blobs_scrool)
                 content_container.appendChild(content_blobs)
+
+                let content_add = document.createElement("div");
+                content_add.innerHTML =
+                    `<div class="col-12 m-0 g-0 p-4">
+                    <a class="btn btn-outline-primary text-decoration-none w-100" role="button">
+                        <div class="d-flex justify-content-center m-2">
+                            <img class="icon-24px fixed-filter-invert me-2"
+                                src="static/action-icons/add.svg">
+                                <p class="g-0 p-0 m-0">Adicionar imagens</p>
+                        </div>
+                    </a>
+                </div>`
+
+                content_container.appendChild(content_add)
             }
             break;
             // categoriaId(2): Links
@@ -560,7 +640,7 @@ function setupPortfolioPage() {
                 let content_blobs = document.createElement("div")
                 content_blobs.classList.add("row", "w-100", "m-0", "g-3", "py-2", "px-3", "pb-4")
 
-                if (secao_content && secao_content.length){
+                if (secao_content && secao_content.length) {
                     // TODO: remove foreach?
                     secao_content.forEach(content_element => {
                         if (!content_element.blob && !content_element.descricao)
@@ -578,6 +658,28 @@ function setupPortfolioPage() {
                     });
                 }
 
+                let add_new_link = document.createElement("div")
+                add_new_link.classList.add("col-12")
+
+                let add_new_link_button = document.createElement("button")
+                add_new_link_button.classList.add("btn", "btn-outline-primary", "text-decoration-none", "w-100")
+                add_new_link_button.addEventListener("click", () => {
+                    if (!globalThis.popup_edit_context)
+                        globalThis.popup_edit_context = []
+
+                    globalThis.popup_edit_context.secao_id = portfolio.id
+                    globalThis.popup_edit_context.secao_ordem = secao_ordem
+
+                    togglePopupAddLink()
+                })
+                add_new_link_button.innerHTML = `<div class="d-flex justify-content-center m-2">
+                                    <img class="icon-24px fixed-filter-invert me-2"
+                                        src="static/action-icons/add.svg">
+                                        <p class="g-0 p-0 m-0">Adicionar link</p>
+                                </div>`
+
+                add_new_link.appendChild(add_new_link_button)
+                content_blobs.appendChild(add_new_link)
                 content_container.appendChild(content_blobs)
             }
             break;

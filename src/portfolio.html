@@ -150,7 +150,7 @@
             </button>
             <div class="card-body">
                 <div class="mb-3 w-100 d-flex justify-content-center">
-                    <img class="m-3 icon-32px" src="static/icons/link.svg">
+                    <img class="m-3 icon-32px icon-dark" src="static/icons/link.svg">
                 </div>
                 <form id="popup-edit-form" class="d-flex justify-content-center flex-column">
                     <div class="mb-3">
@@ -189,7 +189,7 @@
             </button>
             <div class="card-body">
                 <div class="mb-3 w-100 d-flex justify-content-center">
-                    <img class="m-3 icon-32px" src="static/action-icons/add.svg">
+                    <img class="m-3 icon-32px icon-dark" src="static/action-icons/add.svg">
                 </div>
                 <form id="popup-add-form" class="d-flex justify-content-center flex-column">
                     <div class="mb-3">
@@ -218,6 +218,40 @@
                         </select>
                     </div>
                     <button id="popup-add-confirm" type="button" class="btn btn-primary">Confirmar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- TODO: adicionar apenas se ?edit=true -->
+    <div id="popup-add-link" class="d-flex popup-edit justify-content-center align-items-center d-none">
+        <div class="card position-relative w-100">
+            <button id="popup-add-link-close"
+                class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+                <img class="icon-dark icon-24px" src="static/action-icons/close.svg">
+            </button>
+            <div class="card-body">
+                <div class="mb-3 w-100 d-flex justify-content-center">
+                    <img class="m-3 icon-32px icon-dark" src="static/icons/link.svg">
+                </div>
+                <form id="popup-add-link-form" class="d-flex justify-content-center flex-column">
+                    <div class="mb-3">
+                        <label for="basic-url" class="form-label">URL do link</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="popup-add-link-url"
+                                aria-describedby="basic-addon3 basic-addon4">
+                        </div>
+                        <p class="form-text">A URL do link, ex: https://google.com</p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="basic-url" class="form-label">Descrição</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="popup-add-link-description"
+                                aria-describedby="basic-addon3 basic-addon4">
+                        </div>
+                        <p class="form-text">A descrição do link</p>
+                    </div>
+                    <button id="popup-add-link-confirm" type="button" class="btn btn-primary">Confirmar</button>
                 </form>
             </div>
         </div>
