@@ -64,13 +64,16 @@ function getNota(userId) {
 }
 
 function setupPortfolioPage() {
-    let portfolio = JSONQL_P.readPortfolios();
+    // TODO: Utilizar ?id= da URI
+    // INFO: Repo 14 escolhido para desenvolvimento porque contem as 3 categorias necessárias geradas aleatoriamente
+    let portfolio = JSONQL_P.readPortfolios(14);
     if (!portfolio.length) {
         console.log("setupPortfolioPage: nenhum portfólio cadastrado!");
         return null
     }
 
     portfolio = portfolio[genRandomNumber(portfolio.length)]
+    // portfolio = portfolio[genRandomNumber(portfolio.length)]
 
     let user = portfolio.usuarioId
     if (!user) {
@@ -218,20 +221,76 @@ function setupPortfolioPage() {
                 let content_blobs_scrool = document.createElement("div")
                 content_blobs_scrool.classList.add("px-3")
 
-                for (let i = genRandomNumber(7, 2); i >= 0; i--) {
+                let avaliacoes = JSONQL_A.readAvaliacoes()
+                if (!avaliacoes.length)
+                    return null
+
+                // Lê todas as avaliações
+                avaliacoes.forEach(avaliacao_element => { 
+                    let comentario = avaliacao_element.comentario.substring(0, 200)
+                    let nota = avaliacao_element.nota
+                    let contratanteId = avaliacao_element.contratanteId
+                    // TODO: { Otimizar > Informações do serviço da avaliação
+                    // Pega o contratoId da avaliação e filtra
+                    let contratoId = avaliacao_element.contratoId;
+                    if (!contratoId)
+                        return null
+
+                    let contrato = JSONQL_C.readContratos(contratoId)
+                    if (!contrato.length)
+                        return null
+
+                    console.log(contrato);
+
+                    contrato = contrato[0]
+                    let contratadoId = contrato.contratadoId
+
+                    if (!contratadoId)
+                        return null
+
+                    // A partir daqui, continue apenas os contratos que possuem a mesma id que o usuario do portfolio
+                    if (contratadoId != id) {
+                        return null
+                    }
+                    // TODO: } Otimizar > Informações do serviço da avaliação
+                    let servicos = JSONQL_S.readServicos();
+                    // console.log(servicos);
+                    if(!servicos.length)
+                        return null
+                    servicos = servicos[0]
+
+                    // TODO: } Otimizar > Informações do serviço da avaliação
+                    let usuarios = JSONQL_U.readUsuarios(contratanteId);
+                    // console.log(servicos);
+                    if (!usuarios.length)
+                        return null
+                    usuarios = usuarios[0]
+                    
+                    // TODO: replace 'placeholder_profile'
                     content_blobs_scrool.innerHTML += `<div class="d-inline-block float-none me-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Special title treatment</h5>
-                                <p class="card-text">With supporting text below as a natural lead-in to
-                                    additional
-                                    content.
-                                </p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <a class="text-decoration-none m-0 p-0 g-0" href="#">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row card-aval-limit">
+                                        <div class="d-flex justify-content-start align-items-center pb-2">
+                                            <div class="me-2">
+                                                <img class="icon-32px" src="static/img/placeholder_profile.png"> 
+                                            </div>
+                                            <div class="max-width-80">
+                                                <h6 class="text-truncate">${usuarios.nome}</h6>
+                                                <p class="m-0 g-0 p-0 text-truncate">⭐ <span>${nota}</span> - <span>${servicos.titulo}</span></p>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="col-12">
+                                            <p class="text-wrap g-0 m-0 p-0">${comentario}</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>`
-                }
+                });
 
                 content_blobs.appendChild(content_blobs_scrool)
                 content_container.appendChild(content_blobs)

@@ -42,3 +42,12 @@
 #content-div button a p {
     color: white;
 }
+
+.card-aval-limit {
+    max-width: 300px !important;
+    max-height: 250px !important;
+}
+
+.max-width-80 {
+    max-width: 80%;
+}
