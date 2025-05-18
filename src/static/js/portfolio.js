@@ -191,6 +191,27 @@ function toggleEditParam(enable) {
     window.location.href = newUrl;
 }
 
+// @AI-Gemini
+function setIdParam(id) {
+    if (typeof (id) === "string")
+        id = parseInt(id)
+
+    if (typeof (id) !== "number") {
+        console.log("?id= Não é número");
+        return null
+    }
+
+    const url = new URL(window.location.href); // Get the current URL
+    const params = new URLSearchParams(url.search); // Get the search parameters
+    if (id) {
+        params.set('id', id);
+        window.location.href = `${url.origin}${url.pathname}?${params.toString()}${url.hash}`;
+    } else {
+        // Navega para a pagina sem parametros
+        window.location.href = `${url.origin}${url.pathname}`;
+    }
+}
+
 // TODO: Configurar edição apenas se necessário como ?edit=true
 function setupPortfolioPage(portf_id, enable_edit) {
     if (!portf_id && typeof (portf_id) !== "number")
@@ -281,6 +302,10 @@ function setupPortfolioPage(portf_id, enable_edit) {
                 return null
             }
 
+            if (!form_sec_name){
+                alert("O nome da seção não pode estar vazio!")
+                return null
+            }
 
             let maior = 0;
             // Como estamos adicionando uma seção, não é problema se ela esta vazia
@@ -300,7 +325,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
             let secao = {
                 ordem: parseInt(maior),
                 nome: form_sec_name,
-                descricao: form_sec_description,
+                descricao: form_sec_description || "",
                 categoriaId: parseInt(form_sec_categoria),
                 contents: []
             }
@@ -589,10 +614,19 @@ function setupPortfolioPage(portf_id, enable_edit) {
         portfolio_nota.innerText = media
     }
 
+    let portfolio_secoes = document.getElementById("portfolio-secoes");
+    if (!portfolio_secoes) {
+        console.log("no portfolio-secoes id find");
+        return null
+    }
+
     let secoes = portfolio.secoes
     // TODO: O usuário pode não ter cadastrado nenhuma seção ainda
-    if (!secoes.length) {
-        console.log("setupPortfolioPage: sem seções");
+    if (!secoes.length && !enable_edit) {
+        let information = document.createElement("h5")
+        information.classList.add("d-flex","w-100", "p-4", "m-0", "g-0", "align-items-center", "justify-content-center")
+        information.innerText = "Portfólio vazio, edite o portfólio para adicionar uma seção!"
+        portfolio_secoes.appendChild(information)
         return null
     }
 
@@ -616,11 +650,6 @@ function setupPortfolioPage(portf_id, enable_edit) {
             return null
         }
 
-        let portfolio_secoes = document.getElementById("portfolio-secoes");
-        if (!portfolio_secoes) {
-            console.log("no portfolio-secoes id find");
-            return null
-        }
         switch (secao_categoria) {
             // categoriaId(1): Avaliações
             case 1: {
@@ -785,8 +814,12 @@ function setupPortfolioPage(portf_id, enable_edit) {
                 content_blobs_scrool.classList.add("px-3")
 
                 let avaliacoes = JSONQL_A.readAvaliacoes()
-                if (!avaliacoes.length)
-                    return null
+                if (!avaliacoes || !avaliacoes.length){
+                    let information = document.createElement("p")
+                    information.classList.add("d-flex", "w-100", "p-4", "m-0", "g-0", "align-items-center", "justify-content-center")
+                    information.innerHTML = `Não há avaliações para este usuário, você pode utilizar a&nbsp;<a href="dev.html">página de desenvolvimento</a>&nbsp;para gerar uma avaliação.`
+                    content_blobs_scrool.appendChild(information)
+                }
 
                 // Lê todas as avaliações
                 avaliacoes.forEach(avaliacao_element => {
@@ -858,7 +891,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
             // categoriaId(0): Fotos
             case 0: {
                 let container_title = secao_nome || "Imagens"
-                let container_subtitle = secao_descricao || "Imagens de serviços realizados"
+                let container_subtitle = secao_descricao || "Seção de imagens"
 
                 let content_header = createSectionHeader("images", "filter-images", container_title, container_subtitle)
 
@@ -1040,6 +1073,11 @@ function setupPortfolioPage(portf_id, enable_edit) {
 
                         content_blobs_scrool.appendChild(image_div)
                     }
+                } else {
+                    let information = document.createElement("p")
+                    information.classList.add("d-flex", "w-100", "p-4", "m-0", "g-0", "align-items-center", "justify-content-center")
+                    information.innerText = "Não há imagens cadastrados, edite o portfólio para adicionar uma!"
+                    content_blobs_scrool.appendChild(information)
                 }
 
                 content_blobs.appendChild(content_blobs_scrool)
@@ -1072,7 +1110,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                     content_add_div_2_button.addEventListener("click", async () => {
                         let file = content_add_div_1_input.files[0];
                         if (!file) {
-                            console.log("Sem arquivo");
+                            alert("Seleciona um arquivo!")
                             return
                         }
 
@@ -1092,7 +1130,8 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         });
 
                         if (!base64Image.startsWith("data:image/")) {
-                            console.log("Não é um arquivo de imagem!")
+                            alert("Não é um arquivo de imagem!")
+                            return null
                         }
 
                         let form_id = portfolio.id
@@ -1140,7 +1179,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
             // categoriaId(2): Links
             case 2: {
                 let container_title = secao_nome || "Redes"
-                let container_subtitle = secao_descricao || "Segue lá!"
+                let container_subtitle = secao_descricao || "Links Externos" // "Segue lá!"
 
                 let content_header = createSectionHeader("link", "filter-link", container_title, container_subtitle)
                 let content_container = createSectionContainer()
@@ -1325,6 +1364,11 @@ function setupPortfolioPage(portf_id, enable_edit) {
 
                         content_blobs.appendChild(link_div)
                     }
+                } else {
+                    let information = document.createElement("p")
+                    information.classList.add("d-flex", "w-100", "p-4", "m-0", "g-0", "align-items-center", "justify-content-center")
+                    information.innerText = "Não há links cadastrados, edite o portfólio para adicionar um!"
+                    content_blobs.appendChild(information)
                 }
 
                 if (enable_edit) {
@@ -1361,10 +1405,10 @@ function setupPortfolioPage(portf_id, enable_edit) {
 function setupPortfolioSetup() {
     toggleHTMLElement("portfolio-setup", true)
 
-    let portfolio_setup_select = document.getElementById("portfolio-setup-select")
+    // let portfolio_setup_select = document.getElementById("portfolio-setup-select")
     let portfolio_setup_select_select = document.getElementById("portfolio-setup-select-select")
     let portfolio_setup_select_btn = document.getElementById("portfolio-setup-select-btn")
-    let portfolio_setup_create = document.getElementById("portfolio-setup-create")
+    // let portfolio_setup_create = document.getElementById("portfolio-setup-create")
     let portfolio_setup_create_select = document.getElementById("portfolio-setup-create-select")
     let portfolio_setup_create_btn = document.getElementById("portfolio-setup-create-btn")
     let portfolio_setup_dev_btn = document.getElementById("portfolio-setup-dev-btn")
@@ -1374,10 +1418,12 @@ function setupPortfolioSetup() {
     let usuarios = JSONQL_U.readUsuarios()
 
     // Não configura portfolios
-    if(portfolios && portfolios.length){
+    if (portfolios && portfolios.length) {
         // Reseta as opções
-        portfolio_setup_select_select.innerHTML = ""
-        for(let index = 0; index < portfolios.length;index++){
+        console.log(portfolio_setup_select_select);
+        console.log(portfolios);
+        // portfolio_setup_select_select.innerHTML = ""
+        for (let index = 0; index < portfolios.length; index++) {
             let option = document.createElement("option")
             option.value = portfolios[index].id
             option.innerText = `Portfólio de id(${portfolios[index].id})`
@@ -1386,13 +1432,20 @@ function setupPortfolioSetup() {
         portfolio_setup_select_btn.classList.remove("disabled")
         portfolio_setup_select_btn.addEventListener("click", () => {
             // Abrir o portfólio de id $?
-            let useId = parseInt(portfolio_setup_select_select.value)
+            let userId = parseInt(portfolio_setup_select_select.value)
+            setIdParam(userId)
         })
+    } else {
+        let option = document.createElement("option")
+        option.innerText = `Nenhum portfólio criado!`
+        portfolio_setup_select_select.appendChild(option)
     }
 
+    // console.log(portfolio_setup_create_select);
+    // console.log(usuarios);
     if (usuarios && usuarios.length) {
         // Reseta as opções
-        portfolio_setup_create_select.innerHTML = ""
+        // portfolio_setup_create_select.innerHTML = ""
         for (let index = 0; index < usuarios.length; index++) {
             let option = document.createElement("option")
             option.value = usuarios[index].id
@@ -1402,8 +1455,26 @@ function setupPortfolioSetup() {
         portfolio_setup_create_btn.classList.remove("disabled")
         portfolio_setup_create_btn.addEventListener("click", () => {
             // Criar portfólio para o usuário de id $?
-            let useId = parseInt(portfolio_setup_create_select.value)
+            let userId = parseInt(portfolio_setup_create_select.value)
+            let portfolio = {
+                usuarioId: userId,
+                secoes: []
+            }
+            let portfolioId = JSONQL_P.createPortfolio(portfolio)
+            if (!portfolioId) {
+                console.error("Não foi possível criar o portfólio");
+            } else {
+                setIdParam(portfolioId)
+            }
+            // console.log("creating");
+            // portfolioId = parseInt(portfolioId)
+            // const url = new URL(window.location.href);
+            // window.location.href = `${url.origin}${url.pathname}?id=${portfolioId}`;
         })
+    } else {
+        let option = document.createElement("option")
+        option.innerText = `Nenhum usuário criado!`
+        portfolio_setup_create_select.appendChild(option)
     }
 
     portfolio_setup_dev_btn.addEventListener("click", () => {
