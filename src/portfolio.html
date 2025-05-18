@@ -310,6 +310,45 @@
         </div>
     </div>
 
+    <!-- TODO: adicionar apenas se ?edit=true -->
+    <div id="popup-delete-image" class="d-flex popup-edit justify-content-center align-items-center d-none">
+        <div class="card position-relative w-100">
+            <button id="popup-delete-image-close"
+                class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+                <img class="icon-dark icon-24px" src="static/action-icons/close.svg">
+            </button>
+            <div class="card-body">
+                <div class="mb-3 w-100 d-flex justify-content-center">
+                    <img class="m-3 icon-32px icon-dark" src="static/action-icons/delete.svg">
+                </div>
+                <div>
+                    <h3 class="text-primary-danger">
+                        Deletar imagem?
+                    </h3>
+                    <p>
+                        Não é possível desfazer essa ação!
+                    </p>
+                </div>
+                <form id="popup-delete-image-form" class="d-flex justify-content-center flex-column">
+                    <div class="w-100 mb-3 limit-img d-flex justify-content-center align-items-center">
+                        <!-- Limit Size -->
+                        <img id="popup-delete-image-image" class="img-fluid" src="static/img/background.jpg">
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <button id="popup-delete-image-confirm" type="button"
+                                class="btn btn-danger w-100">Deletar</button>
+                        </div>
+                        <div class="col-12 col-sm-6 mb-2 mb-sm-0">
+                            <button id="popup-delete-image-cancel" type="button"
+                                class="btn btn-primary w-100">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Rodapé -->
     <footer class="body-section body-footer container-fluid border-top m-0 p-0 g-0">
         <div class="row px-4 px-md-5 pt-4 pt-md-5">

@@ -87,9 +87,14 @@ function togglePopupAddLink() {
     document.getElementById("popup-add-link").classList.toggle("d-none")
 }
 
-function togglePopupDelete() {
+function togglePopupDeleteSecao() {
     preparePopup();
     document.getElementById("popup-delete").classList.toggle("d-none")
+}
+
+function togglePopupDeleteImage() {
+    preparePopup();
+    document.getElementById("popup-delete-image").classList.toggle("d-none")
 }
 
 function setupPortfolioPage() {
@@ -225,11 +230,10 @@ function setupPortfolioPage() {
         }
     })
 
-    document.getElementById("popup-delete-close").addEventListener("click", togglePopupDelete)
-    document.getElementById("popup-delete-cancel").addEventListener("click", togglePopupDelete)
+    document.getElementById("popup-delete-close").addEventListener("click", togglePopupDeleteSecao)
+    document.getElementById("popup-delete-cancel").addEventListener("click", togglePopupDeleteSecao)
 
     document.getElementById("popup-delete-confirm").addEventListener("click", () => {
-        /** @type { HTMLFormElement | null } */
         let form_id = globalThis.popup_edit_context.portfolio_id
         let form_ordem = globalThis.popup_edit_context.secao_ordem
 
@@ -255,7 +259,67 @@ function setupPortfolioPage() {
         }
 
         if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-            togglePopupDelete()
+            togglePopupDeleteSecao()
+            notifySectionDataChanged()
+        } else {
+            console.log("Ocorreu um erro ao atualizar o objeto!");
+        }
+    })
+
+    document.getElementById("popup-delete-image-close").addEventListener("click", togglePopupDeleteImage)
+    document.getElementById("popup-delete-image-cancel").addEventListener("click", togglePopupDeleteImage)
+
+    document.getElementById("popup-delete-image-confirm").addEventListener("click", () => {
+        let form_id = globalThis.popup_edit_context.secao_id
+        let form_ordem = globalThis.popup_edit_context.secao_ordem
+        // TODO: Expensive, use id or something else
+        let form_blob = globalThis.popup_edit_context.blob
+        let form_descricao = globalThis.popup_edit_context.descricao
+
+        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+        if (!form_porfolio) {
+            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+            return null
+        }
+
+        if (!form_porfolio.secoes.length) {
+            console.log("ID1: Erro ao editar categoria.");
+            return null
+        }
+
+        let procurando = true;
+        for (let index = 0; index < form_porfolio.secoes.length && procurando; index++) {
+            if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                continue
+            }
+
+            if (!form_porfolio.secoes[index].contents || !form_porfolio.secoes[index].contents.length) {
+                console.log(form_porfolio.secoes[index].contents);
+                console.log("Não encontrado");
+                return null
+            }
+
+            console.log(`find: i:${index}`);
+            for (let jindex = 0; form_porfolio.secoes[index].contents.length && procurando; jindex++) {
+                if (!form_porfolio.secoes[index].contents[jindex].blob || !form_porfolio.secoes[index].contents[jindex].descricao)
+                    continue
+
+                if (form_porfolio.secoes[index].contents[jindex].blob != form_blob)
+                    continue
+
+                if (form_porfolio.secoes[index].contents[jindex].descricao != form_descricao)
+                    continue
+
+                console.log(`find: i:${index} j:${jindex}`);
+                form_porfolio.secoes[index].contents.splice(jindex, 1)
+                procurando = false;
+            }
+            procurando = false;
+        }
+
+        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+            togglePopupDeleteImage()
             notifySectionDataChanged()
         } else {
             console.log("Ocorreu um erro ao atualizar o objeto!");
@@ -517,7 +581,7 @@ function setupPortfolioPage() {
                 content_button_delete.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/delete.svg">`
                 content_actions.appendChild(content_button_delete)
                 content_button_delete.addEventListener("click", () => {
-                    togglePopupDelete()
+                    togglePopupDeleteSecao()
 
                     if (!globalThis.popup_edit_context)
                         globalThis.popup_edit_context = []
@@ -763,7 +827,7 @@ function setupPortfolioPage() {
                 content_button_delete.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/delete.svg">`
                 content_button_delete.addEventListener("click", () => {})
                 content_button_delete.addEventListener("click", () => {
-                    togglePopupDelete()
+                    togglePopupDeleteSecao()
 
                     if (!globalThis.popup_edit_context)
                         globalThis.popup_edit_context = []
@@ -791,14 +855,35 @@ function setupPortfolioPage() {
                 content_blobs_scrool.classList.add("px-3")
 
                 if (secao_content && secao_content.length) {
-                    // TODO: remove foreach?
-                    secao_content.forEach(content_element => {
-                        if (!content_element.blob && !content_element.descricao)
+                    for (let index = 0; index < secao_content.length; index++) {
+                        if (!secao_content[index].blob && !secao_content[index].descricao)
                             return null
 
-                        //${content_element.descricao}
-                        content_blobs_scrool.innerHTML += `<img class="img-thumbnail images me-3" src="${content_element.blob}">`
-                    });
+                        let image_div = document.createElement("div")
+                        image_div.classList.add("me-3")
+                        image_div.classList.add("d-inline-block", "position-relative")
+                        let remove_button = document.createElement("button")
+                        remove_button.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`
+                        remove_button.classList.add("icon-32px", "position-absolute", "top-0", "start-100", "translate-middle", "p-2", "border", "border-light", "rounded-circle", "d-flex", "justify-content-center", "align-items-center")
+                        image_div.innerHTML += `<img class="img-thumbnail images" src="${secao_content[index].blob}">`
+                        image_div.appendChild(remove_button)
+                        content_blobs_scrool.appendChild(image_div)
+
+                        remove_button.addEventListener("click", () => {
+                            togglePopupDeleteImage()
+
+                            if (!globalThis.popup_edit_context)
+                                globalThis.popup_edit_context = []
+
+                            globalThis.popup_edit_context.secao_id = portfolio.id
+                            globalThis.popup_edit_context.secao_ordem = secao_ordem
+                            // TODO: Expensive, use id or something else
+                            globalThis.popup_edit_context.blob = secao_content[index].blob
+                            globalThis.popup_edit_context.descricao = secao_content[index].descricao
+
+                            document.getElementById("popup-delete-image-image").src = secao_content[index].blob
+                        })
+                    }
                 }
 
                 content_blobs.appendChild(content_blobs_scrool)
@@ -1047,7 +1132,7 @@ function setupPortfolioPage() {
                 content_button_delete.setAttribute("type", "button")
                 content_button_delete.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/delete.svg">`
                 content_button_delete.addEventListener("click", () => {
-                    togglePopupDelete()
+                    togglePopupDeleteSecao()
 
                     if (!globalThis.popup_edit_context)
                         globalThis.popup_edit_context = []
