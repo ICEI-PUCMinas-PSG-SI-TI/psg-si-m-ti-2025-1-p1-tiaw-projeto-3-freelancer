@@ -15,7 +15,16 @@
 
 const KEY_PORTFOLIOS = "portfolios"
 const getPortfolios = () => JSON.parse(localStorage.getItem(KEY_PORTFOLIOS) || "[]");
-const setPortfolios = (portfolios) => localStorage.setItem(KEY_PORTFOLIOS, JSON.stringify(portfolios));
+const setPortfolios = (portfolios) => {
+    try {
+        localStorage.setItem(KEY_PORTFOLIOS, JSON.stringify(portfolios))
+    } catch (err) {
+        if (err instanceof DOMException) {
+            alert("O limite de armazenamento do localStorage foi atingido!\n\nDelete alguma imagem antes de adicionar outra!\n\nEsse é um problema que utilizar o json-server irá resolver futuramente");
+        } else throw err
+    }
+};
+
 
 /**
  * Retorna null e imprime $value no console

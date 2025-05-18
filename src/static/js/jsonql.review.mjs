@@ -15,7 +15,15 @@
 
 const KEY_AVALIACOES = "avaliacoes"
 const getAvaliacoes = () => JSON.parse(localStorage.getItem(KEY_AVALIACOES) || "[]");
-const setAvaliacoes = (avaliacoes) => localStorage.setItem(KEY_AVALIACOES, JSON.stringify(avaliacoes));
+const setAvaliacoes = (avaliacoes) => {
+    try {
+        localStorage.setItem(KEY_AVALIACOES, JSON.stringify(avaliacoes))
+    } catch (err) {
+        if (err instanceof DOMException) {
+            alert("O limite de armazenamento do localStorage foi atingido!\n\nDelete alguma imagem antes de adicionar outra!\n\nEsse é um problema que utilizar o json-server irá resolver futuramente");
+        } else throw err
+    }
+};
 
 /**
  * Retorna null e printa o que estiver em value no console

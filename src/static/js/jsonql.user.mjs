@@ -15,7 +15,15 @@
 
 const KEY_USUARIOS = "usuarios"
 const getUsuarios = () => JSON.parse(localStorage.getItem(KEY_USUARIOS) || "[]");
-const setUsuarios = (usuarios) => localStorage.setItem(KEY_USUARIOS, JSON.stringify(usuarios));
+const setUsuarios = (usuarios) => {
+    try {
+        localStorage.setItem(KEY_USUARIOS, JSON.stringify(usuarios))
+    } catch (err) {
+        if (err instanceof DOMException) {
+            alert("O limite de armazenamento do localStorage foi atingido!\n\nDelete alguma imagem antes de adicionar outra!\n\nEsse é um problema que utilizar o json-server irá resolver futuramente");
+        } else throw err
+    }
+};
 
 /**
  * Retorna null e printa o que estiver em value no console
