@@ -93,7 +93,7 @@
     <div id="content-div"
         class="body-section body-content d-flex flex-column align-items-center px-2 px-md-3 pt-2 pt-md-3 pt-xl-4">
         <!-- CONTEÚDO -->
-        <div class="container-fluid">
+        <div id="portfolio-display" class="container-fluid d-none">
             <div class="row row-xl-0 col-xl">
 
                 <!-- TODO: Imagem de fundo customizavel -->
@@ -122,6 +122,13 @@
                                         <p class="p-0 m-0">Username: <span id="portfolio-username">@username</span></p>
                                     </div>
                                 </div>
+                                <hr>
+                                <div class="col d-flex w-100 justify-content-center align-items-center g-0 m-0 p-0">
+                                    <button id="toggle-edit"
+                                        class="btn btn-outline-primary d-flex flex-row justify-content-center align-items-center w-100 g-0 m-0 p-2">
+
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -129,7 +136,7 @@
 
                 <!-- TODO: adicionar apenas se ?edit=true -->
                 <div id="portfolio-secoes" class="col-12 col-xl-9">
-                    <button id="add-section" type="button" class="btn btn-outline-secondary mb-3 w-100">
+                    <button id="add-section" type="button" class="btn btn-outline-secondary mb-3 w-100 d-none">
                         <div class="d-flex d-row justify-content-center align-items-center">
                             <img class="icon-24px m-2 icon-dark" src="static/action-icons/add.svg">
                             <p class="g-0 m-0 p-0">Adicionar Seção</p>

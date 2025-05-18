@@ -121,6 +121,22 @@ function notifySectionDataChanged() {
     window.location.reload()
 }
 
+function toggleHTMLElement(id, setStatus) {
+    if (typeof (id) !== "string")
+        return null
+
+    if (typeof (setStatus) === "boolean") {
+        if (setStatus) {
+            document.getElementById(id).classList.add("d-none")
+        }
+
+        document.getElementById(id).classList.remove("d-none")
+        return
+    }
+
+    document.getElementById(id).classList.toggle("d-none")
+}
+
 function togglePopupEdit() {
     preparePopup()
     document.getElementById("popup-edit").classList.toggle("d-none")
@@ -151,303 +167,362 @@ function togglePopupDeleteLink() {
     document.getElementById("popup-delete-link").classList.toggle("d-none")
 }
 
-function setupPortfolioPage() {
-    let add_section = document.getElementById("add-section")
-    // Setup edit first
-    // TODO: Configurar edição apenas se necessário como ?edit=true
+// @AI-Gemini
+function toggleEditParam(enable) {
+    if (typeof (enable) !== "boolean")
+        return null
 
-    document.getElementById("popup-edit-close").addEventListener("click", togglePopupEdit)
+    const url = new URL(window.location.href); // Get the current URL
+    const params = new URLSearchParams(url.search); // Get the search parameters
 
-    document.getElementById("popup-edit-confirm").addEventListener("click", () => {
-                let form_id = globalThis.popup_edit_context.secao_id
-        let form_sec_ordem = globalThis.popup_edit_context.secao_ordem
-        let form_sec_name = document.getElementById("popup-edit-name").value
-        let form_sec_description = document.getElementById("popup-edit-description").value
+    if (enable) {
+        // Set a new parameter or modify an existing one
+        params.set('edit', true);
+    } else {
+        // Delete a parameter
+        params.delete('edit');
+    }
 
-        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+    // Get the modified URL string
+    const newUrl = `${url.origin}${url.pathname}?${params.toString()}${url.hash}`;
 
-        if (!form_porfolio) {
-            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-            return null
-        }
+    // TODO: Verificar a necessidade de recarregar a página se o parametro não foi alterado
+    // Or, to navigate to the new URL (which will cause a reload):
+    window.location.href = newUrl;
+}
 
-        if (!form_porfolio.secoes.length) {
-            console.log("ID1: Erro ao editar categoria.");
-            return null
-        }
+// TODO: Configurar edição apenas se necessário como ?edit=true
+function setupPortfolioPage(portf_id, enable_edit) {
+    if (!portf_id && typeof (portf_id) !== "number")
+        return null
 
-        for (let k = 0; k < form_porfolio.secoes.length; k++) {
-            if (form_porfolio.secoes[k].ordem == form_sec_ordem) {
-                form_porfolio.secoes[k].nome = form_sec_name
-                form_porfolio.secoes[k].descricao = form_sec_description
+    /* Check if null
+    if (enable_edit && typeof (enable_edit) !== "boolean")
+        return null
+    */
+
+    toggleHTMLElement("portfolio-display", true)
+
+    let toggle_edit_element = document.getElementById("toggle-edit")
+    if (enable_edit) {
+        let toggle_edit_element_img = document.createElement("img")
+        toggle_edit_element_img.classList.add("icon-dark", "icon-24px", "g-0", "m-0", "p-0", "me-2")
+        toggle_edit_element_img.src = "static/action-icons/close.svg"
+        let toggle_edit_element_p = document.createElement("p")
+        toggle_edit_element_p.classList.add("g-0", "m-0", "p-0")
+        toggle_edit_element_p.innerText = "Finalizar edição"
+        toggle_edit_element.appendChild(toggle_edit_element_img)
+        toggle_edit_element.appendChild(toggle_edit_element_p)
+        toggle_edit_element.addEventListener("click", () => {
+            toggleEditParam(false)
+        })
+
+        toggleHTMLElement("add-section", true)
+
+        document.getElementById("popup-edit-close").addEventListener("click", togglePopupEdit)
+
+        document.getElementById("popup-edit-confirm").addEventListener("click", () => {
+            let form_id = globalThis.popup_edit_context.secao_id
+            let form_sec_ordem = globalThis.popup_edit_context.secao_ordem
+            let form_sec_name = document.getElementById("popup-edit-name").value
+            let form_sec_description = document.getElementById("popup-edit-description").value
+
+            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+            if (!form_porfolio) {
+                console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                return null
+            }
+
+            if (!form_porfolio.secoes.length) {
+                console.log("ID1: Erro ao editar categoria.");
+                return null
+            }
+
+            for (let k = 0; k < form_porfolio.secoes.length; k++) {
+                if (form_porfolio.secoes[k].ordem == form_sec_ordem) {
+                    form_porfolio.secoes[k].nome = form_sec_name
+                    form_porfolio.secoes[k].descricao = form_sec_description
+                    break;
+                }
+            }
+            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                togglePopupEdit()
+                notifySectionDataChanged()
+            } else {
+                console.log("Ocorreu um erro ao atualizar o objeto!");
+            }
+        })
+
+        document.getElementById("popup-add-close").addEventListener("click", togglePopupAdd)
+        // Botão de adicionar seção
+        document.getElementById("add-section").addEventListener("click", togglePopupAdd)
+
+        document.getElementById("popup-add-confirm").addEventListener("click", () => {
+            let form_id = globalThis.popup_edit_context.portfolio_id
+            let form_sec_name = document.getElementById("popup-add-name").value
+            let form_sec_description = document.getElementById("popup-add-description").value
+            let form_sec_categoria = document.getElementById("popup-add-categoria").value
+
+            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+            if (!form_porfolio) {
+                console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                return null
+            }
+
+            if (!form_porfolio.secoes.length) {
+                console.log("ID1: Erro ao editar categoria.");
+                return null
+            }
+
+            // Verificar o maior valor para json.ordem
+            let maior = 0;
+            form_porfolio.secoes.forEach(element => {
+                if (parseInt(element.ordem) > maior)
+                    maior = element.ordem;
+            });
+
+            maior++
+
+            let secao = {
+                ordem: parseInt(maior),
+                nome: form_sec_name,
+                descricao: form_sec_description,
+                categoriaId: parseInt(form_sec_categoria),
+                contents: []
+            }
+
+            form_porfolio.secoes.push(secao)
+
+            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                togglePopupAdd()
+                notifySectionDataChanged()
+            } else {
+                console.log("Ocorreu um erro ao atualizar o objeto!");
+            }
+        })
+
+        document.getElementById("popup-add-link-close").addEventListener("click", togglePopupAddLink)
+
+        document.getElementById("popup-add-link-confirm").addEventListener("click", () => {
+            let form_id = globalThis.popup_edit_context.secao_id
+            let form_ordem = globalThis.popup_edit_context.secao_ordem
+            let form_sec_url = document.getElementById("popup-add-link-url").value
+            let form_sec_description = document.getElementById("popup-add-link-description").value
+
+            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+            if (!form_porfolio) {
+                console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                return null
+            }
+
+            if (!form_porfolio.secoes.length) {
+                console.log("ID1: Erro ao editar categoria.");
+                return null
+            }
+
+            for (let index = 0; index < form_porfolio.secoes.length; index++) {
+                if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                    continue
+                }
+
+                let content_tv = {
+                    blob: form_sec_url,
+                    descricao: form_sec_description
+                }
+
+                form_porfolio.secoes[index].contents.push(content_tv)
                 break;
             }
-        }
-        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-            togglePopupEdit()
-            notifySectionDataChanged()
-        } else {
-            console.log("Ocorreu um erro ao atualizar o objeto!");
-        }
-    })
 
-    document.getElementById("popup-add-close").addEventListener("click", togglePopupAdd)
-// Botão de adicionar seção
-    document.getElementById("add-section").addEventListener("click", togglePopupAdd)
-
-    document.getElementById("popup-add-confirm").addEventListener("click", () => {
-                let form_id = globalThis.popup_edit_context.portfolio_id
-        let form_sec_name = document.getElementById("popup-add-name").value
-        let form_sec_description = document.getElementById("popup-add-description").value
-        let form_sec_categoria = document.getElementById("popup-add-categoria").value
-
-        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
-
-        if (!form_porfolio) {
-            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-            return null
-        }
-
-        if (!form_porfolio.secoes.length) {
-            console.log("ID1: Erro ao editar categoria.");
-            return null
-        }
-
-        // Verificar o maior valor para json.ordem
-        let maior = 0;
-        form_porfolio.secoes.forEach(element => {
-            if (parseInt(element.ordem) > maior)
-                maior = element.ordem;
-        });
-
-        maior++
-
-        let secao = {
-            ordem: parseInt(maior),
-            nome: form_sec_name,
-            descricao: form_sec_description,
-            categoriaId: parseInt(form_sec_categoria),
-            contents: []
-        }
-
-        form_porfolio.secoes.push(secao)
-
-        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-            togglePopupAdd()
-            notifySectionDataChanged()
-        } else {
-            console.log("Ocorreu um erro ao atualizar o objeto!");
-        }
-    })
-
-    document.getElementById("popup-add-link-close").addEventListener("click", togglePopupAddLink)
-
-    document.getElementById("popup-add-link-confirm").addEventListener("click", () => {
-        let form_id = globalThis.popup_edit_context.secao_id
-        let form_ordem = globalThis.popup_edit_context.secao_ordem
-        let form_sec_url = document.getElementById("popup-add-link-url").value
-        let form_sec_description = document.getElementById("popup-add-link-description").value
-
-        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
-
-        if (!form_porfolio) {
-            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-            return null
-        }
-
-        if (!form_porfolio.secoes.length) {
-            console.log("ID1: Erro ao editar categoria.");
-            return null
-        }
-
-        for (let index = 0; index < form_porfolio.secoes.length; index++) {
-            if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                continue
+            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                togglePopupAddLink()
+                notifySectionDataChanged()
+            } else {
+                console.log("Ocorreu um erro ao atualizar o objeto!");
             }
+        })
 
-            let content_tv = {
-                blob: form_sec_url,
-                descricao: form_sec_description
-            }
+        document.getElementById("popup-delete-close").addEventListener("click", togglePopupDeleteSecao)
+        document.getElementById("popup-delete-cancel").addEventListener("click", togglePopupDeleteSecao)
 
-            form_porfolio.secoes[index].contents.push(content_tv)
-            break;
-        }
+        document.getElementById("popup-delete-confirm").addEventListener("click", () => {
+            let form_id = globalThis.popup_edit_context.portfolio_id
+            let form_ordem = globalThis.popup_edit_context.secao_ordem
 
-        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-            togglePopupAddLink()
-            notifySectionDataChanged()
-        } else {
-            console.log("Ocorreu um erro ao atualizar o objeto!");
-        }
-    })
+            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
 
-    document.getElementById("popup-delete-close").addEventListener("click", togglePopupDeleteSecao)
-    document.getElementById("popup-delete-cancel").addEventListener("click", togglePopupDeleteSecao)
-
-    document.getElementById("popup-delete-confirm").addEventListener("click", () => {
-        let form_id = globalThis.popup_edit_context.portfolio_id
-        let form_ordem = globalThis.popup_edit_context.secao_ordem
-
-        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
-
-        if (!form_porfolio) {
-            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-            return null
-        }
-
-        if (!form_porfolio.secoes.length) {
-            console.log("ID1: Erro ao editar categoria.");
-            return null
-        }
-
-        for (let index = 0; index < form_porfolio.secoes.length; index++) {
-            if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                continue
-            }
-
-            form_porfolio.secoes.splice(index, 1)
-            break;
-        }
-
-        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-            togglePopupDeleteSecao()
-            notifySectionDataChanged()
-        } else {
-            console.log("Ocorreu um erro ao atualizar o objeto!");
-        }
-    })
-
-    document.getElementById("popup-delete-image-close").addEventListener("click", togglePopupDeleteImage)
-    document.getElementById("popup-delete-image-cancel").addEventListener("click", togglePopupDeleteImage)
-
-    document.getElementById("popup-delete-image-confirm").addEventListener("click", () => {
-        let form_id = globalThis.popup_edit_context.secao_id
-        let form_ordem = globalThis.popup_edit_context.secao_ordem
-        // TODO: Expensive, use id or something else
-        let form_blob = globalThis.popup_edit_context.blob
-        let form_descricao = globalThis.popup_edit_context.descricao
-
-        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
-
-        if (!form_porfolio) {
-            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-            return null
-        }
-
-        if (!form_porfolio.secoes.length) {
-            console.log("ID1: Erro ao editar categoria.");
-            return null
-        }
-
-        let procurando = true;
-        for (let index = 0; index < form_porfolio.secoes.length && procurando; index++) {
-            if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                continue
-            }
-
-            if (!form_porfolio.secoes[index].contents || !form_porfolio.secoes[index].contents.length) {
-                console.log(form_porfolio.secoes[index].contents);
-                console.log("Não encontrado");
+            if (!form_porfolio) {
+                console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
                 return null
             }
 
-            console.log(`find: i:${index}`);
-            for (let jindex = 0; form_porfolio.secoes[index].contents.length && procurando; jindex++) {
-                if (!form_porfolio.secoes[index].contents[jindex].blob || !form_porfolio.secoes[index].contents[jindex].descricao)
-                    continue
-
-                if (form_porfolio.secoes[index].contents[jindex].blob != form_blob)
-                    continue
-
-                if (form_porfolio.secoes[index].contents[jindex].descricao != form_descricao)
-                    continue
-
-                console.log(`find: i:${index} j:${jindex}`);
-                form_porfolio.secoes[index].contents.splice(jindex, 1)
-                procurando = false;
-            }
-            procurando = false;
-        }
-
-        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-            togglePopupDeleteImage()
-            notifySectionDataChanged()
-        } else {
-            console.log("Ocorreu um erro ao atualizar o objeto!");
-        }
-    })
-
-    document.getElementById("popup-delete-link-close").addEventListener("click", togglePopupDeleteLink)
-    document.getElementById("popup-delete-link-cancel").addEventListener("click", togglePopupDeleteLink)
-
-    document.getElementById("popup-delete-link-confirm").addEventListener("click", () => {
-        let form_id = globalThis.popup_edit_context.secao_id
-        let form_ordem = globalThis.popup_edit_context.secao_ordem
-        // TODO: Expensive, use id or something else
-        let form_blob = globalThis.popup_edit_context.blob
-        let form_descricao = globalThis.popup_edit_context.descricao
-
-        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
-
-        if (!form_porfolio) {
-            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-            return null
-        }
-
-        if (!form_porfolio.secoes.length) {
-            console.log("ID1: Erro ao editar categoria.");
-            return null
-        }
-
-        let procurando = true;
-        for (let index = 0; index < form_porfolio.secoes.length && procurando; index++) {
-            if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                continue
-            }
-
-            if (!form_porfolio.secoes[index].contents || !form_porfolio.secoes[index].contents.length) {
-                console.log(form_porfolio.secoes[index].contents);
-                console.log("Não encontrado");
+            if (!form_porfolio.secoes.length) {
+                console.log("ID1: Erro ao editar categoria.");
                 return null
             }
 
-            console.log(`find: i:${index}`);
-            for (let jindex = 0; form_porfolio.secoes[index].contents.length && procurando; jindex++) {
-                if (!form_porfolio.secoes[index].contents[jindex].blob || !form_porfolio.secoes[index].contents[jindex].descricao)
+            for (let index = 0; index < form_porfolio.secoes.length; index++) {
+                if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
                     continue
+                }
 
-                if (form_porfolio.secoes[index].contents[jindex].blob != form_blob)
+                form_porfolio.secoes.splice(index, 1)
+                break;
+            }
+
+            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                togglePopupDeleteSecao()
+                notifySectionDataChanged()
+            } else {
+                console.log("Ocorreu um erro ao atualizar o objeto!");
+            }
+        })
+
+        document.getElementById("popup-delete-image-close").addEventListener("click", togglePopupDeleteImage)
+        document.getElementById("popup-delete-image-cancel").addEventListener("click", togglePopupDeleteImage)
+
+        document.getElementById("popup-delete-image-confirm").addEventListener("click", () => {
+            let form_id = globalThis.popup_edit_context.secao_id
+            let form_ordem = globalThis.popup_edit_context.secao_ordem
+            // TODO: Expensive, use id or something else
+            let form_blob = globalThis.popup_edit_context.blob
+            let form_descricao = globalThis.popup_edit_context.descricao
+
+            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+            if (!form_porfolio) {
+                console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                return null
+            }
+
+            if (!form_porfolio.secoes.length) {
+                console.log("ID1: Erro ao editar categoria.");
+                return null
+            }
+
+            let procurando = true;
+            for (let index = 0; index < form_porfolio.secoes.length && procurando; index++) {
+                if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
                     continue
+                }
 
-                if (form_porfolio.secoes[index].contents[jindex].descricao != form_descricao)
-                    continue
+                if (!form_porfolio.secoes[index].contents || !form_porfolio.secoes[index].contents.length) {
+                    console.log(form_porfolio.secoes[index].contents);
+                    console.log("Não encontrado");
+                    return null
+                }
 
-                console.log(`find: i:${index} j:${jindex}`);
-                form_porfolio.secoes[index].contents.splice(jindex, 1)
+                console.log(`find: i:${index}`);
+                for (let jindex = 0; form_porfolio.secoes[index].contents.length && procurando; jindex++) {
+                    if (!form_porfolio.secoes[index].contents[jindex].blob || !form_porfolio.secoes[index].contents[jindex].descricao)
+                        continue
+
+                    if (form_porfolio.secoes[index].contents[jindex].blob != form_blob)
+                        continue
+
+                    if (form_porfolio.secoes[index].contents[jindex].descricao != form_descricao)
+                        continue
+
+                    console.log(`find: i:${index} j:${jindex}`);
+                    form_porfolio.secoes[index].contents.splice(jindex, 1)
+                    procurando = false;
+                }
                 procurando = false;
             }
-            procurando = false;
-        }
 
-        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-            togglePopupDeleteLink()
-            notifySectionDataChanged()
-        } else {
-            console.log("Ocorreu um erro ao atualizar o objeto!");
-        }
-    })
+            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                togglePopupDeleteImage()
+                notifySectionDataChanged()
+            } else {
+                console.log("Ocorreu um erro ao atualizar o objeto!");
+            }
+        })
+
+        document.getElementById("popup-delete-link-close").addEventListener("click", togglePopupDeleteLink)
+        document.getElementById("popup-delete-link-cancel").addEventListener("click", togglePopupDeleteLink)
+
+        document.getElementById("popup-delete-link-confirm").addEventListener("click", () => {
+            let form_id = globalThis.popup_edit_context.secao_id
+            let form_ordem = globalThis.popup_edit_context.secao_ordem
+            // TODO: Expensive, use id or something else
+            let form_blob = globalThis.popup_edit_context.blob
+            let form_descricao = globalThis.popup_edit_context.descricao
+
+            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+            if (!form_porfolio) {
+                console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                return null
+            }
+
+            if (!form_porfolio.secoes.length) {
+                console.log("ID1: Erro ao editar categoria.");
+                return null
+            }
+
+            let procurando = true;
+            for (let index = 0; index < form_porfolio.secoes.length && procurando; index++) {
+                if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                    continue
+                }
+
+                if (!form_porfolio.secoes[index].contents || !form_porfolio.secoes[index].contents.length) {
+                    console.log(form_porfolio.secoes[index].contents);
+                    console.log("Não encontrado");
+                    return null
+                }
+
+                console.log(`find: i:${index}`);
+                for (let jindex = 0; form_porfolio.secoes[index].contents.length && procurando; jindex++) {
+                    if (!form_porfolio.secoes[index].contents[jindex].blob || !form_porfolio.secoes[index].contents[jindex].descricao)
+                        continue
+
+                    if (form_porfolio.secoes[index].contents[jindex].blob != form_blob)
+                        continue
+
+                    if (form_porfolio.secoes[index].contents[jindex].descricao != form_descricao)
+                        continue
+
+                    console.log(`find: i:${index} j:${jindex}`);
+                    form_porfolio.secoes[index].contents.splice(jindex, 1)
+                    procurando = false;
+                }
+                procurando = false;
+            }
+
+            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                togglePopupDeleteLink()
+                notifySectionDataChanged()
+            } else {
+                console.log("Ocorreu um erro ao atualizar o objeto!");
+            }
+        })
+    } else {
+        let toggle_edit_element_img = document.createElement("img")
+        toggle_edit_element_img.classList.add("icon-dark", "icon-24px", "g-0", "m-0", "p-0", "me-2")
+        toggle_edit_element_img.src = "static/action-icons/edit.svg"
+        let toggle_edit_element_p = document.createElement("p")
+        toggle_edit_element_p.classList.add("g-0", "m-0", "p-0")
+        toggle_edit_element_p.innerText = "Editar portfólio"
+        toggle_edit_element.appendChild(toggle_edit_element_img)
+        toggle_edit_element.appendChild(toggle_edit_element_p)
+        toggle_edit_element.addEventListener("click", () => {
+            toggleEditParam(true)
+        })
+    }
 
     // TODO: Utilizar ?id= da URI
     // INFO: Repo 14 escolhido para desenvolvimento porque contem as 3 categorias necessárias geradas aleatoriamente
-    let portfolio = JSONQL_P.readPortfolios(14);
+    let portfolio = JSONQL_P.readPortfolios(portf_id);
     if (!portfolio.length) {
         console.log("setupPortfolioPage: nenhum portfólio cadastrado!");
         return null
     }
 
-    portfolio = portfolio[genRandomNumber(portfolio.length)]
-    // portfolio = portfolio[genRandomNumber(portfolio.length)]
+    portfolio = portfolio[0]
     if (!globalThis.popup_edit_context) {
         globalThis.popup_edit_context = []
         globalThis.popup_edit_context.portfolio_id = portfolio.id
@@ -536,11 +611,11 @@ function setupPortfolioPage() {
                 /*
                 if (aval_ja_adicionado)
                     return
-                
-                aval_ja_adicionado = true
-*/
 
-                                let container_title = secao_nome || "Avaliações"
+                aval_ja_adicionado = true
+                */
+
+                let container_title = secao_nome || "Avaliações"
                 let container_subtitle = secao_descricao || "Clientes satisfeitos!"
 
                 let content_header = createSectionHeader("star", "filter-star", container_title, container_subtitle)
@@ -548,138 +623,140 @@ function setupPortfolioPage() {
                 let content_container = createSectionContainer()
                 content_container.appendChild(content_header)
 
-                let content_actions = document.createElement("div")
-                content_actions.classList.add("ms-auto")
+                if (enable_edit) {
+                    let content_actions = document.createElement("div")
+                    content_actions.classList.add("ms-auto")
 
-                let content_button_edit = createActionButton("edit", () => {
-                    togglePopupEdit()
+                    let content_button_edit = createActionButton("edit", () => {
+                        togglePopupEdit()
 
-                    if (!globalThis.popup_edit_context)
-                        globalThis.popup_edit_context = []
+                        if (!globalThis.popup_edit_context)
+                            globalThis.popup_edit_context = []
 
-                    globalThis.popup_edit_context.secao_id = portfolio.id
-                    globalThis.popup_edit_context.secao_ordem = secao_ordem
-                    globalThis.popup_edit_context.secao_nome = container_title
-                    globalThis.popup_edit_context.secao_descricao = container_subtitle
+                        globalThis.popup_edit_context.secao_id = portfolio.id
+                        globalThis.popup_edit_context.secao_ordem = secao_ordem
+                        globalThis.popup_edit_context.secao_nome = container_title
+                        globalThis.popup_edit_context.secao_descricao = container_subtitle
 
-                    document.getElementById("popup-edit-name").value = container_title
-                    document.getElementById("popup-edit-description").value = container_subtitle
-                })
+                        document.getElementById("popup-edit-name").value = container_title
+                        document.getElementById("popup-edit-description").value = container_subtitle
+                    })
 
-                let content_button_up = createActionButton("up", () => {
-                    let form_id = portfolio.id
-                    let form_ordem = secao_ordem
+                    let content_button_up = createActionButton("up", () => {
+                        let form_id = portfolio.id
+                        let form_ordem = secao_ordem
 
-                    let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+                        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
 
-                    if (!form_porfolio) {
-                        console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-                        return null
-                    }
-
-                    if (!form_porfolio.secoes.length) {
-                        console.log("ID1: Erro ao editar categoria.");
-                        return null
-                    }
-
-                    // TODO: Por enquanto a ordem no array é mais importante que o valor em json.ordem
-                    // INFO: Aqui a ordem esta sendo utilizada como id da seção
-                    // Verificar o maior valor para json.ordem
-                    /*
-                    let maior = 0;
-                    form_porfolio.secoes.forEach(element => {
-                        if (parseInt(element.ordem) > maior)
-                            maior = element.ordem;
-                    });
-
-                    // TODO: Desabilitar botão quando no topo ou no final?
-                    if (secao_ordem >= maior)
-                        return null
-                    */
-
-                    for (let index = 1; index > 0 && index < form_porfolio.secoes.length; index++) {
-                        if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                            continue
+                        if (!form_porfolio) {
+                            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                            return null
                         }
 
-                        // Remove do array
-                        let secao = form_porfolio.secoes.splice(index, 1)[0]
-                        form_porfolio.secoes.splice(index - 1, 0, secao)
-                        break;
-                    }
-
-                    if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                        notifySectionDataChanged()
-                    } else {
-                        console.log("Ocorreu um erro ao atualizar o objeto!");
-                    }
-                })
-
-                let content_button_down = createActionButton("down", () => {
-                                        let form_id = portfolio.id
-                    let form_ordem = secao_ordem
-
-                    let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
-
-                    if (!form_porfolio) {
-                        console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-                        return null
-                    }
-
-                    if (!form_porfolio.secoes.length) {
-                        console.log("ID1: Erro ao editar categoria.");
-                        return null
-                    }
-
-                    // Verificar o maior valor para json.ordem
-                    let maior = 0;
-                    form_porfolio.secoes.forEach(element => {
-                        if (parseInt(element.ordem) > maior)
-                            maior = element.ordem;
-                    });
-
-                    // TODO: Desabilitar botão quando no topo ou no final?
-                    if (secao_ordem >= maior)
-                        return null
-
-                    for (let index = 0; index < form_porfolio.secoes.length - 1; index++) {
-                        if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                            continue
+                        if (!form_porfolio.secoes.length) {
+                            console.log("ID1: Erro ao editar categoria.");
+                            return null
                         }
 
-                        // Remove do array
-                        let secao = form_porfolio.secoes.splice(index, 1)[0]
-                        form_porfolio.secoes.splice(index + 1, 0, secao)
-                        break;
-                    }
+                        // TODO: Por enquanto a ordem no array é mais importante que o valor em json.ordem
+                        // INFO: Aqui a ordem esta sendo utilizada como id da seção
+                        // Verificar o maior valor para json.ordem
+                        /*
+                        let maior = 0;
+                        form_porfolio.secoes.forEach(element => {
+                            if (parseInt(element.ordem) > maior)
+                                maior = element.ordem;
+                        });
 
-                    if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                        notifySectionDataChanged()
-                    } else {
-                        console.log("Ocorreu um erro ao atualizar o objeto!");
-                    }
-                })
+                        // TODO: Desabilitar botão quando no topo ou no final?
+                        if (secao_ordem >= maior)
+                            return null
+                        */
 
-                let content_button_delete = createActionButton("delete", () => {
-                    togglePopupDeleteSecao()
+                        for (let index = 1; index > 0 && index < form_porfolio.secoes.length; index++) {
+                            if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                                continue
+                            }
 
-                    if (!globalThis.popup_edit_context)
-                        globalThis.popup_edit_context = []
+                            // Remove do array
+                            let secao = form_porfolio.secoes.splice(index, 1)[0]
+                            form_porfolio.secoes.splice(index - 1, 0, secao)
+                            break;
+                        }
 
-                    globalThis.popup_edit_context.secao_id = portfolio.id
-                    globalThis.popup_edit_context.secao_ordem = secao_ordem
+                        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                            notifySectionDataChanged()
+                        } else {
+                            console.log("Ocorreu um erro ao atualizar o objeto!");
+                        }
+                    })
 
-                    // TODO: Isso aqui pode mudar com o tempo?
-                    document.getElementById("popup-delete-name").innerText = container_title
-                    document.getElementById("popup-delete-description").innerText = container_subtitle
-                })
+                    let content_button_down = createActionButton("down", () => {
+                        let form_id = portfolio.id
+                        let form_ordem = secao_ordem
 
-                content_actions.appendChild(content_button_edit)
-                content_actions.appendChild(content_button_down)
-                content_actions.appendChild(content_button_up)
-                content_actions.appendChild(content_button_delete)
+                        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
 
-                content_header.appendChild(content_actions)
+                        if (!form_porfolio) {
+                            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                            return null
+                        }
+
+                        if (!form_porfolio.secoes.length) {
+                            console.log("ID1: Erro ao editar categoria.");
+                            return null
+                        }
+
+                        // Verificar o maior valor para json.ordem
+                        let maior = 0;
+                        form_porfolio.secoes.forEach(element => {
+                            if (parseInt(element.ordem) > maior)
+                                maior = element.ordem;
+                        });
+
+                        // TODO: Desabilitar botão quando no topo ou no final?
+                        if (secao_ordem >= maior)
+                            return null
+
+                        for (let index = 0; index < form_porfolio.secoes.length - 1; index++) {
+                            if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                                continue
+                            }
+
+                            // Remove do array
+                            let secao = form_porfolio.secoes.splice(index, 1)[0]
+                            form_porfolio.secoes.splice(index + 1, 0, secao)
+                            break;
+                        }
+
+                        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                            notifySectionDataChanged()
+                        } else {
+                            console.log("Ocorreu um erro ao atualizar o objeto!");
+                        }
+                    })
+
+                    let content_button_delete = createActionButton("delete", () => {
+                        togglePopupDeleteSecao()
+
+                        if (!globalThis.popup_edit_context)
+                            globalThis.popup_edit_context = []
+
+                        globalThis.popup_edit_context.secao_id = portfolio.id
+                        globalThis.popup_edit_context.secao_ordem = secao_ordem
+
+                        // TODO: Isso aqui pode mudar com o tempo?
+                        document.getElementById("popup-delete-name").innerText = container_title
+                        document.getElementById("popup-delete-description").innerText = container_subtitle
+                    })
+
+                    content_actions.appendChild(content_button_edit)
+                    content_actions.appendChild(content_button_down)
+                    content_actions.appendChild(content_button_up)
+                    content_actions.appendChild(content_button_delete)
+
+                    content_header.appendChild(content_actions)
+                }
 
                 portfolio_secoes.appendChild(content_container)
 
@@ -762,7 +839,7 @@ function setupPortfolioPage() {
             break;
             // categoriaId(0): Fotos
             case 0: {
-                                let container_title = secao_nome || "Imagens"
+                let container_title = secao_nome || "Imagens"
                 let container_subtitle = secao_descricao || "Imagens de serviços realizados"
 
                 let content_header = createSectionHeader("images", "filter-images", container_title, container_subtitle)
@@ -770,137 +847,139 @@ function setupPortfolioPage() {
                 let content_container = createSectionContainer()
                 content_container.appendChild(content_header)
 
-                let content_actions = document.createElement("div")
-                content_actions.classList.add("ms-auto")
+                if (enable_edit) {
+                    let content_actions = document.createElement("div")
+                    content_actions.classList.add("ms-auto")
 
-                let content_button_edit = createActionButton("edit", () => {
-                    togglePopupEdit()
+                    let content_button_edit = createActionButton("edit", () => {
+                        togglePopupEdit()
 
-                    if (!globalThis.popup_edit_context)
-                        globalThis.popup_edit_context = []
+                        if (!globalThis.popup_edit_context)
+                            globalThis.popup_edit_context = []
 
-                    globalThis.popup_edit_context.secao_id = portfolio.id
-                    globalThis.popup_edit_context.secao_ordem = secao_ordem
-                    globalThis.popup_edit_context.secao_nome = container_title
-                    globalThis.popup_edit_context.secao_descricao = container_subtitle
+                        globalThis.popup_edit_context.secao_id = portfolio.id
+                        globalThis.popup_edit_context.secao_ordem = secao_ordem
+                        globalThis.popup_edit_context.secao_nome = container_title
+                        globalThis.popup_edit_context.secao_descricao = container_subtitle
 
-                    document.getElementById("popup-edit-name").value = container_title
-                    document.getElementById("popup-edit-description").value = container_subtitle
-                })
+                        document.getElementById("popup-edit-name").value = container_title
+                        document.getElementById("popup-edit-description").value = container_subtitle
+                    })
 
-                let content_button_up = createActionButton("up", () => {
-                    let form_id = portfolio.id
-                    let form_ordem = secao_ordem
+                    let content_button_up = createActionButton("up", () => {
+                        let form_id = portfolio.id
+                        let form_ordem = secao_ordem
 
-                    let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+                        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
 
-                    if (!form_porfolio) {
-                        console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-                        return null
-                    }
-
-                    if (!form_porfolio.secoes.length) {
-                        console.log("ID1: Erro ao editar categoria.");
-                        return null
-                    }
-
-                    // TODO: Por enquanto a ordem no array é mais importante que o valor em json.ordem
-                    // INFO: Aqui a ordem esta sendo utilizada como id da seção
-                    // Verificar o maior valor para json.ordem
-                    /*
-                    let maior = 0;
-                    form_porfolio.secoes.forEach(element => {
-                        if (parseInt(element.ordem) > maior)
-                            maior = element.ordem;
-                    });
-
-                    // TODO: Desabilitar botão quando no topo ou no final?
-                    if (secao_ordem >= maior)
-                        return null
-                    */
-
-                    for (let index = 1; index > 0 && index < form_porfolio.secoes.length; index++) {
-                        if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                            continue
+                        if (!form_porfolio) {
+                            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                            return null
                         }
 
-                        // Remove do array
-                        let secao = form_porfolio.secoes.splice(index, 1)[0]
-                        form_porfolio.secoes.splice(index - 1, 0, secao)
-                        break;
-                    }
-
-                    if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                        notifySectionDataChanged()
-                    } else {
-                        console.log("Ocorreu um erro ao atualizar o objeto!");
-                    }
-                })
-
-                let content_button_down = createActionButton("down", () => {
-                                        let form_id = portfolio.id
-                    let form_ordem = secao_ordem
-
-                    let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
-
-                    if (!form_porfolio) {
-                        console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-                        return null
-                    }
-
-                    if (!form_porfolio.secoes.length) {
-                        console.log("ID1: Erro ao editar categoria.");
-                        return null
-                    }
-
-                    // Verificar o maior valor para json.ordem
-                    let maior = 0;
-                    form_porfolio.secoes.forEach(element => {
-                        if (parseInt(element.ordem) > maior)
-                            maior = element.ordem;
-                    });
-
-                    // TODO: Desabilitar botão quando no topo ou no final?
-                    if (secao_ordem >= maior)
-                        return null
-
-                    for (let index = 0; index < form_porfolio.secoes.length - 1; index++) {
-                        if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                            continue
+                        if (!form_porfolio.secoes.length) {
+                            console.log("ID1: Erro ao editar categoria.");
+                            return null
                         }
 
-                        // Remove do array
-                        let secao = form_porfolio.secoes.splice(index, 1)[0]
-                        form_porfolio.secoes.splice(index + 1, 0, secao)
-                        break;
-                    }
+                        // TODO: Por enquanto a ordem no array é mais importante que o valor em json.ordem
+                        // INFO: Aqui a ordem esta sendo utilizada como id da seção
+                        // Verificar o maior valor para json.ordem
+                        /*
+                        let maior = 0;
+                        form_porfolio.secoes.forEach(element => {
+                            if (parseInt(element.ordem) > maior)
+                                maior = element.ordem;
+                        });
 
-                    if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                        notifySectionDataChanged()
-                    } else {
-                        console.log("Ocorreu um erro ao atualizar o objeto!");
-                    }
-                })
+                        // TODO: Desabilitar botão quando no topo ou no final?
+                        if (secao_ordem >= maior)
+                            return null
+                        */
 
-                let content_button_delete = createActionButton("delete", () => {
-                    togglePopupDeleteSecao()
+                        for (let index = 1; index > 0 && index < form_porfolio.secoes.length; index++) {
+                            if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                                continue
+                            }
 
-                    if (!globalThis.popup_edit_context)
-                        globalThis.popup_edit_context = []
+                            // Remove do array
+                            let secao = form_porfolio.secoes.splice(index, 1)[0]
+                            form_porfolio.secoes.splice(index - 1, 0, secao)
+                            break;
+                        }
 
-                    globalThis.popup_edit_context.secao_id = portfolio.id
-                    globalThis.popup_edit_context.secao_ordem = secao_ordem
-                    // TODO: Isso aqui pode mudar com o tempo?
-                    document.getElementById("popup-delete-name").innerText = container_title
-                    document.getElementById("popup-delete-description").innerText = container_subtitle
-                })
+                        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                            notifySectionDataChanged()
+                        } else {
+                            console.log("Ocorreu um erro ao atualizar o objeto!");
+                        }
+                    })
 
-                content_actions.appendChild(content_button_edit)
-                content_actions.appendChild(content_button_up)
-                content_actions.appendChild(content_button_down)
-                content_actions.appendChild(content_button_delete)
+                    let content_button_down = createActionButton("down", () => {
+                        let form_id = portfolio.id
+                        let form_ordem = secao_ordem
 
-                content_header.appendChild(content_actions)
+                        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+                        if (!form_porfolio) {
+                            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                            return null
+                        }
+
+                        if (!form_porfolio.secoes.length) {
+                            console.log("ID1: Erro ao editar categoria.");
+                            return null
+                        }
+
+                        // Verificar o maior valor para json.ordem
+                        let maior = 0;
+                        form_porfolio.secoes.forEach(element => {
+                            if (parseInt(element.ordem) > maior)
+                                maior = element.ordem;
+                        });
+
+                        // TODO: Desabilitar botão quando no topo ou no final?
+                        if (secao_ordem >= maior)
+                            return null
+
+                        for (let index = 0; index < form_porfolio.secoes.length - 1; index++) {
+                            if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                                continue
+                            }
+
+                            // Remove do array
+                            let secao = form_porfolio.secoes.splice(index, 1)[0]
+                            form_porfolio.secoes.splice(index + 1, 0, secao)
+                            break;
+                        }
+
+                        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                            notifySectionDataChanged()
+                        } else {
+                            console.log("Ocorreu um erro ao atualizar o objeto!");
+                        }
+                    })
+
+                    let content_button_delete = createActionButton("delete", () => {
+                        togglePopupDeleteSecao()
+
+                        if (!globalThis.popup_edit_context)
+                            globalThis.popup_edit_context = []
+
+                        globalThis.popup_edit_context.secao_id = portfolio.id
+                        globalThis.popup_edit_context.secao_ordem = secao_ordem
+                        // TODO: Isso aqui pode mudar com o tempo?
+                        document.getElementById("popup-delete-name").innerText = container_title
+                        document.getElementById("popup-delete-description").innerText = container_subtitle
+                    })
+
+                    content_actions.appendChild(content_button_edit)
+                    content_actions.appendChild(content_button_up)
+                    content_actions.appendChild(content_button_down)
+                    content_actions.appendChild(content_button_delete)
+
+                    content_header.appendChild(content_actions)
+                }
 
                 portfolio_secoes.appendChild(content_container)
 
@@ -917,264 +996,272 @@ function setupPortfolioPage() {
 
                         let image_div = document.createElement("div")
                         image_div.classList.add("me-3", "d-inline-block", "position-relative")
-                        let remove_button = document.createElement("button")
-                        remove_button.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`
-                        remove_button.classList.add("icon-32px", "position-absolute", "top-0", "start-100", "translate-middle", "p-2", "border", "border-light", "rounded-circle", "d-flex", "justify-content-center", "align-items-center")
                         image_div.innerHTML += `<img class="img-thumbnail images" src="${secao_content[index].blob}">`
-                        image_div.appendChild(remove_button)
+
+                        // edit.remove
+                        if (enable_edit) {
+                            let remove_button = document.createElement("button")
+                            remove_button.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`
+                            remove_button.classList.add("icon-32px", "position-absolute", "top-0", "start-100", "translate-middle", "p-2", "border", "border-light", "rounded-circle", "d-flex", "justify-content-center", "align-items-center")
+                            remove_button.addEventListener("click", () => {
+                                togglePopupDeleteImage()
+
+                                if (!globalThis.popup_edit_context)
+                                    globalThis.popup_edit_context = []
+
+                                globalThis.popup_edit_context.secao_id = portfolio.id
+                                globalThis.popup_edit_context.secao_ordem = secao_ordem
+                                // TODO: Expensive, use id or something else
+                                globalThis.popup_edit_context.blob = secao_content[index].blob
+                                globalThis.popup_edit_context.descricao = secao_content[index].descricao
+
+                                document.getElementById("popup-delete-image-image").src = secao_content[index].blob
+                            })
+                            image_div.appendChild(remove_button)
+                        }
+
                         content_blobs_scrool.appendChild(image_div)
-
-                        remove_button.addEventListener("click", () => {
-                            togglePopupDeleteImage()
-
-                            if (!globalThis.popup_edit_context)
-                                globalThis.popup_edit_context = []
-
-                            globalThis.popup_edit_context.secao_id = portfolio.id
-                            globalThis.popup_edit_context.secao_ordem = secao_ordem
-                            // TODO: Expensive, use id or something else
-                            globalThis.popup_edit_context.blob = secao_content[index].blob
-                            globalThis.popup_edit_context.descricao = secao_content[index].descricao
-
-                            document.getElementById("popup-delete-image-image").src = secao_content[index].blob
-                        })
                     }
                 }
 
                 content_blobs.appendChild(content_blobs_scrool)
                 content_container.appendChild(content_blobs)
 
-                let content_add = document.createElement("div");
-                content_add.innerHTML += "<hr>"
-                let content_add_div_1 = document.createElement("div")
-                content_add_div_1.innerHTML = `<label class="form-label">Adicionar imagens</label>`
-                content_add_div_1.classList.add("col-12", "m-0", "g-0", "px-4", "w-100", "mb-3")
-                let content_add_div_1_input = document.createElement("input")
-                content_add_div_1_input.classList.add("form-control")
-                content_add_div_1_input.setAttribute("type", "file")
-                content_add_div_1.appendChild(content_add_div_1_input)
-                content_add.appendChild(content_add_div_1)
+                // edit.add
+                if (enable_edit) {
+                    let content_add = document.createElement("div");
+                    content_add.innerHTML += "<hr>"
+                    let content_add_div_1 = document.createElement("div")
+                    content_add_div_1.innerHTML = `<label class="form-label">Adicionar imagens</label>`
+                    content_add_div_1.classList.add("col-12", "m-0", "g-0", "px-4", "w-100", "mb-3")
+                    let content_add_div_1_input = document.createElement("input")
+                    content_add_div_1_input.classList.add("form-control")
+                    content_add_div_1_input.setAttribute("type", "file")
+                    content_add_div_1.appendChild(content_add_div_1_input)
+                    content_add.appendChild(content_add_div_1)
 
-                let content_add_div_2 = document.createElement("div")
-                content_add_div_2.classList.add("col-12", "m-0", "g-0", "px-4", "pb-4")
+                    let content_add_div_2 = document.createElement("div")
+                    content_add_div_2.classList.add("col-12", "m-0", "g-0", "px-4", "pb-4")
 
-                let content_add_div_2_button = document.createElement("button")
-                content_add_div_2_button.classList.add("btn", "btn-outline-primary", "text-decoration-none", "w-100")
-                content_add_div_2_button.role = "button"
-                content_add_div_2_button.innerHTML = `<div class="d-flex justify-content-center m-2">
-                    <img class="icon-24px fixed-filter-invert me-2"
-                        src="static/action-icons/add.svg">
-                        <p class="g-0 p-0 m-0">Adicionar imagens</p>
-                </div>`
-                content_add_div_2_button.addEventListener("click", async () => {
-                    let file = content_add_div_1_input.files[0];
-                    if (!file) {
-                        console.log("Sem arquivo");
-                        return
-                    }
+                    let content_add_div_2_button = document.createElement("button")
+                    content_add_div_2_button.classList.add("btn", "btn-outline-primary", "text-decoration-none", "w-100")
+                    content_add_div_2_button.role = "button"
+                    content_add_div_2_button.innerHTML = `<div class="d-flex justify-content-center m-2">
+                        <img class="icon-24px fixed-filter-invert me-2"
+                            src="static/action-icons/add.svg">
+                            <p class="g-0 p-0 m-0">Adicionar imagens</p>
+                    </div>`
+                    content_add_div_2_button.addEventListener("click", async () => {
+                        let file = content_add_div_1_input.files[0];
+                        if (!file) {
+                            console.log("Sem arquivo");
+                            return
+                        }
 
-                    const base64Image = await new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = async () => {
-                            try {
-                                resolve(reader.result);
-                            } catch (err) {
-                                reject(err);
+                        const base64Image = await new Promise((resolve, reject) => {
+                            const reader = new FileReader();
+                            reader.onload = async () => {
+                                try {
+                                    resolve(reader.result);
+                                } catch (err) {
+                                    reject(err);
+                                }
+                            };
+                            reader.onerror = (error) => {
+                                reject(error);
+                            };
+                            reader.readAsDataURL(file);
+                        });
+
+                        if (!base64Image.startsWith("data:image/")) {
+                            console.log("Não é um arquivo de imagem!")
+                        }
+
+                        let form_id = portfolio.id
+                        let form_ordem = secao_ordem
+
+                        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+                        if (!form_porfolio) {
+                            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                            return null
+                        }
+
+                        if (!form_porfolio.secoes.length) {
+                            console.log("ID1: Erro ao editar categoria.");
+                            return null
+                        }
+
+                        for (let index = 0; index < form_porfolio.secoes.length; index++) {
+                            if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                                continue
                             }
-                        };
-                        reader.onerror = (error) => {
-                            reject(error);
-                        };
-                        reader.readAsDataURL(file);
-                    });
 
-                    if (!base64Image.startsWith("data:image/")) {
-                        console.log("Não é um arquivo de imagem!")
-                    }
+                            /// TODO: Add id
+                            let content_tv = {
+                                blob: base64Image,
+                                descricao: "Imagem"
+                            }
 
-                                        let form_id = portfolio.id
-                    let form_ordem = secao_ordem
-
-                    let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
-
-                    if (!form_porfolio) {
-                        console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-                        return null
-                    }
-
-                    if (!form_porfolio.secoes.length) {
-                        console.log("ID1: Erro ao editar categoria.");
-                        return null
-                    }
-
-                    for (let index = 0; index < form_porfolio.secoes.length; index++) {
-                        if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                            continue
+                            form_porfolio.secoes[index].contents.push(content_tv)
+                            break;
                         }
 
-                        /// TODO: Add id
-                        let content_tv = {
-                            blob: base64Image,
-                            descricao: "Imagem"
+                        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                            notifySectionDataChanged()
+                        } else {
+                            console.log("Ocorreu um erro ao atualizar o objeto!");
                         }
-
-                        form_porfolio.secoes[index].contents.push(content_tv)
-                        break;
-                    }
-
-                    if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                        notifySectionDataChanged()
-                    } else {
-                        console.log("Ocorreu um erro ao atualizar o objeto!");
-                    }
-                })
-                content_add_div_2.appendChild(content_add_div_2_button)
-                content_add.appendChild(content_add_div_2)
-
-                content_container.appendChild(content_add)
+                    })
+                    content_add_div_2.appendChild(content_add_div_2_button)
+                    content_add.appendChild(content_add_div_2)
+                    content_container.appendChild(content_add)
+                }
             }
             break;
             // categoriaId(2): Links
             case 2: {
-                                let container_title = secao_nome || "Redes"
+                let container_title = secao_nome || "Redes"
                 let container_subtitle = secao_descricao || "Segue lá!"
 
                 let content_header = createSectionHeader("link", "filter-link", container_title, container_subtitle)
                 let content_container = createSectionContainer()
                 content_container.appendChild(content_header)
 
-                let content_actions = document.createElement("div")
-                content_actions.classList.add("ms-auto")
+                if (enable_edit) {
+                    let content_actions = document.createElement("div")
+                    content_actions.classList.add("ms-auto")
 
-                let content_button_edit = createActionButton("edit", () => {
-                    togglePopupEdit()
+                    let content_button_edit = createActionButton("edit", () => {
+                        togglePopupEdit()
 
-                    if (!globalThis.popup_edit_context)
-                        globalThis.popup_edit_context = []
+                        if (!globalThis.popup_edit_context)
+                            globalThis.popup_edit_context = []
 
-                    globalThis.popup_edit_context.secao_id = portfolio.id
-                    globalThis.popup_edit_context.secao_ordem = secao_ordem
-                    globalThis.popup_edit_context.secao_nome = container_title
-                    globalThis.popup_edit_context.secao_descricao = container_subtitle
+                        globalThis.popup_edit_context.secao_id = portfolio.id
+                        globalThis.popup_edit_context.secao_ordem = secao_ordem
+                        globalThis.popup_edit_context.secao_nome = container_title
+                        globalThis.popup_edit_context.secao_descricao = container_subtitle
 
-                    document.getElementById("popup-edit-name").value = container_title
-                    document.getElementById("popup-edit-description").value = container_subtitle
-                })
+                        document.getElementById("popup-edit-name").value = container_title
+                        document.getElementById("popup-edit-description").value = container_subtitle
+                    })
 
-                let content_button_up = createActionButton("up", () => {
-                    let form_id = portfolio.id
-                    let form_ordem = secao_ordem
+                    let content_button_up = createActionButton("up", () => {
+                        let form_id = portfolio.id
+                        let form_ordem = secao_ordem
 
-                    let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+                        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
 
-                    if (!form_porfolio) {
-                        console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-                        return null
-                    }
-
-                    if (!form_porfolio.secoes.length) {
-                        console.log("ID1: Erro ao editar categoria.");
-                        return null
-                    }
-
-                    // TODO: Por enquanto a ordem no array é mais importante que o valor em json.ordem
-                    // INFO: Aqui a ordem esta sendo utilizada como id da seção
-                    // Verificar o maior valor para json.ordem
-                    /*
-                    let maior = 0;
-                    form_porfolio.secoes.forEach(element => {
-                        if (parseInt(element.ordem) > maior)
-                            maior = element.ordem;
-                    });
-
-                    // TODO: Desabilitar botão quando no topo ou no final?
-                    if (secao_ordem >= maior)
-                        return null
-                    */
-
-                    for (let index = 1; index > 0 && index < form_porfolio.secoes.length; index++) {
-                        if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                            continue
+                        if (!form_porfolio) {
+                            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                            return null
                         }
 
-                        // Remove do array
-                        let secao = form_porfolio.secoes.splice(index, 1)[0]
-                        form_porfolio.secoes.splice(index - 1, 0, secao)
-                        break;
-                    }
-
-                    if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                        notifySectionDataChanged()
-                    } else {
-                        console.log("Ocorreu um erro ao atualizar o objeto!");
-                    }
-                })
-
-                let content_button_down = createActionButton("down", () => {
-                                        let form_id = portfolio.id
-                    let form_ordem = secao_ordem
-
-                    let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
-
-                    if (!form_porfolio) {
-                        console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-                        return null
-                    }
-
-                    if (!form_porfolio.secoes.length) {
-                        console.log("ID1: Erro ao editar categoria.");
-                        return null
-                    }
-
-                    // Verificar o maior valor para json.ordem
-                    let maior = 0;
-                    form_porfolio.secoes.forEach(element => {
-                        if (parseInt(element.ordem) > maior)
-                            maior = element.ordem;
-                    });
-
-                    // TODO: Desabilitar botão quando no topo ou no final?
-                    if (secao_ordem >= maior)
-                        return null
-
-                    for (let index = 0; index < form_porfolio.secoes.length - 1; index++) {
-                        if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                            continue
+                        if (!form_porfolio.secoes.length) {
+                            console.log("ID1: Erro ao editar categoria.");
+                            return null
                         }
 
-                        // Remove do array
-                        let secao = form_porfolio.secoes.splice(index, 1)[0]
-                        form_porfolio.secoes.splice(index + 1, 0, secao)
-                        break;
-                    }
+                        // TODO: Por enquanto a ordem no array é mais importante que o valor em json.ordem
+                        // INFO: Aqui a ordem esta sendo utilizada como id da seção
+                        // Verificar o maior valor para json.ordem
+                        /*
+                        let maior = 0;
+                        form_porfolio.secoes.forEach(element => {
+                            if (parseInt(element.ordem) > maior)
+                                maior = element.ordem;
+                        });
 
-                    if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                        notifySectionDataChanged()
-                    } else {
-                        console.log("Ocorreu um erro ao atualizar o objeto!");
-                    }
-                })
+                        // TODO: Desabilitar botão quando no topo ou no final?
+                        if (secao_ordem >= maior)
+                            return null
+                        */
 
-                let content_button_delete = createActionButton("delete", () => {
-                    togglePopupDeleteSecao()
+                        for (let index = 1; index > 0 && index < form_porfolio.secoes.length; index++) {
+                            if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                                continue
+                            }
 
-                    if (!globalThis.popup_edit_context)
-                        globalThis.popup_edit_context = []
+                            // Remove do array
+                            let secao = form_porfolio.secoes.splice(index, 1)[0]
+                            form_porfolio.secoes.splice(index - 1, 0, secao)
+                            break;
+                        }
 
-                    globalThis.popup_edit_context.secao_id = portfolio.id
-                    globalThis.popup_edit_context.secao_ordem = secao_ordem
+                        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                            notifySectionDataChanged()
+                        } else {
+                            console.log("Ocorreu um erro ao atualizar o objeto!");
+                        }
+                    })
 
-                    // TODO: Isso aqui pode mudar com o tempo?
-                    document.getElementById("popup-delete-name").innerText = container_title
-                    document.getElementById("popup-delete-description").innerText = container_subtitle
-                })
+                    let content_button_down = createActionButton("down", () => {
+                        let form_id = portfolio.id
+                        let form_ordem = secao_ordem
 
-                content_actions.appendChild(content_button_edit)
-                content_actions.appendChild(content_button_up)
-                content_actions.appendChild(content_button_down)
-                content_actions.appendChild(content_button_delete)
+                        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
 
-                content_header.appendChild(content_actions)
+                        if (!form_porfolio) {
+                            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                            return null
+                        }
+
+                        if (!form_porfolio.secoes.length) {
+                            console.log("ID1: Erro ao editar categoria.");
+                            return null
+                        }
+
+                        // Verificar o maior valor para json.ordem
+                        let maior = 0;
+                        form_porfolio.secoes.forEach(element => {
+                            if (parseInt(element.ordem) > maior)
+                                maior = element.ordem;
+                        });
+
+                        // TODO: Desabilitar botão quando no topo ou no final?
+                        if (secao_ordem >= maior)
+                            return null
+
+                        for (let index = 0; index < form_porfolio.secoes.length - 1; index++) {
+                            if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                                continue
+                            }
+
+                            // Remove do array
+                            let secao = form_porfolio.secoes.splice(index, 1)[0]
+                            form_porfolio.secoes.splice(index + 1, 0, secao)
+                            break;
+                        }
+
+                        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                            notifySectionDataChanged()
+                        } else {
+                            console.log("Ocorreu um erro ao atualizar o objeto!");
+                        }
+                    })
+
+                    let content_button_delete = createActionButton("delete", () => {
+                        togglePopupDeleteSecao()
+
+                        if (!globalThis.popup_edit_context)
+                            globalThis.popup_edit_context = []
+
+                        globalThis.popup_edit_context.secao_id = portfolio.id
+                        globalThis.popup_edit_context.secao_ordem = secao_ordem
+
+                        // TODO: Isso aqui pode mudar com o tempo?
+                        document.getElementById("popup-delete-name").innerText = container_title
+                        document.getElementById("popup-delete-description").innerText = container_subtitle
+                    })
+
+                    content_actions.appendChild(content_button_edit)
+                    content_actions.appendChild(content_button_up)
+                    content_actions.appendChild(content_button_down)
+                    content_actions.appendChild(content_button_delete)
+
+                    content_header.appendChild(content_actions)
+                }
 
                 portfolio_secoes.appendChild(content_container)
 
@@ -1188,9 +1275,6 @@ function setupPortfolioPage() {
 
                         let link_div = document.createElement("div")
                         link_div.classList.add("col-12", "col-sm-6", "col-xl-4", "position-relative")
-                        let remove_button = document.createElement("button")
-                        remove_button.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`
-                        remove_button.classList.add("icon-32px", "position-absolute", "top-0", "start-100", "translate-middle", "p-2", "border", "border-light", "rounded-circle", "d-flex", "justify-content-center", "align-items-center")
                         link_div.innerHTML += `<a class="btn btn-primary text-decoration-none w-100" href="${secao_content[index].blob}" role="button">
                                 <div class="d-flex justify-content-center m-2">
                                     <img class="icon-24px fixed-filter-invert me-2"
@@ -1198,49 +1282,57 @@ function setupPortfolioPage() {
                                         <p class="g-0 p-0 m-0">${secao_content[index].descricao}</p>
                                 </div>
                             </a>`
-                        link_div.appendChild(remove_button)
+
+                        if (enable_edit) {
+                            let remove_button = document.createElement("button")
+                            remove_button.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`
+                            remove_button.classList.add("icon-32px", "position-absolute", "top-0", "start-100", "translate-middle", "p-2", "border", "border-light", "rounded-circle", "d-flex", "justify-content-center", "align-items-center")
+                            link_div.appendChild(remove_button)
+                            remove_button.addEventListener("click", () => {
+                                togglePopupDeleteLink()
+
+                                if (!globalThis.popup_edit_context)
+                                    globalThis.popup_edit_context = []
+
+                                globalThis.popup_edit_context.secao_id = portfolio.id
+                                globalThis.popup_edit_context.secao_ordem = secao_ordem
+                                // TODO: Expensive, use id or something else
+                                globalThis.popup_edit_context.blob = secao_content[index].blob
+                                globalThis.popup_edit_context.descricao = secao_content[index].descricao
+
+                                document.getElementById("popup-delete-link-url").innerText = secao_content[index].blob
+                                document.getElementById("popup-delete-link-description").innerText = secao_content[index].descricao
+                            })
+                        }
+
                         content_blobs.appendChild(link_div)
-
-                        remove_button.addEventListener("click", () => {
-                            togglePopupDeleteLink()
-
-                            if (!globalThis.popup_edit_context)
-                                globalThis.popup_edit_context = []
-
-                            globalThis.popup_edit_context.secao_id = portfolio.id
-                            globalThis.popup_edit_context.secao_ordem = secao_ordem
-                            // TODO: Expensive, use id or something else
-                            globalThis.popup_edit_context.blob = secao_content[index].blob
-                            globalThis.popup_edit_context.descricao = secao_content[index].descricao
-
-                            document.getElementById("popup-delete-link-url").innerText = secao_content[index].blob
-                            document.getElementById("popup-delete-link-description").innerText = secao_content[index].descricao
-                        })
                     }
                 }
 
-                let add_new_link = document.createElement("div")
-                add_new_link.classList.add("col-12")
+                if (enable_edit) {
+                    let add_new_link = document.createElement("div")
+                    add_new_link.classList.add("col-12")
 
-                let add_new_link_button = document.createElement("button")
-                add_new_link_button.classList.add("btn", "btn-outline-primary", "text-decoration-none", "w-100")
-                add_new_link_button.addEventListener("click", () => {
-                    if (!globalThis.popup_edit_context)
-                        globalThis.popup_edit_context = []
+                    let add_new_link_button = document.createElement("button")
+                    add_new_link_button.classList.add("btn", "btn-outline-primary", "text-decoration-none", "w-100")
+                    add_new_link_button.addEventListener("click", () => {
+                        if (!globalThis.popup_edit_context)
+                            globalThis.popup_edit_context = []
 
-                    globalThis.popup_edit_context.secao_id = portfolio.id
-                    globalThis.popup_edit_context.secao_ordem = secao_ordem
+                        globalThis.popup_edit_context.secao_id = portfolio.id
+                        globalThis.popup_edit_context.secao_ordem = secao_ordem
 
-                    togglePopupAddLink()
-                })
-                add_new_link_button.innerHTML = `<div class="d-flex justify-content-center m-2">
+                        togglePopupAddLink()
+                    })
+                    add_new_link_button.innerHTML = `<div class="d-flex justify-content-center m-2">
                                     <img class="icon-24px fixed-filter-invert me-2"
                                         src="static/action-icons/add.svg">
                                         <p class="g-0 p-0 m-0">Adicionar link</p>
                                 </div>`
 
-                add_new_link.appendChild(add_new_link_button)
-                content_blobs.appendChild(add_new_link)
+                    add_new_link.appendChild(add_new_link_button)
+                    content_blobs.appendChild(add_new_link)
+                }
                 content_container.appendChild(content_blobs)
             }
             break;
@@ -1248,4 +1340,23 @@ function setupPortfolioPage() {
     });
 }
 
-setupPortfolioPage();
+function setupPortfolioSetup() {}
+
+function validateEntry() {
+    let params = new URLSearchParams(location.search)
+    // ?id=:id
+    let id = parseInt(params.get("id"))
+    // ?edit=true
+    let edit = params.get("edit") === "true"
+
+    if (id) {
+        // Se tem ?id, carrega as informações do portfolio
+        setupPortfolioPage(id, edit);
+    } else {
+        setupPortfolioSetup();
+    }
+
+    return null;
+}
+
+validateEntry();
