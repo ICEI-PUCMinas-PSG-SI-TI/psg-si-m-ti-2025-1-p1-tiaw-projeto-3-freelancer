@@ -53,6 +53,12 @@ function ensureType(value, type) {
     if (typeof (type) !== "string")
         return false
 
+    if (typeof (value) === "string" && type === "number") {
+        let parse = parseInt(value)
+        if (typeof (parse) === "number")
+            value = parse
+    }
+
     return typeof (value) === type;
 }
 
