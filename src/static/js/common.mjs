@@ -29,7 +29,11 @@ export function genRandomNumber(max, min) {
 }
 
 export async function getExemplos() {
+    if (globalThis._exemplos)
+        return globalThis._exemplos
+    
     try {
+        console.log("chamado de novo");
         // URL assume que você esta na página src/dev.html
         const response = await fetch('data/json/_exemplos.json');
         if (!response.ok) {
@@ -37,6 +41,7 @@ export async function getExemplos() {
         }
 
         const json = await response.json();
+        globalThis._exemplos = json
         return json;
     } catch (error) {
         console.error(error.message);
@@ -288,6 +293,7 @@ export async function createNUsers(number) {
         let ativo = true
         let nome = exemplos.nomes[genRandomNumber(exemplos.nomes.length)]
         nome += " " + exemplos.sobrenomes[genRandomNumber(exemplos.sobrenomes.length)]
+        let foto = `https://picsum.photos/seed/${genRandomNumber(200)}/200`
         let data_nascimento = genRandomNumber(28) + "/" + genRandomNumber(12) + "/" + genRandomNumber(2026, 1970)
         let email = exemplos.email[genRandomNumber(exemplos.email.length)] // string
         let senha = genRandomNumber(999999, 100000).toString() // string
@@ -303,6 +309,7 @@ export async function createNUsers(number) {
         const element = {
             ativo: ativo, // bool
             nome: nome, // string
+            foto: foto, // string
             data_nascimento: data_nascimento, // string
             email: email, // string
             senha: senha, // string

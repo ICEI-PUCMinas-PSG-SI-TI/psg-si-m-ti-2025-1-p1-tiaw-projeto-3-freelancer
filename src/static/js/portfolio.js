@@ -3,6 +3,7 @@ import * as JSONQL_U from "./jsonql.user.mjs"; // Usuários
 import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
+import * as DEV from "./dev_create.mjs"; // Portfólios
 
 /**
  * Retorna um número aleatório entre 0 e max, o min é opcional
@@ -302,7 +303,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                 return null
             }
 
-            if (!form_sec_name){
+            if (!form_sec_name) {
                 alert("O nome da seção não pode estar vazio!")
                 return null
             }
@@ -586,7 +587,9 @@ function setupPortfolioPage(portf_id, enable_edit) {
 
     let nome = user[0].nome
     let id = user[0].id
-    let biografia = user[0].biografia
+    let biografia = user[0].biografia || "Sem descrição informada"
+    let picture = user[0].foto || `https://picsum.photos/seed/${id}/200`
+    
     // TODO: adicionar contato e e-mail?
 
     // TODO: Se não preenchido na hora do cadastro?
@@ -596,17 +599,19 @@ function setupPortfolioPage(portf_id, enable_edit) {
     }
 
     let portfolio_name = document.getElementById("portfolio-name")
+    let portfolio_picture = document.getElementById("portfolio-picture")
     let portfolio_username = document.getElementById("portfolio-username")
     let portfolio_nota = document.getElementById("portfolio-nota")
     let portfolio_descricao = document.getElementById("portfolio-descricao")
 
-    if (!portfolio_name || !portfolio_username || !portfolio_nota || !portfolio_descricao) {
+    if (!portfolio_name || !portfolio_picture || !portfolio_username || !portfolio_nota || !portfolio_descricao) {
         console.log("setupPortfolioPage: não foi possível atribuir o id");
         return null
     }
 
     portfolio_name.innerText = nome
     portfolio_username.innerText = `@${id}`
+    portfolio_picture.src = picture
     portfolio_descricao.innerText = biografia
 
     let media = getNota(id);
@@ -624,7 +629,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
     // TODO: O usuário pode não ter cadastrado nenhuma seção ainda
     if (!secoes.length && !enable_edit) {
         let information = document.createElement("h5")
-        information.classList.add("d-flex","w-100", "p-4", "m-0", "g-0", "align-items-center", "justify-content-center")
+        information.classList.add("d-flex", "w-100", "p-4", "m-0", "g-0", "align-items-center", "justify-content-center")
         information.innerText = "Portfólio vazio, edite o portfólio para adicionar uma seção!"
         portfolio_secoes.appendChild(information)
         return null
@@ -814,7 +819,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                 content_blobs_scrool.classList.add("px-3")
 
                 let avaliacoes = JSONQL_A.readAvaliacoes()
-                if (!avaliacoes || !avaliacoes.length){
+                if (!avaliacoes || !avaliacoes.length) {
                     let information = document.createElement("p")
                     information.classList.add("d-flex", "w-100", "p-4", "m-0", "g-0", "align-items-center", "justify-content-center")
                     information.innerHTML = `Não há avaliações para este usuário, você pode utilizar a&nbsp;<a href="dev.html">página de desenvolvimento</a>&nbsp;para gerar uma avaliação.`
@@ -1477,8 +1482,14 @@ function setupPortfolioSetup() {
         portfolio_setup_create_select.appendChild(option)
     }
 
-    portfolio_setup_dev_btn.addEventListener("click", () => {
+    portfolio_setup_dev_btn.addEventListener("click", async () => {
         // Utilizar a página 'dev.js'
+        await DEV.createUsuarios(30);
+        await DEV.createServicos(60);
+        await DEV.createContratos(90);
+        await DEV.createAvaliacoes(120);
+        // DEV.createPortfolios(30);
+        notifySectionDataChanged()
     })
 }
 
@@ -1495,8 +1506,6 @@ function validateEntry() {
     } else {
         setupPortfolioSetup();
     }
-
-    return null;
 }
 
 validateEntry();

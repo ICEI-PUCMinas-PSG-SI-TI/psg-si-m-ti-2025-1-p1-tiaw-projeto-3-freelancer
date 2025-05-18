@@ -80,3 +80,8 @@
 #portfolio-setup div {
     max-width: 600px;
 }
+
+#portfolio-picture {
+    max-width: 200px;
+    max-height: 200px;
+}

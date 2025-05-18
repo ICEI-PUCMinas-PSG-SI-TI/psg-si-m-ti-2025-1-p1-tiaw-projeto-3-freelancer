@@ -5,6 +5,7 @@ import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as COMMON from "./common.mjs"; // Common Utilities
+import * as DEV from "./dev_create.mjs"; // Common Utilities
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -73,14 +74,7 @@ function setupDevTools() {
 
     dev_create_usuarios?.addEventListener('click', async () => {
         const quantidade = dev_create_usuarios_n?.value;
-        const quantidade_int = COMMON.ensureInteger(quantidade)
-        if (!quantidade_int) {
-            console.log("dev_create_usuarios: Não foi possível realizar o parse da quantidade");
-            return
-        }
-
-        const usuarios = await COMMON.createNUsers(quantidade_int);
-        usuarios.forEach((value) => JSONQL_U.createUsuario(value));
+        DEV.createUsuarios(quantidade)
     })
 
     dev_delete_usuarios_all?.addEventListener('click', JSONQL_U.clearUsuarios)
@@ -107,13 +101,7 @@ function setupDevTools() {
 
     dev_create_servicos?.addEventListener('click', async () => {
         let quantidade = dev_create_servicos_n?.value;
-        const quantidade_int = COMMON.ensureInteger(quantidade)
-        if (!quantidade_int) {
-            console.log("dev_create_servicos: Não foi possível realizar o parse da quantidade");
-            return
-        }
-        let servicos = await COMMON.createNServicos(quantidade_int);
-        servicos.forEach((value) => JSONQL_S.createServicos(value));
+        DEV.createServicos(quantidade)
     })
 
     dev_delete_servicos_all?.addEventListener('click', JSONQL_S.clearServicos)
@@ -139,13 +127,7 @@ function setupDevTools() {
 
     dev_create_contratos?.addEventListener('click', async () => {
         let quantidade = dev_create_contratos_n?.value;
-        const quantidade_int = COMMON.ensureInteger(quantidade)
-        if (!quantidade_int) {
-            console.log("dev_create_contratos: Não foi possível realizar o parse da quantidade");
-            return
-        }
-        let contratos = await COMMON.createNContratos(quantidade_int);
-        contratos?.forEach((value) => JSONQL_C.createContrato(value));
+        DEV.createContratos(quantidade)
     })
 
     dev_delete_contratos_all?.addEventListener('click', JSONQL_C.clearContratos)
@@ -171,13 +153,7 @@ function setupDevTools() {
 
     dev_create_avaliacoes?.addEventListener('click', async () => {
         let quantidade = dev_create_avaliacoes_n?.value;
-        const quantidade_int = COMMON.ensureInteger(quantidade)
-        if (!quantidade_int) {
-            console.log("dev_create_avaliacoes: Não foi possível realizar o parse da quantidade");
-            return
-        }
-        let avaliacoes = await COMMON.createNAvaliacoes(quantidade_int);
-        avaliacoes?.forEach((value) => JSONQL_A.createAvaliacao(value));
+        DEV.createAvaliacoes(quantidade)
     })
 
     dev_delete_avaliacoes_all?.addEventListener('click', JSONQL_A.clearAvaliacoes)
@@ -203,13 +179,7 @@ function setupDevTools() {
 
     dev_create_portfolios?.addEventListener('click', async () => {
         let quantidade = dev_create_portfolios_n?.value;
-        const quantidade_int = COMMON.ensureInteger(quantidade)
-        if (!quantidade_int) {
-            console.log("dev_create_portfolios: Não foi possível realizar o parse da quantidade");
-            return
-        }
-        let portfolios = await COMMON.createNPortfolios(quantidade_int);
-        portfolios?.forEach((value) => JSONQL_P.createPortfolio(value));
+        DEV.createPortfolios(quantidade)
     })
 
     dev_delete_portfolios_all?.addEventListener('click', JSONQL_P.clearPortfolios)
