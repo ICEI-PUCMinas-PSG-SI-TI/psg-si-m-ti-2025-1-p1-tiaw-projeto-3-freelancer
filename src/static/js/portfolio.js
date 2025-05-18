@@ -357,8 +357,12 @@ function setupPortfolioPage() {
         switch (secao_categoria) {
             // categoriaId(1): Avaliações
             case 1: {
+                // Não é um bug, é uma feature, mas parece um bug
+                // Desabilitado por enquanto
+                /*
                 if (aval_ja_adicionado)
                     return
+                */
 
                 aval_ja_adicionado = true
 
@@ -407,15 +411,107 @@ function setupPortfolioPage() {
                 content_button_up.classList.add("button")
                 content_button_up.setAttribute("type", "button")
                 content_button_up.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/up.svg">`
-                content_button_up.addEventListener("click", () => {})
                 content_actions.appendChild(content_button_up)
+                content_button_up.addEventListener("click", () => {
+                    /** @type { HTMLFormElement | null } */
+                    let form_id = portfolio.id
+                    let form_ordem = secao_ordem
+
+                    let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+                    if (!form_porfolio) {
+                        console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                        return null
+                    }
+
+                    if (!form_porfolio.secoes.length) {
+                        console.log("ID1: Erro ao editar categoria.");
+                        return null
+                    }
+
+                    // TODO: Por enquanto a ordem no array é mais importante que o valor em json.ordem
+                    // INFO: Aqui a ordem esta sendo utilizada como id da seção
+                    // Verificar o maior valor para json.ordem
+                    /*
+                    let maior = 0;
+                    form_porfolio.secoes.forEach(element => {
+                        if (parseInt(element.ordem) > maior)
+                            maior = element.ordem;
+                    });
+
+                    // TODO: Desabilitar botão quando no topo ou no final?
+                    if (secao_ordem >= maior)
+                        return null
+                    */
+
+                    for (let index = 1; index > 0 && index < form_porfolio.secoes.length; index++) {
+                        if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                            continue
+                        }
+
+                        // Remove do array
+                        let secao = form_porfolio.secoes.splice(index, 1)[0]
+                        form_porfolio.secoes.splice(index - 1, 0, secao)
+                        break;
+                    }
+
+                    if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                        notifySectionDataChanged()
+                    } else {
+                        console.log("Ocorreu um erro ao atualizar o objeto!");
+                    }
+                })
 
                 let content_button_down = document.createElement("button")
                 content_button_down.classList.add("button")
                 content_button_down.setAttribute("type", "button")
                 content_button_down.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/down.svg">`
-                content_button_down.addEventListener("click", () => {})
                 content_actions.appendChild(content_button_down)
+                content_button_down.addEventListener("click", () => {
+                    /** @type { HTMLFormElement | null } */
+                    let form_id = portfolio.id
+                    let form_ordem = secao_ordem
+
+                    let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+                    if (!form_porfolio) {
+                        console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                        return null
+                    }
+
+                    if (!form_porfolio.secoes.length) {
+                        console.log("ID1: Erro ao editar categoria.");
+                        return null
+                    }
+
+                    // Verificar o maior valor para json.ordem
+                    let maior = 0;
+                    form_porfolio.secoes.forEach(element => {
+                        if (parseInt(element.ordem) > maior)
+                            maior = element.ordem;
+                    });
+
+                    // TODO: Desabilitar botão quando no topo ou no final?
+                    if (secao_ordem >= maior)
+                        return null
+
+                    for (let index = 0; index < form_porfolio.secoes.length - 1; index++) {
+                        if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                            continue
+                        }
+
+                        // Remove do array
+                        let secao = form_porfolio.secoes.splice(index, 1)[0]
+                        form_porfolio.secoes.splice(index + 1, 0, secao)
+                        break;
+                    }
+
+                    if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                        notifySectionDataChanged()
+                    } else {
+                        console.log("Ocorreu um erro ao atualizar o objeto!");
+                    }
+                })
 
                 let content_button_delete = document.createElement("button")
                 content_button_delete.classList.add("button")
@@ -563,13 +659,105 @@ function setupPortfolioPage() {
                 content_button_up.classList.add("button")
                 content_button_up.setAttribute("type", "button")
                 content_button_up.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/up.svg">`
-                content_button_up.addEventListener("click", () => {})
+                content_button_up.addEventListener("click", () => {
+                    /** @type { HTMLFormElement | null } */
+                    let form_id = portfolio.id
+                    let form_ordem = secao_ordem
+
+                    let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+                    if (!form_porfolio) {
+                        console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                        return null
+                    }
+
+                    if (!form_porfolio.secoes.length) {
+                        console.log("ID1: Erro ao editar categoria.");
+                        return null
+                    }
+
+                    // TODO: Por enquanto a ordem no array é mais importante que o valor em json.ordem
+                    // INFO: Aqui a ordem esta sendo utilizada como id da seção
+                    // Verificar o maior valor para json.ordem
+                    /*
+                    let maior = 0;
+                    form_porfolio.secoes.forEach(element => {
+                        if (parseInt(element.ordem) > maior)
+                            maior = element.ordem;
+                    });
+
+                    // TODO: Desabilitar botão quando no topo ou no final?
+                    if (secao_ordem >= maior)
+                        return null
+                    */
+
+                    for (let index = 1; index > 0 && index < form_porfolio.secoes.length; index++) {
+                        if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                            continue
+                        }
+
+                        // Remove do array
+                        let secao = form_porfolio.secoes.splice(index, 1)[0]
+                        form_porfolio.secoes.splice(index - 1, 0, secao)
+                        break;
+                    }
+
+                    if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                        notifySectionDataChanged()
+                    } else {
+                        console.log("Ocorreu um erro ao atualizar o objeto!");
+                    }
+                })
 
                 let content_button_down = document.createElement("button")
                 content_button_down.classList.add("button")
                 content_button_down.setAttribute("type", "button")
                 content_button_down.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/down.svg">`
-                content_button_down.addEventListener("click", () => {})
+                content_button_down.addEventListener("click", () => {
+                    /** @type { HTMLFormElement | null } */
+                    let form_id = portfolio.id
+                    let form_ordem = secao_ordem
+
+                    let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+                    if (!form_porfolio) {
+                        console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                        return null
+                    }
+
+                    if (!form_porfolio.secoes.length) {
+                        console.log("ID1: Erro ao editar categoria.");
+                        return null
+                    }
+
+                    // Verificar o maior valor para json.ordem
+                    let maior = 0;
+                    form_porfolio.secoes.forEach(element => {
+                        if (parseInt(element.ordem) > maior)
+                            maior = element.ordem;
+                    });
+
+                    // TODO: Desabilitar botão quando no topo ou no final?
+                    if (secao_ordem >= maior)
+                        return null
+
+                    for (let index = 0; index < form_porfolio.secoes.length - 1; index++) {
+                        if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                            continue
+                        }
+
+                        // Remove do array
+                        let secao = form_porfolio.secoes.splice(index, 1)[0]
+                        form_porfolio.secoes.splice(index + 1, 0, secao)
+                        break;
+                    }
+
+                    if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                        notifySectionDataChanged()
+                    } else {
+                        console.log("Ocorreu um erro ao atualizar o objeto!");
+                    }
+                })
 
                 let content_button_delete = document.createElement("button")
                 content_button_delete.classList.add("button")
@@ -679,13 +867,105 @@ function setupPortfolioPage() {
                 content_button_up.classList.add("button")
                 content_button_up.setAttribute("type", "button")
                 content_button_up.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/up.svg">`
-                content_button_up.addEventListener("click", () => {})
+                content_button_up.addEventListener("click", () => {
+                    /** @type { HTMLFormElement | null } */
+                    let form_id = portfolio.id
+                    let form_ordem = secao_ordem
+
+                    let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+                    if (!form_porfolio) {
+                        console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                        return null
+                    }
+
+                    if (!form_porfolio.secoes.length) {
+                        console.log("ID1: Erro ao editar categoria.");
+                        return null
+                    }
+
+                    // TODO: Por enquanto a ordem no array é mais importante que o valor em json.ordem
+                    // INFO: Aqui a ordem esta sendo utilizada como id da seção
+                    // Verificar o maior valor para json.ordem
+                    /*
+                    let maior = 0;
+                    form_porfolio.secoes.forEach(element => {
+                        if (parseInt(element.ordem) > maior)
+                            maior = element.ordem;
+                    });
+
+                    // TODO: Desabilitar botão quando no topo ou no final?
+                    if (secao_ordem >= maior)
+                        return null
+                    */
+
+                    for (let index = 1; index > 0 && index < form_porfolio.secoes.length; index++) {
+                        if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                            continue
+                        }
+
+                        // Remove do array
+                        let secao = form_porfolio.secoes.splice(index, 1)[0]
+                        form_porfolio.secoes.splice(index - 1, 0, secao)
+                        break;
+                    }
+
+                    if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                        notifySectionDataChanged()
+                    } else {
+                        console.log("Ocorreu um erro ao atualizar o objeto!");
+                    }
+                })
 
                 let content_button_down = document.createElement("button")
                 content_button_down.classList.add("button")
                 content_button_down.setAttribute("type", "button")
                 content_button_down.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/down.svg">`
-                content_button_down.addEventListener("click", () => {})
+                content_button_down.addEventListener("click", () => {
+                    /** @type { HTMLFormElement | null } */
+                    let form_id = portfolio.id
+                    let form_ordem = secao_ordem
+
+                    let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+                    if (!form_porfolio) {
+                        console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                        return null
+                    }
+
+                    if (!form_porfolio.secoes.length) {
+                        console.log("ID1: Erro ao editar categoria.");
+                        return null
+                    }
+
+                    // Verificar o maior valor para json.ordem
+                    let maior = 0;
+                    form_porfolio.secoes.forEach(element => {
+                        if (parseInt(element.ordem) > maior)
+                            maior = element.ordem;
+                    });
+
+                    // TODO: Desabilitar botão quando no topo ou no final?
+                    if (secao_ordem >= maior)
+                        return null
+
+                    for (let index = 0; index < form_porfolio.secoes.length - 1; index++) {
+                        if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                            continue
+                        }
+
+                        // Remove do array
+                        let secao = form_porfolio.secoes.splice(index, 1)[0]
+                        form_porfolio.secoes.splice(index + 1, 0, secao)
+                        break;
+                    }
+
+                    if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                        notifySectionDataChanged()
+                    } else {
+                        console.log("Ocorreu um erro ao atualizar o objeto!");
+                    }
+                })
 
                 let content_button_delete = document.createElement("button")
                 content_button_delete.classList.add("button")
