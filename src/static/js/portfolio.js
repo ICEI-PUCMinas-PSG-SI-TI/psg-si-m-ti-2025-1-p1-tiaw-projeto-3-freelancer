@@ -271,6 +271,11 @@ function setupPortfolioPage(portf_id, enable_edit) {
                 return null
             }
 
+            if (!form_sec_name) {
+                alert("O nome da seção não pode estar vazio!")
+                return null
+            }
+
             for (let k = 0; k < form_porfolio.secoes.length; k++) {
                 if (form_porfolio.secoes[k].ordem == form_sec_ordem) {
                     form_porfolio.secoes[k].nome = form_sec_name
@@ -865,7 +870,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
 
                     // TODO: replace 'placeholder_profile'
                     content_blobs_scrool.innerHTML += `<div class="d-inline-block float-none me-3">
-                        <a class="text-decoration-none m-0 p-0 g-0" href="#">
+                        <a class="text-decoration-none m-0 p-0 g-0" href="404.html">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row card-aval-limit">
@@ -1488,6 +1493,7 @@ function setupPortfolioSetup() {
         await DEV.createServicos(60);
         await DEV.createContratos(90);
         await DEV.createAvaliacoes(120);
+        alert("Foram criados usuários e avaliações que seráo utilizadas no portfólio")
         // DEV.createPortfolios(30);
         notifySectionDataChanged()
     })
