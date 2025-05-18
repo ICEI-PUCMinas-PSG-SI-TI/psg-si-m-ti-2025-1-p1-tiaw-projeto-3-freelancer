@@ -203,8 +203,6 @@ function setupPortfolioPage() {
             return null
         }
 
-        // Verificar o maior valor para json.ordem
-        let maior = 0;
         for (let index = 0; index < form_porfolio.secoes.length; index++) {
             if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
                 continue
@@ -807,16 +805,93 @@ function setupPortfolioPage() {
                 content_container.appendChild(content_blobs)
 
                 let content_add = document.createElement("div");
-                content_add.innerHTML =
-                    `<div class="col-12 m-0 g-0 p-4">
-                    <a class="btn btn-outline-primary text-decoration-none w-100" role="button">
-                        <div class="d-flex justify-content-center m-2">
-                            <img class="icon-24px fixed-filter-invert me-2"
-                                src="static/action-icons/add.svg">
-                                <p class="g-0 p-0 m-0">Adicionar imagens</p>
-                        </div>
-                    </a>
+                content_add.innerHTML += "<hr>"
+                let content_add_div_1 = document.createElement("div")
+                content_add_div_1.innerHTML = `<label class="form-label">Adicionar imagens</label>`
+                content_add_div_1.classList.add("col-12", "m-0", "g-0", "px-4", "w-100", "mb-3")
+                let content_add_div_1_input = document.createElement("input")
+                content_add_div_1_input.classList.add("form-control")
+                content_add_div_1_input.setAttribute("type", "file")
+                content_add_div_1.appendChild(content_add_div_1_input)
+                content_add.appendChild(content_add_div_1)
+
+                let content_add_div_2 = document.createElement("div")
+                content_add_div_2.classList.add("col-12", "m-0", "g-0", "px-4", "pb-4")
+
+                let content_add_div_2_button = document.createElement("button")
+                content_add_div_2_button.classList.add("btn", "btn-outline-primary", "text-decoration-none", "w-100")
+                content_add_div_2_button.role = "button"
+                content_add_div_2_button.innerHTML = `<div class="d-flex justify-content-center m-2">
+                    <img class="icon-24px fixed-filter-invert me-2"
+                        src="static/action-icons/add.svg">
+                        <p class="g-0 p-0 m-0">Adicionar imagens</p>
                 </div>`
+                content_add_div_2_button.addEventListener("click", async () => {
+                    let file = content_add_div_1_input.files[0];
+                    if (!file) {
+                        console.log("Sem arquivo");
+                        return
+                    }
+
+                    const base64Image = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = async () => {
+                            try {
+                                resolve(reader.result);
+                            } catch (err) {
+                                reject(err);
+                            }
+                        };
+                        reader.onerror = (error) => {
+                            reject(error);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+
+                    if (!base64Image.startsWith("data:image/")) {
+                        console.log("Não é um arquivo de imagem!")
+                    }
+
+                    /** @type { HTMLFormElement | null } */
+                    let form_id = portfolio.id
+                    let form_ordem = secao_ordem
+
+                    let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+                    if (!form_porfolio) {
+                        console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                        return null
+                    }
+
+                    if (!form_porfolio.secoes.length) {
+                        console.log("ID1: Erro ao editar categoria.");
+                        return null
+                    }
+
+                    for (let index = 0; index < form_porfolio.secoes.length; index++) {
+                        if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                            continue
+                        }
+
+                        /// TODO: Add id
+                        let content_tv = {
+                            blob: base64Image,
+                            descricao: "Imagem"
+                        }
+
+                        form_porfolio.secoes[index].contents.push(content_tv)
+                        break;
+                    }
+
+                    if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+                        notifySectionDataChanged()
+                    } else {
+                        console.log("Ocorreu um erro ao atualizar o objeto!");
+                    }
+                })
+                content_add_div_2.appendChild(content_add_div_2_button)
+                content_add.appendChild(content_add_div_2)
+
 
                 content_container.appendChild(content_add)
             }
