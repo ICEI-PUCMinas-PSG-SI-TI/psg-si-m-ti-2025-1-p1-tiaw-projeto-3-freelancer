@@ -27,6 +27,38 @@ function genRandomNumber(max, min) {
     return Math.floor(Math.random() * max);
 }
 
+/**
+ * 
+ * @param {string} icon 
+ * @param {string} icon_class 
+ * @param {string} title 
+ * @param {string} subtitle 
+ * 
+ * @returns {HTMLDivElement}
+ */
+function createSectionContainer(icon, icon_class, title, subtitle) {
+    /** @type { HTMLDivElement } */
+    let content_container = document.createElement("div")
+    content_container.classList.add("card", "w-100", "overflow-hidden", "p-0", "g-0", "g-0", "mb-3")
+    return content_container;
+}
+
+/**
+ *
+ * @returns {HTMLDivElement}
+ */
+function createSectionHeader(icon, icon_class, title, subtitle) {
+    let content_header = document.createElement("div")
+    content_header.classList.add("card-header", "p-3", "d-flex", "align-items-center", "justify-content-start")
+    content_header.innerHTML =
+        `<div>
+            <img class="icon-32px me-3 ${icon_class}" src="static/icons/${icon}.svg">
+        </div><div>
+            <h5 class="card-title">${title}</h5>
+            <h6 class="card-subtitle mb-0 pb-0 text-body-secondary">${subtitle}</h6>
+        </div>`
+    return content_header
+}
 
 /** 
  * @param {string} icon 
@@ -504,26 +536,16 @@ function setupPortfolioPage() {
                 /*
                 if (aval_ja_adicionado)
                     return
-                */
-
+                
                 aval_ja_adicionado = true
+*/
 
-                let container_icon = "static/icons/star.svg"
-                let container_icon_class = "filter-star"
-                // TODO: remove
-                let container_title = secao_nome || "Avaliações"
+                                let container_title = secao_nome || "Avaliações"
                 let container_subtitle = secao_descricao || "Clientes satisfeitos!"
 
-                let content_container = document.createElement("div")
-                content_container.classList.add("card", "w-100", "overflow-hidden", "p-0", "g-0", "g-0", "mb-3")
-                let content_header = document.createElement("div")
-                content_header.classList.add("card-header", "p-3", "d-flex", "align-items-center", "justify-content-start")
-                content_header.innerHTML = `<div>
-                            <img class="icon-32px me-3 ${container_icon_class}" src="${container_icon}">
-                        </div><div>
-                            <h5 class="card-title">${container_title}</h5>
-                            <h6 class="card-subtitle mb-0 pb-0 text-body-secondary">${container_subtitle}</h6>
-                        </div>`
+                let content_header = createSectionHeader("star", "filter-star", container_title, container_subtitle)
+
+                let content_container = createSectionContainer()
                 content_container.appendChild(content_header)
 
                 let content_actions = document.createElement("div")
@@ -740,22 +762,12 @@ function setupPortfolioPage() {
             break;
             // categoriaId(0): Fotos
             case 0: {
-                let container_icon = "static/icons/images.svg"
-                let container_icon_class = "filter-images"
-                // TODO: remove
-                let container_title = secao_nome || "Imagens"
+                                let container_title = secao_nome || "Imagens"
                 let container_subtitle = secao_descricao || "Imagens de serviços realizados"
 
-                let content_container = document.createElement("div")
-                content_container.classList.add("card", "w-100", "overflow-hidden", "p-0", "g-0", "g-0", "mb-3")
-                let content_header = document.createElement("div")
-                content_header.classList.add("card-header", "p-3", "d-flex", "align-items-center", "justify-content-start")
-                content_header.innerHTML = `<div>
-                            <img class="icon-32px me-3 ${container_icon_class}" src="${container_icon}">
-                        </div><div>
-                            <h5 class="card-title">${container_title}</h5>
-                            <h6 class="card-subtitle mb-0 pb-0 text-body-secondary">${container_subtitle}</h6>
-                        </div>`
+                let content_header = createSectionHeader("images", "filter-images", container_title, container_subtitle)
+
+                let content_container = createSectionContainer()
                 content_container.appendChild(content_header)
 
                 let content_actions = document.createElement("div")
@@ -1019,28 +1031,16 @@ function setupPortfolioPage() {
                 content_add_div_2.appendChild(content_add_div_2_button)
                 content_add.appendChild(content_add_div_2)
 
-
                 content_container.appendChild(content_add)
             }
             break;
             // categoriaId(2): Links
             case 2: {
-                let container_icon = "static/icons/link.svg"
-                let container_icon_class = "filter-link"
-                // TODO: remove
-                let container_title = secao_nome || "Redes"
+                                let container_title = secao_nome || "Redes"
                 let container_subtitle = secao_descricao || "Segue lá!"
 
-                let content_container = document.createElement("div")
-                content_container.classList.add("card", "w-100", "overflow-hidden", "p-0", "g-0", "g-0", "mb-3")
-                let content_header = document.createElement("div")
-                content_header.classList.add("card-header", "p-3", "d-flex", "align-items-center", "justify-content-start")
-                content_header.innerHTML = `<div>
-                            <img class="icon-32px me-3 ${container_icon_class}" src="${container_icon}">
-                        </div><div>
-                            <h5 class="card-title">${container_title}</h5>
-                            <h6 class="card-subtitle mb-0 pb-0 text-body-secondary">${container_subtitle}</h6>
-                        </div>`
+                let content_header = createSectionHeader("link", "filter-link", container_title, container_subtitle)
+                let content_container = createSectionContainer()
                 content_container.appendChild(content_header)
 
                 let content_actions = document.createElement("div")
