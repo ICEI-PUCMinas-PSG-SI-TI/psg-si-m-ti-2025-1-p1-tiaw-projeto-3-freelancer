@@ -146,6 +146,47 @@
 
             </div>
         </div>
+
+        <div id="portfolio-setup" class="container-fluid d-flex d-none w-100 justify-content-center m-0 p-0 g-0">
+            <div class="d-flex flex-column justify-content-start m-0 p-0 g-0">
+                <div class="w-100">
+                    <h1>// Portfólios</h1>
+                    <p>O que deseja fazer?</p>
+                    <hr>
+                    <p><strong>Visualizar um porfólio já criado</strong></p>
+                    <div id="portfolio-setup-select" class="mb-3">
+                        <label for="portfolio-setup-select-select" class="form-label">Selecionar um portfólio</label>
+                        <select class="form-select" id="portfolio-setup-select-select" required>
+                            <option>Nenhum portfólio criado!</option>
+                        </select>
+                    </div>
+                    <button id="portfolio-setup-select-btn" class="btn btn-primary disabled w-100">
+                        Abrir portfólio selecionado
+                    </button>
+                    <hr>
+                    <p><strong>Criar um novo porfólio</strong></p>
+                    <div class="mb-3">
+                        <label for="portfolio-setup-create-select" class="form-label">Selecionar usuário</label>
+                        <select class="form-select" id="portfolio-setup-create-select" required>
+                            <option>Nenhum usuário criado!</option>
+                        </select>
+                    </div>
+                    <button id="portfolio-setup-create-btn" class="btn btn-primary disabled w-100 mb-3">
+                        Criar portfólio para o usuário selecionado
+                    </button>
+                    <p>Observação: Para criar um portfolio é necessário que haja informações de algum usuário.</p>
+                    <p>
+                        Para a seção de avaliações no portfólio, também é recomendado que haja algum serviço e avaliação
+                        cadastrados, como a avaliação é individual, essas paginas ainda não foram criadas, portanto é
+                        recomendado utilizar <a href="dev.html">essa pagina</a> para criar usuários aleatórios, ou você
+                        pode fazer isso automaticamente clicando no botão abaixo:
+                    </p>
+                    <button id="portfolio-setup-dev-btn" class="btn btn-warning w-100">
+                        Criar informações aleatórias de usuários, portfolios e avaliações
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- TODO: adicionar apenas se ?edit=true -->

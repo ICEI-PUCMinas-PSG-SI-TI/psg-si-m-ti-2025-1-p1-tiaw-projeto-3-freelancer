@@ -1340,7 +1340,58 @@ function setupPortfolioPage(portf_id, enable_edit) {
     });
 }
 
-function setupPortfolioSetup() {}
+function setupPortfolioSetup() {
+    toggleHTMLElement("portfolio-setup", true)
+
+    let portfolio_setup_select = document.getElementById("portfolio-setup-select")
+    let portfolio_setup_select_select = document.getElementById("portfolio-setup-select-select")
+    let portfolio_setup_select_btn = document.getElementById("portfolio-setup-select-btn")
+    let portfolio_setup_create = document.getElementById("portfolio-setup-create")
+    let portfolio_setup_create_select = document.getElementById("portfolio-setup-create-select")
+    let portfolio_setup_create_btn = document.getElementById("portfolio-setup-create-btn")
+    let portfolio_setup_dev_btn = document.getElementById("portfolio-setup-dev-btn")
+
+    // Lê todos os portfolios
+    let portfolios = JSONQL_P.readPortfolios()
+    let usuarios = JSONQL_U.readUsuarios()
+
+    // Não configura portfolios
+    if(portfolios && portfolios.length){
+        // Reseta as opções
+        portfolio_setup_select_select.innerHTML = ""
+        for(let index = 0; index < portfolios.length;index++){
+            let option = document.createElement("option")
+            option.value = portfolios[index].id
+            option.innerText = `Portfólio de id(${portfolios[index].id})`
+            portfolio_setup_select_select.appendChild(option)
+        }
+        portfolio_setup_select_btn.classList.remove("disabled")
+        portfolio_setup_select_btn.addEventListener("click", () => {
+            // Abrir o portfólio de id $?
+            let useId = parseInt(portfolio_setup_select_select.value)
+        })
+    }
+
+    if (usuarios && usuarios.length) {
+        // Reseta as opções
+        portfolio_setup_create_select.innerHTML = ""
+        for (let index = 0; index < usuarios.length; index++) {
+            let option = document.createElement("option")
+            option.value = usuarios[index].id
+            option.innerText = `Usuário id(${usuarios[index].id}): ${usuarios[index].nome}`
+            portfolio_setup_create_select.appendChild(option)
+        }
+        portfolio_setup_create_btn.classList.remove("disabled")
+        portfolio_setup_create_btn.addEventListener("click", () => {
+            // Criar portfólio para o usuário de id $?
+            let useId = parseInt(portfolio_setup_create_select.value)
+        })
+    }
+
+    portfolio_setup_dev_btn.addEventListener("click", () => {
+        // Utilizar a página 'dev.js'
+    })
+}
 
 function validateEntry() {
     let params = new URLSearchParams(location.search)
