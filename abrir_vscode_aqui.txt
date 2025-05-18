@@ -1,0 +1,1 @@
+Para o funcionamento correto do site abrir o vscode e o live-server nessa pasta, se o site for aberto em src/ diretamente pode haver problemas.
