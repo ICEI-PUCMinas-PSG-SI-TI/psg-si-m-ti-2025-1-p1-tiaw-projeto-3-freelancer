@@ -280,7 +280,7 @@
                     <div class="mb-3">
                         <label for="basic-url" class="form-label">Nome da seção</label>
                         <div class="input-group">
-                            <p type="text" class="form-control" id="popup-delete-url"
+                            <p type="text" class="form-control" id="popup-delete-name"
                                 aria-describedby="basic-addon3 basic-addon4">
                                 $Temp
                             </p>
@@ -302,6 +302,59 @@
                         </div>
                         <div class="col-12 col-sm-6 mb-2 mb-sm-0">
                             <button id="popup-delete-cancel" type="button"
+                                class="btn btn-primary w-100">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- TODO: adicionar apenas se ?edit=true -->
+    <div id="popup-delete-link" class="d-flex popup-edit justify-content-center align-items-center d-none">
+        <div class="card position-relative w-100">
+            <button id="popup-delete-link-close"
+                class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+                <img class="icon-dark icon-24px" src="static/action-icons/close.svg">
+            </button>
+            <div class="card-body">
+                <div class="mb-3 w-100 d-flex justify-content-center">
+                    <img class="m-3 icon-32px icon-dark" src="static/action-icons/delete.svg">
+                </div>
+                <div>
+                    <h3 class="text-primary-danger">
+                        Deletar link?
+                    </h3>
+                    <p>
+                        Não é possível desfazer essa ação!
+                    </p>
+                </div>
+                <form id="popup-delete-link-form" class="d-flex justify-content-center flex-column">
+                    <div class="mb-3">
+                        <label for="basic-url" class="form-label">URL</label>
+                        <div class="input-group">
+                            <p type="text" class="form-control" id="popup-delete-link-url"
+                                aria-describedby="basic-addon3 basic-addon4">
+                                $Temp
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="basic-url" class="form-label">Descrição</label>
+                        <div class="input-group">
+                            <p type="text" class="form-control" id="popup-delete-link-description"
+                                aria-describedby="basic-addon3 basic-addon4">
+                                $Temp
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <button id="popup-delete-link-confirm" type="button"
+                                class="btn btn-danger w-100">Deletar</button>
+                        </div>
+                        <div class="col-12 col-sm-6 mb-2 mb-sm-0">
+                            <button id="popup-delete-link-cancel" type="button"
                                 class="btn btn-primary w-100">Cancelar</button>
                         </div>
                     </div>

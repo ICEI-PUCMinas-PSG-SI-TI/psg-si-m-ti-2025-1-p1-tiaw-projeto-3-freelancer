@@ -97,6 +97,11 @@ function togglePopupDeleteImage() {
     document.getElementById("popup-delete-image").classList.toggle("d-none")
 }
 
+function togglePopupDeleteLink() {
+    preparePopup();
+    document.getElementById("popup-delete-link").classList.toggle("d-none")
+}
+
 function setupPortfolioPage() {
     let add_section = document.getElementById("add-section")
     // Setup edit first
@@ -320,6 +325,66 @@ function setupPortfolioPage() {
 
         if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
             togglePopupDeleteImage()
+            notifySectionDataChanged()
+        } else {
+            console.log("Ocorreu um erro ao atualizar o objeto!");
+        }
+    })
+
+    document.getElementById("popup-delete-link-close").addEventListener("click", togglePopupDeleteLink)
+    document.getElementById("popup-delete-link-cancel").addEventListener("click", togglePopupDeleteLink)
+
+    document.getElementById("popup-delete-link-confirm").addEventListener("click", () => {
+        let form_id = globalThis.popup_edit_context.secao_id
+        let form_ordem = globalThis.popup_edit_context.secao_ordem
+        // TODO: Expensive, use id or something else
+        let form_blob = globalThis.popup_edit_context.blob
+        let form_descricao = globalThis.popup_edit_context.descricao
+
+        let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
+
+        if (!form_porfolio) {
+            console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+            return null
+        }
+
+        if (!form_porfolio.secoes.length) {
+            console.log("ID1: Erro ao editar categoria.");
+            return null
+        }
+
+        let procurando = true;
+        for (let index = 0; index < form_porfolio.secoes.length && procurando; index++) {
+            if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
+                continue
+            }
+
+            if (!form_porfolio.secoes[index].contents || !form_porfolio.secoes[index].contents.length) {
+                console.log(form_porfolio.secoes[index].contents);
+                console.log("Não encontrado");
+                return null
+            }
+
+            console.log(`find: i:${index}`);
+            for (let jindex = 0; form_porfolio.secoes[index].contents.length && procurando; jindex++) {
+                if (!form_porfolio.secoes[index].contents[jindex].blob || !form_porfolio.secoes[index].contents[jindex].descricao)
+                    continue
+
+                if (form_porfolio.secoes[index].contents[jindex].blob != form_blob)
+                    continue
+
+                if (form_porfolio.secoes[index].contents[jindex].descricao != form_descricao)
+                    continue
+
+                console.log(`find: i:${index} j:${jindex}`);
+                form_porfolio.secoes[index].contents.splice(jindex, 1)
+                procurando = false;
+            }
+            procurando = false;
+        }
+
+        if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
+            togglePopupDeleteLink()
             notifySectionDataChanged()
         } else {
             console.log("Ocorreu um erro ao atualizar o objeto!");
@@ -590,7 +655,7 @@ function setupPortfolioPage() {
                     globalThis.popup_edit_context.secao_ordem = secao_ordem
 
                     // TODO: Isso aqui pode mudar com o tempo?
-                    document.getElementById("popup-delete-url").innerText = container_title
+                    document.getElementById("popup-delete-name").innerText = container_title
                     document.getElementById("popup-delete-description").innerText = container_subtitle
                 })
 
@@ -835,7 +900,7 @@ function setupPortfolioPage() {
                     globalThis.popup_edit_context.secao_id = portfolio.id
                     globalThis.popup_edit_context.secao_ordem = secao_ordem
                     // TODO: Isso aqui pode mudar com o tempo?
-                    document.getElementById("popup-delete-url").innerText = container_title
+                    document.getElementById("popup-delete-name").innerText = container_title
                     document.getElementById("popup-delete-description").innerText = container_subtitle
                 })
 
@@ -860,8 +925,7 @@ function setupPortfolioPage() {
                             return null
 
                         let image_div = document.createElement("div")
-                        image_div.classList.add("me-3")
-                        image_div.classList.add("d-inline-block", "position-relative")
+                        image_div.classList.add("me-3", "d-inline-block", "position-relative")
                         let remove_button = document.createElement("button")
                         remove_button.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`
                         remove_button.classList.add("icon-32px", "position-absolute", "top-0", "start-100", "translate-middle", "p-2", "border", "border-light", "rounded-circle", "d-flex", "justify-content-center", "align-items-center")
@@ -1141,7 +1205,7 @@ function setupPortfolioPage() {
                     globalThis.popup_edit_context.secao_ordem = secao_ordem
 
                     // TODO: Isso aqui pode mudar com o tempo?
-                    document.getElementById("popup-delete-url").innerText = container_title
+                    document.getElementById("popup-delete-name").innerText = container_title
                     document.getElementById("popup-delete-description").innerText = container_subtitle
                 })
 
@@ -1158,21 +1222,41 @@ function setupPortfolioPage() {
                 content_blobs.classList.add("row", "w-100", "m-0", "g-3", "py-2", "px-3", "pb-4")
 
                 if (secao_content && secao_content.length) {
-                    // TODO: remove foreach?
-                    secao_content.forEach(content_element => {
-                        if (!content_element.blob && !content_element.descricao)
+                    for (let index = 0; index < secao_content.length; index++) {
+                        if (!secao_content[index].blob && !secao_content[index].descricao)
                             return null
 
-                        content_blobs.innerHTML += `<div class="col-12 col-sm-6 col-xl-4">
-                            <a class="btn btn-primary text-decoration-none w-100" href="${content_element.blob}" role="button">
+                        let link_div = document.createElement("div")
+                        link_div.classList.add("col-12", "col-sm-6", "col-xl-4", "position-relative")
+                        let remove_button = document.createElement("button")
+                        remove_button.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`
+                        remove_button.classList.add("icon-32px", "position-absolute", "top-0", "start-100", "translate-middle", "p-2", "border", "border-light", "rounded-circle", "d-flex", "justify-content-center", "align-items-center")
+                        link_div.innerHTML += `<a class="btn btn-primary text-decoration-none w-100" href="${secao_content[index].blob}" role="button">
                                 <div class="d-flex justify-content-center m-2">
                                     <img class="icon-24px fixed-filter-invert me-2"
                                         src="static/action-icons/external.svg">
-                                        <p class="g-0 p-0 m-0">${content_element.descricao}</p>
+                                        <p class="g-0 p-0 m-0">${secao_content[index].descricao}</p>
                                 </div>
-                            </a>
-                        </div>`
-                    });
+                            </a>`
+                        link_div.appendChild(remove_button)
+                        content_blobs.appendChild(link_div)
+
+                        remove_button.addEventListener("click", () => {
+                            togglePopupDeleteLink()
+
+                            if (!globalThis.popup_edit_context)
+                                globalThis.popup_edit_context = []
+
+                            globalThis.popup_edit_context.secao_id = portfolio.id
+                            globalThis.popup_edit_context.secao_ordem = secao_ordem
+                            // TODO: Expensive, use id or something else
+                            globalThis.popup_edit_context.blob = secao_content[index].blob
+                            globalThis.popup_edit_context.descricao = secao_content[index].descricao
+
+                            document.getElementById("popup-delete-link-url").innerText = secao_content[index].blob
+                            document.getElementById("popup-delete-link-description").innerText = secao_content[index].descricao
+                        })
+                    }
                 }
 
                 let add_new_link = document.createElement("div")
