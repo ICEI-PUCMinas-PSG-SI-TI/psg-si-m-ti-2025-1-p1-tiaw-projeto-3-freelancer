@@ -27,6 +27,23 @@ function genRandomNumber(max, min) {
     return Math.floor(Math.random() * max);
 }
 
+
+/** 
+ * @param {string} icon 
+ * @param {EventListener} clickEventListener 
+ * 
+ * @returns {HTMLButtonElement}
+ */
+function createActionButton(icon, clickEventListener) {
+    /** @type { HTMLButtonElement } */
+    let HTMLButton = document.createElement("button")
+    HTMLButton.classList.add("button")
+    HTMLButton.setAttribute("type", "button")
+    HTMLButton.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/${icon}.svg">`
+    HTMLButton.addEventListener("click", clickEventListener)
+    return HTMLButton
+}
+
 function getNota(userId) {
     // TODO: select * where userId = userId
     let media = 0;
@@ -110,8 +127,7 @@ function setupPortfolioPage() {
     document.getElementById("popup-edit-close").addEventListener("click", togglePopupEdit)
 
     document.getElementById("popup-edit-confirm").addEventListener("click", () => {
-        /** @type { HTMLFormElement | null } */
-        let form_id = globalThis.popup_edit_context.secao_id
+                let form_id = globalThis.popup_edit_context.secao_id
         let form_sec_ordem = globalThis.popup_edit_context.secao_ordem
         let form_sec_name = document.getElementById("popup-edit-name").value
         let form_sec_description = document.getElementById("popup-edit-description").value
@@ -144,11 +160,11 @@ function setupPortfolioPage() {
     })
 
     document.getElementById("popup-add-close").addEventListener("click", togglePopupAdd)
-    add_section.addEventListener("click", togglePopupAdd)
+// Botão de adicionar seção
+    document.getElementById("add-section").addEventListener("click", togglePopupAdd)
 
     document.getElementById("popup-add-confirm").addEventListener("click", () => {
-        /** @type { HTMLFormElement | null } */
-        let form_id = globalThis.popup_edit_context.portfolio_id
+                let form_id = globalThis.popup_edit_context.portfolio_id
         let form_sec_name = document.getElementById("popup-add-name").value
         let form_sec_description = document.getElementById("popup-add-description").value
         let form_sec_categoria = document.getElementById("popup-add-categoria").value
@@ -195,7 +211,6 @@ function setupPortfolioPage() {
     document.getElementById("popup-add-link-close").addEventListener("click", togglePopupAddLink)
 
     document.getElementById("popup-add-link-confirm").addEventListener("click", () => {
-        /** @type { HTMLFormElement | null } */
         let form_id = globalThis.popup_edit_context.secao_id
         let form_ordem = globalThis.popup_edit_context.secao_ordem
         let form_sec_url = document.getElementById("popup-add-link-url").value
@@ -514,12 +529,7 @@ function setupPortfolioPage() {
                 let content_actions = document.createElement("div")
                 content_actions.classList.add("ms-auto")
 
-                let content_button_edit = document.createElement("button")
-                content_button_edit.classList.add("button")
-                content_button_edit.setAttribute("type", "button")
-                content_button_edit.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/edit.svg">`
-                content_actions.appendChild(content_button_edit)
-                content_button_edit.addEventListener("click", () => {
+                let content_button_edit = createActionButton("edit", () => {
                     togglePopupEdit()
 
                     if (!globalThis.popup_edit_context)
@@ -534,13 +544,7 @@ function setupPortfolioPage() {
                     document.getElementById("popup-edit-description").value = container_subtitle
                 })
 
-                let content_button_up = document.createElement("button")
-                content_button_up.classList.add("button")
-                content_button_up.setAttribute("type", "button")
-                content_button_up.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/up.svg">`
-                content_actions.appendChild(content_button_up)
-                content_button_up.addEventListener("click", () => {
-                    /** @type { HTMLFormElement | null } */
+                let content_button_up = createActionButton("up", () => {
                     let form_id = portfolio.id
                     let form_ordem = secao_ordem
 
@@ -589,14 +593,8 @@ function setupPortfolioPage() {
                     }
                 })
 
-                let content_button_down = document.createElement("button")
-                content_button_down.classList.add("button")
-                content_button_down.setAttribute("type", "button")
-                content_button_down.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/down.svg">`
-                content_actions.appendChild(content_button_down)
-                content_button_down.addEventListener("click", () => {
-                    /** @type { HTMLFormElement | null } */
-                    let form_id = portfolio.id
+                let content_button_down = createActionButton("down", () => {
+                                        let form_id = portfolio.id
                     let form_ordem = secao_ordem
 
                     let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
@@ -640,12 +638,7 @@ function setupPortfolioPage() {
                     }
                 })
 
-                let content_button_delete = document.createElement("button")
-                content_button_delete.classList.add("button")
-                content_button_delete.setAttribute("type", "button")
-                content_button_delete.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/delete.svg">`
-                content_actions.appendChild(content_button_delete)
-                content_button_delete.addEventListener("click", () => {
+                let content_button_delete = createActionButton("delete", () => {
                     togglePopupDeleteSecao()
 
                     if (!globalThis.popup_edit_context)
@@ -658,6 +651,11 @@ function setupPortfolioPage() {
                     document.getElementById("popup-delete-name").innerText = container_title
                     document.getElementById("popup-delete-description").innerText = container_subtitle
                 })
+
+                content_actions.appendChild(content_button_edit)
+                content_actions.appendChild(content_button_down)
+                content_actions.appendChild(content_button_up)
+                content_actions.appendChild(content_button_delete)
 
                 content_header.appendChild(content_actions)
 
@@ -763,11 +761,7 @@ function setupPortfolioPage() {
                 let content_actions = document.createElement("div")
                 content_actions.classList.add("ms-auto")
 
-                let content_button_edit = document.createElement("button")
-                content_button_edit.classList.add("button")
-                content_button_edit.setAttribute("type", "button")
-                content_button_edit.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/edit.svg">`
-                content_button_edit.addEventListener("click", () => {
+                let content_button_edit = createActionButton("edit", () => {
                     togglePopupEdit()
 
                     if (!globalThis.popup_edit_context)
@@ -782,12 +776,7 @@ function setupPortfolioPage() {
                     document.getElementById("popup-edit-description").value = container_subtitle
                 })
 
-                let content_button_up = document.createElement("button")
-                content_button_up.classList.add("button")
-                content_button_up.setAttribute("type", "button")
-                content_button_up.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/up.svg">`
-                content_button_up.addEventListener("click", () => {
-                    /** @type { HTMLFormElement | null } */
+                let content_button_up = createActionButton("up", () => {
                     let form_id = portfolio.id
                     let form_ordem = secao_ordem
 
@@ -836,13 +825,8 @@ function setupPortfolioPage() {
                     }
                 })
 
-                let content_button_down = document.createElement("button")
-                content_button_down.classList.add("button")
-                content_button_down.setAttribute("type", "button")
-                content_button_down.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/down.svg">`
-                content_button_down.addEventListener("click", () => {
-                    /** @type { HTMLFormElement | null } */
-                    let form_id = portfolio.id
+                let content_button_down = createActionButton("down", () => {
+                                        let form_id = portfolio.id
                     let form_ordem = secao_ordem
 
                     let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
@@ -886,12 +870,7 @@ function setupPortfolioPage() {
                     }
                 })
 
-                let content_button_delete = document.createElement("button")
-                content_button_delete.classList.add("button")
-                content_button_delete.setAttribute("type", "button")
-                content_button_delete.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/delete.svg">`
-                content_button_delete.addEventListener("click", () => {})
-                content_button_delete.addEventListener("click", () => {
+                let content_button_delete = createActionButton("delete", () => {
                     togglePopupDeleteSecao()
 
                     if (!globalThis.popup_edit_context)
@@ -1001,8 +980,7 @@ function setupPortfolioPage() {
                         console.log("Não é um arquivo de imagem!")
                     }
 
-                    /** @type { HTMLFormElement | null } */
-                    let form_id = portfolio.id
+                                        let form_id = portfolio.id
                     let form_ordem = secao_ordem
 
                     let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
@@ -1068,11 +1046,7 @@ function setupPortfolioPage() {
                 let content_actions = document.createElement("div")
                 content_actions.classList.add("ms-auto")
 
-                let content_button_edit = document.createElement("button")
-                content_button_edit.classList.add("button")
-                content_button_edit.setAttribute("type", "button")
-                content_button_edit.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/edit.svg">`
-                content_button_edit.addEventListener("click", () => {
+                let content_button_edit = createActionButton("edit", () => {
                     togglePopupEdit()
 
                     if (!globalThis.popup_edit_context)
@@ -1087,12 +1061,7 @@ function setupPortfolioPage() {
                     document.getElementById("popup-edit-description").value = container_subtitle
                 })
 
-                let content_button_up = document.createElement("button")
-                content_button_up.classList.add("button")
-                content_button_up.setAttribute("type", "button")
-                content_button_up.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/up.svg">`
-                content_button_up.addEventListener("click", () => {
-                    /** @type { HTMLFormElement | null } */
+                let content_button_up = createActionButton("up", () => {
                     let form_id = portfolio.id
                     let form_ordem = secao_ordem
 
@@ -1141,13 +1110,8 @@ function setupPortfolioPage() {
                     }
                 })
 
-                let content_button_down = document.createElement("button")
-                content_button_down.classList.add("button")
-                content_button_down.setAttribute("type", "button")
-                content_button_down.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/down.svg">`
-                content_button_down.addEventListener("click", () => {
-                    /** @type { HTMLFormElement | null } */
-                    let form_id = portfolio.id
+                let content_button_down = createActionButton("down", () => {
+                                        let form_id = portfolio.id
                     let form_ordem = secao_ordem
 
                     let form_porfolio = JSONQL_P.readPortfolios(form_id)[0]
@@ -1191,11 +1155,7 @@ function setupPortfolioPage() {
                     }
                 })
 
-                let content_button_delete = document.createElement("button")
-                content_button_delete.classList.add("button")
-                content_button_delete.setAttribute("type", "button")
-                content_button_delete.innerHTML = `<img class="icon-dark icon-16px" src="static/action-icons/delete.svg">`
-                content_button_delete.addEventListener("click", () => {
+                let content_button_delete = createActionButton("delete", () => {
                     togglePopupDeleteSecao()
 
                     if (!globalThis.popup_edit_context)
