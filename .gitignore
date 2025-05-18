@@ -1,7 +1,0 @@
-# IDEs
-*.swp
-*.swo
-.vscode/
-.vs/
-_temp/
-*_test.*
