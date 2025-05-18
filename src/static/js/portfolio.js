@@ -201,6 +201,16 @@ function setupPortfolioPage(portf_id, enable_edit) {
         return null
     */
 
+    // TODO: Utilizar ?id= da URI
+    // INFO: Repo 14 escolhido para desenvolvimento porque contem as 3 categorias necessárias geradas aleatoriamente
+    let portfolio = JSONQL_P.readPortfolios(portf_id);
+    if (!portfolio.length) {
+        console.log("setupPortfolioPage: nenhum portfólio cadastrado!");
+        alert("A id informada para o portfólio não existe!")
+        setIdParam(0)
+        return null
+    }
+
     toggleHTMLElement("portfolio-display", true)
 
     let toggle_edit_element = document.getElementById("toggle-edit")
@@ -271,17 +281,19 @@ function setupPortfolioPage(portf_id, enable_edit) {
                 return null
             }
 
-            if (!form_porfolio.secoes.length) {
-                console.log("ID1: Erro ao editar categoria.");
-                return null
-            }
 
-            // Verificar o maior valor para json.ordem
             let maior = 0;
-            form_porfolio.secoes.forEach(element => {
-                if (parseInt(element.ordem) > maior)
-                    maior = element.ordem;
-            });
+            // Como estamos adicionando uma seção, não é problema se ela esta vazia
+            if (form_porfolio.secoes && form_porfolio.secoes.length) {
+                // Verificar o maior valor para json.ordem
+
+                form_porfolio.secoes.forEach(element => {
+                    if (parseInt(element.ordem) > maior)
+                        maior = element.ordem;
+                });
+            } else {
+                form_porfolio.secoes = []
+            }
 
             maior++
 
@@ -323,14 +335,30 @@ function setupPortfolioPage(portf_id, enable_edit) {
                 return null
             }
 
+
+            if (!(form_sec_url.startsWith("https://") || form_sec_url.startsWith("http://"))) {
+                alert("URL não é valida!\n\nA URL não começa com 'http://' ou 'https://'")
+                return null
+            } else if (form_sec_url.startsWith("https://")) {
+                if (form_sec_url.length === 8) {
+                    alert("URL não é valida!\n\nA URL esta vazia!")
+                    return null
+                }
+            } else if (form_sec_url.startsWith("http://")) {
+                if (form_sec_url.length === 8) {
+                    alert("URL não é valida!\n\nA URL esta vazia!")
+                    return null
+                }
+            }
+
             for (let index = 0; index < form_porfolio.secoes.length; index++) {
                 if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
                     continue
                 }
 
                 let content_tv = {
-                    blob: form_sec_url,
-                    descricao: form_sec_description
+                    blob: form_sec_url || "",
+                    descricao: form_sec_description || ""
                 }
 
                 form_porfolio.secoes[index].contents.push(content_tv)
@@ -415,9 +443,8 @@ function setupPortfolioPage(portf_id, enable_edit) {
                     return null
                 }
 
-                console.log(`find: i:${index}`);
-                for (let jindex = 0; form_porfolio.secoes[index].contents.length && procurando; jindex++) {
-                    if (!form_porfolio.secoes[index].contents[jindex].blob || !form_porfolio.secoes[index].contents[jindex].descricao)
+                for (let jindex = 0; jindex < form_porfolio.secoes[index].contents.length && procurando; jindex++) {
+                    if (!form_porfolio.secoes[index].contents[jindex].blob || form_porfolio.secoes[index].contents[jindex].descricao == null)
                         continue
 
                     if (form_porfolio.secoes[index].contents[jindex].blob != form_blob)
@@ -426,7 +453,6 @@ function setupPortfolioPage(portf_id, enable_edit) {
                     if (form_porfolio.secoes[index].contents[jindex].descricao != form_descricao)
                         continue
 
-                    console.log(`find: i:${index} j:${jindex}`);
                     form_porfolio.secoes[index].contents.splice(jindex, 1)
                     procurando = false;
                 }
@@ -475,9 +501,10 @@ function setupPortfolioPage(portf_id, enable_edit) {
                     return null
                 }
 
-                console.log(`find: i:${index}`);
-                for (let jindex = 0; form_porfolio.secoes[index].contents.length && procurando; jindex++) {
-                    if (!form_porfolio.secoes[index].contents[jindex].blob || !form_porfolio.secoes[index].contents[jindex].descricao)
+                for (let jindex = 0; jindex < form_porfolio.secoes[index].contents.length && procurando; jindex++) {
+                    console.log(form_porfolio.secoes[index].contents[jindex]);
+                    console.log(form_porfolio.secoes[index].contents);
+                    if (!form_porfolio.secoes[index].contents[jindex].blob || form_porfolio.secoes[index].contents[jindex].descricao == null)
                         continue
 
                     if (form_porfolio.secoes[index].contents[jindex].blob != form_blob)
@@ -486,7 +513,6 @@ function setupPortfolioPage(portf_id, enable_edit) {
                     if (form_porfolio.secoes[index].contents[jindex].descricao != form_descricao)
                         continue
 
-                    console.log(`find: i:${index} j:${jindex}`);
                     form_porfolio.secoes[index].contents.splice(jindex, 1)
                     procurando = false;
                 }
@@ -512,14 +538,6 @@ function setupPortfolioPage(portf_id, enable_edit) {
         toggle_edit_element.addEventListener("click", () => {
             toggleEditParam(true)
         })
-    }
-
-    // TODO: Utilizar ?id= da URI
-    // INFO: Repo 14 escolhido para desenvolvimento porque contem as 3 categorias necessárias geradas aleatoriamente
-    let portfolio = JSONQL_P.readPortfolios(portf_id);
-    if (!portfolio.length) {
-        console.log("setupPortfolioPage: nenhum portfólio cadastrado!");
-        return null
     }
 
     portfolio = portfolio[0]
