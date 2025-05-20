@@ -15,7 +15,16 @@
 
 const KEY_PORTFOLIOS = "portfolios"
 const getPortfolios = () => JSON.parse(localStorage.getItem(KEY_PORTFOLIOS) || "[]");
-const setPortfolios = (portfolios) => localStorage.setItem(KEY_PORTFOLIOS, JSON.stringify(portfolios));
+const setPortfolios = (portfolios) => {
+    try {
+        localStorage.setItem(KEY_PORTFOLIOS, JSON.stringify(portfolios))
+    } catch (err) {
+        if (err instanceof DOMException) {
+            alert("O limite de armazenamento do localStorage foi atingido!\n\nDelete alguma imagem antes de adicionar outra!\n\nEsse é um problema que utilizar o json-server irá resolver futuramente");
+        } else throw err
+    }
+};
+
 
 /**
  * Retorna null e imprime $value no console
@@ -44,6 +53,12 @@ function returnError(value) {
 function ensureType(value, type) {
     if (typeof (type) !== "string")
         return false
+
+    if (typeof (value) === "string" && type === "number") {
+        let parse = parseInt(value)
+        if (typeof (parse) === "number")
+            value = parse
+    }
 
     return typeof (value) === type;
 }
@@ -129,7 +144,6 @@ export function validatePortfolio(portfolio) {
 
     // portfolio.secoes é opcional
     if (portfolio.secoes) {
-        console.log("vava");
         // !ensureType(portfolio.secoes, "object") &&
         if (!Array.isArray(portfolio.secoes))
             return null

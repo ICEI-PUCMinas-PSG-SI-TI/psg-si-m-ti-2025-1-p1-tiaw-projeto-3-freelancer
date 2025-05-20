@@ -15,7 +15,15 @@
 
 const KEY_CONTRATOS = "contratos"
 const getContratos = () => JSON.parse(localStorage.getItem(KEY_CONTRATOS) || "[]");
-const setContratos = (contratos) => localStorage.setItem(KEY_CONTRATOS, JSON.stringify(contratos));
+const setContratos = (contratos) => {
+    try {
+        localStorage.setItem(KEY_CONTRATOS, JSON.stringify(contratos))
+    } catch (err) {
+        if (err instanceof DOMException) {
+            alert("O limite de armazenamento do localStorage foi atingido!\n\nDelete alguma imagem antes de adicionar outra!\n\nEsse é um problema que utilizar o json-server irá resolver futuramente");
+        } else throw err
+    }
+};
 
 /**
  * Retorna null e printa o que estiver em value no console
@@ -44,6 +52,12 @@ function returnError(value) {
 function ensureType(value, type) {
     if (typeof (type) !== "string")
         return false
+
+    if (typeof (value) === "string" && type === "number") {
+        let parse = parseInt(value)
+        if (typeof (parse) === "number")
+            value = parse
+    }
 
     return typeof (value) === type;
 }

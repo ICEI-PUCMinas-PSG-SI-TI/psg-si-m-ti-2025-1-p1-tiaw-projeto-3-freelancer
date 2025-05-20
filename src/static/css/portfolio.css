@@ -1,0 +1,87 @@
+:root {
+    --image-section-thumbnail-size: 150px;
+}
+
+.avoid-wide {
+    max-width: 500px;
+}
+
+.button {
+    width: 32px;
+    height: 32px;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+    background: 0;
+    border: 0;
+    left: 0;
+}
+
+.scrool-container {
+    overflow-x: auto !important;
+    white-space: nowrap;
+}
+
+.images {
+    width: var(--image-section-thumbnail-size);
+    height: var(--image-section-thumbnail-size);
+}
+
+.filter-star {
+    filter: invert(76%) sepia(16%) saturate(1613%) hue-rotate(358deg) brightness(101%) contrast(108%);
+}
+
+.filter-link {
+    filter: invert(41%) sepia(100%) saturate(630%) hue-rotate(154deg) brightness(100%) contrast(102%);
+}
+
+.filter-images {
+    filter: invert(10%) sepia(98%) saturate(4895%) hue-rotate(103deg) brightness(95%) contrast(94%);
+}
+
+#content-div button a p {
+    color: white;
+}
+
+.card-aval-limit {
+    max-width: 300px !important;
+    max-height: 250px !important;
+}
+
+.max-width-80 {
+    max-width: 80%;
+}
+
+.popup-edit {
+    display: flex;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    backdrop-filter: blur(12px);
+}
+
+.popup-edit div.card {
+    max-width: 500px;
+    max-height: 500px;
+}
+
+.limit-img {
+    width: 100%;
+    height: 150px;
+}
+
+.limit-img img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#portfolio-setup div {
+    max-width: 600px;
+}
+
+#portfolio-picture {
+    max-width: 200px;
+    max-height: 200px;
+}

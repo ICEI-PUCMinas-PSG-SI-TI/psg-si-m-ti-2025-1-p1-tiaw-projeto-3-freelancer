@@ -9,7 +9,8 @@
 # id = ID do portfólio
 # usuarioId = ID do usuário do portfólio
 # secao.nome = Nome da seção
-# secao.ordem = Posição que a seção aparece
+# secao.descricao = Descrição/Subtítulo da seção
+# secao.ordem = Posição que a seção aparece (e id)
 # secao.categoriaId = Tipo de categoria da seção (categorias.secao.toml)
 # secao.contents = Lista de conteúdos da seção
 # secao.contents.blob = Conteúdo da seção (ID da imagem, URL do site, ...)
@@ -21,11 +22,13 @@ usuarioId = 0
 
 [[portfolios.secoes]]
 nome = "Avaliações"
+descricao = "Cliente satisfeitos!"
 ordem = 0
 categoriaId = 1
 
 [[portfolios.secoes]]
 nome = "Fotos de trabalhos anteriores"
+descricao = "Imagens de serviços realizados"
 ordem = 1
 categoriaId = 0
 contents = [
@@ -36,6 +39,7 @@ contents = [
 
 [[portfolios.secoes]]
 nome = "Links Importantes"
+descricao = "Segue lá"
 ordem = 2
 categoriaId = 2
 contents = [

@@ -68,6 +68,10 @@ h6 {
     filter: invert();
 }
 
+.fixed-filter-invert {
+    filter: invert();
+}
+
 .icon-16px,
 .dark-toggle {
     width: 16px;
