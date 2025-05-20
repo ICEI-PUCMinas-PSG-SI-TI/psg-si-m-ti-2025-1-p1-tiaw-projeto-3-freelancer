@@ -1,0 +1,39 @@
+{
+    "avaliacoes": [
+        {
+            "comentario": "Um comentário simples sobre o serviço de id {id}",
+            "contratanteId": 5,
+            "contratoId": 0,
+            "id": 0,
+            "nota": 5
+        },
+        {
+            "comentario": "Um comentário simples sobre o serviço de id {id}",
+            "contratanteId": 4,
+            "contratoId": 0,
+            "id": 1,
+            "nota": 1
+        },
+        {
+            "comentario": "Um comentário simples sobre o serviço de id {id}",
+            "contratanteId": 3,
+            "contratoId": 1,
+            "id": 2,
+            "nota": 2
+        },
+        {
+            "comentario": "Um comentário simples sobre o serviço de id {id}",
+            "contratanteId": 2,
+            "contratoId": 1,
+            "id": 3,
+            "nota": 8
+        },
+        {
+            "comentario": "Um comentário simples sobre o serviço de id {id}",
+            "contratanteId": 2,
+            "contratoId": 1,
+            "id": 4,
+            "nota": 10
+        }
+    ]
+}

@@ -1,0 +1,53 @@
+{
+    "portfolios": [
+        {
+            "id": 0,
+            "secoes": [
+                {
+                    "categoriaId": 1,
+                    "nome": "Avaliações",
+                    "ordem": 0
+                },
+                {
+                    "categoriaId": 0,
+                    "contents": [
+                        {
+                            "blob": "imagemId",
+                            "descricao": "Foto"
+                        },
+                        {
+                            "blob": "imagemId",
+                            "descricao": "Foto"
+                        },
+                        {
+                            "blob": "imagemId",
+                            "descricao": "Foto"
+                        }
+                    ],
+                    "nome": "Fotos de trabalhos anteriores",
+                    "ordem": 1
+                },
+                {
+                    "categoriaId": 2,
+                    "contents": [
+                        {
+                            "blob": "https://example.com",
+                            "descricao": "GitLab"
+                        },
+                        {
+                            "blob": "https://example.com",
+                            "descricao": "GitHub"
+                        },
+                        {
+                            "blob": "https://example.com",
+                            "descricao": "LinkedIn"
+                        }
+                    ],
+                    "nome": "Links Importantes",
+                    "ordem": 2
+                }
+            ],
+            "usuarioId": 0
+        }
+    ]
+}
