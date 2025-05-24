@@ -1,0 +1,16 @@
+{
+    "status_contrato": [
+        {
+            "id": 0,
+            "nome": "Aguardando Pagamento"
+        },
+        {
+            "id": 1,
+            "nome": "Pendente"
+        },
+        {
+            "id": 2,
+            "nome": "Concluído"
+        }
+    ]
+}
