@@ -187,10 +187,19 @@ function setupPortfolioPage(portf_id, enable_edit) {
         return null
     */
 
-    // TODO: Utilizar ?id= da URI
+    function readPortfolio(id) {
+        const p_id = ensureInteger(id);
+        if (typeof p_id !== "number") return null;
+
+        const portfolios = JSONQL_P.readPortfolios(p_id);
+        if (!portfolios || !portfolios.length) return null;
+
+        return portfolios[0];
+    }
+
     // INFO: Repo 14 escolhido para desenvolvimento porque contem as 3 categorias necessárias geradas aleatoriamente
-    let portfolio = JSONQL_P.readPortfolios(portf_id);
-    if (!portfolio.length) {
+    const portfolio = readPortfolio(portf_id);
+    if (!portfolio) {
         console.log("setupPortfolioPage: nenhum portfólio cadastrado!");
         alert("A id informada para o portfólio não existe!");
         setIdParam(0);
@@ -248,7 +257,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
             let form_sec_name = html_popup_edit_name.value;
             let form_sec_description = html_popup_edit_description.value;
 
-            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
+            const form_porfolio = readPortfolio(form_id);
 
             if (!form_porfolio) {
                 console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
@@ -304,8 +313,8 @@ function setupPortfolioPage(portf_id, enable_edit) {
             const form_section_name = html_popup_add_name.value;
             const form_section_description = html_popup_add_description.value;
             const form_section_categoria = html_popup_add_categoria.value;
-            
-            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
+
+            const form_porfolio = readPortfolio(form_id);
 
             if (!form_porfolio) {
                 console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
@@ -373,7 +382,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
             let form_sec_url = popup_add_link_url.value;
             let form_sec_description = popup_add_link_description.value;
 
-            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
+            const form_porfolio = readPortfolio(form_id);
 
             if (!form_porfolio) {
                 console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
@@ -437,7 +446,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
             let form_id = globalThis.popup_edit_context.portfolio_id;
             let form_ordem = globalThis.popup_edit_context.secao_ordem;
 
-            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
+            const form_porfolio = readPortfolio(form_id);
 
             if (!form_porfolio) {
                 console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
@@ -484,7 +493,13 @@ function setupPortfolioPage(portf_id, enable_edit) {
             let form_blob = globalThis.popup_edit_context.blob;
             let form_descricao = globalThis.popup_edit_context.descricao;
 
-            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
+            const portfolios = JSONQL_P.readPortfolios(form_id);
+            if (!portfolios || !portfolios.length) {
+                console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
+                return;
+            }
+
+            const form_porfolio = portfolios[0];
 
             if (!form_porfolio) {
                 console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
@@ -559,12 +574,13 @@ function setupPortfolioPage(portf_id, enable_edit) {
             let form_blob = globalThis.popup_edit_context.blob;
             let form_descricao = globalThis.popup_edit_context.descricao;
 
-            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
+            const form_porfolios = JSONQL_P.readPortfolios(form_id);
 
-            if (!form_porfolio) {
+            if (!form_porfolios || !form_porfolios.length) {
                 console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
                 return null;
             }
+            const form_porfolio = form_porfolios[0];
 
             if (!form_porfolio.secoes.length) {
                 console.log("ID1: Erro ao editar categoria.");
@@ -639,7 +655,6 @@ function setupPortfolioPage(portf_id, enable_edit) {
         });
     }
 
-    portfolio = portfolio[0];
     if (!globalThis.popup_edit_context) {
         globalThis.popup_edit_context = [];
         globalThis.popup_edit_context.portfolio_id = portfolio.id;
@@ -799,7 +814,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             let form_id = portfolio.id;
                             let form_ordem = secao_ordem;
 
-                            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
+                            const form_porfolio = readPortfolio(form_id);
 
                             if (!form_porfolio) {
                                 console.log(
@@ -854,7 +869,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             let form_id = portfolio.id;
                             let form_ordem = secao_ordem;
 
-                            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
+                            const form_porfolio = readPortfolio(form_id);
 
                             if (!form_porfolio) {
                                 console.log(
@@ -1070,7 +1085,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             let form_id = portfolio.id;
                             let form_ordem = secao_ordem;
 
-                            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
+                            const form_porfolio = readPortfolio(form_id);
 
                             if (!form_porfolio) {
                                 console.log(
@@ -1125,7 +1140,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             let form_id = portfolio.id;
                             let form_ordem = secao_ordem;
 
-                            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
+                            const form_porfolio = readPortfolio(form_id);
 
                             if (!form_porfolio) {
                                 console.log(
@@ -1350,7 +1365,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             let form_id = portfolio.id;
                             let form_ordem = secao_ordem;
 
-                            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
+                            const form_porfolio = readPortfolio(form_id);
 
                             if (!form_porfolio) {
                                 console.log(
@@ -1441,7 +1456,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             let form_id = portfolio.id;
                             let form_ordem = secao_ordem;
 
-                            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
+                            const form_porfolio = readPortfolio(form_id);
 
                             if (!form_porfolio) {
                                 console.log(
@@ -1496,7 +1511,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             let form_id = portfolio.id;
                             let form_ordem = secao_ordem;
 
-                            let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
+                            const form_porfolio = readPortfolio(form_id);
 
                             if (!form_porfolio) {
                                 console.log(
@@ -1775,11 +1790,11 @@ function setupPortfolioSetup() {
         portfolio_setup_create_btn.addEventListener("click", () => {
             // Criar portfólio para o usuário de id $?
             let userId = parseInt(portfolio_setup_create_select.value);
-            let portfolio = {
+            let portfolioId = JSONQL_P.createPortfolio({
                 usuarioId: userId,
                 secoes: [],
-            };
-            let portfolioId = JSONQL_P.createPortfolio(portfolio);
+            });
+
             if (!portfolioId) {
                 console.error("Não foi possível criar o portfólio");
             } else {
