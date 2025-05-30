@@ -11,7 +11,6 @@ import { ensureInteger, imageFileToBase64 } from "./tools.mjs";
  * @returns {HTMLDivElement}
  */
 function createSectionContainer() {
-    /** @type { HTMLDivElement } */
     let content_container = document.createElement("div");
     content_container.classList.add(
         "card",
@@ -58,7 +57,6 @@ function createSectionHeader(icon, icon_class, title, subtitle) {
  * @returns {HTMLButtonElement}
  */
 function createActionButton(icon, clickEventListener) {
-    /** @type { HTMLButtonElement } */
     let HTMLButton = document.createElement("button");
     HTMLButton.classList.add("button");
     HTMLButton.setAttribute("type", "button");
@@ -233,34 +231,52 @@ function setupPortfolioPage(portf_id, enable_edit) {
 
     let toggle_edit_element = document.getElementById("toggle-edit");
     if (enable_edit) {
-        let toggle_edit_element_img = document.createElement("img");
-        toggle_edit_element_img.classList.add(
-            "icon-dark",
-            "icon-24px",
-            "g-0",
-            "m-0",
-            "p-0",
-            "me-2"
-        );
-        toggle_edit_element_img.src = "static/action-icons/close.svg";
-        let toggle_edit_element_p = document.createElement("p");
-        toggle_edit_element_p.classList.add("g-0", "m-0", "p-0");
-        toggle_edit_element_p.innerText = "Finalizar edição";
-        toggle_edit_element.appendChild(toggle_edit_element_img);
-        toggle_edit_element.appendChild(toggle_edit_element_p);
-        toggle_edit_element.addEventListener("click", () => {
-            toggleEditParam(false);
-        });
+        if (toggle_edit_element instanceof HTMLButtonElement) {
+            let toggle_edit_element_img = document.createElement("img");
+            toggle_edit_element_img.classList.add(
+                "icon-dark",
+                "icon-24px",
+                "g-0",
+                "m-0",
+                "p-0",
+                "me-2"
+            );
+            toggle_edit_element_img.src = "static/action-icons/close.svg";
+            let toggle_edit_element_p = document.createElement("p");
+            toggle_edit_element_p.classList.add("g-0", "m-0", "p-0");
+            toggle_edit_element_p.innerText = "Finalizar edição";
+            toggle_edit_element.appendChild(toggle_edit_element_img);
+            toggle_edit_element.appendChild(toggle_edit_element_p);
+            toggle_edit_element.addEventListener("click", () => {
+                toggleEditParam(false);
+            });
+        }
 
         toggleHTMLElement("add-section", true);
 
-        document.getElementById("popup-edit-close").addEventListener("click", togglePopupEdit);
+        const popup_edit_section_close = document.getElementById("popup-edit-close");
+        const popup_edit_section_confirm = document.getElementById("popup-edit-confirm");
 
-        document.getElementById("popup-edit-confirm").addEventListener("click", () => {
+        popup_edit_section_close?.addEventListener("click", () =>
+            toggleDisplayNoneOnElement("popup-edit", true)
+        );
+        popup_edit_section_confirm?.addEventListener("click", () => {
             let form_id = globalThis.popup_edit_context.secao_id;
             let form_sec_ordem = globalThis.popup_edit_context.secao_ordem;
-            let form_sec_name = document.getElementById("popup-edit-name").value;
-            let form_sec_description = document.getElementById("popup-edit-description").value;
+
+            const html_popup_edit_name = document.getElementById("popup-edit-name");
+            const html_popup_edit_description = document.getElementById("popup-edit-description");
+
+            if (
+                !(html_popup_edit_name instanceof HTMLButtonElement) ||
+                !(html_popup_edit_description instanceof HTMLButtonElement)
+            ) {
+                console.log("edit-section: null check");
+                return null;
+            }
+
+            let form_sec_name = html_popup_edit_name.value;
+            let form_sec_description = html_popup_edit_description.value;
 
             let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
 
@@ -289,16 +305,35 @@ function setupPortfolioPage(portf_id, enable_edit) {
             }
         });
 
-        document.getElementById("popup-add-close").addEventListener("click", togglePopupAdd);
+        const add_section = document.getElementById("add-section");
+        const popup_add_section_close = document.getElementById("popup-add-close");
+        const popup_add_section_confirm = document.getElementById("popup-add-confirm");
+
         // Botão de adicionar seção
-        document.getElementById("add-section").addEventListener("click", togglePopupAdd);
-
-        document.getElementById("popup-add-confirm").addEventListener("click", () => {
+        add_section?.addEventListener("click", () => toggleDisplayNoneOnElement("popup-add", true));
+        popup_add_section_close?.addEventListener("click", () =>
+            toggleDisplayNoneOnElement("popup-add", true)
+        );
+        popup_add_section_confirm?.addEventListener("click", () => {
             let form_id = globalThis.popup_edit_context.portfolio_id;
-            let form_sec_name = document.getElementById("popup-add-name").value;
-            let form_sec_description = document.getElementById("popup-add-description").value;
-            let form_sec_categoria = document.getElementById("popup-add-categoria").value;
 
+            const html_popup_add_name = document.getElementById("popup-add-name");
+            const html_popup_add_description = document.getElementById("popup-add-description");
+            const html_popup_add_categoria = document.getElementById("popup-add-categoria");
+
+            if (
+                !(html_popup_add_name instanceof HTMLInputElement) ||
+                !(html_popup_add_description instanceof HTMLInputElement) ||
+                !(html_popup_add_categoria instanceof HTMLInputElement)
+            ) {
+                console.log("add-section: null check");
+                return;
+            }
+
+            const form_section_name = html_popup_add_name.value;
+            const form_section_description = html_popup_add_description.value;
+            const form_section_categoria = html_popup_add_categoria.value;
+            
             let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
 
             if (!form_porfolio) {
@@ -306,7 +341,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                 return null;
             }
 
-            if (!form_sec_name) {
+            if (!form_section_name) {
                 alert("O nome da seção não pode estar vazio!");
                 return null;
             }
@@ -325,15 +360,13 @@ function setupPortfolioPage(portf_id, enable_edit) {
 
             maior++;
 
-            let secao = {
-                ordem: parseInt(maior),
-                nome: form_sec_name,
-                descricao: form_sec_description || "",
-                categoriaId: parseInt(form_sec_categoria),
+            form_porfolio.secoes.push({
+                ordem: maior,
+                nome: form_section_name,
+                descricao: form_section_description || "",
+                categoriaId: parseInt(form_section_categoria),
                 contents: [],
-            };
-
-            form_porfolio.secoes.push(secao);
+            });
 
             if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
                 togglePopupAdd();
@@ -343,15 +376,30 @@ function setupPortfolioPage(portf_id, enable_edit) {
             }
         });
 
-        document
-            .getElementById("popup-add-link-close")
-            .addEventListener("click", togglePopupAddLink);
-
-        document.getElementById("popup-add-link-confirm").addEventListener("click", () => {
+        const popup_add_link_close = document.getElementById("popup-add-link-close");
+        const popup_add_link_confirm = document.getElementById("popup-add-link-confirm");
+        popup_add_link_close?.addEventListener("click", () =>
+            toggleDisplayNoneOnElement("popup-add-link", true)
+        );
+        popup_add_link_confirm?.addEventListener("click", () => {
             let form_id = globalThis.popup_edit_context.secao_id;
             let form_ordem = globalThis.popup_edit_context.secao_ordem;
-            let form_sec_url = document.getElementById("popup-add-link-url").value;
-            let form_sec_description = document.getElementById("popup-add-link-description").value;
+
+            const popup_add_link_url = document.getElementById("popup-add-link-url");
+            const popup_add_link_description = document.getElementById(
+                "popup-add-link-description"
+            );
+
+            if (
+                !(popup_add_link_url instanceof HTMLInputElement) ||
+                !(popup_add_link_description instanceof HTMLInputElement)
+            ) {
+                console.error(`${this.name}: null check`);
+                return;
+            }
+
+            let form_sec_url = popup_add_link_url.value;
+            let form_sec_description = popup_add_link_description.value;
 
             let form_porfolio = JSONQL_P.readPortfolios(form_id)[0];
 
@@ -402,14 +450,17 @@ function setupPortfolioPage(portf_id, enable_edit) {
             }
         });
 
-        document
-            .getElementById("popup-delete-close")
-            .addEventListener("click", togglePopupDeleteSecao);
-        document
-            .getElementById("popup-delete-cancel")
-            .addEventListener("click", togglePopupDeleteSecao);
+        const popup_delete_section_close = document.getElementById("popup-delete-close");
+        const popup_delete_section_cancel = document.getElementById("popup-delete-cancel");
+        const popup_delete_section_confirm = document.getElementById("popup-delete-confirm");
 
-        document.getElementById("popup-delete-confirm").addEventListener("click", () => {
+        popup_delete_section_close?.addEventListener("click", () =>
+            toggleDisplayNoneOnElement("popup-delete", true)
+        );
+        popup_delete_section_cancel?.addEventListener("click", () =>
+            toggleDisplayNoneOnElement("popup-delete", true)
+        );
+        popup_delete_section_confirm?.addEventListener("click", () => {
             let form_id = globalThis.popup_edit_context.portfolio_id;
             let form_ordem = globalThis.popup_edit_context.secao_ordem;
 
@@ -442,14 +493,17 @@ function setupPortfolioPage(portf_id, enable_edit) {
             }
         });
 
-        document
-            .getElementById("popup-delete-image-close")
-            .addEventListener("click", togglePopupDeleteImage);
-        document
-            .getElementById("popup-delete-image-cancel")
-            .addEventListener("click", togglePopupDeleteImage);
+        const popup_delete_image_close = document.getElementById("popup-delete-image-close");
+        const popup_delete_image_cancel = document.getElementById("popup-delete-image-cancel");
+        const popup_delete_image_confirm = document.getElementById("popup-delete-image-confirm");
 
-        document.getElementById("popup-delete-image-confirm").addEventListener("click", () => {
+        popup_delete_image_close?.addEventListener("click", () =>
+            toggleDisplayNoneOnElement("popup-delete-image", true)
+        );
+        popup_delete_image_cancel?.addEventListener("click", () =>
+            toggleDisplayNoneOnElement("popup-delete-image", true)
+        );
+        popup_delete_image_confirm?.addEventListener("click", () => {
             let form_id = globalThis.popup_edit_context.secao_id;
             let form_ordem = globalThis.popup_edit_context.secao_ordem;
             // TODO: Expensive, use id or something else
@@ -513,14 +567,17 @@ function setupPortfolioPage(portf_id, enable_edit) {
             }
         });
 
-        document
-            .getElementById("popup-delete-link-close")
-            .addEventListener("click", togglePopupDeleteLink);
-        document
-            .getElementById("popup-delete-link-cancel")
-            .addEventListener("click", togglePopupDeleteLink);
+        const popup_delete_link_close = document.getElementById("popup-delete-link-close");
+        const popup_delete_link_cancel = document.getElementById("popup-delete-link-cancel");
+        const popup_delete_link_confirm = document.getElementById("popup-delete-link-confirm");
 
-        document.getElementById("popup-delete-link-confirm").addEventListener("click", () => {
+        popup_delete_link_close?.addEventListener("click", () =>
+            toggleDisplayNoneOnElement("popup-delete-link", true)
+        );
+        popup_delete_link_cancel?.addEventListener("click", () =>
+            toggleDisplayNoneOnElement("popup-delete-link", true)
+        );
+        popup_delete_link_confirm?.addEventListener("click", () => {
             let form_id = globalThis.popup_edit_context.secao_id;
             let form_ordem = globalThis.popup_edit_context.secao_ordem;
             // TODO: Expensive, use id or something else
@@ -585,7 +642,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                 console.log("Ocorreu um erro ao atualizar o objeto!");
             }
         });
-    } else {
+    } else if (toggle_edit_element instanceof HTMLButtonElement) {
         let toggle_edit_element_img = document.createElement("img");
         toggle_edit_element_img.classList.add(
             "icon-dark",
@@ -638,20 +695,22 @@ function setupPortfolioPage(portf_id, enable_edit) {
         return null;
     }
 
-    let portfolio_name = document.getElementById("portfolio-name");
-    let portfolio_picture = document.getElementById("portfolio-picture");
-    let portfolio_username = document.getElementById("portfolio-username");
-    let portfolio_nota = document.getElementById("portfolio-nota");
-    let portfolio_descricao = document.getElementById("portfolio-descricao");
+    const portfolio_name = document.getElementById("portfolio-name");
+    const portfolio_picture = document.getElementById("portfolio-picture");
+    const portfolio_username = document.getElementById("portfolio-username");
+    const portfolio_nota = document.getElementById("portfolio-nota");
+    const portfolio_descricao = document.getElementById("portfolio-descricao");
+    const portfolio_secoes = document.getElementById("portfolio-secoes");
 
     if (
-        !portfolio_name ||
-        !portfolio_picture ||
-        !portfolio_username ||
-        !portfolio_nota ||
-        !portfolio_descricao
+        !(portfolio_name instanceof HTMLHeadingElement) ||
+        !(portfolio_picture instanceof HTMLImageElement) ||
+        !(portfolio_username instanceof HTMLSpanElement) ||
+        !(portfolio_nota instanceof HTMLSpanElement) ||
+        !(portfolio_descricao instanceof HTMLParagraphElement) ||
+        !(portfolio_secoes instanceof HTMLDivElement)
     ) {
-        console.log("setupPortfolioPage: não foi possível atribuir o id");
+        console.error(`${this.name}: null check`);
         return null;
     }
 
@@ -662,13 +721,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
 
     let media = getMediaAvaliacoes(id);
     if (media) {
-        portfolio_nota.innerText = media;
-    }
-
-    let portfolio_secoes = document.getElementById("portfolio-secoes");
-    if (!portfolio_secoes) {
-        console.log("no portfolio-secoes id find");
-        return null;
+        portfolio_nota.innerText = media.toString();
     }
 
     let secoes = portfolio.secoes;
@@ -749,9 +802,20 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             globalThis.popup_edit_context.secao_nome = container_title;
                             globalThis.popup_edit_context.secao_descricao = container_subtitle;
 
-                            document.getElementById("popup-edit-name").value = container_title;
-                            document.getElementById("popup-edit-description").value =
-                                container_subtitle;
+                            const popup_edit_name = document.getElementById("popup-edit-name");
+                            const popup_edit_description =
+                                document.getElementById("popup-edit-description");
+
+                            if (
+                                !(popup_edit_name instanceof HTMLInputElement) ||
+                                !(popup_edit_description instanceof HTMLInputElement)
+                            ) {
+                                console.error(`${this.name}: null check`);
+                                return;
+                            }
+
+                            popup_edit_name.value = container_title;
+                            popup_edit_description.value = container_subtitle;
                         });
 
                         let content_button_up = createActionButton("up", () => {
@@ -862,11 +926,20 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             globalThis.popup_edit_context.secao_id = portfolio.id;
                             globalThis.popup_edit_context.secao_ordem = secao_ordem;
 
-                            // TODO: Isso aqui pode mudar com o tempo?
-                            document.getElementById("popup-delete-name").innerText =
-                                container_title;
-                            document.getElementById("popup-delete-description").innerText =
-                                container_subtitle;
+                            const popup_delete_name = document.getElementById("popup-delete-name");
+                            const popup_delete_description = document.getElementById(
+                                "popup-delete-description"
+                            );
+
+                            if (
+                                !(popup_delete_name instanceof HTMLParagraphElement) ||
+                                !(popup_delete_description instanceof HTMLParagraphElement)
+                            ) {
+                                return;
+                            }
+
+                            popup_delete_name.innerText = container_title;
+                            popup_delete_description.innerText = container_subtitle;
                         });
 
                         content_actions.appendChild(content_button_edit);
@@ -1000,9 +1073,18 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             globalThis.popup_edit_context.secao_nome = container_title;
                             globalThis.popup_edit_context.secao_descricao = container_subtitle;
 
-                            document.getElementById("popup-edit-name").value = container_title;
-                            document.getElementById("popup-edit-description").value =
-                                container_subtitle;
+                            const popup_edit_name = document.getElementById("popup-edit-name");
+                            const popup_edit_description =
+                                document.getElementById("popup-edit-description");
+
+                            if (
+                                !(popup_edit_name instanceof HTMLInputElement) ||
+                                !(popup_edit_description instanceof HTMLInputElement)
+                            )
+                                return;
+
+                            popup_edit_name.value = container_title;
+                            popup_edit_description.value = container_subtitle;
                         });
 
                         let content_button_up = createActionButton("up", () => {
@@ -1112,11 +1194,22 @@ function setupPortfolioPage(portf_id, enable_edit) {
 
                             globalThis.popup_edit_context.secao_id = portfolio.id;
                             globalThis.popup_edit_context.secao_ordem = secao_ordem;
-                            // TODO: Isso aqui pode mudar com o tempo?
-                            document.getElementById("popup-delete-name").innerText =
-                                container_title;
-                            document.getElementById("popup-delete-description").innerText =
-                                container_subtitle;
+
+                            const popup_delete_name = document.getElementById("popup-delete-name");
+                            const popup_delete_description = document.getElementById(
+                                "popup-delete-description"
+                            );
+
+                            if (
+                                !(popup_delete_name instanceof HTMLParagraphElement) ||
+                                !(popup_delete_description instanceof HTMLParagraphElement)
+                            ) {
+                                console.error(`${this.name}: null check`);
+                                return null;
+                            }
+
+                            popup_delete_name.innerText = container_title;
+                            popup_delete_description.innerText = container_subtitle;
                         });
 
                         content_actions.appendChild(content_button_edit);
@@ -1182,8 +1275,16 @@ function setupPortfolioPage(portf_id, enable_edit) {
                                     globalThis.popup_edit_context.descricao =
                                         secao_content[index].descricao;
 
-                                    document.getElementById("popup-delete-image-image").src =
-                                        secao_content[index].blob;
+                                    const popup_delete_image_image = document.getElementById(
+                                        "popup-delete-image-image"
+                                    );
+
+                                    if (!(popup_delete_image_image instanceof HTMLImageElement)) {
+                                        console.error(`${this.name}: null check`);
+                                        return;
+                                    }
+
+                                    popup_delete_image_image.src = secao_content[index].blob;
                                 });
                                 image_div.appendChild(remove_button);
                             }
@@ -1338,9 +1439,20 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             globalThis.popup_edit_context.secao_nome = container_title;
                             globalThis.popup_edit_context.secao_descricao = container_subtitle;
 
-                            document.getElementById("popup-edit-name").value = container_title;
-                            document.getElementById("popup-edit-description").value =
-                                container_subtitle;
+                            const html_popup_edit_name = document.getElementById("popup-edit-name");
+                            const html_popup_edit_description =
+                                document.getElementById("popup-edit-description");
+
+                            if (
+                                !(html_popup_edit_name instanceof HTMLButtonElement) ||
+                                !(html_popup_edit_description instanceof HTMLButtonElement)
+                            ) {
+                                console.log(`${this.name}: null check`);
+                                return null;
+                            }
+
+                            html_popup_edit_name.value = container_title;
+                            html_popup_edit_description.value = container_subtitle;
                         });
 
                         let content_button_up = createActionButton("up", () => {
@@ -1451,11 +1563,21 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             globalThis.popup_edit_context.secao_id = portfolio.id;
                             globalThis.popup_edit_context.secao_ordem = secao_ordem;
 
-                            // TODO: Isso aqui pode mudar com o tempo?
-                            document.getElementById("popup-delete-name").innerText =
-                                container_title;
-                            document.getElementById("popup-delete-description").innerText =
-                                container_subtitle;
+                            const popup_delete_name = document.getElementById("popup-delete-name");
+                            const popup_delete_description = document.getElementById(
+                                "popup-delete-description"
+                            );
+
+                            if (
+                                !(popup_delete_name instanceof HTMLParagraphElement) ||
+                                !(popup_delete_description instanceof HTMLParagraphElement)
+                            ) {
+                                console.error(`${this.name}: null check`);
+                                return;
+                            }
+
+                            popup_delete_name.innerText = container_title;
+                            popup_delete_description.innerText = container_subtitle;
                         });
 
                         content_actions.appendChild(content_button_edit);
@@ -1530,11 +1652,25 @@ function setupPortfolioPage(portf_id, enable_edit) {
                                     globalThis.popup_edit_context.descricao =
                                         secao_content[index].descricao;
 
-                                    document.getElementById("popup-delete-link-url").innerText =
-                                        secao_content[index].blob;
-                                    document.getElementById(
+                                    const popup_delete_link_url =
+                                        document.getElementById("popup-delete-link-url");
+                                    const popup_delete_link_description = document.getElementById(
                                         "popup-delete-link-description"
-                                    ).innerText = secao_content[index].descricao;
+                                    );
+
+                                    if (
+                                        !(popup_delete_link_url instanceof HTMLParagraphElement) ||
+                                        !(
+                                            popup_delete_link_description instanceof
+                                            HTMLParagraphElement
+                                        )
+                                    ) {
+                                        return;
+                                    }
+
+                                    popup_delete_link_url.innerText = secao_content[index].blob;
+                                    popup_delete_link_description.innerText =
+                                        secao_content[index].descricao;
                                 });
                             }
 
@@ -1602,7 +1738,16 @@ function setupPortfolioSetup() {
     let portfolio_setup_create_btn = document.getElementById("portfolio-setup-create-btn");
     let portfolio_setup_dev_btn = document.getElementById("portfolio-setup-dev-btn");
 
-    // Lê todos os portfolios
+    if (
+        !(portfolio_setup_select_select instanceof HTMLSelectElement) ||
+        !(portfolio_setup_select_btn instanceof HTMLButtonElement) ||
+        !(portfolio_setup_create_select instanceof HTMLSelectElement) ||
+        !(portfolio_setup_create_btn instanceof HTMLButtonElement) ||
+        !(portfolio_setup_dev_btn instanceof HTMLButtonElement)
+    ) {
+        console.error(`${this.name}: null check`);
+        return;
+    }
     let portfolios = JSONQL_P.readPortfolios();
     let usuarios = JSONQL_U.readUsuarios();
 
