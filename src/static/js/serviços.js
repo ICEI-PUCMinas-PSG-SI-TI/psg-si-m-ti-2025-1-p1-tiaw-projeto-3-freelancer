@@ -1,60 +1,114 @@
 //@ts-check
 
+var editarServico = () => {};
+var deletarServico = () => {};
+const getServicos = () => JSON.parse(localStorage.getItem("servicos") || "[]");
+const salvarServicos = (/** @type {Object} */ servicos) =>
+    localStorage.setItem("servicos", JSON.stringify(servicos));
+
+// TODO: Add image
 document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("form-servico");
-    const lista = document.getElementById("lista-servicos");
+    /** @type {HTMLFormElement} */
+    // @ts-ignore Casting HTMLElement as HTMLFormElement
+    const html_form = document.getElementById("form-servico");
+    const html_ul_lista = document.getElementById("lista-servicos");
+
+    if (!html_form || !html_ul_lista) return;
+
     let editIndex = null;
 
-    const getServicos = () => JSON.parse(localStorage.getItem("servicos") || "[]");
-    const salvarServicos = (servicos) => localStorage.setItem("servicos", JSON.stringify(servicos));
-
     const render = () => {
-        lista.innerHTML = "";
-        getServicos().forEach((servico, index) => {
-            const li = document.createElement("li");
-            li.className =
-                "list-group-item d-flex justify-content-between align-items-center flex-wrap";
+        html_ul_lista.innerHTML = "";
+        getServicos().forEach(
+            (
+                /** @type {{ titulo: any; categoria: any; descricao: any; contato: any; }} */ servico,
+                /** @type {any} */ index
+            ) => {
+                const li = document.createElement("li");
+                li.className =
+                    "list-group-item d-flex justify-content-between align-items-center flex-wrap";
 
-            li.innerHTML = `
-          <div class="d-flex flex-column">
-            <strong>${servico.titulo}</strong>
-            <small>${servico.categoria}</small>
-            <p class="mb-1">${servico.descricao}</p>
-            <small>Contato: ${servico.contato}</small>
-          </div>
-          <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-warning" onclick="editarServico(${index})">Editar</button>
-            <button class="btn btn-sm btn-danger" onclick="deletarServico(${index})">Excluir</button>
-          </div>
-        `;
+                li.innerHTML = `<div class="d-flex flex-column">
+                    <strong>${servico.titulo}</strong>
+                    <small>${servico.categoria}</small>
+                    <p class="mb-1">${servico.descricao}</p>
+                    <small>Contato: ${servico.contato}</small>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-warning" onclick="editarServico(${index})">Editar</button>
+                    <button class="btn btn-sm btn-danger" onclick="deletarServico(${index})">Excluir</button>
+                </div>`;
 
-            lista.appendChild(li);
-        });
+                html_ul_lista.appendChild(li);
+            }
+        );
     };
 
-    window.editarServico = (index) => {
+    editarServico = (/** @type {string | number} */ index) => {
         const servico = getServicos()[index];
-        document.getElementById("titulo").value = servico.titulo;
-        document.getElementById("contato").value = servico.contato;
-        document.getElementById("categoriaId").value = servico.categoriaId;
-        document.getElementById("descricao").value = servico.descricao;
+
+        /** @type {HTMLInputElement} */
+        // @ts-ignore Casting HTMLElement as HTMLInputElement
+        const html_titulo = document.getElementById("titulo");
+        /** @type {HTMLInputElement} */
+        // @ts-ignore Casting HTMLElement as HTMLInputElement
+        const html_contato = document.getElementById("contato");
+        /** @type {HTMLInputElement} */
+        // @ts-ignore Casting HTMLElement as HTMLInputElement
+        const html_categoria = document.getElementById("categoriaId");
+        /** @type {HTMLInputElement} */
+        // @ts-ignore Casting HTMLElement as HTMLInputElement
+        const html_descricao = document.getElementById("descricao");
+
+        if (!html_titulo || !html_contato || !html_categoria || !html_descricao) return;
+
+        html_titulo.value = servico.titulo;
+        html_contato.value = servico.contato;
+        html_categoria.value = servico.categoriaId;
+        html_descricao.value = servico.descricao;
         editIndex = index;
     };
 
-    window.deletarServico = (index) => {
+    deletarServico = (/** @type {any} */ index) => {
         const servicos = getServicos();
         servicos.splice(index, 1);
         salvarServicos(servicos);
         render();
     };
 
-    form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const titulo = document.getElementById("titulo").value.trim();
-        const contato = document.getElementById("contato").value.trim();
-        const categoriaId = document.getElementById("categoriaId").value;
-        const descricao = document.getElementById("descricao").value.trim();
-        const categoria = document.getElementById("categoriaId").selectedOptions[0].text;
+    html_form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        /** @type {HTMLInputElement} */
+        // @ts-ignore Casting HTMLElement as HTMLInputElement
+        const html_titulo = document.getElementById("titulo");
+        /** @type {HTMLInputElement} */
+        // @ts-ignore Casting HTMLElement as HTMLInputElement
+        const html_contato = document.getElementById("contato");
+        /** @type {HTMLInputElement} */
+        // @ts-ignore Casting HTMLElement as HTMLInputElement
+        const html_categoriaId = document.getElementById("categoriaId");
+        /** @type {HTMLInputElement} */
+        // @ts-ignore Casting HTMLElement as HTMLInputElement
+        const html_descricao = document.getElementById("descricao");
+        /** @type {HTMLSelectElement} */
+        // @ts-ignore Casting HTMLElement as HTMLSelectElement
+        const html_categoria = document.getElementById("categoriaId");
+
+        if (
+            !html_titulo ||
+            !html_contato ||
+            !html_categoriaId ||
+            !html_descricao ||
+            !html_categoria
+        )
+            return;
+
+        const titulo = html_titulo.value.trim();
+        const contato = html_contato.value.trim();
+        const categoriaId = html_categoriaId.value;
+        const descricao = html_descricao.value.trim();
+        const categoria = html_categoria.selectedOptions[0].text;
 
         const novoServico = {
             titulo,
@@ -74,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         salvarServicos(servicos);
-        form.reset();
+        html_form.reset();
         render();
     });
 
