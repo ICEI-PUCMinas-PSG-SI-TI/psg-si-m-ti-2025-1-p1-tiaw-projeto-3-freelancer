@@ -1,5 +1,7 @@
 //@ts-check
 
+const maxAllowedSize = 5 * 1024 * 1024; // 5 MB in bytes
+
 var editarServico = () => {};
 var deletarServico = () => {};
 var previewPicture = () => {};
@@ -13,6 +15,10 @@ const salvarServicos = (/** @type {Object} */ servicos) =>
  */
 async function fileToBase64(file) {
     const reader = new FileReader();
+
+    if (file.size > maxAllowedSize) throw new Error("O tamanho do arquivo deve ser menor que 5MB!");
+
+    if (!file.type.match("image.*")) throw new Error("O arquivo não é uma imagem!");
 
     return new Promise((resolve, reject) => {
         reader.onload = () => resolve(reader.result);
@@ -104,25 +110,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!html_input_picture.files || !html_input_picture.files.length) return;
 
-        fileToBase64(html_input_picture.files[0]).then((/** @type {string} */ result) => {
-            // TODO: Limitar tamanho da imagem
-
-            if (result.startsWith("data:image/")) {
-                html_img_preview.src = result;
-                html_img_preview.classList.remove("d-none");
-                html_svg_placeholder.classList.add("d-none");
-            } else {
-                alert("Arquivo inválido!");
+        fileToBase64(html_input_picture.files[0])
+            .then((/** @type {string} */ result) => {
+                if (result.startsWith("data:image/")) {
+                    html_img_preview.src = result;
+                    html_img_preview.classList.remove("d-none");
+                    html_svg_placeholder.classList.add("d-none");
+                } else {
+                    alert("Arquivo inválido!");
+                    html_img_preview.src = "";
+                    html_img_preview.classList.add("d-none");
+                    html_svg_placeholder.classList.remove("d-none");
+                }
+            })
+            .catch((error) => {
                 html_img_preview.src = "";
                 html_img_preview.classList.add("d-none");
                 html_svg_placeholder.classList.remove("d-none");
-            }
-        });
+
+                alert(error);
+                // Limpa arquivos
+                setTimeout(() => (html_input_picture.value = ""), 1);
+            });
     };
 
     html_form.addEventListener("submit", (event) => {
         event.preventDefault();
 
+        // TODO: declare 1 time
+        /** @type {HTMLInputElement} */
+        // @ts-ignore Casting HTMLElement as HTMLInputElement
+        const html_input_picture = document.getElementById("imagem");
         /** @type {HTMLInputElement} */
         // @ts-ignore Casting HTMLElement as HTMLInputElement
         const html_titulo = document.getElementById("titulo");
@@ -140,6 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const html_categoria = document.getElementById("categoriaId");
 
         if (
+            !html_input_picture ||
             !html_titulo ||
             !html_contato ||
             !html_categoriaId ||
@@ -148,32 +167,42 @@ document.addEventListener("DOMContentLoaded", () => {
         )
             return;
 
-        const titulo = html_titulo.value.trim();
-        const contato = html_contato.value.trim();
-        const categoriaId = html_categoriaId.value;
-        const descricao = html_descricao.value.trim();
-        const categoria = html_categoria.selectedOptions[0].text;
+        if (!html_input_picture.files || !html_input_picture.files.length) return;
 
-        const novoServico = {
-            titulo,
-            contato,
-            categoriaId,
-            categoria,
-            descricao,
-        };
+        fileToBase64(html_input_picture.files[0]).then((imagem) => {
+            if (!imagem.startsWith("data:image/")) {
+                alert("Ocorreu um erro ao validar as informações!");
+                return;
+            }
 
-        const servicos = getServicos();
+            const titulo = html_titulo.value.trim();
+            const contato = html_contato.value.trim();
+            const categoriaId = html_categoriaId.value;
+            const descricao = html_descricao.value.trim();
+            const categoria = html_categoria.selectedOptions[0].text;
 
-        if (editIndex !== null) {
-            servicos[editIndex] = novoServico;
-            editIndex = null;
-        } else {
-            servicos.push(novoServico);
-        }
+            const novoServico = {
+                imagem,
+                titulo,
+                contato,
+                categoriaId,
+                categoria,
+                descricao,
+            };
 
-        salvarServicos(servicos);
-        html_form.reset();
-        render();
+            const servicos = getServicos();
+
+            if (editIndex !== null) {
+                servicos[editIndex] = novoServico;
+                editIndex = null;
+            } else {
+                servicos.push(novoServico);
+            }
+
+            salvarServicos(servicos);
+            html_form.reset();
+            render();
+        });
     });
 
     render();

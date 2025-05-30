@@ -1,11 +1,18 @@
 //@ts-check
 
+const maxAllowedSizeCad = 5 * 1024 * 1024; // 5 MB in bytes
+
 // TODO: Move to module
 /**
  * @param {Blob} file
  */
 async function fileToBase64(file) {
     const reader = new FileReader();
+
+    if (file.size > maxAllowedSizeCad)
+        throw new Error("O tamanho do arquivo deve ser menor que 5MB!");
+
+    if (!file.type.match("image.*")) throw new Error("O arquivo não é uma imagem!");
 
     return new Promise((resolve, reject) => {
         reader.onload = () => resolve(reader.result);
@@ -90,6 +97,7 @@ form_cadastro_usuario?.addEventListener("submit", async (event) => {
 
     const fotoInput = fotoInput_files[0];
 
+    // TODO: Clear input if image is invalid
     fileToBase64(fotoInput)
         .then((result) => {
             const novoUsuario = {
@@ -128,7 +136,7 @@ form_cadastro_usuario?.addEventListener("submit", async (event) => {
             html_img_preview.src = "https://www.w3schools.com/howto/img_avatar.png";
         })
         .catch((error) => {
-            console.log(error);
+            alert(error);
         });
 });
 
