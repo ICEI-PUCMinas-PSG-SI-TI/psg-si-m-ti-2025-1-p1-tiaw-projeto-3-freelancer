@@ -5,3 +5,4 @@
 .vs/
 _temp/
 *_test.*
+node_modules/

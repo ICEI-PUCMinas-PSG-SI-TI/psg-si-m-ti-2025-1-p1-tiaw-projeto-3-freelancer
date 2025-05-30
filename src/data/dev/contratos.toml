@@ -11,6 +11,7 @@
 # contratanteId = ID do usuário que contratou o serviço
 # data = Data do contrato do serviço
 # valor = Valor combinado (int)
+# status = Status do contrato (Concluído, Pendente, Aguardando Pagamento)
 
 [[contratos]]
 id = 0
@@ -19,6 +20,7 @@ contratadoId = 0
 contratanteId = 1
 data = "1970-01-01T00:00:00.000Z-03:00"
 valor = 300
+status = 0
 
 [[contratos]]
 id = 1
@@ -27,6 +29,7 @@ contratadoId = 0
 contratanteId = 2
 data = "1970-01-01T00:00:00.000Z-03:00"
 valor = 552
+status = 1
 
 [[contratos]]
 id = 2
@@ -35,3 +38,4 @@ contratadoId = 0
 contratanteId = 3
 data = "1970-01-01T00:00:00.000Z-03:00"
 valor = 4896
+status = 1

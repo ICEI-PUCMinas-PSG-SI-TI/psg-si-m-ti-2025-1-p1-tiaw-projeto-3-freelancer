@@ -6,18 +6,18 @@
 
 # TODO: Cadastro de categorias via UI (admin)
 
-# [[categorias_secao]]
+# [[categorias_secoes]]
 # id = ID da categoria
 # nome = Nome da categoria
 
-[[categorias_secao]]
+[[categorias_secoes]]
 id = 0
 nome = "Imagens"
 
-[[categorias_secao]]
+[[categorias_secoes]]
 id = 1
 nome = "Avaliações"
 
-[[categorias_secao]]
+[[categorias_secoes]]
 id = 2
 nome = "Links Externos"
