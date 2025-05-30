@@ -130,10 +130,6 @@ export function validateContrato(contrato) {
  * @returns {Array|null} Array com informações sobre os contratos
  */
 export function readContratos(...contratos_id) {
-    if (!contratos_id) {
-        return returnError("readContratos: nulo");
-    }
-
     if (!Array.isArray(contratos_id)) {
         return returnError("readContratos: não é um array");
     }
@@ -148,15 +144,13 @@ export function readContratos(...contratos_id) {
     for (let x = 0; x < contratos_id.length; x++) {
         let id = parseInt(contratos_id[x]);
 
-        if (isNaN(id)) return null;
+        if (typeof id !== "number") return null;
 
         for (let index = 0; index < contratos.length; index++) {
-            const element = contratos[index];
-
-            if (id === parseInt(element.id)) {
-                contratos_filter.push(element);
-                // Remove o contrato da lista original
-                contratos.splice(index, 1);
+            // console.log(`race cond ${index}`);
+            if (id === parseInt(contratos[index].id)) {
+                // Remove o contrato da lista original e adiciona a lista filtrada
+                contratos_filter.push(contratos.splice(index, 1));
             }
         }
     }
@@ -179,9 +173,7 @@ export function getIdLastContrato() {
 
     contratos.forEach((contrato) => {
         let id = parseInt(contrato.id);
-        if (id > last_id) {
-            last_id = id;
-        }
+        if (id > last_id) last_id = id;
     });
 
     return last_id;

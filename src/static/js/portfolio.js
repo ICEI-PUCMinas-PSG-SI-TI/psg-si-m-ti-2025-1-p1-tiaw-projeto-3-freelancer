@@ -81,23 +81,17 @@ function getMediaAvaliacoes(userId) {
 
     let media = 0;
     let quantidade = 0;
-    while (quantidade < avaliacoes.length) {
-        const contratoId = avaliacoes[quantidade].contratoId;
+    for (let index = 0; index < avaliacoes.length; index++) {
+        const contratoId = avaliacoes[index].contratoId;
         const contrato = JSONQL_C.readContratos(contratoId);
-        if (!contrato) {
-            console.log("setupPortfolioPage: Não foi possível identificar o contrato");
-            continue;
-        }
+        if (!contrato) continue
 
         let contratado = contrato[0].contratadoId;
 
-        if (!contratado) {
-            console.log("setupPortfolioPage: Não foi possível identificar o contratado");
-            continue;
-        }
+        if (!contratado) continue
 
         if (ensureInteger(contratado) === userId_int) {
-            media += avaliacoes[quantidade].nota;
+            media += avaliacoes[index].nota;
             quantidade++;
         }
     }
@@ -130,6 +124,8 @@ function toggleDisplayNoneOnElement(element_id, set_display_none_status) {
         set_display_none_status
             ? element.classList.add("d-none")
             : element.classList.remove("d-none");
+
+        return;
     }
 
     element.classList.toggle("d-none");
@@ -144,7 +140,7 @@ function toggleEditParam(enable) {
 
     if (enable) {
         // Set a new parameter or modify an existing one
-        params.set("edit", true);
+        params.set("edit", "true");
     } else {
         // Delete a parameter
         params.delete("edit");
@@ -170,7 +166,7 @@ function setIdParam(id) {
     const url = new URL(window.location.href); // Get the current URL
     const params = new URLSearchParams(url.search); // Get the search parameters
     if (id) {
-        params.set("id", id);
+        params.set("id", id.toString());
         window.location.href = `${url.origin}${url.pathname}?${params.toString()}${url.hash}`;
     } else {
         // Navega para a pagina sem parametros
@@ -760,11 +756,11 @@ function setupPortfolioPage(portf_id, enable_edit) {
                     // Não é um bug, é uma feature, mas parece um bug
                     // Desabilitado por enquanto
                     /*
-                if (aval_ja_adicionado)
-                    return
+                    if (aval_ja_adicionado)
+                        return
 
-                aval_ja_adicionado = true
-                */
+                    aval_ja_adicionado = true
+                    */
 
                     let container_title = secao_nome || "Avaliações";
                     let container_subtitle = secao_descricao || "Clientes satisfeitos!";
@@ -832,16 +828,16 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             // INFO: Aqui a ordem esta sendo utilizada como id da seção
                             // Verificar o maior valor para json.ordem
                             /*
-                        let maior = 0;
-                        form_porfolio.secoes.forEach(element => {
-                            if (parseInt(element.ordem) > maior)
-                                maior = element.ordem;
-                        });
+                            let maior = 0;
+                            form_porfolio.secoes.forEach(element => {
+                                if (parseInt(element.ordem) > maior)
+                                    maior = element.ordem;
+                            });
 
-                        // TODO: Desabilitar botão quando no topo ou no final?
-                        if (secao_ordem >= maior)
-                            return null
-                        */
+                            // TODO: Desabilitar botão quando no topo ou no final?
+                            if (secao_ordem >= maior)
+                                return null
+                            */
 
                             for (
                                 let index = 1;
@@ -972,65 +968,62 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         );
                         information.innerHTML = `Não há avaliações para este usuário, você pode utilizar a&nbsp;<a href="dev.html">página de desenvolvimento</a>&nbsp;para gerar uma avaliação.`;
                         content_blobs_scrool.appendChild(information);
-                    }
+                    } else {
+                        console.log("avaliacoes");
+                        // Lê todas as avaliações
+                        avaliacoes.forEach((avaliacao_element) => {
+                            const comentario = avaliacao_element.comentario.substring(0, 200);
+                            const nota = avaliacao_element.nota;
+                            const contratanteId = avaliacao_element.contratanteId;
+                            // TODO: { Otimizar > Informações do serviço da avaliação
+                            // Pega o contratoId da avaliação e filtra
+                            const contratoId = avaliacao_element.contratoId;
+                            if (!contratoId) return null;
 
-                    // Lê todas as avaliações
-                    avaliacoes.forEach((avaliacao_element) => {
-                        let comentario = avaliacao_element.comentario.substring(0, 200);
-                        let nota = avaliacao_element.nota;
-                        let contratanteId = avaliacao_element.contratanteId;
-                        // TODO: { Otimizar > Informações do serviço da avaliação
-                        // Pega o contratoId da avaliação e filtra
-                        let contratoId = avaliacao_element.contratoId;
-                        if (!contratoId) return null;
+                            const contratos = JSONQL_C.readContratos(contratoId);
+                            if (!contratos || !contratos.length) return null;
+                            const contrato = contratos[0];
+                            const contratadoId = contrato.contratadoId;
+                            if (!contratadoId) return null;
 
-                        let contrato = JSONQL_C.readContratos(contratoId);
-                        if (!contrato.length) return null;
+                            // A partir daqui, continue apenas os contratos que possuem a mesma id que o usuario do portfolio
+                            if (contratadoId != id) return null;
 
-                        contrato = contrato[0];
-                        let contratadoId = contrato.contratadoId;
+                            // TODO: Otimizar > Informações do serviço da avaliação
+                            let servicos = JSONQL_S.readServicos();
+                            if (!servicos || servicos.length) return null;
+                            const servico = servicos[0];
 
-                        if (!contratadoId) return null;
+                            let usuarios = JSONQL_U.readUsuarios(contratanteId);
+                            if (!usuarios || usuarios.length) return null;
+                            const usuario = usuarios[0];
 
-                        // A partir daqui, continue apenas os contratos que possuem a mesma id que o usuario do portfolio
-                        if (contratadoId != id) {
-                            return null;
-                        }
-
-                        // TODO: } Otimizar > Informações do serviço da avaliação
-                        let servicos = JSONQL_S.readServicos();
-                        if (!servicos.length) return null;
-                        servicos = servicos[0];
-
-                        let usuarios = JSONQL_U.readUsuarios(contratanteId);
-                        if (!usuarios.length) return null;
-                        usuarios = usuarios[0];
-
-                        // TODO: replace 'placeholder_profile'
-                        content_blobs_scrool.innerHTML += `<div class="d-inline-block float-none me-3">
-                        <a class="text-decoration-none m-0 p-0 g-0" href="#">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row card-aval-limit">
-                                        <div class="d-flex justify-content-start align-items-center pb-2">
-                                            <div class="me-2">
-                                                <img class="icon-32px" src="static/img/placeholder_profile.png"> 
+                            // TODO: replace 'placeholder_profile'
+                            content_blobs_scrool.innerHTML += `<div class="d-inline-block float-none me-3">
+                                <a class="text-decoration-none m-0 p-0 g-0" href="#">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row card-aval-limit">
+                                                <div class="d-flex justify-content-start align-items-center pb-2">
+                                                    <div class="me-2">
+                                                        <img class="icon-32px" src="static/img/placeholder_profile.png"> 
+                                                    </div>
+                                                    <div class="max-width-80">
+                                                        <h6 class="text-truncate">${usuario.nome}</h6>
+                                                        <p class="m-0 g-0 p-0 text-truncate">⭐ ${nota} - ${servico.titulo}</p>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="col-12">
+                                                    <p class="text-wrap g-0 m-0 p-0">${comentario}</p>
+                                                </div>
                                             </div>
-                                            <div class="max-width-80">
-                                                <h6 class="text-truncate">${usuarios.nome}</h6>
-                                                <p class="m-0 g-0 p-0 text-truncate">⭐ <span>${nota}</span> - <span>${servicos.titulo}</span></p>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <div class="col-12">
-                                            <p class="text-wrap g-0 m-0 p-0">${comentario}</p>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>`;
-                    });
+                                </a>
+                            </div>`;
+                        });
+                    }
 
                     content_blobs.appendChild(content_blobs_scrool);
                     content_container.appendChild(content_blobs);
@@ -1103,16 +1096,16 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             // INFO: Aqui a ordem esta sendo utilizada como id da seção
                             // Verificar o maior valor para json.ordem
                             /*
-                        let maior = 0;
-                        form_porfolio.secoes.forEach(element => {
-                            if (parseInt(element.ordem) > maior)
-                                maior = element.ordem;
-                        });
+                            let maior = 0;
+                            form_porfolio.secoes.forEach(element => {
+                                if (parseInt(element.ordem) > maior)
+                                    maior = element.ordem;
+                            });
 
-                        // TODO: Desabilitar botão quando no topo ou no final?
-                        if (secao_ordem >= maior)
-                            return null
-                        */
+                            // TODO: Desabilitar botão quando no topo ou no final?
+                            if (secao_ordem >= maior)
+                                return null
+                            */
 
                             for (
                                 let index = 1;
@@ -1474,16 +1467,16 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             // INFO: Aqui a ordem esta sendo utilizada como id da seção
                             // Verificar o maior valor para json.ordem
                             /*
-                        let maior = 0;
-                        form_porfolio.secoes.forEach(element => {
-                            if (parseInt(element.ordem) > maior)
-                                maior = element.ordem;
-                        });
+                            let maior = 0;
+                            form_porfolio.secoes.forEach(element => {
+                                if (parseInt(element.ordem) > maior)
+                                    maior = element.ordem;
+                            });
 
-                        // TODO: Desabilitar botão quando no topo ou no final?
-                        if (secao_ordem >= maior)
-                            return null
-                        */
+                            // TODO: Desabilitar botão quando no topo ou no final?
+                            if (secao_ordem >= maior)
+                                return null
+                            */
 
                             for (
                                 let index = 1;
@@ -1712,10 +1705,10 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             toggleDisplayNoneOnElement("popup-add-link", false);
                         });
                         add_new_link_button.innerHTML = `<div class="d-flex justify-content-center m-2">
-                                    <img class="icon-24px fixed-filter-invert me-2"
-                                        src="static/action-icons/add.svg">
-                                        <p class="g-0 p-0 m-0">Adicionar link</p>
-                                </div>`;
+                            <img class="icon-24px fixed-filter-invert me-2"
+                                src="static/action-icons/add.svg">
+                            <p class="g-0 p-0 m-0">Adicionar link</p>
+                        </div>`;
 
                         add_new_link.appendChild(add_new_link_button);
                         content_blobs.appendChild(add_new_link);
@@ -1730,10 +1723,8 @@ function setupPortfolioPage(portf_id, enable_edit) {
 function setupPortfolioSetup() {
     toggleDisplayNoneOnElement("portfolio-setup", false);
 
-    // let portfolio_setup_select = document.getElementById("portfolio-setup-select")
     let portfolio_setup_select_select = document.getElementById("portfolio-setup-select-select");
     let portfolio_setup_select_btn = document.getElementById("portfolio-setup-select-btn");
-    // let portfolio_setup_create = document.getElementById("portfolio-setup-create")
     let portfolio_setup_create_select = document.getElementById("portfolio-setup-create-select");
     let portfolio_setup_create_btn = document.getElementById("portfolio-setup-create-btn");
     let portfolio_setup_dev_btn = document.getElementById("portfolio-setup-dev-btn");
@@ -1748,15 +1739,13 @@ function setupPortfolioSetup() {
         console.error(`${this.name}: null check`);
         return;
     }
+
+    // Lê os portfolios e usuários disponíveis
     let portfolios = JSONQL_P.readPortfolios();
     let usuarios = JSONQL_U.readUsuarios();
 
-    // Não configura portfolios
+    // Se existem portfólios, adiciona-os à lista (abrir portfólio)
     if (portfolios && portfolios.length) {
-        // Reseta as opções
-        console.log(portfolio_setup_select_select);
-        console.log(portfolios);
-        // portfolio_setup_select_select.innerHTML = ""
         for (let index = 0; index < portfolios.length; index++) {
             let option = document.createElement("option");
             option.value = portfolios[index].id;
@@ -1765,8 +1754,8 @@ function setupPortfolioSetup() {
         }
         portfolio_setup_select_btn.classList.remove("disabled");
         portfolio_setup_select_btn.addEventListener("click", () => {
-            // Abrir o portfólio de id $?
             let userId = parseInt(portfolio_setup_select_select.value);
+            // Abrir o portfólio de id $?
             setIdParam(userId);
         });
     } else {
@@ -1775,11 +1764,8 @@ function setupPortfolioSetup() {
         portfolio_setup_select_select.appendChild(option);
     }
 
-    // console.log(portfolio_setup_create_select);
-    // console.log(usuarios);
+    // Se existem usuários, adiciona-os à lista (criar novo portfólio)
     if (usuarios && usuarios.length) {
-        // Reseta as opções
-        // portfolio_setup_create_select.innerHTML = ""
         for (let index = 0; index < usuarios.length; index++) {
             let option = document.createElement("option");
             option.value = usuarios[index].id;
@@ -1797,13 +1783,11 @@ function setupPortfolioSetup() {
 
             if (!portfolioId) {
                 console.error("Não foi possível criar o portfólio");
-            } else {
-                setIdParam(portfolioId);
+                return;
             }
-            // console.log("creating");
-            // portfolioId = parseInt(portfolioId)
-            // const url = new URL(window.location.href);
-            // window.location.href = `${url.origin}${url.pathname}?id=${portfolioId}`;
+
+            // Abrir o portfólio de id $?
+            setIdParam(portfolioId);
         });
     } else {
         let option = document.createElement("option");
@@ -1817,8 +1801,8 @@ function setupPortfolioSetup() {
         await Faker.criarNServicos(60);
         await Faker.criarNContratos(90);
         await Faker.criarNAvaliacoes(120);
-        // Faker.createPortfolios(30);
         notifySectionDataChanged();
+        // Faker.createPortfolios(30);
     });
 }
 

@@ -11,8 +11,10 @@ import { generateRandomNumber, ensureInteger } from "./tools.mjs";
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
  */
 
+var exemplos_json = null;
+
 export async function getFakeData() {
-    if (globalThis._exemplos) return globalThis._exemplos;
+    if (exemplos_json) return exemplos_json;
 
     try {
         // URL assume que você esta na página src/dev.html
@@ -22,7 +24,7 @@ export async function getFakeData() {
         }
 
         const json = await response.json();
-        globalThis._exemplos = json;
+        exemplos_json = json;
         return json;
     } catch (error) {
         console.error(error.message);
@@ -40,7 +42,7 @@ export async function criarNPortfolios(quantidade) {
     if (typeof quantidade_int !== "number" || quantidade_int <= 0)
         throw new Error("Criação de portfólios: A quantidade informada é inválida!");
 
-    getFakeData().then((json) => {
+    await getFakeData().then((json) => {
         const exemplos = json.exemplos;
 
         let portfolios = [];
@@ -149,7 +151,7 @@ export async function criarNContratos(quantidade) {
 
     for (let index = 0; index < quantidade_int; index++) {
         const usuarios = JSONQL_U.readUsuarios();
-        if (!usuarios || usuarios.length)
+        if (!usuarios || !usuarios.length)
             throw new Error(
                 "Criação de contratos: É necessário que haja usuários cadastrados para criar contratos."
             );
@@ -203,7 +205,7 @@ export async function criarNAvaliacoes(quantidade) {
     if (typeof quantidade_int !== "number" || quantidade_int <= 0)
         throw new Error("Criação de avaliações: A quantidade informada é inválida!");
 
-    getFakeData().then((json) => {
+    await getFakeData().then((json) => {
         const exemplos = json.exemplos;
 
         let avaliacoes = [];
@@ -257,7 +259,7 @@ export async function criarNUsuarios(quantidade) {
     if (typeof quantidade_int !== "number" || quantidade_int <= 0)
         throw new Error("Criação de usuários: A quantidade informada é inválida!");
 
-    getFakeData().then((json) => {
+    await getFakeData().then((json) => {
         const exemplos = json.exemplos;
 
         let usuarios = [];
@@ -326,7 +328,7 @@ export async function criarNServicos(quantidade) {
     if (typeof quantidade_int !== "number" || quantidade_int <= 0)
         throw new Error("Criação de serviços: A quantidade informada é inválida!");
 
-    getFakeData().then((json) => {
+    await getFakeData().then((json) => {
         const exemplos = json.exemplos;
 
         let servicos = [];
