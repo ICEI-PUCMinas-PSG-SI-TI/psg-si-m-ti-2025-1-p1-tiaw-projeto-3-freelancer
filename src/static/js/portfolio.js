@@ -120,49 +120,19 @@ function notifySectionDataChanged() {
     window.location.reload();
 }
 
-function toggleHTMLElement(id, setStatus) {
-    if (typeof id !== "string") return null;
+function toggleDisplayNoneOnElement(element_id, set_display_none_status) {
+    if (typeof element_id !== "string") return null;
 
-    if (typeof setStatus === "boolean") {
-        if (setStatus) {
-            document.getElementById(id).classList.add("d-none");
-        }
+    const element = document.getElementById(element_id);
+    if (!(element instanceof HTMLElement)) return;
 
-        document.getElementById(id).classList.remove("d-none");
-        return;
+    if (typeof set_display_none_status === "boolean") {
+        set_display_none_status
+            ? element.classList.add("d-none")
+            : element.classList.remove("d-none");
     }
 
-    document.getElementById(id).classList.toggle("d-none");
-}
-
-function togglePopupEdit() {
-    preparePopup();
-    document.getElementById("popup-edit").classList.toggle("d-none");
-}
-
-function togglePopupAdd() {
-    preparePopup();
-    document.getElementById("popup-add").classList.toggle("d-none");
-}
-
-function togglePopupAddLink() {
-    preparePopup();
-    document.getElementById("popup-add-link").classList.toggle("d-none");
-}
-
-function togglePopupDeleteSecao() {
-    preparePopup();
-    document.getElementById("popup-delete").classList.toggle("d-none");
-}
-
-function togglePopupDeleteImage() {
-    preparePopup();
-    document.getElementById("popup-delete-image").classList.toggle("d-none");
-}
-
-function togglePopupDeleteLink() {
-    preparePopup();
-    document.getElementById("popup-delete-link").classList.toggle("d-none");
+    element.classList.toggle("d-none");
 }
 
 // @AI-Gemini
@@ -227,7 +197,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
         return null;
     }
 
-    toggleHTMLElement("portfolio-display", true);
+    toggleDisplayNoneOnElement("portfolio-display", false);
 
     let toggle_edit_element = document.getElementById("toggle-edit");
     if (enable_edit) {
@@ -252,7 +222,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
             });
         }
 
-        toggleHTMLElement("add-section", true);
+        toggleDisplayNoneOnElement("add-section", false);
 
         const popup_edit_section_close = document.getElementById("popup-edit-close");
         const popup_edit_section_confirm = document.getElementById("popup-edit-confirm");
@@ -298,11 +268,12 @@ function setupPortfolioPage(portf_id, enable_edit) {
                 }
             }
             if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                togglePopupEdit();
+                toggleDisplayNoneOnElement("popup-edit", true);
                 notifySectionDataChanged();
-            } else {
-                console.log("Ocorreu um erro ao atualizar o objeto!");
+                return null;
             }
+
+            console.log("Ocorreu um erro ao atualizar o objeto!");
         });
 
         const add_section = document.getElementById("add-section");
@@ -369,11 +340,12 @@ function setupPortfolioPage(portf_id, enable_edit) {
             });
 
             if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                togglePopupAdd();
+                toggleDisplayNoneOnElement("popup-add", true);
                 notifySectionDataChanged();
-            } else {
-                console.log("Ocorreu um erro ao atualizar o objeto!");
+                return;
             }
+
+            console.log("Ocorreu um erro ao atualizar o objeto!");
         });
 
         const popup_add_link_close = document.getElementById("popup-add-link-close");
@@ -443,11 +415,12 @@ function setupPortfolioPage(portf_id, enable_edit) {
             }
 
             if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                togglePopupAddLink();
+                toggleDisplayNoneOnElement("popup-add-link", true);
                 notifySectionDataChanged();
-            } else {
-                console.log("Ocorreu um erro ao atualizar o objeto!");
+                return;
             }
+
+            console.log("Ocorreu um erro ao atualizar o objeto!");
         });
 
         const popup_delete_section_close = document.getElementById("popup-delete-close");
@@ -486,11 +459,12 @@ function setupPortfolioPage(portf_id, enable_edit) {
             }
 
             if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                togglePopupDeleteSecao();
+                toggleDisplayNoneOnElement("popup-delete", true);
                 notifySectionDataChanged();
-            } else {
-                console.log("Ocorreu um erro ao atualizar o objeto!");
+                return;
             }
+
+            console.log("Ocorreu um erro ao atualizar o objeto!");
         });
 
         const popup_delete_image_close = document.getElementById("popup-delete-image-close");
@@ -560,11 +534,12 @@ function setupPortfolioPage(portf_id, enable_edit) {
             }
 
             if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                togglePopupDeleteImage();
+                toggleDisplayNoneOnElement("popup-delete-image", true);
                 notifySectionDataChanged();
-            } else {
-                console.log("Ocorreu um erro ao atualizar o objeto!");
+                return;
             }
+
+            console.log("Ocorreu um erro ao atualizar o objeto!");
         });
 
         const popup_delete_link_close = document.getElementById("popup-delete-link-close");
@@ -636,11 +611,12 @@ function setupPortfolioPage(portf_id, enable_edit) {
             }
 
             if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                togglePopupDeleteLink();
+                toggleDisplayNoneOnElement("popup-delete-link", true);
                 notifySectionDataChanged();
-            } else {
-                console.log("Ocorreu um erro ao atualizar o objeto!");
+                return;
             }
+
+            console.log("Ocorreu um erro ao atualizar o objeto!");
         });
     } else if (toggle_edit_element instanceof HTMLButtonElement) {
         let toggle_edit_element_img = document.createElement("img");
@@ -793,7 +769,8 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         content_actions.classList.add("ms-auto");
 
                         let content_button_edit = createActionButton("edit", () => {
-                            togglePopupEdit();
+                            preparePopup();
+                            toggleDisplayNoneOnElement("popup-edit", false);
 
                             if (!globalThis.popup_edit_context) globalThis.popup_edit_context = [];
 
@@ -919,7 +896,8 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         });
 
                         let content_button_delete = createActionButton("delete", () => {
-                            togglePopupDeleteSecao();
+                            preparePopup();
+                            toggleDisplayNoneOnElement("popup-delete", false);
 
                             if (!globalThis.popup_edit_context) globalThis.popup_edit_context = [];
 
@@ -1064,7 +1042,8 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         content_actions.classList.add("ms-auto");
 
                         let content_button_edit = createActionButton("edit", () => {
-                            togglePopupEdit();
+                            preparePopup();
+                            toggleDisplayNoneOnElement("popup-edit", false);
 
                             if (!globalThis.popup_edit_context) globalThis.popup_edit_context = [];
 
@@ -1188,7 +1167,8 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         });
 
                         let content_button_delete = createActionButton("delete", () => {
-                            togglePopupDeleteSecao();
+                            preparePopup();
+                            toggleDisplayNoneOnElement("popup-delete", false);
 
                             if (!globalThis.popup_edit_context) globalThis.popup_edit_context = [];
 
@@ -1263,7 +1243,8 @@ function setupPortfolioPage(portf_id, enable_edit) {
                                     "align-items-center"
                                 );
                                 remove_button.addEventListener("click", () => {
-                                    togglePopupDeleteImage();
+                                    preparePopup();
+                                    toggleDisplayNoneOnElement("popup-delete-image", false);
 
                                     if (!globalThis.popup_edit_context)
                                         globalThis.popup_edit_context = [];
@@ -1430,7 +1411,8 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         content_actions.classList.add("ms-auto");
 
                         let content_button_edit = createActionButton("edit", () => {
-                            togglePopupEdit();
+                            preparePopup();
+                            toggleDisplayNoneOnElement("popup-edit", false);
 
                             if (!globalThis.popup_edit_context) globalThis.popup_edit_context = [];
 
@@ -1556,7 +1538,8 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         });
 
                         let content_button_delete = createActionButton("delete", () => {
-                            togglePopupDeleteSecao();
+                            preparePopup();
+                            toggleDisplayNoneOnElement("popup-delete", false);
 
                             if (!globalThis.popup_edit_context) globalThis.popup_edit_context = [];
 
@@ -1640,7 +1623,8 @@ function setupPortfolioPage(portf_id, enable_edit) {
                                 );
                                 link_div.appendChild(remove_button);
                                 remove_button.addEventListener("click", () => {
-                                    togglePopupDeleteLink();
+                                    preparePopup();
+                                    toggleDisplayNoneOnElement("popup-delete-link", false);
 
                                     if (!globalThis.popup_edit_context)
                                         globalThis.popup_edit_context = [];
@@ -1709,7 +1693,8 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             globalThis.popup_edit_context.secao_id = portfolio.id;
                             globalThis.popup_edit_context.secao_ordem = secao_ordem;
 
-                            togglePopupAddLink();
+                            preparePopup();
+                            toggleDisplayNoneOnElement("popup-add-link", false);
                         });
                         add_new_link_button.innerHTML = `<div class="d-flex justify-content-center m-2">
                                     <img class="icon-24px fixed-filter-invert me-2"
@@ -1728,7 +1713,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
 }
 
 function setupPortfolioSetup() {
-    toggleHTMLElement("portfolio-setup", true);
+    toggleDisplayNoneOnElement("portfolio-setup", false);
 
     // let portfolio_setup_select = document.getElementById("portfolio-setup-select")
     let portfolio_setup_select_select = document.getElementById("portfolio-setup-select-select");
