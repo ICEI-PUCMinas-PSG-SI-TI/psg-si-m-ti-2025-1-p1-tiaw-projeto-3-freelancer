@@ -60,3 +60,23 @@ export function ensureType(value, type) {
 
     return typeof value === type;
 }
+
+const MAX_ALLOWED_SIZE = 5 * 1024 * 1024; // 5 MB in bytes
+
+/**
+ * @param {Blob} file
+ */
+export async function imageFileToBase64(file) {
+    const reader = new FileReader();
+
+    if (file.size > MAX_ALLOWED_SIZE)
+        throw new Error("O tamanho do arquivo deve ser menor que 5MB!");
+
+    if (!file.type.match("image.*")) throw new Error("O arquivo não é uma imagem!");
+
+    return new Promise((resolve, reject) => {
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}

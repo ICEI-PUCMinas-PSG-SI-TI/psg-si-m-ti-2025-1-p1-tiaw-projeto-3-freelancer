@@ -5,7 +5,7 @@ import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as Faker from "./faker.mjs";
-import { ensureInteger } from "./tools.mjs";
+import { ensureInteger, imageFileToBase64 } from "./tools.mjs";
 
 /**
  * @returns {HTMLDivElement}
@@ -1246,26 +1246,19 @@ function setupPortfolioPage(portf_id, enable_edit) {
                             <p class="g-0 p-0 m-0">Adicionar imagens</p>
                     </div>`;
                         content_add_div_2_button.addEventListener("click", async () => {
-                            let file = content_add_div_1_input.files[0];
-                            if (!file) {
+                            if (!(content_add_div_1_input instanceof HTMLInputElement)) return;
+
+                            if (
+                                !content_add_div_1_input.files ||
+                                !content_add_div_1_input.files.length
+                            ) {
                                 alert("Seleciona um arquivo!");
                                 return;
                             }
 
-                            const base64Image = await new Promise((resolve, reject) => {
-                                const reader = new FileReader();
-                                reader.onload = async () => {
-                                    try {
-                                        resolve(reader.result);
-                                    } catch (err) {
-                                        reject(err);
-                                    }
-                                };
-                                reader.onerror = (error) => {
-                                    reject(error);
-                                };
-                                reader.readAsDataURL(file);
-                            });
+                            const base64Image = await imageFileToBase64(
+                                content_add_div_1_input.files[0]
+                            );
 
                             if (!base64Image.startsWith("data:image/")) {
                                 alert("Não é um arquivo de imagem!");

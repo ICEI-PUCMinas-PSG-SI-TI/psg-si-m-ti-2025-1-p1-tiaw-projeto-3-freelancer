@@ -6,11 +6,10 @@ import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as Faker from "./faker.mjs";
-import * as Tools from "./tools.mjs"
+import * as Tools from "./tools.mjs";
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
- *
  */
 
 function setupDevTools() {
