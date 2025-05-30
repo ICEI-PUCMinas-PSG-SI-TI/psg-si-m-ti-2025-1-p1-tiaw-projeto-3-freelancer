@@ -1,482 +1,561 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <!-- Metadata -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- TODO: Atualizar sempre com o título da pagina -->
     <title>Portfólios</title>
     <!-- Favicon -->
-    <link rel="icon" href="static/favicon.ico">
+    <link rel="icon" href="static/favicon.ico" />
     <!-- CSS -->
-    <link rel="stylesheet" href="static/css/styles.css" type="text/css">
-    <link rel="stylesheet" href="static/css/portfolio.css" type="text/css">
+    <link rel="stylesheet" href="static/css/styles.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/portfolio.css" type="text/css" />
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous">
-    </script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+      crossorigin="anonymous" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+      crossorigin="anonymous"></script>
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+3&display=swap"
+      rel="stylesheet" />
     <!-- Project Scripts -->
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
     <script defer type="module" src="static/js/portfolio.js"></script>
-</head>
+  </head>
 
-<body data-bs-theme="dark">
-
+  <body data-bs-theme="dark">
     <!-- Cabeçalho -->
     <nav class="body-section body-header navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <!-- id.navbar.logo -->
-            <a class="d-flex justify-content-center text-center align-items-center text-decoration-none me-3" href="./">
-                <img class="m-2 icon-32px" src="static/icon.png">
-                <p class="navbar-brand p-0 m-0 g-0">Lucre+</p>
-            </a>
-            <!-- id.navbar.toggle -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <!-- id.navbar.navigation -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Serviços
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="404.html">Em andamento</a></li>
-                        </ul>
-                    </li>
-                    <!-- id.navbar.navigation.pares -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Revisão por Pares
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="serviços.html">Cadastro de Serviços</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <!-- id.navbar.darkmode -->
-                <!-- Layout será modificado por js/darkmode.js -->
-                <div class="d-none" id="toggleDarkDiv"></div>
-                <!-- id.navbar.autenticacao -->
-                <!-- TODO: Inserir dinamicamente <login-cadastre_se|search-profile_picture> -->
-                <!-- id.navbar.search -->
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Search">
-                    <a class="btn btn-outline-primary" href="404.html">Pesquisar</a>
-                    <!--
+      <div class="container-fluid">
+        <!-- id.navbar.logo -->
+        <a
+          class="d-flex justify-content-center text-center align-items-center text-decoration-none me-3"
+          href="./">
+          <img class="m-2 icon-32px" src="static/icon.png" />
+          <p class="navbar-brand p-0 m-0 g-0">Lucre+</p>
+        </a>
+        <!-- id.navbar.toggle -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <!-- id.navbar.navigation -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Serviços
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="404.html">Em andamento</a></li>
+              </ul>
+            </li>
+            <!-- id.navbar.navigation.pares -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Revisão por Pares
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="serviços.html">Cadastro de Serviços</a></li>
+              </ul>
+            </li>
+          </ul>
+          <!-- id.navbar.darkmode -->
+          <!-- Layout será modificado por js/darkmode.js -->
+          <div class="d-none" id="toggleDarkDiv"></div>
+          <!-- id.navbar.autenticacao -->
+          <!-- TODO: Inserir dinamicamente <login-cadastre_se|search-profile_picture> -->
+          <!-- id.navbar.search -->
+          <form class="d-flex" role="search">
+            <input
+              class="form-control me-2"
+              type="search"
+              placeholder="Pesquisar"
+              aria-label="Search" />
+            <a class="btn btn-outline-primary" href="404.html">Pesquisar</a>
+            <!--
                     <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
                     -->
-                </form>
-                <!-- id.navbar.profile -->
-                <div class="m-2 me-0 rounded d-flex justify-content-center">
-                    <img class="rounded profile-picture" src="static/img/placeholder_profile.png">
-                </div>
-            </div>
+          </form>
+          <!-- id.navbar.profile -->
+          <div class="m-2 me-0 rounded d-flex justify-content-center">
+            <img class="rounded profile-picture" src="static/img/placeholder_profile.png" />
+          </div>
         </div>
+      </div>
     </nav>
 
     <!-- Conteúdo da página -->
-    <div id="content-div"
-        class="body-section body-content d-flex flex-column align-items-center px-2 px-md-3 pt-2 pt-md-3 pt-xl-4">
-        <!-- CONTEÚDO -->
-        <div id="portfolio-display" class="container-fluid d-none">
-            <div class="row row-xl-0 col-xl">
-
-                <!-- TODO: Imagem de fundo customizavel -->
-                <div class="col-12 col-xl-3 mb-3">
-                    <div class="card rounded-end w-100">
-                        <div class="card-body rounded-end d-flex align-items-center flex-column">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div
-                                        class="row-lg col-md-4 col-xl-12 p-2 m-0 g-0 d-flex align-items-center flex-column">
-                                        <img id="portfolio-picture" class="rounded-circle p-0 m-0 g-0 w-100">
-                                    </div>
-                                    <div class="row-lg col-md-8 col-xl-12 p-2 m-0 g-0 avoid-wide rounded-end d-flex align-items-center
-                                align-items-md-start flex-column justify-content-center">
-                                        <!-- id.portfolio.name -->
-                                        <h5 id="portfolio-name">Nome do Usuário da Silva</h5>
-                                        <!-- id.portfolio.nota -->
-                                        <p class="mb-2">⭐ <span id="portfolio-nota">Sem Avaliações</span></p>
-                                        <!-- id.portfolio.descricao -->
-                                        <p id="portfolio-descricao" class="mb-2">Informações sobre o perfil
-                                            profissional do usuário, incluindo métodos de trabalho e outras
-                                            particularidades relevantes.</p>
-                                        <!-- id.portfolio.username -->
-                                        <p class="p-0 m-0">Username: <span id="portfolio-username">@username</span></p>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="col d-flex w-100 justify-content-center align-items-center g-0 m-0 p-0">
-                                    <button id="toggle-edit"
-                                        class="btn btn-outline-primary d-flex flex-row justify-content-center align-items-center w-100 g-0 m-0 p-2">
-
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+    <div
+      id="content-div"
+      class="body-section body-content d-flex flex-column align-items-center px-2 px-md-3 pt-2 pt-md-3 pt-xl-4">
+      <!-- CONTEÚDO -->
+      <div id="portfolio-display" class="container-fluid d-none">
+        <div class="row row-xl-0 col-xl">
+          <!-- TODO: Imagem de fundo customizavel -->
+          <div class="col-12 col-xl-3 mb-3">
+            <div class="card rounded-end w-100">
+              <div class="card-body rounded-end d-flex align-items-center flex-column">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div
+                      class="row-lg col-md-4 col-xl-12 p-2 m-0 g-0 d-flex align-items-center flex-column">
+                      <img id="portfolio-picture" class="rounded-circle p-0 m-0 g-0 w-100" />
                     </div>
+                    <div
+                      class="row-lg col-md-8 col-xl-12 p-2 m-0 g-0 avoid-wide rounded-end d-flex align-items-center align-items-md-start flex-column justify-content-center">
+                      <!-- id.portfolio.name -->
+                      <h5 id="portfolio-name">Nome do Usuário da Silva</h5>
+                      <!-- id.portfolio.nota -->
+                      <p class="mb-2">⭐ <span id="portfolio-nota">Sem Avaliações</span></p>
+                      <!-- id.portfolio.descricao -->
+                      <p id="portfolio-descricao" class="mb-2">
+                        Informações sobre o perfil profissional do usuário, incluindo métodos de
+                        trabalho e outras particularidades relevantes.
+                      </p>
+                      <!-- id.portfolio.username -->
+                      <p class="p-0 m-0">
+                        Username: <span id="portfolio-username">@username</span>
+                      </p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div
+                    class="col d-flex w-100 justify-content-center align-items-center g-0 m-0 p-0">
+                    <button
+                      id="toggle-edit"
+                      class="btn btn-outline-primary d-flex flex-row justify-content-center align-items-center w-100 g-0 m-0 p-2"></button>
+                  </div>
                 </div>
-
-                <!-- TODO: adicionar apenas se ?edit=true -->
-                <div id="portfolio-secoes" class="col-12 col-xl-9">
-                    <button id="add-section" type="button" class="btn btn-outline-secondary mb-3 w-100 d-none">
-                        <div class="d-flex d-row justify-content-center align-items-center">
-                            <img class="icon-24px m-2 icon-dark" src="static/action-icons/add.svg">
-                            <p class="g-0 m-0 p-0">Adicionar Seção</p>
-                        </div>
-                    </button>
-                </div>
-
+              </div>
             </div>
-        </div>
+          </div>
 
-        <div id="portfolio-setup" class="container-fluid d-flex d-none w-100 justify-content-center m-0 p-0 g-0">
-            <div class="d-flex flex-column justify-content-start m-0 p-0 g-0">
-                <div class="w-100">
-                    <h1>// Portfólios</h1>
-                    <p>O que deseja fazer?</p>
-                    <hr>
-                    <p><strong>Visualizar um porfólio já criado</strong></p>
-                    <div id="portfolio-setup-select" class="mb-3">
-                        <label for="portfolio-setup-select-select" class="form-label">Selecionar um portfólio</label>
-                        <select class="form-select" id="portfolio-setup-select-select" required>
-                        </select>
-                    </div>
-                    <button id="portfolio-setup-select-btn" class="btn btn-primary disabled w-100">
-                        Abrir portfólio selecionado
-                    </button>
-                    <hr>
-                    <p><strong>Criar um novo porfólio</strong></p>
-                    <div class="mb-3">
-                        <label for="portfolio-setup-create-select" class="form-label">Selecionar usuário</label>
-                        <select class="form-select" id="portfolio-setup-create-select" required>
-                        </select>
-                    </div>
-                    <button id="portfolio-setup-create-btn" class="btn btn-primary disabled w-100 mb-3">
-                        Criar portfólio para o usuário selecionado
-                    </button>
-                    <p>Observação: Para criar um portfolio é necessário que haja informações de algum usuário.</p>
-                    <p>
-                        Para a seção de avaliações no portfólio, também é recomendado que haja algum serviço e avaliação
-                        cadastrados, como a avaliação é individual, essas paginas ainda não foram criadas, portanto é
-                        recomendado utilizar <a href="dev.html">essa pagina</a> para criar usuários aleatórios, ou você
-                        pode fazer isso automaticamente clicando no botão abaixo:
-                    </p>
-                    <button id="portfolio-setup-dev-btn" class="btn btn-warning w-100">
-                        Criar informações aleatórias de usuários, portfolios e avaliações
-                    </button>
-                </div>
-            </div>
+          <!-- TODO: adicionar apenas se ?edit=true -->
+          <div id="portfolio-secoes" class="col-12 col-xl-9">
+            <button
+              id="add-section"
+              type="button"
+              class="btn btn-outline-secondary mb-3 w-100 d-none">
+              <div class="d-flex d-row justify-content-center align-items-center">
+                <img class="icon-24px m-2 icon-dark" src="static/action-icons/add.svg" />
+                <p class="g-0 m-0 p-0">Adicionar Seção</p>
+              </div>
+            </button>
+          </div>
         </div>
+      </div>
+
+      <div
+        id="portfolio-setup"
+        class="container-fluid d-flex d-none w-100 justify-content-center m-0 p-0 g-0">
+        <div class="d-flex flex-column justify-content-start m-0 p-0 g-0">
+          <div class="w-100">
+            <h1>// Portfólios</h1>
+            <p>O que deseja fazer?</p>
+            <hr />
+            <p><strong>Visualizar um porfólio já criado</strong></p>
+            <div id="portfolio-setup-select" class="mb-3">
+              <label for="portfolio-setup-select-select" class="form-label"
+                >Selecionar um portfólio</label
+              >
+              <select class="form-select" id="portfolio-setup-select-select" required></select>
+            </div>
+            <button id="portfolio-setup-select-btn" class="btn btn-primary disabled w-100">
+              Abrir portfólio selecionado
+            </button>
+            <hr />
+            <p><strong>Criar um novo porfólio</strong></p>
+            <div class="mb-3">
+              <label for="portfolio-setup-create-select" class="form-label"
+                >Selecionar usuário</label
+              >
+              <select class="form-select" id="portfolio-setup-create-select" required></select>
+            </div>
+            <button id="portfolio-setup-create-btn" class="btn btn-primary disabled w-100 mb-3">
+              Criar portfólio para o usuário selecionado
+            </button>
+            <p>
+              Observação: Para criar um portfolio é necessário que haja informações de algum
+              usuário.
+            </p>
+            <p>
+              Para a seção de avaliações no portfólio, também é recomendado que haja algum serviço e
+              avaliação cadastrados, como a avaliação é individual, essas paginas ainda não foram
+              criadas, portanto é recomendado utilizar <a href="dev.html">essa pagina</a> para criar
+              usuários aleatórios, ou você pode fazer isso automaticamente clicando no botão abaixo:
+            </p>
+            <button id="portfolio-setup-dev-btn" class="btn btn-warning w-100">
+              Criar informações aleatórias de usuários, portfolios e avaliações
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- TODO: adicionar apenas se ?edit=true -->
     <div id="popup-edit" class="d-flex popup-edit justify-content-center align-items-center d-none">
-        <div class="card position-relative w-100">
-            <button id="popup-edit-close"
-                class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
-                <img class="icon-dark icon-24px" src="static/action-icons/close.svg">
-            </button>
-            <div class="card-body">
-                <div class="mb-3 w-100 d-flex justify-content-center">
-                    <img class="m-3 icon-32px icon-dark" src="static/icons/link.svg">
-                </div>
-                <form id="popup-edit-form" class="d-flex justify-content-center flex-column">
-                    <div class="mb-3">
-                        <label for="basic-url" class="form-label">Nome da seção</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="popup-edit-name"
-                                aria-describedby="basic-addon3 basic-addon4">
-                        </div>
-                        <!-- TODO: Mudar dinamicamente -->
-                        <p class="form-text">O nome da seção de <span id="popup-edit-name-span">secao.content</span>
-                        </p>
-                    </div>
-                    <div class="mb-3">
-                        <label for="basic-url" class="form-label">Descrição da Seção</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="popup-edit-description"
-                                aria-describedby="basic-addon3 basic-addon4">
-                        </div>
-                        <!-- TODO: Mudar dinamicamente -->
-                        <p class="form-text">A descrição da seção de <span
-                                id="popup-edit-description-span">secao.content</span>
-                        </p>
-                    </div>
-                    <button id="popup-edit-confirm" type="button" class="btn btn-primary">Confirmar</button>
-                </form>
+      <div class="card position-relative w-100">
+        <button
+          id="popup-edit-close"
+          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+          <img class="icon-dark icon-24px" src="static/action-icons/close.svg" />
+        </button>
+        <div class="card-body">
+          <div class="mb-3 w-100 d-flex justify-content-center">
+            <img class="m-3 icon-32px icon-dark" src="static/icons/link.svg" />
+          </div>
+          <form id="popup-edit-form" class="d-flex justify-content-center flex-column">
+            <div class="mb-3">
+              <label for="basic-url" class="form-label">Nome da seção</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="popup-edit-name"
+                  aria-describedby="basic-addon3 basic-addon4" />
+              </div>
+              <!-- TODO: Mudar dinamicamente -->
+              <p class="form-text">
+                O nome da seção de <span id="popup-edit-name-span">secao.content</span>
+              </p>
             </div>
+            <div class="mb-3">
+              <label for="basic-url" class="form-label">Descrição da Seção</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="popup-edit-description"
+                  aria-describedby="basic-addon3 basic-addon4" />
+              </div>
+              <!-- TODO: Mudar dinamicamente -->
+              <p class="form-text">
+                A descrição da seção de <span id="popup-edit-description-span">secao.content</span>
+              </p>
+            </div>
+            <button id="popup-edit-confirm" type="button" class="btn btn-primary">Confirmar</button>
+          </form>
         </div>
+      </div>
     </div>
 
     <!-- TODO: adicionar apenas se ?edit=true -->
     <div id="popup-add" class="d-flex popup-edit justify-content-center align-items-center d-none">
-        <div class="card position-relative w-100">
-            <button id="popup-add-close"
-                class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
-                <img class="icon-dark icon-24px" src="static/action-icons/close.svg">
-            </button>
-            <div class="card-body">
-                <div class="mb-3 w-100 d-flex justify-content-center">
-                    <img class="m-3 icon-32px icon-dark" src="static/action-icons/add.svg">
-                </div>
-                <form id="popup-add-form" class="d-flex justify-content-center flex-column">
-                    <div class="mb-3">
-                        <label for="basic-url" class="form-label">Nome da seção</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="popup-add-name"
-                                aria-describedby="basic-addon3 basic-addon4">
-                        </div>
-                        <p class="form-text">O nome da seção</p>
-                    </div>
-                    <div class="mb-3">
-                        <label for="basic-url" class="form-label">Descrição da Seção</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="popup-add-description"
-                                aria-describedby="basic-addon3 basic-addon4">
-                        </div>
-                        <p class="form-text">A descrição da seção</p>
-                    </div>
-                    <div class="mb-3">
-                        <label for="popup-add-categoria" class="form-label">Tipo de Seção</label>
-                        <select class="form-select" id="popup-add-categoria" required>
-                            <!-- TODO: Permitir apenas uma aba de avaliações -->
-                            <option value="0">Imagens</option>
-                            <option value="1">Avaliações</option>
-                            <option value="2">Links</option>
-                        </select>
-                    </div>
-                    <button id="popup-add-confirm" type="button" class="btn btn-primary">Confirmar</button>
-                </form>
+      <div class="card position-relative w-100">
+        <button
+          id="popup-add-close"
+          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+          <img class="icon-dark icon-24px" src="static/action-icons/close.svg" />
+        </button>
+        <div class="card-body">
+          <div class="mb-3 w-100 d-flex justify-content-center">
+            <img class="m-3 icon-32px icon-dark" src="static/action-icons/add.svg" />
+          </div>
+          <form id="popup-add-form" class="d-flex justify-content-center flex-column">
+            <div class="mb-3">
+              <label for="basic-url" class="form-label">Nome da seção</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="popup-add-name"
+                  aria-describedby="basic-addon3 basic-addon4" />
+              </div>
+              <p class="form-text">O nome da seção</p>
             </div>
+            <div class="mb-3">
+              <label for="basic-url" class="form-label">Descrição da Seção</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="popup-add-description"
+                  aria-describedby="basic-addon3 basic-addon4" />
+              </div>
+              <p class="form-text">A descrição da seção</p>
+            </div>
+            <div class="mb-3">
+              <label for="popup-add-categoria" class="form-label">Tipo de Seção</label>
+              <select class="form-select" id="popup-add-categoria" required>
+                <!-- TODO: Permitir apenas uma aba de avaliações -->
+                <option value="0">Imagens</option>
+                <option value="1">Avaliações</option>
+                <option value="2">Links</option>
+              </select>
+            </div>
+            <button id="popup-add-confirm" type="button" class="btn btn-primary">Confirmar</button>
+          </form>
         </div>
+      </div>
     </div>
 
     <!-- TODO: adicionar apenas se ?edit=true -->
-    <div id="popup-add-link" class="d-flex popup-edit justify-content-center align-items-center d-none">
-        <div class="card position-relative w-100">
-            <button id="popup-add-link-close"
-                class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
-                <img class="icon-dark icon-24px" src="static/action-icons/close.svg">
-            </button>
-            <div class="card-body">
-                <div class="mb-3 w-100 d-flex justify-content-center">
-                    <img class="m-3 icon-32px icon-dark" src="static/icons/link.svg">
-                </div>
-                <form id="popup-add-link-form" class="d-flex justify-content-center flex-column">
-                    <div class="mb-3">
-                        <label for="basic-url" class="form-label">URL do link</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="popup-add-link-url"
-                                aria-describedby="basic-addon3 basic-addon4">
-                        </div>
-                        <p class="form-text">A URL do link, ex: https://google.com</p>
-                    </div>
-                    <div class="mb-3">
-                        <label for="basic-url" class="form-label">Descrição</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="popup-add-link-description"
-                                aria-describedby="basic-addon3 basic-addon4">
-                        </div>
-                        <p class="form-text">A descrição do link</p>
-                    </div>
-                    <button id="popup-add-link-confirm" type="button" class="btn btn-primary">Confirmar</button>
-                </form>
+    <div
+      id="popup-add-link"
+      class="d-flex popup-edit justify-content-center align-items-center d-none">
+      <div class="card position-relative w-100">
+        <button
+          id="popup-add-link-close"
+          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+          <img class="icon-dark icon-24px" src="static/action-icons/close.svg" />
+        </button>
+        <div class="card-body">
+          <div class="mb-3 w-100 d-flex justify-content-center">
+            <img class="m-3 icon-32px icon-dark" src="static/icons/link.svg" />
+          </div>
+          <form id="popup-add-link-form" class="d-flex justify-content-center flex-column">
+            <div class="mb-3">
+              <label for="basic-url" class="form-label">URL do link</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="popup-add-link-url"
+                  aria-describedby="basic-addon3 basic-addon4" />
+              </div>
+              <p class="form-text">A URL do link, ex: https://google.com</p>
             </div>
+            <div class="mb-3">
+              <label for="basic-url" class="form-label">Descrição</label>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="popup-add-link-description"
+                  aria-describedby="basic-addon3 basic-addon4" />
+              </div>
+              <p class="form-text">A descrição do link</p>
+            </div>
+            <button id="popup-add-link-confirm" type="button" class="btn btn-primary">
+              Confirmar
+            </button>
+          </form>
         </div>
+      </div>
     </div>
 
     <!-- TODO: adicionar apenas se ?edit=true -->
-    <div id="popup-delete" class="d-flex popup-edit justify-content-center align-items-center d-none">
-        <div class="card position-relative w-100">
-            <button id="popup-delete-close"
-                class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
-                <img class="icon-dark icon-24px" src="static/action-icons/close.svg">
-            </button>
-            <div class="card-body">
-                <div class="mb-3 w-100 d-flex justify-content-center">
-                    <img class="m-3 icon-32px icon-dark" src="static/action-icons/delete.svg">
-                </div>
-                <div>
-                    <h3 class="text-primary-danger">
-                        Deletar seção?
-                    </h3>
-                    <p>
-                        Não é possível desfazer essa ação!
-                    </p>
-                </div>
-                <form id="popup-delete-form" class="d-flex justify-content-center flex-column">
-                    <div class="mb-3">
-                        <label for="basic-url" class="form-label">Nome da seção</label>
-                        <div class="input-group">
-                            <p type="text" class="form-control" id="popup-delete-name"
-                                aria-describedby="basic-addon3 basic-addon4">
-                                $Temp
-                            </p>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="basic-url" class="form-label">Descrição da Seção</label>
-                        <div class="input-group">
-                            <p type="text" class="form-control" id="popup-delete-description"
-                                aria-describedby="basic-addon3 basic-addon4">
-                                $Temp
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 col-sm-6">
-                            <button id="popup-delete-confirm" type="button"
-                                class="btn btn-danger w-100">Deletar</button>
-                        </div>
-                        <div class="col-12 col-sm-6 mb-2 mb-sm-0">
-                            <button id="popup-delete-cancel" type="button"
-                                class="btn btn-primary w-100">Cancelar</button>
-                        </div>
-                    </div>
-                </form>
+    <div
+      id="popup-delete"
+      class="d-flex popup-edit justify-content-center align-items-center d-none">
+      <div class="card position-relative w-100">
+        <button
+          id="popup-delete-close"
+          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+          <img class="icon-dark icon-24px" src="static/action-icons/close.svg" />
+        </button>
+        <div class="card-body">
+          <div class="mb-3 w-100 d-flex justify-content-center">
+            <img class="m-3 icon-32px icon-dark" src="static/action-icons/delete.svg" />
+          </div>
+          <div>
+            <h3 class="text-primary-danger">Deletar seção?</h3>
+            <p>Não é possível desfazer essa ação!</p>
+          </div>
+          <form id="popup-delete-form" class="d-flex justify-content-center flex-column">
+            <div class="mb-3">
+              <label for="basic-url" class="form-label">Nome da seção</label>
+              <div class="input-group">
+                <p
+                  type="text"
+                  class="form-control"
+                  id="popup-delete-name"
+                  aria-describedby="basic-addon3 basic-addon4">
+                  $Temp
+                </p>
+              </div>
             </div>
+            <div class="mb-3">
+              <label for="basic-url" class="form-label">Descrição da Seção</label>
+              <div class="input-group">
+                <p
+                  type="text"
+                  class="form-control"
+                  id="popup-delete-description"
+                  aria-describedby="basic-addon3 basic-addon4">
+                  $Temp
+                </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-sm-6">
+                <button id="popup-delete-confirm" type="button" class="btn btn-danger w-100">
+                  Deletar
+                </button>
+              </div>
+              <div class="col-12 col-sm-6 mb-2 mb-sm-0">
+                <button id="popup-delete-cancel" type="button" class="btn btn-primary w-100">
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
 
     <!-- TODO: adicionar apenas se ?edit=true -->
-    <div id="popup-delete-link" class="d-flex popup-edit justify-content-center align-items-center d-none">
-        <div class="card position-relative w-100">
-            <button id="popup-delete-link-close"
-                class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
-                <img class="icon-dark icon-24px" src="static/action-icons/close.svg">
-            </button>
-            <div class="card-body">
-                <div class="mb-3 w-100 d-flex justify-content-center">
-                    <img class="m-3 icon-32px icon-dark" src="static/action-icons/delete.svg">
-                </div>
-                <div>
-                    <h3 class="text-primary-danger">
-                        Deletar link?
-                    </h3>
-                    <p>
-                        Não é possível desfazer essa ação!
-                    </p>
-                </div>
-                <form id="popup-delete-link-form" class="d-flex justify-content-center flex-column">
-                    <div class="mb-3">
-                        <label for="basic-url" class="form-label">URL</label>
-                        <div class="input-group">
-                            <p type="text" class="form-control" id="popup-delete-link-url"
-                                aria-describedby="basic-addon3 basic-addon4">
-                                $Temp
-                            </p>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="basic-url" class="form-label">Descrição</label>
-                        <div class="input-group">
-                            <p type="text" class="form-control" id="popup-delete-link-description"
-                                aria-describedby="basic-addon3 basic-addon4">
-                                $Temp
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 col-sm-6">
-                            <button id="popup-delete-link-confirm" type="button"
-                                class="btn btn-danger w-100">Deletar</button>
-                        </div>
-                        <div class="col-12 col-sm-6 mb-2 mb-sm-0">
-                            <button id="popup-delete-link-cancel" type="button"
-                                class="btn btn-primary w-100">Cancelar</button>
-                        </div>
-                    </div>
-                </form>
+    <div
+      id="popup-delete-link"
+      class="d-flex popup-edit justify-content-center align-items-center d-none">
+      <div class="card position-relative w-100">
+        <button
+          id="popup-delete-link-close"
+          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+          <img class="icon-dark icon-24px" src="static/action-icons/close.svg" />
+        </button>
+        <div class="card-body">
+          <div class="mb-3 w-100 d-flex justify-content-center">
+            <img class="m-3 icon-32px icon-dark" src="static/action-icons/delete.svg" />
+          </div>
+          <div>
+            <h3 class="text-primary-danger">Deletar link?</h3>
+            <p>Não é possível desfazer essa ação!</p>
+          </div>
+          <form id="popup-delete-link-form" class="d-flex justify-content-center flex-column">
+            <div class="mb-3">
+              <label for="basic-url" class="form-label">URL</label>
+              <div class="input-group">
+                <p
+                  type="text"
+                  class="form-control"
+                  id="popup-delete-link-url"
+                  aria-describedby="basic-addon3 basic-addon4">
+                  $Temp
+                </p>
+              </div>
             </div>
+            <div class="mb-3">
+              <label for="basic-url" class="form-label">Descrição</label>
+              <div class="input-group">
+                <p
+                  type="text"
+                  class="form-control"
+                  id="popup-delete-link-description"
+                  aria-describedby="basic-addon3 basic-addon4">
+                  $Temp
+                </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-sm-6">
+                <button id="popup-delete-link-confirm" type="button" class="btn btn-danger w-100">
+                  Deletar
+                </button>
+              </div>
+              <div class="col-12 col-sm-6 mb-2 mb-sm-0">
+                <button id="popup-delete-link-cancel" type="button" class="btn btn-primary w-100">
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
 
     <!-- TODO: adicionar apenas se ?edit=true -->
-    <div id="popup-delete-image" class="d-flex popup-edit justify-content-center align-items-center d-none">
-        <div class="card position-relative w-100">
-            <button id="popup-delete-image-close"
-                class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
-                <img class="icon-dark icon-24px" src="static/action-icons/close.svg">
-            </button>
-            <div class="card-body">
-                <div class="mb-3 w-100 d-flex justify-content-center">
-                    <img class="m-3 icon-32px icon-dark" src="static/action-icons/delete.svg">
-                </div>
-                <div>
-                    <h3 class="text-primary-danger">
-                        Deletar imagem?
-                    </h3>
-                    <p>
-                        Não é possível desfazer essa ação!
-                    </p>
-                </div>
-                <form id="popup-delete-image-form" class="d-flex justify-content-center flex-column">
-                    <div class="w-100 mb-3 limit-img d-flex justify-content-center align-items-center">
-                        <!-- Limit Size -->
-                        <img id="popup-delete-image-image" class="img-fluid" src="static/img/background.jpg">
-                    </div>
-                    <div class="row">
-                        <div class="col-12 col-sm-6">
-                            <button id="popup-delete-image-confirm" type="button"
-                                class="btn btn-danger w-100">Deletar</button>
-                        </div>
-                        <div class="col-12 col-sm-6 mb-2 mb-sm-0">
-                            <button id="popup-delete-image-cancel" type="button"
-                                class="btn btn-primary w-100">Cancelar</button>
-                        </div>
-                    </div>
-                </form>
+    <div
+      id="popup-delete-image"
+      class="d-flex popup-edit justify-content-center align-items-center d-none">
+      <div class="card position-relative w-100">
+        <button
+          id="popup-delete-image-close"
+          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+          <img class="icon-dark icon-24px" src="static/action-icons/close.svg" />
+        </button>
+        <div class="card-body">
+          <div class="mb-3 w-100 d-flex justify-content-center">
+            <img class="m-3 icon-32px icon-dark" src="static/action-icons/delete.svg" />
+          </div>
+          <div>
+            <h3 class="text-primary-danger">Deletar imagem?</h3>
+            <p>Não é possível desfazer essa ação!</p>
+          </div>
+          <form id="popup-delete-image-form" class="d-flex justify-content-center flex-column">
+            <div class="w-100 mb-3 limit-img d-flex justify-content-center align-items-center">
+              <!-- Limit Size -->
+              <img
+                id="popup-delete-image-image"
+                class="img-fluid"
+                src="static/img/background.jpg" />
             </div>
+            <div class="row">
+              <div class="col-12 col-sm-6">
+                <button id="popup-delete-image-confirm" type="button" class="btn btn-danger w-100">
+                  Deletar
+                </button>
+              </div>
+              <div class="col-12 col-sm-6 mb-2 mb-sm-0">
+                <button id="popup-delete-image-cancel" type="button" class="btn btn-primary w-100">
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
 
     <!-- Rodapé -->
     <footer class="body-section body-footer container-fluid border-top m-0 p-0 g-0">
-        <div class="row px-4 px-md-5 pt-4 pt-md-5">
-            <div class="col-12 col-sm-6 pb-3 pb-md-4">
-                <h5>Lucre+</h5>
-                <p>Conectando talentos ao sucesso, um projeto de cada vez.</p>
-                <div class="d-flex flex-row">
-                    <a class="text-decoration-none"
-                        href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer">
-                        <img class="social-icon me-3" src="static/social/github.svg">
-                    </a>
-                </div>
-            </div>
-            <hr class="col-12 d-block d-sm-none">
-            <!-- Social Links -->
-            <div class="col-12 col-sm-6 pb-3 pb-md-4 d-flex flex-column">
-                <h5 class="">Navegação</h5>
-                <a class="mb-1"
-                    href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer">Projeto</a>
-                <a class="mb-1" href="404.html">Sobre o site</a>
-                <a class="mb-1" href="404.html">Suporte</a>
-                <a class="mb-1" href="404.html">FAQ</a>
-            </div>
+      <div class="row px-4 px-md-5 pt-4 pt-md-5">
+        <div class="col-12 col-sm-6 pb-3 pb-md-4">
+          <h5>Lucre+</h5>
+          <p>Conectando talentos ao sucesso, um projeto de cada vez.</p>
+          <div class="d-flex flex-row">
+            <a
+              class="text-decoration-none"
+              href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer">
+              <img class="social-icon me-3" src="static/social/github.svg" />
+            </a>
+          </div>
         </div>
-        <div class="row">
-            <div class="col-12 d-flex justify-content-center align-items-center">
-                <p class="p-3 m-0 g-0">Copyright (c) Lucre+ 2025</p>
-            </div>
+        <hr class="col-12 d-block d-sm-none" />
+        <!-- Social Links -->
+        <div class="col-12 col-sm-6 pb-3 pb-md-4 d-flex flex-column">
+          <h5 class="">Navegação</h5>
+          <a
+            class="mb-1"
+            href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer"
+            >Projeto</a
+          >
+          <a class="mb-1" href="404.html">Sobre o site</a>
+          <a class="mb-1" href="404.html">Suporte</a>
+          <a class="mb-1" href="404.html">FAQ</a>
         </div>
+      </div>
+      <div class="row">
+        <div class="col-12 d-flex justify-content-center align-items-center">
+          <p class="p-3 m-0 g-0">Copyright (c) Lucre+ 2025</p>
+        </div>
+      </div>
     </footer>
-
-</body>
-
+  </body>
 </html>
