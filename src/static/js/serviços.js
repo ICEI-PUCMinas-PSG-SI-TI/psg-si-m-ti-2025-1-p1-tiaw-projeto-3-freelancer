@@ -2,9 +2,24 @@
 
 var editarServico = () => {};
 var deletarServico = () => {};
+var previewPicture = () => {};
 const getServicos = () => JSON.parse(localStorage.getItem("servicos") || "[]");
 const salvarServicos = (/** @type {Object} */ servicos) =>
     localStorage.setItem("servicos", JSON.stringify(servicos));
+
+// TODO: Move to module
+/**
+ * @param {Blob} file
+ */
+async function fileToBase64(file) {
+    const reader = new FileReader();
+
+    return new Promise((resolve, reject) => {
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
 
 // TODO: Add image
 document.addEventListener("DOMContentLoaded", () => {
@@ -74,6 +89,35 @@ document.addEventListener("DOMContentLoaded", () => {
         servicos.splice(index, 1);
         salvarServicos(servicos);
         render();
+    };
+
+    previewPicture = () => {
+        /** @type {HTMLInputElement} */
+        // @ts-ignore Casting HTMLElement as HTMLInputElement
+        const html_input_picture = document.getElementById("imagem");
+        /** @type {HTMLImageElement} */
+        // @ts-ignore Casting HTMLElement as HTMLInputElement
+        const html_img_preview = document.getElementById("image_preview");
+        /** @type {SVGElement} */
+        // @ts-ignore Casting HTMLElement as HTMLInputElement
+        const html_svg_placeholder = document.getElementById("image_placeholder");
+
+        if (!html_input_picture.files || !html_input_picture.files.length) return;
+
+        fileToBase64(html_input_picture.files[0]).then((/** @type {string} */ result) => {
+            // TODO: Limitar tamanho da imagem
+
+            if (result.startsWith("data:image/")) {
+                html_img_preview.src = result;
+                html_img_preview.classList.remove("d-none");
+                html_svg_placeholder.classList.add("d-none");
+            } else {
+                alert("Arquivo inválido!");
+                html_img_preview.src = "";
+                html_img_preview.classList.add("d-none");
+                html_svg_placeholder.classList.remove("d-none");
+            }
+        });
     };
 
     html_form.addEventListener("submit", (event) => {
