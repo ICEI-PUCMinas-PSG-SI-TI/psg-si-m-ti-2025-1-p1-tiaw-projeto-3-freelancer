@@ -40,3 +40,23 @@ export function ensureInteger(value) {
 
     return null;
 }
+
+/**
+ * Retorna true se o tipo do objeto passado como parametro é igual ao tipo desejado
+ *
+ * @param {any} value Objeto para comparação
+ * @param {string} type Tipo para comparação
+ *
+ * @return {boolean}
+ */
+// TODO: Export to module and reuse
+export function ensureType(value, type) {
+    if (typeof type !== "string") return false;
+
+    if (typeof value === "string" && type === "number") {
+        let parse = parseInt(value);
+        if (typeof parse === "number") value = parse;
+    }
+
+    return typeof value === type;
+}

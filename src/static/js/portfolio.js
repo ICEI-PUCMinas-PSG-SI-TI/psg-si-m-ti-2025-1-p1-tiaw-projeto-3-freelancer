@@ -5,17 +5,12 @@ import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as Faker from "./faker.mjs";
+import { ensureInteger } from "./tools.mjs";
 
 /**
- *
- * @param {string} icon
- * @param {string} icon_class
- * @param {string} title
- * @param {string} subtitle
- *
  * @returns {HTMLDivElement}
  */
-function createSectionContainer(icon, icon_class, title, subtitle) {
+function createSectionContainer() {
     /** @type { HTMLDivElement } */
     let content_container = document.createElement("div");
     content_container.classList.add(
@@ -32,6 +27,10 @@ function createSectionContainer(icon, icon_class, title, subtitle) {
 
 /**
  *
+ * @param {string} icon
+ * @param {string} icon_class
+ * @param {string} title
+ * @param {string} subtitle
  * @returns {HTMLDivElement}
  */
 function createSectionHeader(icon, icon_class, title, subtitle) {
@@ -68,40 +67,50 @@ function createActionButton(icon, clickEventListener) {
     return HTMLButton;
 }
 
-function getNota(userId) {
-    // TODO: select * where userId = userId
+// TODO: Improve this: get only needed contracts
+// TODO: select * where userId = userId
+/**
+ * @param {string | number} userId
+ * @returns {number | null}
+ */
+function getMediaAvaliacoes(userId) {
+    const userId_int = ensureInteger(userId);
+    if (typeof userId_int !== "number") return null;
+
+    let avaliacoes = JSONQL_A.readAvaliacoes() || [];
+    // Sem avaliações
+    if (!avaliacoes || !avaliacoes.length) return null;
+
     let media = 0;
-    let avaliacoes = JSONQL_A.readAvaliacoes();
-    if (avaliacoes.length) {
-        let q = 0;
-        avaliacoes.forEach((element) => {
-            let contratoId = element.contratoId;
-            // TODO: Otimizar
-            let contrato = JSONQL_C.readContratos(contratoId);
-            if (!contrato) {
-                console.log("setupPortfolioPage: Não foi possível identificar o contrato");
-                return null;
-            }
+    let quantidade = 0;
+    while (quantidade < avaliacoes.length) {
+        const contratoId = avaliacoes[quantidade].contratoId;
+        const contrato = JSONQL_C.readContratos(contratoId);
+        if (!contrato) {
+            console.log("setupPortfolioPage: Não foi possível identificar o contrato");
+            continue;
+        }
 
-            let contratado = contrato[0].contratadoId;
+        let contratado = contrato[0].contratadoId;
 
-            if (!contratado) {
-                console.log("setupPortfolioPage: Não foi possível identificar o contratado");
-                return null;
-            }
+        if (!contratado) {
+            console.log("setupPortfolioPage: Não foi possível identificar o contratado");
+            continue;
+        }
 
-            if (contratado == userId) {
-                media += element.nota;
-                q++;
-            }
-        });
-        if (q > 0) {
-            media /= q;
+        if (ensureInteger(contratado) === userId_int) {
+            media += avaliacoes[quantidade].nota;
+            quantidade++;
         }
     }
 
-    // Arredonda para 2 casas
-    return Math.round(media * 100) / 100;
+    if (quantidade > 0) {
+        media /= quantidade;
+        // Arredonda para 2 casas
+        return Math.round(media * 100) / 100;
+    }
+
+    return null;
 }
 
 function preparePopup() {
@@ -651,7 +660,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
     portfolio_picture.src = picture;
     portfolio_descricao.innerText = biografia;
 
-    let media = getNota(id);
+    let media = getMediaAvaliacoes(id);
     if (media) {
         portfolio_nota.innerText = media;
     }
@@ -1678,11 +1687,10 @@ function setupPortfolioSetup() {
 function validateEntry() {
     let params = new URLSearchParams(location.search);
     // ?id=:id
-    let id = parseInt(params.get("id") || "");
+    let id = ensureInteger(params.get("id"));
     // ?edit=true
     let edit = params.get("edit") === "true";
 
-    // TODO: Check if string or number
     if (id) {
         // Se tem ?id, carrega as informações do portfolio
         setupPortfolioPage(id, edit);
