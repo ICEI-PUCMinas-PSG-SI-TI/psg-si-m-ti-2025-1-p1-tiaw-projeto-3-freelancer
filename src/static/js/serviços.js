@@ -27,7 +27,6 @@ async function fileToBase64(file) {
     });
 }
 
-// TODO: Add image
 document.addEventListener("DOMContentLoaded", () => {
     /** @type {HTMLFormElement} */
     // @ts-ignore Casting HTMLElement as HTMLFormElement
@@ -42,20 +41,25 @@ document.addEventListener("DOMContentLoaded", () => {
         html_ul_lista.innerHTML = "";
         getServicos().forEach(
             (
-                /** @type {{ titulo: any; categoria: any; descricao: any; contato: any; }} */ servico,
+                /** @type {{ imagem: any; titulo: any; categoria: any; descricao: any; contato: any; }} */ servico,
                 /** @type {any} */ index
             ) => {
                 const li = document.createElement("li");
                 li.className =
                     "list-group-item d-flex justify-content-between align-items-center flex-wrap";
 
-                li.innerHTML = `<div class="d-flex flex-column">
+                li.innerHTML = `<div class="d-flex me-3">
+                    <img width="64px" heigth="64px" src="${
+                        servico.imagem || "static/icons/images.svg"
+                    }" />
+                </div>
+                <div class="d-flex flex-column flex-grow-1 me-3">
                     <strong>${servico.titulo}</strong>
                     <small>${servico.categoria}</small>
                     <p class="mb-1">${servico.descricao}</p>
                     <small>Contato: ${servico.contato}</small>
                 </div>
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 ms-auto">
                     <button class="btn btn-sm btn-warning" onclick="editarServico(${index})">Editar</button>
                     <button class="btn btn-sm btn-danger" onclick="deletarServico(${index})">Excluir</button>
                 </div>`;
