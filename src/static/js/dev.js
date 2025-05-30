@@ -5,8 +5,8 @@ import * as JSONQL_U from "./jsonql.user.mjs"; // Usuários
 import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
-import * as COMMON from "./common.mjs"; // Common Utilities
-import * as DEV from "./dev_create.mjs"; // Common Utilities
+import * as Faker from "./faker.mjs";
+import * as Tools from "./tools.mjs"
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -75,14 +75,14 @@ function setupDevTools() {
 
     dev_create_usuarios?.addEventListener("click", async () => {
         const quantidade = dev_create_usuarios_n?.value;
-        DEV.createUsuarios(quantidade);
+        Faker.criarNUsuarios(parseInt(quantidade || ""));
     });
 
     dev_delete_usuarios_all?.addEventListener("click", JSONQL_U.clearUsuarios);
 
     dev_delete_usuarios?.addEventListener("click", () => {
         const id = dev_delete_usuarios_id?.value;
-        const id_int = COMMON.ensureInteger(id);
+        const id_int = Tools.ensureInteger(id);
 
         if (!id_int) {
             console.log("dev_delete_usuarios: Não foi possível realizar o parse do id");
@@ -104,14 +104,14 @@ function setupDevTools() {
 
     dev_create_servicos?.addEventListener("click", async () => {
         let quantidade = dev_create_servicos_n?.value;
-        DEV.createServicos(quantidade);
+        Faker.criarNServicos(parseInt(quantidade || ""));
     });
 
     dev_delete_servicos_all?.addEventListener("click", JSONQL_S.clearServicos);
 
     dev_delete_servicos?.addEventListener("click", () => {
         const id = dev_delete_servicos_id?.value;
-        const id_int = COMMON.ensureInteger(id);
+        const id_int = Tools.ensureInteger(id);
         if (!id_int) {
             console.log("dev_delete_servicos: Não foi possível realizar o parse do id");
             return;
@@ -132,14 +132,14 @@ function setupDevTools() {
 
     dev_create_contratos?.addEventListener("click", async () => {
         let quantidade = dev_create_contratos_n?.value;
-        DEV.createContratos(quantidade);
+        Faker.criarNContratos(parseInt(quantidade || ""));
     });
 
     dev_delete_contratos_all?.addEventListener("click", JSONQL_C.clearContratos);
 
     dev_delete_contratos?.addEventListener("click", () => {
         const id = dev_delete_contratos_id?.value;
-        const id_int = COMMON.ensureInteger(id);
+        const id_int = Tools.ensureInteger(id);
         if (!id_int) {
             console.log("dev_delete_contratos: Não foi possível realizar o parse do id");
             return;
@@ -160,14 +160,14 @@ function setupDevTools() {
 
     dev_create_avaliacoes?.addEventListener("click", async () => {
         let quantidade = dev_create_avaliacoes_n?.value;
-        DEV.createAvaliacoes(quantidade);
+        Faker.criarNAvaliacoes(parseInt(quantidade || ""));
     });
 
     dev_delete_avaliacoes_all?.addEventListener("click", JSONQL_A.clearAvaliacoes);
 
     dev_delete_avaliacoes?.addEventListener("click", () => {
         const id = dev_delete_avaliacoes_id?.value;
-        const id_int = COMMON.ensureInteger(id);
+        const id_int = Tools.ensureInteger(id);
         if (!id_int) {
             console.log("dev_delete_avaliacoes: Não foi possível realizar o parse do id");
             return;
@@ -188,14 +188,14 @@ function setupDevTools() {
 
     dev_create_portfolios?.addEventListener("click", async () => {
         let quantidade = dev_create_portfolios_n?.value;
-        DEV.createPortfolios(quantidade);
+        Faker.criarNPortfolios(parseInt(quantidade || ""));
     });
 
     dev_delete_portfolios_all?.addEventListener("click", JSONQL_P.clearPortfolios);
 
     dev_delete_portfolios?.addEventListener("click", () => {
         const id = dev_delete_portfolios_id?.value;
-        const id_int = COMMON.ensureInteger(id);
+        const id_int = Tools.ensureInteger(id);
         if (!id_int) {
             console.log("dev_delete_portfolios: Não foi possível realizar o parse do id");
             return;

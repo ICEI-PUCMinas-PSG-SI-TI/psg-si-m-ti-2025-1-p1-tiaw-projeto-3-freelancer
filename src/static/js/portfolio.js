@@ -4,29 +4,7 @@ import * as JSONQL_U from "./jsonql.user.mjs"; // Usuários
 import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
-import * as DEV from "./dev_create.mjs"; // Portfólios
-
-/**
- * Retorna um número aleatório entre 0 e max, o min é opcional
- * Valor máximo
- * @param {number} max Valor máximo
- * @param {number} [min] Valor mínimo (opcional = 0)
- *
- * @returns {number} Retorna um número aleatório
- */
-// TODO: Move to a module
-function genRandomNumber(max, min) {
-    if (min) {
-        let val = Math.random() * (max - min) + min;
-        // TODO: why convert to string? avoid IDE warning
-        // Avoid double values
-        return parseInt(val.toString(), 10);
-    }
-
-    if (!max) return 0;
-
-    return Math.floor(Math.random() * max);
-}
+import * as Faker from "./faker.mjs";
 
 /**
  *
@@ -1688,11 +1666,11 @@ function setupPortfolioSetup() {
 
     portfolio_setup_dev_btn.addEventListener("click", async () => {
         // Utilizar a página 'dev.js'
-        await DEV.createUsuarios(30);
-        await DEV.createServicos(60);
-        await DEV.createContratos(90);
-        await DEV.createAvaliacoes(120);
-        // DEV.createPortfolios(30);
+        await Faker.criarNUsuarios(30);
+        await Faker.criarNServicos(60);
+        await Faker.criarNContratos(90);
+        await Faker.criarNAvaliacoes(120);
+        // Faker.createPortfolios(30);
         notifySectionDataChanged();
     });
 }
@@ -1700,10 +1678,11 @@ function setupPortfolioSetup() {
 function validateEntry() {
     let params = new URLSearchParams(location.search);
     // ?id=:id
-    let id = parseInt(params.get("id"));
+    let id = parseInt(params.get("id") || "");
     // ?edit=true
     let edit = params.get("edit") === "true";
 
+    // TODO: Check if string or number
     if (id) {
         // Se tem ?id, carrega as informações do portfolio
         setupPortfolioPage(id, edit);
