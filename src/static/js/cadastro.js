@@ -141,6 +141,7 @@ form_cadastro_usuario?.addEventListener("submit", async (event) => {
 });
 
 // Preview da imagem
+// eslint-disable-next-line no-unused-vars
 function previewFoto() {
     /** @type {HTMLInputElement} */
     // @ts-ignore Casting HTMLElement as HTMLInputElement

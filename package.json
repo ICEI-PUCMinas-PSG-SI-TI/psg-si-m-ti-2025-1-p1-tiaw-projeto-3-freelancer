@@ -21,5 +21,10 @@
   "homepage": "https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer#readme",
   "dependencies": {
     "json-server": "^1.0.0-beta.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "eslint": "^9.28.0",
+    "globals": "^16.2.0"
   }
 }

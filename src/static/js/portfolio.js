@@ -523,25 +523,26 @@ function commitEditSectionPosition(editSectionPositionContext) {
 
             break;
         case EditSectionPositionContext.MOVE_DOWN:
-            // Verificar o maior valor para json.ordem
-            let maior = 0;
-            _portfolio.secoes.forEach((element) => {
-                if (parseInt(element.ordem) > maior) maior = element.ordem;
-            });
+            {
+                // Verificar o maior valor para json.ordem
+                let maior = 0;
+                _portfolio.secoes.forEach((element) => {
+                    if (parseInt(element.ordem) > maior) maior = element.ordem;
+                });
 
-            // TODO: Desabilitar botão quando no topo ou no final?
-            if (_section_id >= maior) return;
+                // TODO: Desabilitar botão quando no topo ou no final?
+                if (_section_id >= maior) return;
 
-            for (let i = 0; i < _portfolio.secoes.length - 1; i++) {
-                if (ensureInteger(_portfolio.secoes[i].ordem) !== _section_id) continue;
+                for (let i = 0; i < _portfolio.secoes.length - 1; i++) {
+                    if (ensureInteger(_portfolio.secoes[i].ordem) !== _section_id) continue;
 
-                // Remove do array
-                let secao = _portfolio.secoes.splice(i, 1)[0];
-                // Adiciona um posição depois
-                _portfolio.secoes.splice(i + 1, 0, secao);
-                break;
+                    // Remove do array
+                    let secao = _portfolio.secoes.splice(i, 1)[0];
+                    // Adiciona um posição depois
+                    _portfolio.secoes.splice(i + 1, 0, secao);
+                    break;
+                }
             }
-
             break;
         default:
             return;

@@ -63,42 +63,47 @@ export async function criarNPortfolios(quantidade) {
                 switch (secao.categoriaId) {
                     // 0: Imagens
                     case 0:
-                        // TODO: Adicionar imagens reais
-                        secao.contents = [];
-                        const quant_imagens = generateRandomNumber(10, 5) || 5;
-                        for (let j = 0; j < quant_imagens; j++) {
-                            secao.contents.push({
-                                blob: `https://picsum.photos/seed/${
-                                    generateRandomNumber(200) || "lucremais"
-                                }/200`, // portfolios.secao.contents.blob - string
-                                descricao: "Foto", // portfolios.secao.contents.descricao - string
-                            });
+                        {
+                            // TODO: Adicionar imagens reais
+                            secao.contents = [];
+                            const quant_imagens = generateRandomNumber(10, 5) || 5;
+                            for (let j = 0; j < quant_imagens; j++) {
+                                secao.contents.push({
+                                    blob: `https://picsum.photos/seed/${
+                                        generateRandomNumber(200) || "lucremais"
+                                    }/200`, // portfolios.secao.contents.blob - string
+                                    descricao: "Foto", // portfolios.secao.contents.descricao - string
+                                });
+                            }
+                            secao.nome = "Imagens";
+                            secao.descricao = "Imagens de serviços realizados";
                         }
-                        secao.nome = "Imagens";
-                        secao.descricao = "Imagens de serviços realizados";
                         break;
                     // 1: Avaliações
-                    case 1:
+                    case 1: {
                         // Faz nada: Essa categoria deve ser controlada pela pagina que mostra as informações
                         secao.nome = "Avaliações";
                         secao.descricao = "Cliente satisfeitos!";
                         break;
+                    }
                     // 2: Links Externos
                     case 2:
-                        secao.contents = [];
-                        const quant_links = generateRandomNumber(6, 3) || 3;
-                        for (let j = 0; j < quant_links; j++) {
-                            const link_ext_index = generateRandomNumber(
-                                exemplos.links_externos.length
-                            );
+                        {
+                            secao.contents = [];
+                            const quant_links = generateRandomNumber(6, 3) || 3;
+                            for (let j = 0; j < quant_links; j++) {
+                                const link_ext_index = generateRandomNumber(
+                                    exemplos.links_externos.length
+                                );
 
-                            if (!link_ext_index) continue;
-                            secao.contents.push({
-                                blob: exemplos.links_externos[link_ext_index], // portfolios.secao.contents.blob - string
-                                descricao: "Link Externo", // portfolios.secao.contents.descricao - string
-                            });
-                            secao.nome = "Redes Sociais";
-                            secao.descricao = "Segue lá!";
+                                if (!link_ext_index) continue;
+                                secao.contents.push({
+                                    blob: exemplos.links_externos[link_ext_index], // portfolios.secao.contents.blob - string
+                                    descricao: "Link Externo", // portfolios.secao.contents.descricao - string
+                                });
+                                secao.nome = "Redes Sociais";
+                                secao.descricao = "Segue lá!";
+                            }
                         }
                         break;
                     default:

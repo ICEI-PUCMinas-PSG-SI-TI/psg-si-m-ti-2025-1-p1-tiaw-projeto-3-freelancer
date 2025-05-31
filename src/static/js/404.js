@@ -23,6 +23,7 @@ function setup404Toast() {
     // retorna todos os elementos <a> | href != null
     let document_links = document.links;
     // @ts-ignore: bootstrap is imported in html
+    // eslint-disable-next-line no-undef
     let toastBootstrap = bootstrap.Toast.getOrCreateInstance(toast);
 
     for (let i = 0; i < document_links.length; i++) {
