@@ -61,7 +61,7 @@ export function ensureType(value, type) {
     return typeof value === type;
 }
 
-const MAX_ALLOWED_SIZE = 5 * 1024 * 1024; // 5 MB in bytes
+export const MAX_ALLOWED_SIZE = 5 * 1024 * 1024; // 5 MB in bytes
 
 /**
  * @param {Blob} file
@@ -79,4 +79,8 @@ export async function imageFileToBase64(file) {
         reader.onerror = reject;
         reader.readAsDataURL(file);
     });
+}
+
+export function isNonEmptyString(value) {
+    return typeof value === "string" && value.length > 0;
 }

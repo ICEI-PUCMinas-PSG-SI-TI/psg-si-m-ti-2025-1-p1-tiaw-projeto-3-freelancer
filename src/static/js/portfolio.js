@@ -5,22 +5,633 @@ import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as Faker from "./faker.mjs";
-import { ensureInteger, imageFileToBase64 } from "./tools.mjs";
+import { ensureInteger, imageFileToBase64, isNonEmptyString, MAX_ALLOWED_SIZE } from "./tools.mjs";
+
+function DeleteSectionContext(portfolio_id, section_id, name, description) {
+    this.portfolio_id = portfolio_id;
+    this.section_id = section_id;
+    // TODO: Optional?
+    this.name = name;
+    this.description = description;
+}
+
+function EditSectionInfoContext(portfolio_id, section_id, name, description) {
+    this.portfolio_id = portfolio_id;
+    this.section_id = section_id;
+    this.name = name;
+    this.description = description;
+}
+
+class EditSectionPositionContext {
+    constructor(portfolio_id, section_id, name, description, move) {
+        this.portfolio_id = portfolio_id;
+        this.section_id = section_id;
+        this.name = name;
+        this.description = description;
+        // down = int(-1), up = int(1)
+        this.direction = move;
+    }
+
+    // mom, can we have static const?
+    // no, we already have static const at home
+    // at home:
+    static get MOVE_UP() {
+        return 1;
+    }
+
+    static get MOVE_DOWN() {
+        return -1;
+    }
+}
+
+function AddLinkContext(portfolio_id, section_id) {
+    this.portfolio_id = portfolio_id;
+    this.section_id = section_id;
+}
+
+function DeleteLinkContext(portfolio_id, section_id, blob, description) {
+    this.portfolio_id = portfolio_id;
+    this.section_id = section_id;
+    this.blob = blob;
+    this.description = description;
+}
+
+function DeleteImageContext(portfolio_id, section_id, blob, description) {
+    this.portfolio_id = portfolio_id;
+    this.section_id = section_id;
+    this.blob = blob;
+    this.description = description;
+}
+
+class Context {
+    constructor() {
+        this.context = {};
+    }
+
+    setupContext(context) {
+        if (
+            context instanceof DeleteSectionContext ||
+            context instanceof EditSectionInfoContext ||
+            context instanceof AddLinkContext ||
+            context instanceof DeleteLinkContext ||
+            context instanceof DeleteImageContext
+        )
+            this.context = context;
+    }
+
+    getContext() {
+        if (Object.keys(this.context).length === 0) return null;
+        else return this.context;
+    }
+
+    resetContext() {
+        this.context = {};
+    }
+}
+
+const context = new Context();
+
+function readPortfolio(id) {
+    const p_id = ensureInteger(id);
+    if (typeof p_id !== "number") return null;
+
+    const portfolios = JSONQL_P.readPortfolios(p_id);
+    if (!portfolios || !portfolios.length) return null;
+
+    return portfolios[0];
+}
+
+function readUser(user_id) {
+    const u_id = ensureInteger(user_id);
+    if (typeof u_id !== "number") return null;
+
+    const users = JSONQL_U.readUsuarios(u_id);
+    if (!users || !users.length) return null;
+
+    return users[0];
+}
+
+function readContract(contract_id) {
+    const c_id = ensureInteger(contract_id);
+    if (typeof c_id !== "number") return null;
+
+    const contracts = JSONQL_C.readContratos(c_id);
+    if (!contracts || !contracts.length) return null;
+
+    return contracts[0];
+}
+
+function readService(services_id) {
+    const s_id = ensureInteger(services_id);
+    if (typeof s_id !== "number") return null;
+
+    const services = JSONQL_S.readServicos(s_id);
+    if (!services || !services.length) return null;
+
+    return services[0];
+}
+
+/**
+ *
+ * @param {DeleteSectionContext} deleteSectionContext
+ */
+function triggerDeleteSection(deleteSectionContext) {
+    if (!(deleteSectionContext instanceof DeleteSectionContext)) return;
+
+    preparePopup();
+    toggleDisplayNoneOnElement("popup-delete", false);
+
+    const popup_delete_name = document.getElementById("popup-delete-name");
+    const popup_delete_description = document.getElementById("popup-delete-description");
+
+    if (
+        !(popup_delete_name instanceof HTMLParagraphElement) ||
+        !(popup_delete_description instanceof HTMLParagraphElement)
+    ) {
+        console.error(`${this.name}: null check`);
+        return;
+    }
+
+    popup_delete_name.innerText = deleteSectionContext.name;
+    popup_delete_description.innerText = deleteSectionContext.description;
+
+    context.setupContext(deleteSectionContext);
+}
+
+/**
+ *
+ * @param {EditSectionInfoContext} editSectionContext
+ */
+function triggerEditSectionInfo(editSectionContext) {
+    if (!(editSectionContext instanceof EditSectionInfoContext)) return;
+
+    preparePopup();
+    toggleDisplayNoneOnElement("popup-edit", false);
+
+    const popup_edit_name = document.getElementById("popup-edit-name");
+    const popup_edit_description = document.getElementById("popup-edit-description");
+
+    if (
+        !(popup_edit_name instanceof HTMLInputElement) ||
+        !(popup_edit_description instanceof HTMLInputElement)
+    ) {
+        console.error(`${this.name}: null check`);
+        return;
+    }
+
+    popup_edit_name.value = editSectionContext.name;
+    popup_edit_description.value = editSectionContext.description;
+
+    context.setupContext(editSectionContext);
+}
+
+/**
+ * @param {AddLinkContext} addLinkContext
+ */
+function triggerAddLink(addLinkContext) {
+    if (!(addLinkContext instanceof AddLinkContext)) return;
+
+    context.setupContext(addLinkContext);
+
+    if (!globalThis.popup_edit_context) globalThis.popup_edit_context = [];
+
+    globalThis.popup_edit_context.secao_id = addLinkContext.portfolio_id;
+    globalThis.popup_edit_context.secao_ordem = addLinkContext.section_id;
+
+    preparePopup();
+    toggleDisplayNoneOnElement("popup-add-link", false);
+
+    context.setupContext(addLinkContext);
+}
+
+/**
+ * @param {DeleteLinkContext} deleteLinkContext
+ */
+function triggerDeleteLink(deleteLinkContext) {
+    if (!(deleteLinkContext instanceof DeleteLinkContext)) return;
+
+    preparePopup();
+    toggleDisplayNoneOnElement("popup-delete-link", false);
+
+    const popup_delete_link_url = document.getElementById("popup-delete-link-url");
+    const popup_delete_link_description = document.getElementById("popup-delete-link-description");
+
+    if (
+        !(popup_delete_link_url instanceof HTMLParagraphElement) ||
+        !(popup_delete_link_description instanceof HTMLParagraphElement)
+    ) {
+        return;
+    }
+
+    popup_delete_link_url.innerText = deleteLinkContext.blob;
+    popup_delete_link_description.innerText = deleteLinkContext.description;
+
+    context.setupContext(deleteLinkContext);
+}
+
+/**
+ * @param {DeleteImageContext} deleteImageContext
+ */
+function triggerDeleteImage(deleteImageContext) {
+    if (!(deleteImageContext instanceof DeleteImageContext)) return;
+
+    preparePopup();
+    toggleDisplayNoneOnElement("popup-delete-image", false);
+
+    const popup_delete_image_image = document.getElementById("popup-delete-image-image");
+
+    if (!(popup_delete_image_image instanceof HTMLImageElement)) {
+        console.error(`${this.name}: null check`);
+        return;
+    }
+
+    popup_delete_image_image.src = deleteImageContext.blob;
+
+    context.setupContext(deleteImageContext);
+}
+
+function commitDeleteSection() {
+    const _context = context.getContext();
+
+    if (!_context || !(_context instanceof DeleteSectionContext)) return;
+
+    const _portfolio_id = ensureInteger(_context.portfolio_id);
+    const _section_id = ensureInteger(_context.section_id);
+    const _portfolio = readPortfolio(_portfolio_id);
+
+    if (!_portfolio || !_portfolio.secoes.length || !_portfolio_id || !_section_id) {
+        console.error(`Erro ao editar o portfólio ${_portfolio_id}.`);
+        return;
+    }
+
+    for (let i = 0; i < _portfolio.secoes.length; i++) {
+        if (ensureInteger(_portfolio.secoes[i].ordem) !== _section_id) continue;
+
+        _portfolio.secoes.splice(i, 1);
+        break;
+    }
+
+    if (JSONQL_P.updatePortfolio(_portfolio_id, _portfolio)) {
+        toggleDisplayNoneOnElement("popup-delete", true);
+        context.resetContext();
+        notifySectionDataChanged();
+        return;
+    }
+
+    console.log("Ocorreu um erro ao atualizar o objeto!");
+}
+
+function commitEditSectionInfo() {
+    const _context = context.getContext();
+
+    if (!_context || !(_context instanceof EditSectionInfoContext)) return;
+
+    const html_popup_edit_name = document.getElementById("popup-edit-name");
+    const html_popup_edit_description = document.getElementById("popup-edit-description");
+
+    if (
+        !(html_popup_edit_name instanceof HTMLInputElement) ||
+        !(html_popup_edit_description instanceof HTMLInputElement)
+    ) {
+        console.log(`${this.name} null check`);
+        return;
+    }
+
+    const new_name = html_popup_edit_name.value;
+    // Pode ser vazio
+    const new_description = html_popup_edit_description.value;
+
+    if (!isNonEmptyString(new_name)) {
+        alert("O campo 'nome' não pode ser vazio!");
+        return;
+    }
+
+    const _portfolio_id = ensureInteger(_context.portfolio_id);
+    const _section_id = ensureInteger(_context.section_id);
+    const _portfolio = readPortfolio(_portfolio_id);
+
+    if (!_portfolio || !_portfolio.secoes.length || !_portfolio_id || !_section_id) {
+        console.error(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
+        return;
+    }
+
+    for (let i = 0; i < _portfolio.secoes.length; i++) {
+        if (ensureInteger(_portfolio.secoes[i].ordem) !== _section_id) continue;
+
+        _portfolio.secoes[i].nome = new_name;
+        _portfolio.secoes[i].descricao = new_description;
+        break;
+    }
+
+    if (JSONQL_P.updatePortfolio(_context.section_id, _portfolio)) {
+        toggleDisplayNoneOnElement("popup-edit", true);
+        context.resetContext();
+        notifySectionDataChanged();
+        return;
+    }
+
+    console.log("Ocorreu um erro ao atualizar o objeto!");
+}
+
+/**
+ *
+ * @param {EditSectionPositionContext} editSectionPositionContext
+ */
+function commitEditSectionPosition(editSectionPositionContext) {
+    if (!(editSectionPositionContext instanceof EditSectionPositionContext)) return;
+
+    const _portfolio_id = ensureInteger(editSectionPositionContext.portfolio_id);
+    const _section_id = ensureInteger(editSectionPositionContext.section_id);
+    const _portfolio = readPortfolio(_portfolio_id);
+
+    if (!_portfolio || !_portfolio.secoes.length || !_portfolio_id || !_section_id) {
+        console.error(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
+        return;
+    }
+
+    switch (editSectionPositionContext.direction) {
+        case EditSectionPositionContext.MOVE_UP:
+            // INFO: Aqui a ordem esta sendo utilizada como id da seção
+            // TODO: Por enquanto a ordem no array é mais importante que o valor em json.ordem
+            // TODO: Desabilitar botão quando no topo ou no final?
+
+            for (let i = 1; i > 0 && i < _portfolio.secoes.length; i++) {
+                if (ensureInteger(_portfolio.secoes[i].ordem) !== _section_id) continue;
+
+                // Remove do array
+                let secao = _portfolio.secoes.splice(i, 1)[0];
+                // Adiciona uma posição antes
+                _portfolio.secoes.splice(i - 1, 0, secao);
+                break;
+            }
+
+            break;
+        case EditSectionPositionContext.MOVE_DOWN:
+            // Verificar o maior valor para json.ordem
+            let maior = 0;
+            _portfolio.secoes.forEach((element) => {
+                if (parseInt(element.ordem) > maior) maior = element.ordem;
+            });
+
+            // TODO: Desabilitar botão quando no topo ou no final?
+            if (_section_id >= maior) return;
+
+            for (let i = 0; i < _portfolio.secoes.length - 1; i++) {
+                if (ensureInteger(_portfolio.secoes[i].ordem) !== _section_id) continue;
+
+                // Remove do array
+                let secao = _portfolio.secoes.splice(i, 1)[0];
+                // Adiciona um posição depois
+                _portfolio.secoes.splice(i + 1, 0, secao);
+                break;
+            }
+
+            break;
+        default:
+            return;
+    }
+
+    if (JSONQL_P.updatePortfolio(_portfolio_id, _portfolio)) {
+        notifySectionDataChanged();
+        return;
+    }
+
+    console.log("Ocorreu um erro ao atualizar o objeto!");
+}
+
+function commitAddLink() {
+    const _context = context.getContext();
+
+    if (!(_context instanceof AddLinkContext)) return;
+
+    const _portfolio_id = ensureInteger(_context.portfolio_id);
+    const _section_id = ensureInteger(_context.section_id);
+
+    if (!_portfolio_id || !_section_id) return;
+
+    const popup_add_link_url = document.getElementById("popup-add-link-url");
+    const popup_add_link_description = document.getElementById("popup-add-link-description");
+
+    if (
+        !(popup_add_link_url instanceof HTMLInputElement) ||
+        !(popup_add_link_description instanceof HTMLInputElement)
+    ) {
+        console.error(`${this.name}: null check`);
+        return;
+    }
+
+    let new_url = popup_add_link_url.value;
+    let new_description = popup_add_link_description.value;
+
+    const _portfolio = readPortfolio(_portfolio_id);
+
+    if (!_portfolio || !_portfolio.secoes.length) {
+        console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
+        return;
+    }
+
+    // TODO: useregex?
+    if (!(new_url.startsWith("https://") || new_url.startsWith("http://"))) {
+        alert("URL não é valida!\n\nA URL não começa com 'http://' ou 'https://'");
+        return;
+    } else if (
+        (new_url.startsWith("https://") && new_url.length === 8) ||
+        (new_url.startsWith("http://") && new_url.length === 7)
+    ) {
+        alert("URL não é valida!\n\nA URL esta vazia!");
+        return;
+    }
+
+    for (let i = 0; i < _portfolio.secoes.length; i++) {
+        if (parseInt(_portfolio.secoes[i].ordem) != _section_id) continue;
+
+        _portfolio.secoes[i].contents.push({
+            blob: new_url || "",
+            descricao: new_description || "",
+        });
+        break;
+    }
+
+    if (JSONQL_P.updatePortfolio(_portfolio_id, _portfolio)) {
+        toggleDisplayNoneOnElement("popup-add-link", true);
+        context.resetContext();
+        notifySectionDataChanged();
+        return;
+    }
+
+    console.log("Ocorreu um erro ao atualizar o objeto!");
+}
+
+function commitDeleteLink() {
+    const _context = context.getContext();
+
+    if (!(_context instanceof DeleteLinkContext)) return;
+
+    // TODO: ensurePositiveInteger()
+    const _portfolio_id = ensureInteger(_context.portfolio_id);
+    const _section_id = ensureInteger(_context.section_id);
+    // TODO: Expensive, use id or something else
+    const _s_cntnt_blob = _context.blob;
+    const _s_cntnt_description = _context.description;
+    const _portfolio = readPortfolio(_portfolio_id);
+
+    if (!_portfolio || !_portfolio.secoes.length || !_portfolio_id || !_section_id) {
+        console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
+        return;
+    }
+
+    let procurando = true;
+    for (let i = 0; i < _portfolio.secoes.length && procurando; i++) {
+        if (parseInt(_portfolio.secoes[i].ordem) != _section_id) {
+            continue;
+        }
+
+        if (!_portfolio.secoes[i].contents || !_portfolio.secoes[i].contents.length) {
+            console.log(`Não encontrado: ${_portfolio.secoes[i].contents}`);
+            return;
+        }
+
+        for (let j = 0; j < _portfolio.secoes[i].contents.length && procurando; j++) {
+            console.log(_portfolio.secoes[i].contents[j]);
+            console.log(_portfolio.secoes[i].contents);
+            if (
+                !_portfolio.secoes[i].contents[j].blob ||
+                _portfolio.secoes[i].contents[j].descricao == null
+            )
+                continue;
+
+            if (_portfolio.secoes[i].contents[j].blob != _s_cntnt_blob) continue;
+
+            if (_portfolio.secoes[i].contents[j].descricao != _s_cntnt_description) continue;
+
+            _portfolio.secoes[i].contents.splice(j, 1);
+            procurando = false;
+        }
+        procurando = false;
+    }
+
+    if (JSONQL_P.updatePortfolio(_portfolio_id, _portfolio)) {
+        toggleDisplayNoneOnElement("popup-delete-link", true);
+        notifySectionDataChanged();
+        return;
+    }
+
+    console.log("Ocorreu um erro ao atualizar o objeto!");
+}
+
+// TODO: Rework this
+/**
+ * @param {number} p_id
+ * @param {number} s_id
+ * @param {Blob} blob
+ */
+async function commitAddImage(p_id, s_id, blob) {
+    const base64Image = await imageFileToBase64(blob);
+
+    if (!base64Image.startsWith("data:image/")) {
+        alert("Não é um arquivo de imagem!");
+        return;
+    }
+
+    const _portfolio_id = ensureInteger(p_id);
+    const _section_id = ensureInteger(s_id);
+    const _portfolio = readPortfolio(_portfolio_id);
+
+    if (!_portfolio || !_portfolio.secoes.length || !_portfolio_id || !_section_id) {
+        console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
+        return;
+    }
+
+    for (let i = 0; i < _portfolio.secoes.length; i++) {
+        if (ensureInteger(_portfolio.secoes[i].ordem) !== _section_id) continue;
+
+        // TODO: Add id
+        _portfolio.secoes[i].contents.push({
+            blob: base64Image,
+            descricao: "Imagem",
+        });
+        break;
+    }
+
+    if (JSONQL_P.updatePortfolio(_portfolio_id, _portfolio)) {
+        notifySectionDataChanged();
+        return;
+    }
+
+    console.log("Ocorreu um erro ao atualizar o objeto!");
+}
+
+function commitDeleteImage() {
+    const _context = context.getContext();
+
+    if (!(_context instanceof DeleteImageContext)) return;
+
+    let _portfolio_id = ensureInteger(_context.portfolio_id);
+    let _section_id = ensureInteger(_context.section_id);
+    // TODO: Expensive, use id or something else
+    let _s_cntnt_blob = _context.blob;
+    let _s_cntnt_description = _context.description;
+
+    const _portfolio = readPortfolio(_portfolio_id);
+    if (!_portfolio || !_portfolio.secoes.length || !_portfolio_id || !_section_id) {
+        console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
+        return;
+    }
+
+    let procurando = true;
+    for (let i = 0; i < _portfolio.secoes.length && procurando; i++) {
+        if (ensureInteger(_portfolio.secoes[i].ordem) !== _section_id) continue;
+
+        if (!_portfolio.secoes[i].contents || !_portfolio.secoes[i].contents.length) {
+            console.log(`Não encontrado: ${_portfolio.secoes[i].contents}`);
+            return;
+        }
+
+        for (let j = 0; j < _portfolio.secoes[i].contents.length && procurando; j++) {
+            if (
+                !_portfolio.secoes[i].contents[j].blob ||
+                _portfolio.secoes[i].contents[j].descricao == null
+            )
+                continue;
+
+            if (_portfolio.secoes[i].contents[j].blob !== _s_cntnt_blob) continue;
+
+            if (_portfolio.secoes[i].contents[j].descricao !== _s_cntnt_description) continue;
+
+            _portfolio.secoes[i].contents.splice(j, 1);
+            procurando = false;
+        }
+        procurando = false;
+    }
+
+    if (JSONQL_P.updatePortfolio(_portfolio_id, _portfolio)) {
+        toggleDisplayNoneOnElement("popup-delete-image", true);
+        notifySectionDataChanged();
+        return;
+    }
+
+    console.log("Ocorreu um erro ao atualizar o objeto!");
+}
+
+/**
+ * Watch change in input of files and check if they are valid
+ * @param {FileList | null} files
+ */
+async function watchImageInputChange(files) {
+    if (!files || !files.length) return;
+
+    if (files[0].size > MAX_ALLOWED_SIZE)
+        throw new Error("O tamanho do arquivo deve ser menor que 5MB!");
+
+    if (!files[0].type.match("image.*")) throw new Error("O arquivo não é uma imagem!");
+}
 
 /**
  * @returns {HTMLDivElement}
  */
 function createSectionContainer() {
     let content_container = document.createElement("div");
-    content_container.classList.add(
-        "card",
-        "w-100",
-        "overflow-hidden",
-        "p-0",
-        "g-0",
-        "g-0",
-        "mb-3"
-    );
+    content_container.classList.add("card", "w-100", "overflow-hidden", "space-0", "mb-3");
     return content_container;
 }
 
@@ -65,6 +676,87 @@ function createActionButton(icon, clickEventListener) {
     return HTMLButton;
 }
 
+/**
+ * @returns {HTMLDivElement}
+ */
+function createActionMenu(portfolio_id, section_id, name, description) {
+    let content_actions = document.createElement("div");
+    content_actions.classList.add("ms-auto");
+
+    let content_button_edit = createActionButton("edit", () =>
+        triggerEditSectionInfo(
+            new EditSectionInfoContext(portfolio_id, section_id, name, description)
+        )
+    );
+
+    let content_button_up = createActionButton("up", () =>
+        commitEditSectionPosition(
+            new EditSectionPositionContext(
+                portfolio_id,
+                section_id,
+                name,
+                description,
+                EditSectionPositionContext.MOVE_UP
+            )
+        )
+    );
+
+    let content_button_down = createActionButton("down", () =>
+        commitEditSectionPosition(
+            new EditSectionPositionContext(
+                portfolio_id,
+                section_id,
+                name,
+                description,
+                EditSectionPositionContext.MOVE_DOWN
+            )
+        )
+    );
+
+    let content_button_delete = createActionButton("delete", () =>
+        triggerDeleteSection(new DeleteSectionContext(portfolio_id, section_id, name, description))
+    );
+
+    content_actions.appendChild(content_button_edit);
+    content_actions.appendChild(content_button_up);
+    content_actions.appendChild(content_button_down);
+    content_actions.appendChild(content_button_delete);
+
+    return content_actions;
+}
+
+function createAddLinkSubSection(portfolio_id, section_id) {
+    let add_new_link = document.createElement("div");
+    add_new_link.classList.add("col-12");
+
+    let add_new_link_button = document.createElement("button");
+    add_new_link_button.classList.add(
+        "btn",
+        "btn-outline-primary",
+        "text-decoration-none",
+        "w-100"
+    );
+    add_new_link_button.addEventListener("click", () =>
+        triggerAddLink(new AddLinkContext(portfolio_id, section_id))
+    );
+
+    add_new_link_button.innerHTML = `<div class="d-flex justify-content-center m-2">
+        <img class="icon-24px fixed-filter-invert me-2"
+            src="static/action-icons/add.svg">
+        <p class="space-0">Adicionar link</p>
+    </div>`;
+
+    add_new_link.appendChild(add_new_link_button);
+    return add_new_link;
+}
+
+function createNoLinkSubSection() {
+    let information = document.createElement("p");
+    information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
+    information.innerText = "Não há links cadastrados, edite o portfólio para adicionar um!";
+    return information;
+}
+
 // TODO: Improve this: get only needed contracts
 // TODO: select * where userId = userId
 /**
@@ -81,19 +773,12 @@ function getMediaAvaliacoes(userId) {
 
     let media = 0;
     let quantidade = 0;
-    for (let index = 0; index < avaliacoes.length; index++) {
-        const contratoId = avaliacoes[index].contratoId;
-        const contrato = JSONQL_C.readContratos(contratoId);
-        if (!contrato) continue
+    for (let i = 0; i < avaliacoes.length; i++) {
+        const contratado = readContract(avaliacoes[i].contratoId);
+        if (!contratado || ensureInteger(contratado) !== userId_int) continue;
 
-        let contratado = contrato[0].contratadoId;
-
-        if (!contratado) continue
-
-        if (ensureInteger(contratado) === userId_int) {
-            media += avaliacoes[index].nota;
-            quantidade++;
-        }
+        media += avaliacoes[i].nota;
+        quantidade++;
     }
 
     if (quantidade > 0) {
@@ -115,7 +800,7 @@ function notifySectionDataChanged() {
 }
 
 function toggleDisplayNoneOnElement(element_id, set_display_none_status) {
-    if (typeof element_id !== "string") return null;
+    if (typeof element_id !== "string") return;
 
     const element = document.getElementById(element_id);
     if (!(element instanceof HTMLElement)) return;
@@ -133,7 +818,7 @@ function toggleDisplayNoneOnElement(element_id, set_display_none_status) {
 
 // @AI-Gemini
 function toggleEditParam(enable) {
-    if (typeof enable !== "boolean") return null;
+    if (typeof enable !== "boolean") return;
 
     const url = new URL(window.location.href); // Get the current URL
     const params = new URLSearchParams(url.search); // Get the search parameters
@@ -160,7 +845,7 @@ function setIdParam(id) {
 
     if (typeof id !== "number") {
         console.log("?id= Não é número");
-        return null;
+        return;
     }
 
     const url = new URL(window.location.href); // Get the current URL
@@ -176,22 +861,9 @@ function setIdParam(id) {
 
 // TODO: Configurar edição apenas se necessário como ?edit=true
 function setupPortfolioPage(portf_id, enable_edit) {
-    if (!portf_id && typeof portf_id !== "number") return null;
+    if (!portf_id && typeof portf_id !== "number") return;
 
-    /* Check if null
-    if (enable_edit && typeof (enable_edit) !== "boolean")
-        return null
-    */
-
-    function readPortfolio(id) {
-        const p_id = ensureInteger(id);
-        if (typeof p_id !== "number") return null;
-
-        const portfolios = JSONQL_P.readPortfolios(p_id);
-        if (!portfolios || !portfolios.length) return null;
-
-        return portfolios[0];
-    }
+    if (typeof enable_edit !== "boolean") enable_edit = false;
 
     // INFO: Repo 14 escolhido para desenvolvimento porque contem as 3 categorias necessárias geradas aleatoriamente
     const portfolio = readPortfolio(portf_id);
@@ -199,7 +871,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
         console.log("setupPortfolioPage: nenhum portfólio cadastrado!");
         alert("A id informada para o portfólio não existe!");
         setIdParam(0);
-        return null;
+        return;
     }
 
     toggleDisplayNoneOnElement("portfolio-display", false);
@@ -208,23 +880,14 @@ function setupPortfolioPage(portf_id, enable_edit) {
     if (enable_edit) {
         if (toggle_edit_element instanceof HTMLButtonElement) {
             let toggle_edit_element_img = document.createElement("img");
-            toggle_edit_element_img.classList.add(
-                "icon-dark",
-                "icon-24px",
-                "g-0",
-                "m-0",
-                "p-0",
-                "me-2"
-            );
+            toggle_edit_element_img.classList.add("icon-dark", "icon-24px", "space-0", "me-2");
             toggle_edit_element_img.src = "static/action-icons/close.svg";
             let toggle_edit_element_p = document.createElement("p");
-            toggle_edit_element_p.classList.add("g-0", "m-0", "p-0");
+            toggle_edit_element_p.classList.add("space-0");
             toggle_edit_element_p.innerText = "Finalizar edição";
             toggle_edit_element.appendChild(toggle_edit_element_img);
             toggle_edit_element.appendChild(toggle_edit_element_p);
-            toggle_edit_element.addEventListener("click", () => {
-                toggleEditParam(false);
-            });
+            toggle_edit_element.addEventListener("click", () => toggleEditParam(false));
         }
 
         toggleDisplayNoneOnElement("add-section", false);
@@ -235,58 +898,16 @@ function setupPortfolioPage(portf_id, enable_edit) {
         popup_edit_section_close?.addEventListener("click", () =>
             toggleDisplayNoneOnElement("popup-edit", true)
         );
-        popup_edit_section_confirm?.addEventListener("click", () => {
-            let form_id = globalThis.popup_edit_context.secao_id;
-            let form_sec_ordem = globalThis.popup_edit_context.secao_ordem;
-
-            const html_popup_edit_name = document.getElementById("popup-edit-name");
-            const html_popup_edit_description = document.getElementById("popup-edit-description");
-
-            if (
-                !(html_popup_edit_name instanceof HTMLButtonElement) ||
-                !(html_popup_edit_description instanceof HTMLButtonElement)
-            ) {
-                console.log("edit-section: null check");
-                return null;
-            }
-
-            let form_sec_name = html_popup_edit_name.value;
-            let form_sec_description = html_popup_edit_description.value;
-
-            const form_porfolio = readPortfolio(form_id);
-
-            if (!form_porfolio) {
-                console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-                return null;
-            }
-
-            if (!form_porfolio.secoes.length) {
-                console.log("ID1: Erro ao editar categoria.");
-                return null;
-            }
-
-            for (let k = 0; k < form_porfolio.secoes.length; k++) {
-                if (form_porfolio.secoes[k].ordem == form_sec_ordem) {
-                    form_porfolio.secoes[k].nome = form_sec_name;
-                    form_porfolio.secoes[k].descricao = form_sec_description;
-                    break;
-                }
-            }
-            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                toggleDisplayNoneOnElement("popup-edit", true);
-                notifySectionDataChanged();
-                return null;
-            }
-
-            console.log("Ocorreu um erro ao atualizar o objeto!");
-        });
+        popup_edit_section_confirm?.addEventListener("click", commitEditSectionInfo);
 
         const add_section = document.getElementById("add-section");
         const popup_add_section_close = document.getElementById("popup-add-close");
         const popup_add_section_confirm = document.getElementById("popup-add-confirm");
 
         // Botão de adicionar seção
-        add_section?.addEventListener("click", () => toggleDisplayNoneOnElement("popup-add", true));
+        add_section?.addEventListener("click", () =>
+            toggleDisplayNoneOnElement("popup-add", false)
+        );
         popup_add_section_close?.addEventListener("click", () =>
             toggleDisplayNoneOnElement("popup-add", true)
         );
@@ -300,7 +921,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
             if (
                 !(html_popup_add_name instanceof HTMLInputElement) ||
                 !(html_popup_add_description instanceof HTMLInputElement) ||
-                !(html_popup_add_categoria instanceof HTMLInputElement)
+                !(html_popup_add_categoria instanceof HTMLSelectElement)
             ) {
                 console.log("add-section: null check");
                 return;
@@ -314,12 +935,12 @@ function setupPortfolioPage(portf_id, enable_edit) {
 
             if (!form_porfolio) {
                 console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-                return null;
+                return;
             }
 
             if (!form_section_name) {
                 alert("O nome da seção não pode estar vazio!");
-                return null;
+                return;
             }
 
             let maior = 0;
@@ -358,75 +979,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
         popup_add_link_close?.addEventListener("click", () =>
             toggleDisplayNoneOnElement("popup-add-link", true)
         );
-        popup_add_link_confirm?.addEventListener("click", () => {
-            let form_id = globalThis.popup_edit_context.secao_id;
-            let form_ordem = globalThis.popup_edit_context.secao_ordem;
-
-            const popup_add_link_url = document.getElementById("popup-add-link-url");
-            const popup_add_link_description = document.getElementById(
-                "popup-add-link-description"
-            );
-
-            if (
-                !(popup_add_link_url instanceof HTMLInputElement) ||
-                !(popup_add_link_description instanceof HTMLInputElement)
-            ) {
-                console.error(`${this.name}: null check`);
-                return;
-            }
-
-            let form_sec_url = popup_add_link_url.value;
-            let form_sec_description = popup_add_link_description.value;
-
-            const form_porfolio = readPortfolio(form_id);
-
-            if (!form_porfolio) {
-                console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-                return null;
-            }
-
-            if (!form_porfolio.secoes.length) {
-                console.log("ID1: Erro ao editar categoria.");
-                return null;
-            }
-
-            if (!(form_sec_url.startsWith("https://") || form_sec_url.startsWith("http://"))) {
-                alert("URL não é valida!\n\nA URL não começa com 'http://' ou 'https://'");
-                return null;
-            } else if (form_sec_url.startsWith("https://")) {
-                if (form_sec_url.length === 8) {
-                    alert("URL não é valida!\n\nA URL esta vazia!");
-                    return null;
-                }
-            } else if (form_sec_url.startsWith("http://")) {
-                if (form_sec_url.length === 8) {
-                    alert("URL não é valida!\n\nA URL esta vazia!");
-                    return null;
-                }
-            }
-
-            for (let index = 0; index < form_porfolio.secoes.length; index++) {
-                if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                    continue;
-                }
-
-                let content_tv = {
-                    blob: form_sec_url || "",
-                    descricao: form_sec_description || "",
-                };
-
-                form_porfolio.secoes[index].contents.push(content_tv);
-                break;
-            }
-
-            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                toggleDisplayNoneOnElement("popup-add-link", true);
-                notifySectionDataChanged();
-                return;
-            }
-
-            console.log("Ocorreu um erro ao atualizar o objeto!");
-        });
+        popup_add_link_confirm?.addEventListener("click", commitAddLink);
 
         const popup_delete_section_close = document.getElementById("popup-delete-close");
         const popup_delete_section_cancel = document.getElementById("popup-delete-cancel");
@@ -438,39 +991,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
         popup_delete_section_cancel?.addEventListener("click", () =>
             toggleDisplayNoneOnElement("popup-delete", true)
         );
-        popup_delete_section_confirm?.addEventListener("click", () => {
-            let form_id = globalThis.popup_edit_context.portfolio_id;
-            let form_ordem = globalThis.popup_edit_context.secao_ordem;
-
-            const form_porfolio = readPortfolio(form_id);
-
-            if (!form_porfolio) {
-                console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-                return null;
-            }
-
-            if (!form_porfolio.secoes.length) {
-                console.log("ID1: Erro ao editar categoria.");
-                return null;
-            }
-
-            for (let index = 0; index < form_porfolio.secoes.length; index++) {
-                if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                    continue;
-                }
-
-                form_porfolio.secoes.splice(index, 1);
-                break;
-            }
-
-            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                toggleDisplayNoneOnElement("popup-delete", true);
-                notifySectionDataChanged();
-                return;
-            }
-
-            console.log("Ocorreu um erro ao atualizar o objeto!");
-        });
+        popup_delete_section_confirm?.addEventListener("click", commitDeleteSection);
 
         const popup_delete_image_close = document.getElementById("popup-delete-image-close");
         const popup_delete_image_cancel = document.getElementById("popup-delete-image-cancel");
@@ -482,76 +1003,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
         popup_delete_image_cancel?.addEventListener("click", () =>
             toggleDisplayNoneOnElement("popup-delete-image", true)
         );
-        popup_delete_image_confirm?.addEventListener("click", () => {
-            let form_id = globalThis.popup_edit_context.secao_id;
-            let form_ordem = globalThis.popup_edit_context.secao_ordem;
-            // TODO: Expensive, use id or something else
-            let form_blob = globalThis.popup_edit_context.blob;
-            let form_descricao = globalThis.popup_edit_context.descricao;
-
-            const portfolios = JSONQL_P.readPortfolios(form_id);
-            if (!portfolios || !portfolios.length) {
-                console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-                return;
-            }
-
-            const form_porfolio = portfolios[0];
-
-            if (!form_porfolio) {
-                console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-                return null;
-            }
-
-            if (!form_porfolio.secoes.length) {
-                console.log("ID1: Erro ao editar categoria.");
-                return null;
-            }
-
-            let procurando = true;
-            for (let index = 0; index < form_porfolio.secoes.length && procurando; index++) {
-                if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                    continue;
-                }
-
-                if (
-                    !form_porfolio.secoes[index].contents ||
-                    !form_porfolio.secoes[index].contents.length
-                ) {
-                    console.log(form_porfolio.secoes[index].contents);
-                    console.log("Não encontrado");
-                    return null;
-                }
-
-                for (
-                    let jindex = 0;
-                    jindex < form_porfolio.secoes[index].contents.length && procurando;
-                    jindex++
-                ) {
-                    if (
-                        !form_porfolio.secoes[index].contents[jindex].blob ||
-                        form_porfolio.secoes[index].contents[jindex].descricao == null
-                    )
-                        continue;
-
-                    if (form_porfolio.secoes[index].contents[jindex].blob != form_blob) continue;
-
-                    if (form_porfolio.secoes[index].contents[jindex].descricao != form_descricao)
-                        continue;
-
-                    form_porfolio.secoes[index].contents.splice(jindex, 1);
-                    procurando = false;
-                }
-                procurando = false;
-            }
-
-            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                toggleDisplayNoneOnElement("popup-delete-image", true);
-                notifySectionDataChanged();
-                return;
-            }
-
-            console.log("Ocorreu um erro ao atualizar o objeto!");
-        });
+        popup_delete_image_confirm?.addEventListener("click", () => commitDeleteImage);
 
         const popup_delete_link_close = document.getElementById("popup-delete-link-close");
         const popup_delete_link_cancel = document.getElementById("popup-delete-link-cancel");
@@ -563,92 +1015,17 @@ function setupPortfolioPage(portf_id, enable_edit) {
         popup_delete_link_cancel?.addEventListener("click", () =>
             toggleDisplayNoneOnElement("popup-delete-link", true)
         );
-        popup_delete_link_confirm?.addEventListener("click", () => {
-            let form_id = globalThis.popup_edit_context.secao_id;
-            let form_ordem = globalThis.popup_edit_context.secao_ordem;
-            // TODO: Expensive, use id or something else
-            let form_blob = globalThis.popup_edit_context.blob;
-            let form_descricao = globalThis.popup_edit_context.descricao;
-
-            const form_porfolios = JSONQL_P.readPortfolios(form_id);
-
-            if (!form_porfolios || !form_porfolios.length) {
-                console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-                return null;
-            }
-            const form_porfolio = form_porfolios[0];
-
-            if (!form_porfolio.secoes.length) {
-                console.log("ID1: Erro ao editar categoria.");
-                return null;
-            }
-
-            let procurando = true;
-            for (let index = 0; index < form_porfolio.secoes.length && procurando; index++) {
-                if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                    continue;
-                }
-
-                if (
-                    !form_porfolio.secoes[index].contents ||
-                    !form_porfolio.secoes[index].contents.length
-                ) {
-                    console.log(form_porfolio.secoes[index].contents);
-                    console.log("Não encontrado");
-                    return null;
-                }
-
-                for (
-                    let jindex = 0;
-                    jindex < form_porfolio.secoes[index].contents.length && procurando;
-                    jindex++
-                ) {
-                    console.log(form_porfolio.secoes[index].contents[jindex]);
-                    console.log(form_porfolio.secoes[index].contents);
-                    if (
-                        !form_porfolio.secoes[index].contents[jindex].blob ||
-                        form_porfolio.secoes[index].contents[jindex].descricao == null
-                    )
-                        continue;
-
-                    if (form_porfolio.secoes[index].contents[jindex].blob != form_blob) continue;
-
-                    if (form_porfolio.secoes[index].contents[jindex].descricao != form_descricao)
-                        continue;
-
-                    form_porfolio.secoes[index].contents.splice(jindex, 1);
-                    procurando = false;
-                }
-                procurando = false;
-            }
-
-            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                toggleDisplayNoneOnElement("popup-delete-link", true);
-                notifySectionDataChanged();
-                return;
-            }
-
-            console.log("Ocorreu um erro ao atualizar o objeto!");
-        });
+        popup_delete_link_confirm?.addEventListener("click", () => commitDeleteLink);
     } else if (toggle_edit_element instanceof HTMLButtonElement) {
         let toggle_edit_element_img = document.createElement("img");
-        toggle_edit_element_img.classList.add(
-            "icon-dark",
-            "icon-24px",
-            "g-0",
-            "m-0",
-            "p-0",
-            "me-2"
-        );
+        toggle_edit_element_img.classList.add("icon-dark", "icon-24px", "space-0", "me-2");
         toggle_edit_element_img.src = "static/action-icons/edit.svg";
         let toggle_edit_element_p = document.createElement("p");
-        toggle_edit_element_p.classList.add("g-0", "m-0", "p-0");
+        toggle_edit_element_p.classList.add("space-0");
         toggle_edit_element_p.innerText = "Editar portfólio";
         toggle_edit_element.appendChild(toggle_edit_element_img);
         toggle_edit_element.appendChild(toggle_edit_element_p);
-        toggle_edit_element.addEventListener("click", () => {
-            toggleEditParam(true);
-        });
+        toggle_edit_element.addEventListener("click", () => toggleEditParam(true));
     }
 
     if (!globalThis.popup_edit_context) {
@@ -656,30 +1033,23 @@ function setupPortfolioPage(portf_id, enable_edit) {
         globalThis.popup_edit_context.portfolio_id = portfolio.id;
     }
 
-    let user = portfolio.usuarioId;
-    if (!user) {
+    const portfolio_user_id = portfolio.usuarioId;
+    const portfolio_user = readUser(portfolio_user_id);
+    if (!portfolio_user) {
         console.log("setupPortfolioPage: no user");
-        return null;
+        return;
     }
 
-    user = JSONQL_U.readUsuarios(user);
-
-    if (!user.length) {
-        console.log("setupPortfolioPage: usuario não encontrado");
-        return null;
-    }
-
-    let nome = user[0].nome;
-    let id = user[0].id;
-    let biografia = user[0].biografia || "Sem descrição informada";
-    let picture = user[0].foto || `https://picsum.photos/seed/${id}/200`;
+    let portfolio_user_name = portfolio_user.nome;
+    let portfolio_user_about = portfolio_user.biografia || "Sem descrição informada";
+    let portfolio_user_picture =
+        portfolio_user.foto || `https://picsum.photos/seed/${portfolio_user_id}/200`;
 
     // TODO: adicionar contato e e-mail?
-
     // TODO: Se não preenchido na hora do cadastro?
-    if (!nome || !id || !biografia) {
+    if (!portfolio_user_name || !portfolio_user_id || !portfolio_user_about) {
         console.log("setupPortfolioPage: não foi possível verificar alguma informação do usuário");
-        return null;
+        return;
     }
 
     const portfolio_name = document.getElementById("portfolio-name");
@@ -698,245 +1068,71 @@ function setupPortfolioPage(portf_id, enable_edit) {
         !(portfolio_secoes instanceof HTMLDivElement)
     ) {
         console.error(`${this.name}: null check`);
-        return null;
+        return;
     }
 
-    portfolio_name.innerText = nome;
-    portfolio_username.innerText = `@${id}`;
-    portfolio_picture.src = picture;
-    portfolio_descricao.innerText = biografia;
+    portfolio_name.innerText = portfolio_user_name;
+    portfolio_username.innerText = `@${portfolio_user_id}`;
+    portfolio_picture.src = portfolio_user_picture;
+    portfolio_descricao.innerText = portfolio_user_about;
 
-    let media = getMediaAvaliacoes(id);
+    const media = getMediaAvaliacoes(portfolio_user_id);
     if (media) {
         portfolio_nota.innerText = media.toString();
     }
 
-    let secoes = portfolio.secoes;
     // TODO: O usuário pode não ter cadastrado nenhuma seção ainda
-    if (!secoes.length && !enable_edit) {
+    if (!portfolio.secoes.length && !enable_edit) {
         let information = document.createElement("h5");
-        information.classList.add(
-            "d-flex",
-            "w-100",
-            "p-4",
-            "m-0",
-            "g-0",
-            "align-items-center",
-            "justify-content-center"
-        );
+        information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
         information.innerText = "Portfólio vazio, edite o portfólio para adicionar uma seção!";
         portfolio_secoes.appendChild(information);
-        return null;
+        return;
     }
 
-    // TODO: {Feratorar} Evitar que haja mais de um container de avaliação
-    let aval_ja_adicionado = false;
-    secoes.forEach((element) => {
-        let secao_nome = element.nome;
-        // New
-        let secao_descricao = element.descricao;
-        let secao_ordem = element.ordem;
-        let secao_categoria = element.categoriaId;
+    // TODO: Permitir apenas 1 seção de avaliações
+    portfolio.secoes.forEach((element) => {
+        let e_section_name = element.nome;
+        let e_section_description = element.descricao;
+        let e_section_id = element.ordem;
+        let e_section_category_id = element.categoriaId;
         // For categoriaId(0), content is optional
-        let secao_content = element.contents;
+        let e_secao_content = element.contents;
 
         if (
-            !secao_nome ||
-            (!secao_ordem && typeof secao_ordem !== "number") ||
-            (!secao_categoria && typeof secao_categoria !== "number")
+            !e_section_name ||
+            (!e_section_id && typeof e_section_id !== "number") ||
+            (!e_section_category_id && typeof e_section_category_id !== "number")
         ) {
             console.log("setupPortfolioPage: algo na seção não foi encontrado!");
-            return null;
+            return;
         }
 
-        switch (secao_categoria) {
+        switch (e_section_category_id) {
             // categoriaId(1): Avaliações
             case 1:
                 {
-                    // Não é um bug, é uma feature, mas parece um bug
-                    // Desabilitado por enquanto
-                    /*
-                    if (aval_ja_adicionado)
-                        return
-
-                    aval_ja_adicionado = true
-                    */
-
-                    let container_title = secao_nome || "Avaliações";
-                    let container_subtitle = secao_descricao || "Clientes satisfeitos!";
-
-                    let content_header = createSectionHeader(
+                    const section_name = e_section_name || "Avaliações";
+                    const section_description = e_section_description || "Clientes satisfeitos!";
+                    const section_header = createSectionHeader(
                         "star",
                         "filter-star",
-                        container_title,
-                        container_subtitle
+                        section_name,
+                        section_description
                     );
 
                     let content_container = createSectionContainer();
-                    content_container.appendChild(content_header);
+                    content_container.appendChild(section_header);
 
                     if (enable_edit) {
-                        let content_actions = document.createElement("div");
-                        content_actions.classList.add("ms-auto");
-
-                        let content_button_edit = createActionButton("edit", () => {
-                            preparePopup();
-                            toggleDisplayNoneOnElement("popup-edit", false);
-
-                            if (!globalThis.popup_edit_context) globalThis.popup_edit_context = [];
-
-                            globalThis.popup_edit_context.secao_id = portfolio.id;
-                            globalThis.popup_edit_context.secao_ordem = secao_ordem;
-                            globalThis.popup_edit_context.secao_nome = container_title;
-                            globalThis.popup_edit_context.secao_descricao = container_subtitle;
-
-                            const popup_edit_name = document.getElementById("popup-edit-name");
-                            const popup_edit_description =
-                                document.getElementById("popup-edit-description");
-
-                            if (
-                                !(popup_edit_name instanceof HTMLInputElement) ||
-                                !(popup_edit_description instanceof HTMLInputElement)
-                            ) {
-                                console.error(`${this.name}: null check`);
-                                return;
-                            }
-
-                            popup_edit_name.value = container_title;
-                            popup_edit_description.value = container_subtitle;
-                        });
-
-                        let content_button_up = createActionButton("up", () => {
-                            let form_id = portfolio.id;
-                            let form_ordem = secao_ordem;
-
-                            const form_porfolio = readPortfolio(form_id);
-
-                            if (!form_porfolio) {
-                                console.log(
-                                    `ID0: Erro ao editar categoria do portfolio ${form_id}.`
-                                );
-                                return null;
-                            }
-
-                            if (!form_porfolio.secoes.length) {
-                                console.log("ID1: Erro ao editar categoria.");
-                                return null;
-                            }
-
-                            // TODO: Por enquanto a ordem no array é mais importante que o valor em json.ordem
-                            // INFO: Aqui a ordem esta sendo utilizada como id da seção
-                            // Verificar o maior valor para json.ordem
-                            /*
-                            let maior = 0;
-                            form_porfolio.secoes.forEach(element => {
-                                if (parseInt(element.ordem) > maior)
-                                    maior = element.ordem;
-                            });
-
-                            // TODO: Desabilitar botão quando no topo ou no final?
-                            if (secao_ordem >= maior)
-                                return null
-                            */
-
-                            for (
-                                let index = 1;
-                                index > 0 && index < form_porfolio.secoes.length;
-                                index++
-                            ) {
-                                if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                                    continue;
-                                }
-
-                                // Remove do array
-                                let secao = form_porfolio.secoes.splice(index, 1)[0];
-                                form_porfolio.secoes.splice(index - 1, 0, secao);
-                                break;
-                            }
-
-                            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                                notifySectionDataChanged();
-                            } else {
-                                console.log("Ocorreu um erro ao atualizar o objeto!");
-                            }
-                        });
-
-                        let content_button_down = createActionButton("down", () => {
-                            let form_id = portfolio.id;
-                            let form_ordem = secao_ordem;
-
-                            const form_porfolio = readPortfolio(form_id);
-
-                            if (!form_porfolio) {
-                                console.log(
-                                    `ID0: Erro ao editar categoria do portfolio ${form_id}.`
-                                );
-                                return null;
-                            }
-
-                            if (!form_porfolio.secoes.length) {
-                                console.log("ID1: Erro ao editar categoria.");
-                                return null;
-                            }
-
-                            // Verificar o maior valor para json.ordem
-                            let maior = 0;
-                            form_porfolio.secoes.forEach((element) => {
-                                if (parseInt(element.ordem) > maior) maior = element.ordem;
-                            });
-
-                            // TODO: Desabilitar botão quando no topo ou no final?
-                            if (secao_ordem >= maior) return null;
-
-                            for (let index = 0; index < form_porfolio.secoes.length - 1; index++) {
-                                if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                                    continue;
-                                }
-
-                                // Remove do array
-                                let secao = form_porfolio.secoes.splice(index, 1)[0];
-                                form_porfolio.secoes.splice(index + 1, 0, secao);
-                                break;
-                            }
-
-                            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                                notifySectionDataChanged();
-                            } else {
-                                console.log("Ocorreu um erro ao atualizar o objeto!");
-                            }
-                        });
-
-                        let content_button_delete = createActionButton("delete", () => {
-                            preparePopup();
-                            toggleDisplayNoneOnElement("popup-delete", false);
-
-                            if (!globalThis.popup_edit_context) globalThis.popup_edit_context = [];
-
-                            globalThis.popup_edit_context.secao_id = portfolio.id;
-                            globalThis.popup_edit_context.secao_ordem = secao_ordem;
-
-                            const popup_delete_name = document.getElementById("popup-delete-name");
-                            const popup_delete_description = document.getElementById(
-                                "popup-delete-description"
-                            );
-
-                            if (
-                                !(popup_delete_name instanceof HTMLParagraphElement) ||
-                                !(popup_delete_description instanceof HTMLParagraphElement)
-                            ) {
-                                return;
-                            }
-
-                            popup_delete_name.innerText = container_title;
-                            popup_delete_description.innerText = container_subtitle;
-                        });
-
-                        content_actions.appendChild(content_button_edit);
-                        content_actions.appendChild(content_button_down);
-                        content_actions.appendChild(content_button_up);
-                        content_actions.appendChild(content_button_delete);
-
-                        content_header.appendChild(content_actions);
+                        section_header.appendChild(
+                            createActionMenu(
+                                portfolio.id, // portfolio_id
+                                e_section_id, // section_id
+                                section_name, // section_name
+                                section_description // section_description
+                            )
+                        );
                     }
 
                     portfolio_secoes.appendChild(content_container);
@@ -945,8 +1141,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                     content_blobs.classList.add(
                         "row",
                         "w-100",
-                        "m-0",
-                        "g-0",
+                        "space-0",
                         "py-3",
                         "scrool-container"
                     );
@@ -957,50 +1152,40 @@ function setupPortfolioPage(portf_id, enable_edit) {
                     let avaliacoes = JSONQL_A.readAvaliacoes();
                     if (!avaliacoes || !avaliacoes.length) {
                         let information = document.createElement("p");
-                        information.classList.add(
-                            "d-flex",
-                            "w-100",
-                            "p-4",
-                            "m-0",
-                            "g-0",
-                            "align-items-center",
-                            "justify-content-center"
-                        );
+                        information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
                         information.innerHTML = `Não há avaliações para este usuário, você pode utilizar a&nbsp;<a href="dev.html">página de desenvolvimento</a>&nbsp;para gerar uma avaliação.`;
                         content_blobs_scrool.appendChild(information);
                     } else {
                         console.log("avaliacoes");
                         // Lê todas as avaliações
+                        // TODO: Otimizar > Informações do serviço da avaliação
                         avaliacoes.forEach((avaliacao_element) => {
                             const comentario = avaliacao_element.comentario.substring(0, 200);
                             const nota = avaliacao_element.nota;
                             const contratanteId = avaliacao_element.contratanteId;
-                            // TODO: { Otimizar > Informações do serviço da avaliação
                             // Pega o contratoId da avaliação e filtra
-                            const contratoId = avaliacao_element.contratoId;
-                            if (!contratoId) return null;
+                            const _contract_id = avaliacao_element.contratoId;
+                            if (!_contract_id) return;
 
-                            const contratos = JSONQL_C.readContratos(contratoId);
-                            if (!contratos || !contratos.length) return null;
-                            const contrato = contratos[0];
+                            const contrato = readContract(_contract_id);
+                            if (!contrato) return;
+
                             const contratadoId = contrato.contratadoId;
-                            if (!contratadoId) return null;
+                            const _service_id = ensureInteger(contrato.servicoId);
+                            if (!contratadoId || !_service_id) return;
 
                             // A partir daqui, continue apenas os contratos que possuem a mesma id que o usuario do portfolio
-                            if (contratadoId != id) return null;
+                            if (contratadoId !== portfolio_user_id) return;
 
-                            // TODO: Otimizar > Informações do serviço da avaliação
-                            let servicos = JSONQL_S.readServicos();
-                            if (!servicos || servicos.length) return null;
-                            const servico = servicos[0];
+                            const service = readService(_service_id);
+                            if (!service) return;
 
-                            let usuarios = JSONQL_U.readUsuarios(contratanteId);
-                            if (!usuarios || usuarios.length) return null;
-                            const usuario = usuarios[0];
+                            let user = readUser(contratanteId);
+                            if (!user) return;
 
                             // TODO: replace 'placeholder_profile'
                             content_blobs_scrool.innerHTML += `<div class="d-inline-block float-none me-3">
-                                <a class="text-decoration-none m-0 p-0 g-0" href="#">
+                                <a class="text-decoration-none space-0" href="#">
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="row card-aval-limit">
@@ -1009,13 +1194,13 @@ function setupPortfolioPage(portf_id, enable_edit) {
                                                         <img class="icon-32px" src="static/img/placeholder_profile.png"> 
                                                     </div>
                                                     <div class="max-width-80">
-                                                        <h6 class="text-truncate">${usuario.nome}</h6>
-                                                        <p class="m-0 g-0 p-0 text-truncate">⭐ ${nota} - ${servico.titulo}</p>
+                                                        <h6 class="text-truncate">${user.nome}</h6>
+                                                        <p class="space-0 text-truncate">⭐ ${nota} - ${service.titulo}</p>
                                                     </div>
                                                 </div>
                                                 <hr>
                                                 <div class="col-12">
-                                                    <p class="text-wrap g-0 m-0 p-0">${comentario}</p>
+                                                    <p class="text-wrap space-0">${comentario}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1032,180 +1217,27 @@ function setupPortfolioPage(portf_id, enable_edit) {
             // categoriaId(0): Fotos
             case 0:
                 {
-                    let container_title = secao_nome || "Imagens";
-                    let container_subtitle = secao_descricao || "Seção de imagens";
-
-                    let content_header = createSectionHeader(
+                    const section_name = e_section_name || "Imagens";
+                    const section_description = e_section_description || "Seção de imagens";
+                    const section_header = createSectionHeader(
                         "images",
                         "filter-images",
-                        container_title,
-                        container_subtitle
+                        section_name,
+                        section_description
                     );
 
-                    let content_container = createSectionContainer();
-                    content_container.appendChild(content_header);
+                    const content_container = createSectionContainer();
+                    content_container.appendChild(section_header);
 
                     if (enable_edit) {
-                        let content_actions = document.createElement("div");
-                        content_actions.classList.add("ms-auto");
-
-                        let content_button_edit = createActionButton("edit", () => {
-                            preparePopup();
-                            toggleDisplayNoneOnElement("popup-edit", false);
-
-                            if (!globalThis.popup_edit_context) globalThis.popup_edit_context = [];
-
-                            globalThis.popup_edit_context.secao_id = portfolio.id;
-                            globalThis.popup_edit_context.secao_ordem = secao_ordem;
-                            globalThis.popup_edit_context.secao_nome = container_title;
-                            globalThis.popup_edit_context.secao_descricao = container_subtitle;
-
-                            const popup_edit_name = document.getElementById("popup-edit-name");
-                            const popup_edit_description =
-                                document.getElementById("popup-edit-description");
-
-                            if (
-                                !(popup_edit_name instanceof HTMLInputElement) ||
-                                !(popup_edit_description instanceof HTMLInputElement)
+                        section_header.appendChild(
+                            createActionMenu(
+                                portfolio.id, // portfolio_id
+                                e_section_id, // section_id
+                                section_name, // section_name
+                                section_description // section_description
                             )
-                                return;
-
-                            popup_edit_name.value = container_title;
-                            popup_edit_description.value = container_subtitle;
-                        });
-
-                        let content_button_up = createActionButton("up", () => {
-                            let form_id = portfolio.id;
-                            let form_ordem = secao_ordem;
-
-                            const form_porfolio = readPortfolio(form_id);
-
-                            if (!form_porfolio) {
-                                console.log(
-                                    `ID0: Erro ao editar categoria do portfolio ${form_id}.`
-                                );
-                                return null;
-                            }
-
-                            if (!form_porfolio.secoes.length) {
-                                console.log("ID1: Erro ao editar categoria.");
-                                return null;
-                            }
-
-                            // TODO: Por enquanto a ordem no array é mais importante que o valor em json.ordem
-                            // INFO: Aqui a ordem esta sendo utilizada como id da seção
-                            // Verificar o maior valor para json.ordem
-                            /*
-                            let maior = 0;
-                            form_porfolio.secoes.forEach(element => {
-                                if (parseInt(element.ordem) > maior)
-                                    maior = element.ordem;
-                            });
-
-                            // TODO: Desabilitar botão quando no topo ou no final?
-                            if (secao_ordem >= maior)
-                                return null
-                            */
-
-                            for (
-                                let index = 1;
-                                index > 0 && index < form_porfolio.secoes.length;
-                                index++
-                            ) {
-                                if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                                    continue;
-                                }
-
-                                // Remove do array
-                                let secao = form_porfolio.secoes.splice(index, 1)[0];
-                                form_porfolio.secoes.splice(index - 1, 0, secao);
-                                break;
-                            }
-
-                            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                                notifySectionDataChanged();
-                            } else {
-                                console.log("Ocorreu um erro ao atualizar o objeto!");
-                            }
-                        });
-
-                        let content_button_down = createActionButton("down", () => {
-                            let form_id = portfolio.id;
-                            let form_ordem = secao_ordem;
-
-                            const form_porfolio = readPortfolio(form_id);
-
-                            if (!form_porfolio) {
-                                console.log(
-                                    `ID0: Erro ao editar categoria do portfolio ${form_id}.`
-                                );
-                                return null;
-                            }
-
-                            if (!form_porfolio.secoes.length) {
-                                console.log("ID1: Erro ao editar categoria.");
-                                return null;
-                            }
-
-                            // Verificar o maior valor para json.ordem
-                            let maior = 0;
-                            form_porfolio.secoes.forEach((element) => {
-                                if (parseInt(element.ordem) > maior) maior = element.ordem;
-                            });
-
-                            // TODO: Desabilitar botão quando no topo ou no final?
-                            if (secao_ordem >= maior) return null;
-
-                            for (let index = 0; index < form_porfolio.secoes.length - 1; index++) {
-                                if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                                    continue;
-                                }
-
-                                // Remove do array
-                                let secao = form_porfolio.secoes.splice(index, 1)[0];
-                                form_porfolio.secoes.splice(index + 1, 0, secao);
-                                break;
-                            }
-
-                            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                                notifySectionDataChanged();
-                            } else {
-                                console.log("Ocorreu um erro ao atualizar o objeto!");
-                            }
-                        });
-
-                        let content_button_delete = createActionButton("delete", () => {
-                            preparePopup();
-                            toggleDisplayNoneOnElement("popup-delete", false);
-
-                            if (!globalThis.popup_edit_context) globalThis.popup_edit_context = [];
-
-                            globalThis.popup_edit_context.secao_id = portfolio.id;
-                            globalThis.popup_edit_context.secao_ordem = secao_ordem;
-
-                            const popup_delete_name = document.getElementById("popup-delete-name");
-                            const popup_delete_description = document.getElementById(
-                                "popup-delete-description"
-                            );
-
-                            if (
-                                !(popup_delete_name instanceof HTMLParagraphElement) ||
-                                !(popup_delete_description instanceof HTMLParagraphElement)
-                            ) {
-                                console.error(`${this.name}: null check`);
-                                return null;
-                            }
-
-                            popup_delete_name.innerText = container_title;
-                            popup_delete_description.innerText = container_subtitle;
-                        });
-
-                        content_actions.appendChild(content_button_edit);
-                        content_actions.appendChild(content_button_up);
-                        content_actions.appendChild(content_button_down);
-                        content_actions.appendChild(content_button_delete);
-
-                        content_header.appendChild(content_actions);
+                        );
                     }
 
                     portfolio_secoes.appendChild(content_container);
@@ -1214,8 +1246,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                     content_blobs.classList.add(
                         "row",
                         "w-100",
-                        "m-0",
-                        "g-0",
+                        "space-0",
                         "py-3",
                         "scrool-container"
                     );
@@ -1223,14 +1254,13 @@ function setupPortfolioPage(portf_id, enable_edit) {
                     let content_blobs_scrool = document.createElement("div");
                     content_blobs_scrool.classList.add("px-3");
 
-                    if (secao_content && secao_content.length) {
-                        for (let index = 0; index < secao_content.length; index++) {
-                            if (!secao_content[index].blob && !secao_content[index].descricao)
-                                return null;
+                    if (e_secao_content && e_secao_content.length) {
+                        for (let i = 0; i < e_secao_content.length; i++) {
+                            if (!e_secao_content[i].blob && !e_secao_content[i].descricao) return;
 
                             let image_div = document.createElement("div");
                             image_div.classList.add("me-3", "d-inline-block", "position-relative");
-                            image_div.innerHTML += `<img class="img-thumbnail images" src="${secao_content[index].blob}">`;
+                            image_div.innerHTML += `<img class="img-thumbnail images" src="${e_secao_content[i].blob}">`;
 
                             // edit.remove
                             if (enable_edit) {
@@ -1247,34 +1277,18 @@ function setupPortfolioPage(portf_id, enable_edit) {
                                     "border-light",
                                     "rounded-circle",
                                     "d-flex",
-                                    "justify-content-center",
-                                    "align-items-center"
+                                    "center-xy"
                                 );
-                                remove_button.addEventListener("click", () => {
-                                    preparePopup();
-                                    toggleDisplayNoneOnElement("popup-delete-image", false);
-
-                                    if (!globalThis.popup_edit_context)
-                                        globalThis.popup_edit_context = [];
-
-                                    globalThis.popup_edit_context.secao_id = portfolio.id;
-                                    globalThis.popup_edit_context.secao_ordem = secao_ordem;
-                                    // TODO: Expensive, use id or something else
-                                    globalThis.popup_edit_context.blob = secao_content[index].blob;
-                                    globalThis.popup_edit_context.descricao =
-                                        secao_content[index].descricao;
-
-                                    const popup_delete_image_image = document.getElementById(
-                                        "popup-delete-image-image"
-                                    );
-
-                                    if (!(popup_delete_image_image instanceof HTMLImageElement)) {
-                                        console.error(`${this.name}: null check`);
-                                        return;
-                                    }
-
-                                    popup_delete_image_image.src = secao_content[index].blob;
-                                });
+                                remove_button.addEventListener("click", () =>
+                                    triggerDeleteImage(
+                                        new DeleteImageContext(
+                                            portfolio.id,
+                                            e_section_id,
+                                            e_secao_content[i].blob,
+                                            e_secao_content[i].descricao
+                                        )
+                                    )
+                                );
                                 image_div.appendChild(remove_button);
                             }
 
@@ -1282,15 +1296,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         }
                     } else {
                         let information = document.createElement("p");
-                        information.classList.add(
-                            "d-flex",
-                            "w-100",
-                            "p-4",
-                            "m-0",
-                            "g-0",
-                            "align-items-center",
-                            "justify-content-center"
-                        );
+                        information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
                         information.innerText =
                             "Não há imagens cadastrados, edite o portfólio para adicionar uma!";
                         content_blobs_scrool.appendChild(information);
@@ -1307,8 +1313,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         content_add_div_1.innerHTML = `<label class="form-label">Adicionar imagens</label>`;
                         content_add_div_1.classList.add(
                             "col-12",
-                            "m-0",
-                            "g-0",
+                            "space-0",
                             "px-4",
                             "w-100",
                             "mb-3"
@@ -1319,8 +1324,15 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         content_add_div_1.appendChild(content_add_div_1_input);
                         content_add.appendChild(content_add_div_1);
 
+                        content_add_div_1_input.addEventListener("change", () =>
+                            watchImageInputChange(content_add_div_1_input.files).catch((error) => {
+                                alert(error);
+                                content_add_div_1_input.value = "";
+                            })
+                        );
+
                         let content_add_div_2 = document.createElement("div");
-                        content_add_div_2.classList.add("col-12", "m-0", "g-0", "px-4", "pb-4");
+                        content_add_div_2.classList.add("col-12", "space-0", "px-4", "pb-4");
 
                         let content_add_div_2_button = document.createElement("button");
                         content_add_div_2_button.classList.add(
@@ -1331,10 +1343,10 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         );
                         content_add_div_2_button.role = "button";
                         content_add_div_2_button.innerHTML = `<div class="d-flex justify-content-center m-2">
-                        <img class="icon-24px fixed-filter-invert me-2"
-                            src="static/action-icons/add.svg">
-                            <p class="g-0 p-0 m-0">Adicionar imagens</p>
-                    </div>`;
+                            <img class="icon-24px fixed-filter-invert me-2"
+                                src="static/action-icons/add.svg">
+                                <p class="space-0">Adicionar imagens</p>
+                        </div>`;
                         content_add_div_2_button.addEventListener("click", async () => {
                             if (!(content_add_div_1_input instanceof HTMLInputElement)) return;
 
@@ -1346,52 +1358,11 @@ function setupPortfolioPage(portf_id, enable_edit) {
                                 return;
                             }
 
-                            const base64Image = await imageFileToBase64(
+                            commitAddImage(
+                                portfolio.id,
+                                e_section_id,
                                 content_add_div_1_input.files[0]
                             );
-
-                            if (!base64Image.startsWith("data:image/")) {
-                                alert("Não é um arquivo de imagem!");
-                                return null;
-                            }
-
-                            let form_id = portfolio.id;
-                            let form_ordem = secao_ordem;
-
-                            const form_porfolio = readPortfolio(form_id);
-
-                            if (!form_porfolio) {
-                                console.log(
-                                    `ID0: Erro ao editar categoria do portfolio ${form_id}.`
-                                );
-                                return null;
-                            }
-
-                            if (!form_porfolio.secoes.length) {
-                                console.log("ID1: Erro ao editar categoria.");
-                                return null;
-                            }
-
-                            for (let index = 0; index < form_porfolio.secoes.length; index++) {
-                                if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                                    continue;
-                                }
-
-                                /// TODO: Add id
-                                let content_tv = {
-                                    blob: base64Image,
-                                    descricao: "Imagem",
-                                };
-
-                                form_porfolio.secoes[index].contents.push(content_tv);
-                                break;
-                            }
-
-                            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                                notifySectionDataChanged();
-                            } else {
-                                console.log("Ocorreu um erro ao atualizar o objeto!");
-                            }
                         });
                         content_add_div_2.appendChild(content_add_div_2_button);
                         content_add.appendChild(content_add_div_2);
@@ -1402,181 +1373,27 @@ function setupPortfolioPage(portf_id, enable_edit) {
             // categoriaId(2): Links
             case 2:
                 {
-                    let container_title = secao_nome || "Redes";
-                    let container_subtitle = secao_descricao || "Links Externos"; // "Segue lá!"
-
-                    let content_header = createSectionHeader(
+                    const section_name = e_section_name || "Redes";
+                    const section_description = e_section_description || "Links Externos"; // "Segue lá!"
+                    const section_header = createSectionHeader(
                         "link",
                         "filter-link",
-                        container_title,
-                        container_subtitle
+                        section_name,
+                        section_description
                     );
+
                     let content_container = createSectionContainer();
-                    content_container.appendChild(content_header);
+                    content_container.appendChild(section_header);
 
                     if (enable_edit) {
-                        let content_actions = document.createElement("div");
-                        content_actions.classList.add("ms-auto");
-
-                        let content_button_edit = createActionButton("edit", () => {
-                            preparePopup();
-                            toggleDisplayNoneOnElement("popup-edit", false);
-
-                            if (!globalThis.popup_edit_context) globalThis.popup_edit_context = [];
-
-                            globalThis.popup_edit_context.secao_id = portfolio.id;
-                            globalThis.popup_edit_context.secao_ordem = secao_ordem;
-                            globalThis.popup_edit_context.secao_nome = container_title;
-                            globalThis.popup_edit_context.secao_descricao = container_subtitle;
-
-                            const html_popup_edit_name = document.getElementById("popup-edit-name");
-                            const html_popup_edit_description =
-                                document.getElementById("popup-edit-description");
-
-                            if (
-                                !(html_popup_edit_name instanceof HTMLButtonElement) ||
-                                !(html_popup_edit_description instanceof HTMLButtonElement)
-                            ) {
-                                console.log(`${this.name}: null check`);
-                                return null;
-                            }
-
-                            html_popup_edit_name.value = container_title;
-                            html_popup_edit_description.value = container_subtitle;
-                        });
-
-                        let content_button_up = createActionButton("up", () => {
-                            let form_id = portfolio.id;
-                            let form_ordem = secao_ordem;
-
-                            const form_porfolio = readPortfolio(form_id);
-
-                            if (!form_porfolio) {
-                                console.log(
-                                    `ID0: Erro ao editar categoria do portfolio ${form_id}.`
-                                );
-                                return null;
-                            }
-
-                            if (!form_porfolio.secoes.length) {
-                                console.log("ID1: Erro ao editar categoria.");
-                                return null;
-                            }
-
-                            // TODO: Por enquanto a ordem no array é mais importante que o valor em json.ordem
-                            // INFO: Aqui a ordem esta sendo utilizada como id da seção
-                            // Verificar o maior valor para json.ordem
-                            /*
-                            let maior = 0;
-                            form_porfolio.secoes.forEach(element => {
-                                if (parseInt(element.ordem) > maior)
-                                    maior = element.ordem;
-                            });
-
-                            // TODO: Desabilitar botão quando no topo ou no final?
-                            if (secao_ordem >= maior)
-                                return null
-                            */
-
-                            for (
-                                let index = 1;
-                                index > 0 && index < form_porfolio.secoes.length;
-                                index++
-                            ) {
-                                if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                                    continue;
-                                }
-
-                                // Remove do array
-                                let secao = form_porfolio.secoes.splice(index, 1)[0];
-                                form_porfolio.secoes.splice(index - 1, 0, secao);
-                                break;
-                            }
-
-                            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                                notifySectionDataChanged();
-                            } else {
-                                console.log("Ocorreu um erro ao atualizar o objeto!");
-                            }
-                        });
-
-                        let content_button_down = createActionButton("down", () => {
-                            let form_id = portfolio.id;
-                            let form_ordem = secao_ordem;
-
-                            const form_porfolio = readPortfolio(form_id);
-
-                            if (!form_porfolio) {
-                                console.log(
-                                    `ID0: Erro ao editar categoria do portfolio ${form_id}.`
-                                );
-                                return null;
-                            }
-
-                            if (!form_porfolio.secoes.length) {
-                                console.log("ID1: Erro ao editar categoria.");
-                                return null;
-                            }
-
-                            // Verificar o maior valor para json.ordem
-                            let maior = 0;
-                            form_porfolio.secoes.forEach((element) => {
-                                if (parseInt(element.ordem) > maior) maior = element.ordem;
-                            });
-
-                            // TODO: Desabilitar botão quando no topo ou no final?
-                            if (secao_ordem >= maior) return null;
-
-                            for (let index = 0; index < form_porfolio.secoes.length - 1; index++) {
-                                if (parseInt(form_porfolio.secoes[index].ordem) != form_ordem) {
-                                    continue;
-                                }
-
-                                // Remove do array
-                                let secao = form_porfolio.secoes.splice(index, 1)[0];
-                                form_porfolio.secoes.splice(index + 1, 0, secao);
-                                break;
-                            }
-
-                            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                                notifySectionDataChanged();
-                            } else {
-                                console.log("Ocorreu um erro ao atualizar o objeto!");
-                            }
-                        });
-
-                        let content_button_delete = createActionButton("delete", () => {
-                            preparePopup();
-                            toggleDisplayNoneOnElement("popup-delete", false);
-
-                            if (!globalThis.popup_edit_context) globalThis.popup_edit_context = [];
-
-                            globalThis.popup_edit_context.secao_id = portfolio.id;
-                            globalThis.popup_edit_context.secao_ordem = secao_ordem;
-
-                            const popup_delete_name = document.getElementById("popup-delete-name");
-                            const popup_delete_description = document.getElementById(
-                                "popup-delete-description"
-                            );
-
-                            if (
-                                !(popup_delete_name instanceof HTMLParagraphElement) ||
-                                !(popup_delete_description instanceof HTMLParagraphElement)
-                            ) {
-                                console.error(`${this.name}: null check`);
-                                return;
-                            }
-
-                            popup_delete_name.innerText = container_title;
-                            popup_delete_description.innerText = container_subtitle;
-                        });
-
-                        content_actions.appendChild(content_button_edit);
-                        content_actions.appendChild(content_button_up);
-                        content_actions.appendChild(content_button_down);
-                        content_actions.appendChild(content_button_delete);
-
-                        content_header.appendChild(content_actions);
+                        section_header.appendChild(
+                            createActionMenu(
+                                portfolio.id, // portfolio_id
+                                e_section_id, // section_id
+                                section_name, // section_name
+                                section_description // section_description
+                            )
+                        );
                     }
 
                     portfolio_secoes.appendChild(content_container);
@@ -1592,10 +1409,9 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         "pb-4"
                     );
 
-                    if (secao_content && secao_content.length) {
-                        for (let index = 0; index < secao_content.length; index++) {
-                            if (!secao_content[index].blob && !secao_content[index].descricao)
-                                return null;
+                    if (e_secao_content && e_secao_content.length) {
+                        for (let i = 0; i < e_secao_content.length; i++) {
+                            if (!e_secao_content[i].blob && !e_secao_content[i].descricao) return;
 
                             let link_div = document.createElement("div");
                             link_div.classList.add(
@@ -1604,17 +1420,18 @@ function setupPortfolioPage(portf_id, enable_edit) {
                                 "col-xl-4",
                                 "position-relative"
                             );
-                            link_div.innerHTML += `<a class="btn btn-primary text-decoration-none w-100" href="${secao_content[index].blob}" role="button">
+                            link_div.innerHTML += `<a class="btn btn-primary text-decoration-none w-100" href="${e_secao_content[i].blob}" role="button">
                                 <div class="d-flex justify-content-center m-2">
                                     <img class="icon-24px fixed-filter-invert me-2"
                                         src="static/action-icons/external.svg">
-                                        <p class="g-0 p-0 m-0">${secao_content[index].descricao}</p>
+                                        <p class="space-0">${e_secao_content[i].descricao}</p>
                                 </div>
                             </a>`;
 
                             if (enable_edit) {
                                 let remove_button = document.createElement("button");
                                 remove_button.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`;
+                                // TODO: Simplify classes
                                 remove_button.classList.add(
                                     "icon-32px",
                                     "position-absolute",
@@ -1626,92 +1443,31 @@ function setupPortfolioPage(portf_id, enable_edit) {
                                     "border-light",
                                     "rounded-circle",
                                     "d-flex",
-                                    "justify-content-center",
-                                    "align-items-center"
+                                    "center-xy"
                                 );
                                 link_div.appendChild(remove_button);
-                                remove_button.addEventListener("click", () => {
-                                    preparePopup();
-                                    toggleDisplayNoneOnElement("popup-delete-link", false);
-
-                                    if (!globalThis.popup_edit_context)
-                                        globalThis.popup_edit_context = [];
-
-                                    globalThis.popup_edit_context.secao_id = portfolio.id;
-                                    globalThis.popup_edit_context.secao_ordem = secao_ordem;
-                                    // TODO: Expensive, use id or something else
-                                    globalThis.popup_edit_context.blob = secao_content[index].blob;
-                                    globalThis.popup_edit_context.descricao =
-                                        secao_content[index].descricao;
-
-                                    const popup_delete_link_url =
-                                        document.getElementById("popup-delete-link-url");
-                                    const popup_delete_link_description = document.getElementById(
-                                        "popup-delete-link-description"
-                                    );
-
-                                    if (
-                                        !(popup_delete_link_url instanceof HTMLParagraphElement) ||
-                                        !(
-                                            popup_delete_link_description instanceof
-                                            HTMLParagraphElement
+                                remove_button.addEventListener("click", () =>
+                                    triggerDeleteLink(
+                                        new DeleteLinkContext(
+                                            portfolio.id,
+                                            e_section_id,
+                                            e_secao_content[i].blob,
+                                            e_secao_content[i].descricao
                                         )
-                                    ) {
-                                        return;
-                                    }
-
-                                    popup_delete_link_url.innerText = secao_content[index].blob;
-                                    popup_delete_link_description.innerText =
-                                        secao_content[index].descricao;
-                                });
+                                    )
+                                );
                             }
 
                             content_blobs.appendChild(link_div);
                         }
                     } else {
-                        let information = document.createElement("p");
-                        information.classList.add(
-                            "d-flex",
-                            "w-100",
-                            "p-4",
-                            "m-0",
-                            "g-0",
-                            "align-items-center",
-                            "justify-content-center"
-                        );
-                        information.innerText =
-                            "Não há links cadastrados, edite o portfólio para adicionar um!";
-                        content_blobs.appendChild(information);
+                        content_blobs.appendChild(createNoLinkSubSection());
                     }
 
                     if (enable_edit) {
-                        let add_new_link = document.createElement("div");
-                        add_new_link.classList.add("col-12");
-
-                        let add_new_link_button = document.createElement("button");
-                        add_new_link_button.classList.add(
-                            "btn",
-                            "btn-outline-primary",
-                            "text-decoration-none",
-                            "w-100"
+                        content_blobs.appendChild(
+                            createAddLinkSubSection(portfolio.id, e_section_id)
                         );
-                        add_new_link_button.addEventListener("click", () => {
-                            if (!globalThis.popup_edit_context) globalThis.popup_edit_context = [];
-
-                            globalThis.popup_edit_context.secao_id = portfolio.id;
-                            globalThis.popup_edit_context.secao_ordem = secao_ordem;
-
-                            preparePopup();
-                            toggleDisplayNoneOnElement("popup-add-link", false);
-                        });
-                        add_new_link_button.innerHTML = `<div class="d-flex justify-content-center m-2">
-                            <img class="icon-24px fixed-filter-invert me-2"
-                                src="static/action-icons/add.svg">
-                            <p class="g-0 p-0 m-0">Adicionar link</p>
-                        </div>`;
-
-                        add_new_link.appendChild(add_new_link_button);
-                        content_blobs.appendChild(add_new_link);
                     }
                     content_container.appendChild(content_blobs);
                 }
@@ -1741,23 +1497,22 @@ function setupPortfolioSetup() {
     }
 
     // Lê os portfolios e usuários disponíveis
-    let portfolios = JSONQL_P.readPortfolios();
-    let usuarios = JSONQL_U.readUsuarios();
+    const _portfolios = JSONQL_P.readPortfolios();
+    const _usuarios = JSONQL_U.readUsuarios();
 
     // Se existem portfólios, adiciona-os à lista (abrir portfólio)
-    if (portfolios && portfolios.length) {
-        for (let index = 0; index < portfolios.length; index++) {
+    if (_portfolios && _portfolios.length) {
+        for (let i = 0; i < _portfolios.length; i++) {
             let option = document.createElement("option");
-            option.value = portfolios[index].id;
-            option.innerText = `Portfólio de id(${portfolios[index].id})`;
+            option.value = _portfolios[i].id;
+            option.innerText = `Portfólio de id(${_portfolios[i].id})`;
             portfolio_setup_select_select.appendChild(option);
         }
         portfolio_setup_select_btn.classList.remove("disabled");
-        portfolio_setup_select_btn.addEventListener("click", () => {
-            let userId = parseInt(portfolio_setup_select_select.value);
+        portfolio_setup_select_btn.addEventListener("click", () =>
             // Abrir o portfólio de id $?
-            setIdParam(userId);
-        });
+            setIdParam(parseInt(portfolio_setup_select_select.value))
+        );
     } else {
         let option = document.createElement("option");
         option.innerText = `Nenhum portfólio criado!`;
@@ -1765,19 +1520,18 @@ function setupPortfolioSetup() {
     }
 
     // Se existem usuários, adiciona-os à lista (criar novo portfólio)
-    if (usuarios && usuarios.length) {
-        for (let index = 0; index < usuarios.length; index++) {
+    if (_usuarios && _usuarios.length) {
+        for (let i = 0; i < _usuarios.length; i++) {
             let option = document.createElement("option");
-            option.value = usuarios[index].id;
-            option.innerText = `Usuário id(${usuarios[index].id}): ${usuarios[index].nome}`;
+            option.value = _usuarios[i].id;
+            option.innerText = `Usuário id(${_usuarios[i].id}): ${_usuarios[i].nome}`;
             portfolio_setup_create_select.appendChild(option);
         }
         portfolio_setup_create_btn.classList.remove("disabled");
         portfolio_setup_create_btn.addEventListener("click", () => {
             // Criar portfólio para o usuário de id $?
-            let userId = parseInt(portfolio_setup_create_select.value);
             let portfolioId = JSONQL_P.createPortfolio({
-                usuarioId: userId,
+                usuarioId: parseInt(portfolio_setup_create_select.value),
                 secoes: [],
             });
 
