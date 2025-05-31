@@ -41,3 +41,17 @@
     font-weight: 500;
     border-radius: 0.5rem;
 }
+
+.max-preview {
+    max-width: 200px;
+    max-height: 200px;
+    aspect-ratio: 1;
+}
+
+#image_placeholder {
+    padding: 16px;
+}
+
+#image_preview {
+    padding: 4px;
+}
