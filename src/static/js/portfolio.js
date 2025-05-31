@@ -7,6 +7,10 @@ import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as Faker from "./faker.mjs";
 import { ensureInteger, imageFileToBase64, isNonEmptyString, MAX_ALLOWED_SIZE } from "./tools.mjs";
 
+function AddSectionContext(portfolio_id) {
+    this.portfolio_id = portfolio_id;
+}
+
 function DeleteSectionContext(portfolio_id, section_id, name, description) {
     this.portfolio_id = portfolio_id;
     this.section_id = section_id;
@@ -70,6 +74,7 @@ class Context {
 
     setupContext(context) {
         if (
+            context instanceof AddSectionContext ||
             context instanceof DeleteSectionContext ||
             context instanceof EditSectionInfoContext ||
             context instanceof AddLinkContext ||
@@ -129,6 +134,19 @@ function readService(services_id) {
     if (!services || !services.length) return null;
 
     return services[0];
+}
+
+/**
+ *
+ * @param {AddSectionContext} addSectionContext
+ */
+function triggerAddSection(addSectionContext) {
+    if (!(addSectionContext instanceof AddSectionContext)) return;
+
+    preparePopup();
+    toggleDisplayNoneOnElement("popup-add", false);
+
+    context.setupContext(addSectionContext);
 }
 
 /**
@@ -193,11 +211,6 @@ function triggerAddLink(addLinkContext) {
 
     context.setupContext(addLinkContext);
 
-    if (!globalThis.popup_edit_context) globalThis.popup_edit_context = [];
-
-    globalThis.popup_edit_context.secao_id = addLinkContext.portfolio_id;
-    globalThis.popup_edit_context.secao_ordem = addLinkContext.section_id;
-
     preparePopup();
     toggleDisplayNoneOnElement("popup-add-link", false);
 
@@ -248,6 +261,73 @@ function triggerDeleteImage(deleteImageContext) {
     popup_delete_image_image.src = deleteImageContext.blob;
 
     context.setupContext(deleteImageContext);
+}
+
+function commitAddAsection() {
+    const _context = context.getContext();
+
+    if (!(_context instanceof AddSectionContext)) return;
+
+    const _portfolio_id = ensureInteger(_context.portfolio_id);
+    const html_popup_add_name = document.getElementById("popup-add-name");
+    const html_popup_add_description = document.getElementById("popup-add-description");
+    const html_popup_add_categoria = document.getElementById("popup-add-categoria");
+
+    if (
+        !_portfolio_id ||
+        !(html_popup_add_name instanceof HTMLInputElement) ||
+        !(html_popup_add_description instanceof HTMLInputElement) ||
+        !(html_popup_add_categoria instanceof HTMLSelectElement)
+    ) {
+        console.log("add-section: null check");
+        return;
+    }
+
+    const form_section_name = html_popup_add_name.value;
+    const form_section_description = html_popup_add_description.value;
+    const form_section_categoria = html_popup_add_categoria.value;
+
+    const _portfolio = readPortfolio(_portfolio_id);
+
+    if (!_portfolio) {
+        console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
+        return;
+    }
+
+    if (!form_section_name) {
+        alert("O nome da seção não pode estar vazio!");
+        return;
+    }
+
+    let maior = 0;
+    // Como estamos adicionando uma seção, não é problema se ela esta vazia
+    if (_portfolio.secoes && _portfolio.secoes.length) {
+        // Verificar o maior valor para json.ordem
+
+        _portfolio.secoes.forEach((element) => {
+            if (parseInt(element.ordem) > maior) maior = element.ordem;
+        });
+    } else {
+        _portfolio.secoes = [];
+    }
+
+    maior++;
+
+    _portfolio.secoes.push({
+        ordem: maior,
+        nome: form_section_name,
+        descricao: form_section_description || "",
+        categoriaId: parseInt(form_section_categoria),
+        contents: [],
+    });
+
+    if (JSONQL_P.updatePortfolio(_portfolio_id, _portfolio)) {
+        toggleDisplayNoneOnElement("popup-add", true);
+        notifySectionDataChanged();
+        return;
+    }
+
+    console.log("Ocorreu um erro ao atualizar o objeto!");
 }
 
 function commitDeleteSection() {
@@ -757,6 +837,41 @@ function createNoLinkSubSection() {
     return information;
 }
 
+function createEditPortfolioButton(edit) {
+    if (!(typeof edit !== "boolean")) document.createElement("span");
+
+    const button = document.createElement("button");
+    button.classList.add(
+        "btn",
+        "btn-outline-primary",
+        "d-flex",
+        "flex-row",
+        "center-xy",
+        "space-0",
+        "w-100",
+        "p-2"
+    );
+
+    let toggle_edit_element_img = document.createElement("img");
+    let toggle_edit_element_p = document.createElement("p");
+    toggle_edit_element_img.classList.add("icon-dark", "icon-24px", "space-0", "me-2");
+    toggle_edit_element_p.classList.add("space-0");
+
+    if (edit) {
+        toggle_edit_element_img.src = "static/action-icons/close.svg";
+        toggle_edit_element_p.innerText = "Finalizar edição";
+    } else {
+        toggle_edit_element_img.src = "static/action-icons/edit.svg";
+        toggle_edit_element_p.innerText = "Editar portfólio";
+    }
+
+    button.appendChild(toggle_edit_element_img);
+    button.appendChild(toggle_edit_element_p);
+    button.addEventListener("click", () => toggleEditParam(!edit));
+
+    return button;
+}
+
 // TODO: Improve this: get only needed contracts
 // TODO: select * where userId = userId
 /**
@@ -876,20 +991,11 @@ function setupPortfolioPage(portf_id, enable_edit) {
 
     toggleDisplayNoneOnElement("portfolio-display", false);
 
-    let toggle_edit_element = document.getElementById("toggle-edit");
-    if (enable_edit) {
-        if (toggle_edit_element instanceof HTMLButtonElement) {
-            let toggle_edit_element_img = document.createElement("img");
-            toggle_edit_element_img.classList.add("icon-dark", "icon-24px", "space-0", "me-2");
-            toggle_edit_element_img.src = "static/action-icons/close.svg";
-            let toggle_edit_element_p = document.createElement("p");
-            toggle_edit_element_p.classList.add("space-0");
-            toggle_edit_element_p.innerText = "Finalizar edição";
-            toggle_edit_element.appendChild(toggle_edit_element_img);
-            toggle_edit_element.appendChild(toggle_edit_element_p);
-            toggle_edit_element.addEventListener("click", () => toggleEditParam(false));
-        }
+    let toggle_edit_element = document.getElementById("toggle-edit-div");
+    if (!(toggle_edit_element instanceof HTMLDivElement)) return;
 
+    toggle_edit_element.appendChild(createEditPortfolioButton(enable_edit));
+    if (enable_edit) {
         toggleDisplayNoneOnElement("add-section", false);
 
         const popup_edit_section_close = document.getElementById("popup-edit-close");
@@ -906,73 +1012,12 @@ function setupPortfolioPage(portf_id, enable_edit) {
 
         // Botão de adicionar seção
         add_section?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-add", false)
+            triggerAddSection(new AddSectionContext(portfolio.id))
         );
         popup_add_section_close?.addEventListener("click", () =>
             toggleDisplayNoneOnElement("popup-add", true)
         );
-        popup_add_section_confirm?.addEventListener("click", () => {
-            let form_id = globalThis.popup_edit_context.portfolio_id;
-
-            const html_popup_add_name = document.getElementById("popup-add-name");
-            const html_popup_add_description = document.getElementById("popup-add-description");
-            const html_popup_add_categoria = document.getElementById("popup-add-categoria");
-
-            if (
-                !(html_popup_add_name instanceof HTMLInputElement) ||
-                !(html_popup_add_description instanceof HTMLInputElement) ||
-                !(html_popup_add_categoria instanceof HTMLSelectElement)
-            ) {
-                console.log("add-section: null check");
-                return;
-            }
-
-            const form_section_name = html_popup_add_name.value;
-            const form_section_description = html_popup_add_description.value;
-            const form_section_categoria = html_popup_add_categoria.value;
-
-            const form_porfolio = readPortfolio(form_id);
-
-            if (!form_porfolio) {
-                console.log(`ID0: Erro ao editar categoria do portfolio ${form_id}.`);
-                return;
-            }
-
-            if (!form_section_name) {
-                alert("O nome da seção não pode estar vazio!");
-                return;
-            }
-
-            let maior = 0;
-            // Como estamos adicionando uma seção, não é problema se ela esta vazia
-            if (form_porfolio.secoes && form_porfolio.secoes.length) {
-                // Verificar o maior valor para json.ordem
-
-                form_porfolio.secoes.forEach((element) => {
-                    if (parseInt(element.ordem) > maior) maior = element.ordem;
-                });
-            } else {
-                form_porfolio.secoes = [];
-            }
-
-            maior++;
-
-            form_porfolio.secoes.push({
-                ordem: maior,
-                nome: form_section_name,
-                descricao: form_section_description || "",
-                categoriaId: parseInt(form_section_categoria),
-                contents: [],
-            });
-
-            if (JSONQL_P.updatePortfolio(form_id, form_porfolio)) {
-                toggleDisplayNoneOnElement("popup-add", true);
-                notifySectionDataChanged();
-                return;
-            }
-
-            console.log("Ocorreu um erro ao atualizar o objeto!");
-        });
+        popup_add_section_confirm?.addEventListener("click", commitAddAsection);
 
         const popup_add_link_close = document.getElementById("popup-add-link-close");
         const popup_add_link_confirm = document.getElementById("popup-add-link-confirm");
@@ -1016,21 +1061,6 @@ function setupPortfolioPage(portf_id, enable_edit) {
             toggleDisplayNoneOnElement("popup-delete-link", true)
         );
         popup_delete_link_confirm?.addEventListener("click", () => commitDeleteLink);
-    } else if (toggle_edit_element instanceof HTMLButtonElement) {
-        let toggle_edit_element_img = document.createElement("img");
-        toggle_edit_element_img.classList.add("icon-dark", "icon-24px", "space-0", "me-2");
-        toggle_edit_element_img.src = "static/action-icons/edit.svg";
-        let toggle_edit_element_p = document.createElement("p");
-        toggle_edit_element_p.classList.add("space-0");
-        toggle_edit_element_p.innerText = "Editar portfólio";
-        toggle_edit_element.appendChild(toggle_edit_element_img);
-        toggle_edit_element.appendChild(toggle_edit_element_p);
-        toggle_edit_element.addEventListener("click", () => toggleEditParam(true));
-    }
-
-    if (!globalThis.popup_edit_context) {
-        globalThis.popup_edit_context = [];
-        globalThis.popup_edit_context.portfolio_id = portfolio.id;
     }
 
     const portfolio_user_id = portfolio.usuarioId;
