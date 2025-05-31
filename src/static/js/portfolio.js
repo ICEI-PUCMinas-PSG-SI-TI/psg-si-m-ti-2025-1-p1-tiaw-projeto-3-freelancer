@@ -1079,6 +1079,371 @@ function setIdParam(id) {
 }
 
 /**
+ * @param {number} portfolio_id
+ * @param {number} section_id
+ * @param {string} section_name
+ * @param {string} section_description
+ * @param {boolean} enable_edit
+ * @param {number} portfolio_user_id
+ */
+function createReviewSection(
+    portfolio_id,
+    section_id,
+    section_name,
+    section_description,
+    enable_edit,
+    portfolio_user_id
+) {
+    const _portfolio_id = ensureInteger(portfolio_id);
+    const _section_id = ensureInteger(section_id);
+    const _portfolio_user_id = ensureInteger(portfolio_user_id);
+
+    if (!_portfolio_id || !_section_id || !_portfolio_user_id) return;
+
+    const _section_name = section_name || "Avaliações";
+    const _section_description = section_description || "Clientes satisfeitos!";
+
+    const section_header = createSectionHeader(
+        "star",
+        "filter-star",
+        _section_name,
+        _section_description
+    );
+
+    let content_container = createSectionContainer();
+    content_container.appendChild(section_header);
+
+    if (enable_edit) {
+        section_header.appendChild(
+            createActionMenu(_portfolio_id, _section_id, _section_name, _section_description)
+        );
+    }
+
+    let content_blobs = document.createElement("div");
+    content_blobs.classList.add("row", "w-100", "space-0", "py-3", "scrool-container");
+
+    let content_blobs_scrool = document.createElement("div");
+    content_blobs_scrool.classList.add("px-3");
+
+    let avaliacoes = JSONQL_A.readAvaliacoes();
+    if (!avaliacoes || !avaliacoes.length) {
+        let information = document.createElement("p");
+        information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
+        information.innerHTML = `Não há avaliações para este usuário, você pode utilizar a&nbsp;<a href="dev.html">página de desenvolvimento</a>&nbsp;para gerar uma avaliação.`;
+        content_blobs_scrool.appendChild(information);
+    } else {
+        console.log("avaliacoes");
+        // Lê todas as avaliações
+        // TODO: Otimizar > Informações do serviço da avaliação
+        avaliacoes.forEach((avaliacao_element) => {
+            const comentario = avaliacao_element.comentario.substring(0, 200);
+            const nota = avaliacao_element.nota;
+            const contratanteId = avaliacao_element.contratanteId;
+            // Pega o contratoId da avaliação e filtra
+            const _contract_id = avaliacao_element.contratoId;
+            if (!_contract_id) return;
+
+            const contrato = readContract(_contract_id);
+            if (!contrato) return;
+
+            const contratadoId = contrato.contratadoId;
+            const _service_id = ensureInteger(contrato.servicoId);
+            if (!contratadoId || !_service_id) return;
+
+            // A partir daqui, continue apenas os contratos que possuem a mesma id que o usuario do portfolio
+            if (contratadoId !== _portfolio_user_id) return;
+
+            const service = readService(_service_id);
+            if (!service) return;
+
+            let user = readUser(contratanteId);
+            if (!user) return;
+
+            // TODO: replace 'placeholder_profile'
+            content_blobs_scrool.innerHTML += `<div class="d-inline-block float-none me-3">
+                <a class="text-decoration-none space-0" href="#">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row card-aval-limit">
+                                <div class="d-flex justify-content-start align-items-center pb-2">
+                                    <div class="me-2">
+                                        <img class="icon-32px" src="static/img/placeholder_profile.png"> 
+                                    </div>
+                                    <div class="max-width-80">
+                                        <h6 class="text-truncate">${user.nome}</h6>
+                                        <p class="space-0 text-truncate">⭐ ${nota} - ${service.titulo}</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="col-12">
+                                    <p class="text-wrap space-0">${comentario}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>`;
+        });
+    }
+
+    content_blobs.appendChild(content_blobs_scrool);
+    content_container.appendChild(content_blobs);
+
+    return content_container;
+}
+
+/**
+ * @param {number} portfolio_id
+ * @param {number} section_id
+ * @param {string} section_name
+ * @param {string} section_description
+ * @param {boolean} enable_edit
+ * @param {any[]} content
+ */
+function createImageSection(
+    portfolio_id,
+    section_id,
+    section_name,
+    section_description,
+    enable_edit,
+    content
+) {
+    const _portfolio_id = ensureInteger(portfolio_id);
+    const _section_id = ensureInteger(section_id);
+
+    if (!_portfolio_id || !_section_id) return;
+
+    const _section_name = section_name || "Imagens";
+    const _section_description = section_description || "Seção de imagens";
+
+    const section_header = createSectionHeader(
+        "images",
+        "filter-images",
+        section_name,
+        section_description
+    );
+
+    if (enable_edit) {
+        section_header.appendChild(
+            createActionMenu(_portfolio_id, _section_id, _section_name, _section_description)
+        );
+    }
+
+    const content_container = createSectionContainer();
+    content_container.appendChild(section_header);
+
+    let content_blobs = document.createElement("div");
+    content_blobs.classList.add("row", "w-100", "space-0", "py-3", "scrool-container");
+
+    let content_blobs_scrool = document.createElement("div");
+    content_blobs_scrool.classList.add("px-3");
+
+    if (content && content.length) {
+        for (let i = 0; i < content.length; i++) {
+            if (!content[i].blob && !content[i].descricao) return;
+
+            let image_div = document.createElement("div");
+            image_div.classList.add("me-3", "d-inline-block", "position-relative");
+            image_div.innerHTML += `<img class="img-thumbnail images" src="${content[i].blob}">`;
+
+            // edit.remove
+            if (enable_edit) {
+                let remove_button = document.createElement("button");
+                remove_button.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`;
+                remove_button.classList.add(
+                    "icon-32px",
+                    "position-absolute",
+                    "top-0",
+                    "start-100",
+                    "translate-middle",
+                    "p-2",
+                    "border",
+                    "border-light",
+                    "rounded-circle",
+                    "d-flex",
+                    "center-xy"
+                );
+                remove_button.addEventListener("click", () =>
+                    triggerDeleteImage(
+                        new DeleteImageContext(
+                            _portfolio_id,
+                            _section_id,
+                            content[i].blob,
+                            content[i].descricao
+                        )
+                    )
+                );
+                image_div.appendChild(remove_button);
+            }
+
+            content_blobs_scrool.appendChild(image_div);
+        }
+    } else {
+        let information = document.createElement("p");
+        information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
+        information.innerText = "Não há imagens cadastrados, edite o portfólio para adicionar uma!";
+        content_blobs_scrool.appendChild(information);
+    }
+
+    content_blobs.appendChild(content_blobs_scrool);
+    content_container.appendChild(content_blobs);
+
+    // edit.add
+    if (enable_edit) {
+        let content_add = document.createElement("div");
+        content_add.innerHTML += "<hr>";
+        let content_add_div_1 = document.createElement("div");
+        content_add_div_1.innerHTML = `<label class="form-label">Adicionar imagens</label>`;
+        content_add_div_1.classList.add("col-12", "space-0", "px-4", "w-100", "mb-3");
+        let content_add_div_1_input = document.createElement("input");
+        content_add_div_1_input.classList.add("form-control");
+        content_add_div_1_input.setAttribute("type", "file");
+        content_add_div_1.appendChild(content_add_div_1_input);
+        content_add.appendChild(content_add_div_1);
+
+        content_add_div_1_input.addEventListener("change", () =>
+            watchImageInputChange(content_add_div_1_input.files).catch((error) => {
+                alert(error);
+                content_add_div_1_input.value = "";
+            })
+        );
+
+        let content_add_div_2 = document.createElement("div");
+        content_add_div_2.classList.add("col-12", "space-0", "px-4", "pb-4");
+
+        let content_add_div_2_button = document.createElement("button");
+        content_add_div_2_button.classList.add(
+            "btn",
+            "btn-outline-primary",
+            "text-decoration-none",
+            "w-100"
+        );
+        content_add_div_2_button.role = "button";
+        content_add_div_2_button.innerHTML = `<div class="d-flex justify-content-center m-2">
+            <img class="icon-24px fixed-filter-invert me-2"
+                src="static/action-icons/add.svg">
+                <p class="space-0">Adicionar imagens</p>
+        </div>`;
+        content_add_div_2_button.addEventListener("click", async () => {
+            if (!(content_add_div_1_input instanceof HTMLInputElement)) return;
+
+            if (!content_add_div_1_input.files || !content_add_div_1_input.files.length) {
+                alert("Seleciona um arquivo!");
+                return;
+            }
+
+            commitAddImage(_portfolio_id, _section_id, content_add_div_1_input.files[0]);
+        });
+        content_add_div_2.appendChild(content_add_div_2_button);
+        content_add.appendChild(content_add_div_2);
+        content_container.appendChild(content_add);
+    }
+
+    return content_container;
+}
+/**
+ * @param {number} portfolio_id
+ * @param {number} section_id
+ * @param {string} section_name
+ * @param {string} section_description
+ * @param {boolean} enable_edit
+ * @param {any[]} content
+ */
+function createLinkSection(
+    portfolio_id,
+    section_id,
+    section_name,
+    section_description,
+    enable_edit,
+    content
+) {
+    const _portfolio_id = ensureInteger(portfolio_id);
+    const _section_id = ensureInteger(section_id);
+
+    if (!_portfolio_id || !_section_id) return;
+
+    const _section_name = section_name || "Redes";
+    const _section_description = section_description || "Links Externos";
+
+    const section_header = createSectionHeader(
+        "link",
+        "filter-link",
+        section_name,
+        section_description
+    );
+
+    if (enable_edit) {
+        section_header.appendChild(
+            createActionMenu(_portfolio_id, _section_id, _section_name, _section_description)
+        );
+    }
+
+    let content_container = createSectionContainer();
+    content_container.appendChild(section_header);
+
+    let content_blobs = document.createElement("div");
+    content_blobs.classList.add("row", "w-100", "m-0", "g-3", "py-2", "px-3", "pb-4");
+
+    if (content && content.length) {
+        for (let i = 0; i < content.length; i++) {
+            if (!content[i].blob && !content[i].descricao) return;
+
+            let link_div = document.createElement("div");
+            link_div.classList.add("col-12", "col-sm-6", "col-xl-4", "position-relative");
+            link_div.innerHTML += `<a class="btn btn-primary text-decoration-none w-100" href="${content[i].blob}" role="button">
+                    <div class="d-flex justify-content-center m-2">
+                        <img class="icon-24px fixed-filter-invert me-2"
+                            src="static/action-icons/external.svg">
+                            <p class="space-0">${content[i].descricao}</p>
+                    </div>
+                </a>`;
+
+            if (enable_edit) {
+                let remove_button = document.createElement("button");
+                remove_button.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`;
+                // TODO: Simplify classes
+                remove_button.classList.add(
+                    "icon-32px",
+                    "position-absolute",
+                    "top-0",
+                    "start-100",
+                    "translate-middle",
+                    "p-2",
+                    "border",
+                    "border-light",
+                    "rounded-circle",
+                    "d-flex",
+                    "center-xy"
+                );
+                link_div.appendChild(remove_button);
+                remove_button.addEventListener("click", () =>
+                    triggerDeleteLink(
+                        new DeleteLinkContext(
+                            _portfolio_id,
+                            _section_id,
+                            content[i].blob,
+                            content[i].descricao
+                        )
+                    )
+                );
+            }
+
+            content_blobs.appendChild(link_div);
+        }
+    } else {
+        content_blobs.appendChild(createNoLinkSubSection());
+    }
+
+    if (enable_edit) {
+        content_blobs.appendChild(createAddLinkSubSection(_portfolio_id, _section_id));
+    }
+
+    content_container.appendChild(content_blobs);
+
+    return content_container;
+}
+
+/**
  * @param {number} portf_id
  * @param {boolean} enable_edit
  */
@@ -1229,12 +1594,12 @@ function setupPortfolioPage(portf_id, enable_edit) {
 
     // TODO: Permitir apenas 1 seção de avaliações
     portfolio.secoes.forEach((element) => {
-        let e_section_name = element.nome;
-        let e_section_description = element.descricao;
-        let e_section_id = element.ordem;
-        let e_section_category_id = element.categoriaId;
+        const e_section_name = element.nome;
+        const e_section_description = element.descricao;
+        const e_section_id = element.ordem;
+        const e_section_category_id = element.categoriaId;
         // For categoriaId(0), content is optional
-        let e_secao_content = element.contents;
+        const e_secao_content = element.contents;
 
         if (
             !e_section_name ||
@@ -1249,364 +1614,43 @@ function setupPortfolioPage(portf_id, enable_edit) {
             // categoriaId(1): Avaliações
             case 1:
                 {
-                    const section_name = e_section_name || "Avaliações";
-                    const section_description = e_section_description || "Clientes satisfeitos!";
-                    const section_header = createSectionHeader(
-                        "star",
-                        "filter-star",
-                        section_name,
-                        section_description
+                    const child = createReviewSection(
+                        portfolio.id,
+                        e_section_id,
+                        e_section_name,
+                        e_section_description,
+                        enable_edit,
+                        portfolio_user_id
                     );
-
-                    let content_container = createSectionContainer();
-                    content_container.appendChild(section_header);
-
-                    if (enable_edit) {
-                        section_header.appendChild(
-                            createActionMenu(
-                                portfolio.id, // portfolio_id
-                                e_section_id, // section_id
-                                section_name, // section_name
-                                section_description // section_description
-                            )
-                        );
-                    }
-
-                    portfolio_secoes.appendChild(content_container);
-
-                    let content_blobs = document.createElement("div");
-                    content_blobs.classList.add(
-                        "row",
-                        "w-100",
-                        "space-0",
-                        "py-3",
-                        "scrool-container"
-                    );
-
-                    let content_blobs_scrool = document.createElement("div");
-                    content_blobs_scrool.classList.add("px-3");
-
-                    let avaliacoes = JSONQL_A.readAvaliacoes();
-                    if (!avaliacoes || !avaliacoes.length) {
-                        let information = document.createElement("p");
-                        information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
-                        information.innerHTML = `Não há avaliações para este usuário, você pode utilizar a&nbsp;<a href="dev.html">página de desenvolvimento</a>&nbsp;para gerar uma avaliação.`;
-                        content_blobs_scrool.appendChild(information);
-                    } else {
-                        console.log("avaliacoes");
-                        // Lê todas as avaliações
-                        // TODO: Otimizar > Informações do serviço da avaliação
-                        avaliacoes.forEach((avaliacao_element) => {
-                            const comentario = avaliacao_element.comentario.substring(0, 200);
-                            const nota = avaliacao_element.nota;
-                            const contratanteId = avaliacao_element.contratanteId;
-                            // Pega o contratoId da avaliação e filtra
-                            const _contract_id = avaliacao_element.contratoId;
-                            if (!_contract_id) return;
-
-                            const contrato = readContract(_contract_id);
-                            if (!contrato) return;
-
-                            const contratadoId = contrato.contratadoId;
-                            const _service_id = ensureInteger(contrato.servicoId);
-                            if (!contratadoId || !_service_id) return;
-
-                            // A partir daqui, continue apenas os contratos que possuem a mesma id que o usuario do portfolio
-                            if (contratadoId !== portfolio_user_id) return;
-
-                            const service = readService(_service_id);
-                            if (!service) return;
-
-                            let user = readUser(contratanteId);
-                            if (!user) return;
-
-                            // TODO: replace 'placeholder_profile'
-                            content_blobs_scrool.innerHTML += `<div class="d-inline-block float-none me-3">
-                                <a class="text-decoration-none space-0" href="#">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row card-aval-limit">
-                                                <div class="d-flex justify-content-start align-items-center pb-2">
-                                                    <div class="me-2">
-                                                        <img class="icon-32px" src="static/img/placeholder_profile.png"> 
-                                                    </div>
-                                                    <div class="max-width-80">
-                                                        <h6 class="text-truncate">${user.nome}</h6>
-                                                        <p class="space-0 text-truncate">⭐ ${nota} - ${service.titulo}</p>
-                                                    </div>
-                                                </div>
-                                                <hr>
-                                                <div class="col-12">
-                                                    <p class="text-wrap space-0">${comentario}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>`;
-                        });
-                    }
-
-                    content_blobs.appendChild(content_blobs_scrool);
-                    content_container.appendChild(content_blobs);
+                    if (child) portfolio_secoes.appendChild(child);
                 }
                 break;
             // categoriaId(0): Fotos
             case 0:
                 {
-                    const section_name = e_section_name || "Imagens";
-                    const section_description = e_section_description || "Seção de imagens";
-                    const section_header = createSectionHeader(
-                        "images",
-                        "filter-images",
-                        section_name,
-                        section_description
+                    const child = createImageSection(
+                        portfolio.id,
+                        e_section_id,
+                        e_section_name,
+                        e_section_description,
+                        enable_edit,
+                        e_secao_content
                     );
-
-                    const content_container = createSectionContainer();
-                    content_container.appendChild(section_header);
-
-                    if (enable_edit) {
-                        section_header.appendChild(
-                            createActionMenu(
-                                portfolio.id, // portfolio_id
-                                e_section_id, // section_id
-                                section_name, // section_name
-                                section_description // section_description
-                            )
-                        );
-                    }
-
-                    portfolio_secoes.appendChild(content_container);
-
-                    let content_blobs = document.createElement("div");
-                    content_blobs.classList.add(
-                        "row",
-                        "w-100",
-                        "space-0",
-                        "py-3",
-                        "scrool-container"
-                    );
-
-                    let content_blobs_scrool = document.createElement("div");
-                    content_blobs_scrool.classList.add("px-3");
-
-                    if (e_secao_content && e_secao_content.length) {
-                        for (let i = 0; i < e_secao_content.length; i++) {
-                            if (!e_secao_content[i].blob && !e_secao_content[i].descricao) return;
-
-                            let image_div = document.createElement("div");
-                            image_div.classList.add("me-3", "d-inline-block", "position-relative");
-                            image_div.innerHTML += `<img class="img-thumbnail images" src="${e_secao_content[i].blob}">`;
-
-                            // edit.remove
-                            if (enable_edit) {
-                                let remove_button = document.createElement("button");
-                                remove_button.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`;
-                                remove_button.classList.add(
-                                    "icon-32px",
-                                    "position-absolute",
-                                    "top-0",
-                                    "start-100",
-                                    "translate-middle",
-                                    "p-2",
-                                    "border",
-                                    "border-light",
-                                    "rounded-circle",
-                                    "d-flex",
-                                    "center-xy"
-                                );
-                                remove_button.addEventListener("click", () =>
-                                    triggerDeleteImage(
-                                        new DeleteImageContext(
-                                            portfolio.id,
-                                            e_section_id,
-                                            e_secao_content[i].blob,
-                                            e_secao_content[i].descricao
-                                        )
-                                    )
-                                );
-                                image_div.appendChild(remove_button);
-                            }
-
-                            content_blobs_scrool.appendChild(image_div);
-                        }
-                    } else {
-                        let information = document.createElement("p");
-                        information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
-                        information.innerText =
-                            "Não há imagens cadastrados, edite o portfólio para adicionar uma!";
-                        content_blobs_scrool.appendChild(information);
-                    }
-
-                    content_blobs.appendChild(content_blobs_scrool);
-                    content_container.appendChild(content_blobs);
-
-                    // edit.add
-                    if (enable_edit) {
-                        let content_add = document.createElement("div");
-                        content_add.innerHTML += "<hr>";
-                        let content_add_div_1 = document.createElement("div");
-                        content_add_div_1.innerHTML = `<label class="form-label">Adicionar imagens</label>`;
-                        content_add_div_1.classList.add(
-                            "col-12",
-                            "space-0",
-                            "px-4",
-                            "w-100",
-                            "mb-3"
-                        );
-                        let content_add_div_1_input = document.createElement("input");
-                        content_add_div_1_input.classList.add("form-control");
-                        content_add_div_1_input.setAttribute("type", "file");
-                        content_add_div_1.appendChild(content_add_div_1_input);
-                        content_add.appendChild(content_add_div_1);
-
-                        content_add_div_1_input.addEventListener("change", () =>
-                            watchImageInputChange(content_add_div_1_input.files).catch((error) => {
-                                alert(error);
-                                content_add_div_1_input.value = "";
-                            })
-                        );
-
-                        let content_add_div_2 = document.createElement("div");
-                        content_add_div_2.classList.add("col-12", "space-0", "px-4", "pb-4");
-
-                        let content_add_div_2_button = document.createElement("button");
-                        content_add_div_2_button.classList.add(
-                            "btn",
-                            "btn-outline-primary",
-                            "text-decoration-none",
-                            "w-100"
-                        );
-                        content_add_div_2_button.role = "button";
-                        content_add_div_2_button.innerHTML = `<div class="d-flex justify-content-center m-2">
-                            <img class="icon-24px fixed-filter-invert me-2"
-                                src="static/action-icons/add.svg">
-                                <p class="space-0">Adicionar imagens</p>
-                        </div>`;
-                        content_add_div_2_button.addEventListener("click", async () => {
-                            if (!(content_add_div_1_input instanceof HTMLInputElement)) return;
-
-                            if (
-                                !content_add_div_1_input.files ||
-                                !content_add_div_1_input.files.length
-                            ) {
-                                alert("Seleciona um arquivo!");
-                                return;
-                            }
-
-                            commitAddImage(
-                                portfolio.id,
-                                e_section_id,
-                                content_add_div_1_input.files[0]
-                            );
-                        });
-                        content_add_div_2.appendChild(content_add_div_2_button);
-                        content_add.appendChild(content_add_div_2);
-                        content_container.appendChild(content_add);
-                    }
+                    if (child) portfolio_secoes.appendChild(child);
                 }
                 break;
             // categoriaId(2): Links
             case 2:
                 {
-                    const section_name = e_section_name || "Redes";
-                    const section_description = e_section_description || "Links Externos"; // "Segue lá!"
-                    const section_header = createSectionHeader(
-                        "link",
-                        "filter-link",
-                        section_name,
-                        section_description
+                    const child = createLinkSection(
+                        portfolio.id,
+                        e_section_id,
+                        e_section_name,
+                        e_section_description,
+                        enable_edit,
+                        e_secao_content
                     );
-
-                    let content_container = createSectionContainer();
-                    content_container.appendChild(section_header);
-
-                    if (enable_edit) {
-                        section_header.appendChild(
-                            createActionMenu(
-                                portfolio.id, // portfolio_id
-                                e_section_id, // section_id
-                                section_name, // section_name
-                                section_description // section_description
-                            )
-                        );
-                    }
-
-                    portfolio_secoes.appendChild(content_container);
-
-                    let content_blobs = document.createElement("div");
-                    content_blobs.classList.add(
-                        "row",
-                        "w-100",
-                        "m-0",
-                        "g-3",
-                        "py-2",
-                        "px-3",
-                        "pb-4"
-                    );
-
-                    if (e_secao_content && e_secao_content.length) {
-                        for (let i = 0; i < e_secao_content.length; i++) {
-                            if (!e_secao_content[i].blob && !e_secao_content[i].descricao) return;
-
-                            let link_div = document.createElement("div");
-                            link_div.classList.add(
-                                "col-12",
-                                "col-sm-6",
-                                "col-xl-4",
-                                "position-relative"
-                            );
-                            link_div.innerHTML += `<a class="btn btn-primary text-decoration-none w-100" href="${e_secao_content[i].blob}" role="button">
-                                <div class="d-flex justify-content-center m-2">
-                                    <img class="icon-24px fixed-filter-invert me-2"
-                                        src="static/action-icons/external.svg">
-                                        <p class="space-0">${e_secao_content[i].descricao}</p>
-                                </div>
-                            </a>`;
-
-                            if (enable_edit) {
-                                let remove_button = document.createElement("button");
-                                remove_button.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`;
-                                // TODO: Simplify classes
-                                remove_button.classList.add(
-                                    "icon-32px",
-                                    "position-absolute",
-                                    "top-0",
-                                    "start-100",
-                                    "translate-middle",
-                                    "p-2",
-                                    "border",
-                                    "border-light",
-                                    "rounded-circle",
-                                    "d-flex",
-                                    "center-xy"
-                                );
-                                link_div.appendChild(remove_button);
-                                remove_button.addEventListener("click", () =>
-                                    triggerDeleteLink(
-                                        new DeleteLinkContext(
-                                            portfolio.id,
-                                            e_section_id,
-                                            e_secao_content[i].blob,
-                                            e_secao_content[i].descricao
-                                        )
-                                    )
-                                );
-                            }
-
-                            content_blobs.appendChild(link_div);
-                        }
-                    } else {
-                        content_blobs.appendChild(createNoLinkSubSection());
-                    }
-
-                    if (enable_edit) {
-                        content_blobs.appendChild(
-                            createAddLinkSubSection(portfolio.id, e_section_id)
-                        );
-                    }
-                    content_container.appendChild(content_blobs);
+                    if (child) portfolio_secoes.appendChild(child);
                 }
                 break;
         }
