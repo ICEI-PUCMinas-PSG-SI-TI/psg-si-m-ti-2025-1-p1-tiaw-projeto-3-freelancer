@@ -7,26 +7,57 @@ import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as Faker from "./faker.mjs";
 import { ensureInteger, imageFileToBase64, isNonEmptyString, MAX_ALLOWED_SIZE } from "./tools.mjs";
 
-function AddSectionContext(portfolio_id) {
-    this.portfolio_id = portfolio_id;
+// TODO: Mover adicionar-imagens para um popup
+// TODO: Criar popups dinamicamente e remove-los do html
+
+class AddSectionContext {
+    /**
+     * @param {number} portfolio_id
+     */
+    constructor(portfolio_id) {
+        this.portfolio_id = portfolio_id;
+    }
 }
 
-function DeleteSectionContext(portfolio_id, section_id, name, description) {
-    this.portfolio_id = portfolio_id;
-    this.section_id = section_id;
-    // TODO: Optional?
-    this.name = name;
-    this.description = description;
+class DeleteSectionContext {
+    /**
+     * @param {number} portfolio_id
+     * @param {number} section_id
+     * @param {string} name
+     * @param {string} description
+     */
+    constructor(portfolio_id, section_id, name, description) {
+        this.portfolio_id = portfolio_id;
+        this.section_id = section_id;
+        // TODO: Optional?
+        this.name = name;
+        this.description = description;
+    }
 }
 
-function EditSectionInfoContext(portfolio_id, section_id, name, description) {
-    this.portfolio_id = portfolio_id;
-    this.section_id = section_id;
-    this.name = name;
-    this.description = description;
+class EditSectionInfoContext {
+    /**
+     * @param {number} portfolio_id
+     * @param {number} section_id
+     * @param {string} name
+     * @param {string} description
+     */
+    constructor(portfolio_id, section_id, name, description) {
+        this.portfolio_id = portfolio_id;
+        this.section_id = section_id;
+        this.name = name;
+        this.description = description;
+    }
 }
 
 class EditSectionPositionContext {
+    /**
+     * @param {number} portfolio_id
+     * @param {number} section_id
+     * @param {string} name
+     * @param {string} description
+     * @param {number} move
+     */
     constructor(portfolio_id, section_id, name, description, move) {
         this.portfolio_id = portfolio_id;
         this.section_id = section_id;
@@ -48,23 +79,45 @@ class EditSectionPositionContext {
     }
 }
 
-function AddLinkContext(portfolio_id, section_id) {
-    this.portfolio_id = portfolio_id;
-    this.section_id = section_id;
+class AddLinkContext {
+    /**
+     * @param {number} portfolio_id
+     * @param {number} section_id
+     */
+    constructor(portfolio_id, section_id) {
+        this.portfolio_id = portfolio_id;
+        this.section_id = section_id;
+    }
 }
 
-function DeleteLinkContext(portfolio_id, section_id, blob, description) {
-    this.portfolio_id = portfolio_id;
-    this.section_id = section_id;
-    this.blob = blob;
-    this.description = description;
+class DeleteLinkContext {
+    /**
+     * @param {number} portfolio_id
+     * @param {number} section_id
+     * @param {any} blob
+     * @param {string} description
+     */
+    constructor(portfolio_id, section_id, blob, description) {
+        this.portfolio_id = portfolio_id;
+        this.section_id = section_id;
+        this.blob = blob;
+        this.description = description;
+    }
 }
 
-function DeleteImageContext(portfolio_id, section_id, blob, description) {
-    this.portfolio_id = portfolio_id;
-    this.section_id = section_id;
-    this.blob = blob;
-    this.description = description;
+class DeleteImageContext {
+    /**
+     * @param {number} portfolio_id
+     * @param {number} section_id
+     * @param {any} blob
+     * @param {string} description
+     */
+    constructor(portfolio_id, section_id, blob, description) {
+        this.portfolio_id = portfolio_id;
+        this.section_id = section_id;
+        this.blob = blob;
+        this.description = description;
+    }
 }
 
 class Context {
@@ -72,6 +125,9 @@ class Context {
         this.context = {};
     }
 
+    /**
+     * @param {AddSectionContext | DeleteSectionContext | EditSectionInfoContext | AddLinkContext | DeleteLinkContext | DeleteImageContext} context
+     */
     setupContext(context) {
         if (
             context instanceof AddSectionContext ||
@@ -96,6 +152,9 @@ class Context {
 
 const context = new Context();
 
+/**
+ * @param {number} id
+ */
 function readPortfolio(id) {
     const p_id = ensureInteger(id);
     if (typeof p_id !== "number") return null;
@@ -106,6 +165,9 @@ function readPortfolio(id) {
     return portfolios[0];
 }
 
+/**
+ * @param {number} user_id
+ */
 function readUser(user_id) {
     const u_id = ensureInteger(user_id);
     if (typeof u_id !== "number") return null;
@@ -116,6 +178,9 @@ function readUser(user_id) {
     return users[0];
 }
 
+/**
+ * @param {number} contract_id
+ */
 function readContract(contract_id) {
     const c_id = ensureInteger(contract_id);
     if (typeof c_id !== "number") return null;
@@ -126,6 +191,9 @@ function readContract(contract_id) {
     return contracts[0];
 }
 
+/**
+ * @param {number} services_id
+ */
 function readService(services_id) {
     const s_id = ensureInteger(services_id);
     if (typeof s_id !== "number") return null;
@@ -337,9 +405,11 @@ function commitDeleteSection() {
 
     const _portfolio_id = ensureInteger(_context.portfolio_id);
     const _section_id = ensureInteger(_context.section_id);
-    const _portfolio = readPortfolio(_portfolio_id);
 
-    if (!_portfolio || !_portfolio.secoes.length || !_portfolio_id || !_section_id) {
+    if (!_portfolio_id || !_section_id) return;
+
+    const _portfolio = readPortfolio(_portfolio_id);
+    if (!_portfolio || !_portfolio.secoes.length) {
         console.error(`Erro ao editar o portfólio ${_portfolio_id}.`);
         return;
     }
@@ -388,9 +458,12 @@ function commitEditSectionInfo() {
 
     const _portfolio_id = ensureInteger(_context.portfolio_id);
     const _section_id = ensureInteger(_context.section_id);
+
+    if (!_portfolio_id || !_section_id) return;
+
     const _portfolio = readPortfolio(_portfolio_id);
 
-    if (!_portfolio || !_portfolio.secoes.length || !_portfolio_id || !_section_id) {
+    if (!_portfolio || !_portfolio.secoes.length) {
         console.error(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
         return;
     }
@@ -422,9 +495,12 @@ function commitEditSectionPosition(editSectionPositionContext) {
 
     const _portfolio_id = ensureInteger(editSectionPositionContext.portfolio_id);
     const _section_id = ensureInteger(editSectionPositionContext.section_id);
+
+    if (!_portfolio_id || !_section_id) return;
+
     const _portfolio = readPortfolio(_portfolio_id);
 
-    if (!_portfolio || !_portfolio.secoes.length || !_portfolio_id || !_section_id) {
+    if (!_portfolio || !_portfolio.secoes.length) {
         console.error(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
         return;
     }
@@ -553,9 +629,12 @@ function commitDeleteLink() {
     // TODO: Expensive, use id or something else
     const _s_cntnt_blob = _context.blob;
     const _s_cntnt_description = _context.description;
+
+    if (!_portfolio_id || !_section_id) return;
+
     const _portfolio = readPortfolio(_portfolio_id);
 
-    if (!_portfolio || !_portfolio.secoes.length || !_portfolio_id || !_section_id) {
+    if (!_portfolio || !_portfolio.secoes.length) {
         console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
         return;
     }
@@ -615,9 +694,12 @@ async function commitAddImage(p_id, s_id, blob) {
 
     const _portfolio_id = ensureInteger(p_id);
     const _section_id = ensureInteger(s_id);
+
+    if (!_portfolio_id || !_section_id) return;
+
     const _portfolio = readPortfolio(_portfolio_id);
 
-    if (!_portfolio || !_portfolio.secoes.length || !_portfolio_id || !_section_id) {
+    if (!_portfolio || !_portfolio.secoes.length) {
         console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
         return;
     }
@@ -646,14 +728,17 @@ function commitDeleteImage() {
 
     if (!(_context instanceof DeleteImageContext)) return;
 
-    let _portfolio_id = ensureInteger(_context.portfolio_id);
-    let _section_id = ensureInteger(_context.section_id);
+    const _portfolio_id = ensureInteger(_context.portfolio_id);
+    const _section_id = ensureInteger(_context.section_id);
     // TODO: Expensive, use id or something else
     let _s_cntnt_blob = _context.blob;
     let _s_cntnt_description = _context.description;
 
+    if (!_portfolio_id || !_section_id) return;
+
     const _portfolio = readPortfolio(_portfolio_id);
-    if (!_portfolio || !_portfolio.secoes.length || !_portfolio_id || !_section_id) {
+
+    if (!_portfolio || !_portfolio.secoes.length) {
         console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
         return;
     }
@@ -758,6 +843,10 @@ function createActionButton(icon, clickEventListener) {
 
 /**
  * @returns {HTMLDivElement}
+ * @param {number} portfolio_id
+ * @param {number} section_id
+ * @param {string} name
+ * @param {string} description
  */
 function createActionMenu(portfolio_id, section_id, name, description) {
     let content_actions = document.createElement("div");
@@ -805,6 +894,10 @@ function createActionMenu(portfolio_id, section_id, name, description) {
     return content_actions;
 }
 
+/**
+ * @param {number} portfolio_id
+ * @param {number} section_id
+ */
 function createAddLinkSubSection(portfolio_id, section_id) {
     let add_new_link = document.createElement("div");
     add_new_link.classList.add("col-12");
@@ -837,6 +930,9 @@ function createNoLinkSubSection() {
     return information;
 }
 
+/**
+ * @param {boolean} edit
+ */
 function createEditPortfolioButton(edit) {
     if (!(typeof edit !== "boolean")) document.createElement("span");
 
@@ -914,6 +1010,10 @@ function notifySectionDataChanged() {
     window.location.reload();
 }
 
+/**
+ * @param {string} element_id
+ * @param {boolean} set_display_none_status
+ */
 function toggleDisplayNoneOnElement(element_id, set_display_none_status) {
     if (typeof element_id !== "string") return;
 
@@ -932,6 +1032,9 @@ function toggleDisplayNoneOnElement(element_id, set_display_none_status) {
 }
 
 // @AI-Gemini
+/**
+ * @param {boolean} enable
+ */
 function toggleEditParam(enable) {
     if (typeof enable !== "boolean") return;
 
@@ -955,6 +1058,7 @@ function toggleEditParam(enable) {
 }
 
 // @AI-Gemini
+// TODO: Improve this piece of code
 function setIdParam(id) {
     if (typeof id === "string") id = parseInt(id);
 
@@ -974,7 +1078,10 @@ function setIdParam(id) {
     }
 }
 
-// TODO: Configurar edição apenas se necessário como ?edit=true
+/**
+ * @param {number} portf_id
+ * @param {boolean} enable_edit
+ */
 function setupPortfolioPage(portf_id, enable_edit) {
     if (!portf_id && typeof portf_id !== "number") return;
 
