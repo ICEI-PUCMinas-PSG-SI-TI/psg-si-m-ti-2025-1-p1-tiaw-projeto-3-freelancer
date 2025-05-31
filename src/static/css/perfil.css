@@ -1,0 +1,151 @@
+:root{
+    /* Modo claro */
+    --background-light: #f8f9fa;
+    --text-light: #212529;
+    --card-light: #ffffff;
+    --shadow-light: rgba(0, 0, 0, 0.1);
+
+    /* Modo escuro */
+    --background-dark: #212529;
+    --text-dark: #f8f9fa;
+    --card-dark: #343a40;
+    --shadow-dark: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    background-color: var(--background-light);
+    color: var(--text-light);
+}
+
+/* Seção: Conteúdo */
+.body-content {
+    flex: 1;
+    min-height: calc(100vh - var(--nav-bar-size));
+    padding: 20px;
+    background-color: var(--background-light);
+}
+
+[data-bs-theme="dark"] .body-content {
+    background-color: var(--background-dark);
+}
+
+/* Alterna para modo escuro */
+[data-bs-theme="dark"] {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+}
+
+[data-bs-theme="dark"] .body-section {
+    background-color: var(--background-dark);
+}
+
+[data-bs-theme="dark"] .profile-section,
+[data-bs-theme="dark"] .stats-section .stat-box,
+[data-bs-theme="dark"] .calculator-section {
+    background-color: var(--card-dark);
+    box-shadow: 0 4px 6px var(--shadow-dark);
+}
+
+[data-bs-theme="dark"] .profile-title,
+[data-bs-theme="dark"] .profile-location,
+[data-bs-theme="dark"] .stat-box p,
+[data-bs-theme="dark"] .calculator-section p {
+    color: var(--text-dark);
+}
+
+/* Banner */
+.banner img {
+    object-fit: cover;
+    height: 400px;
+}
+
+/* Perfil */
+.profile-section {
+    background-color: var(--card-light);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px var(--shadow-light);
+}
+
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 3px solid #007bff;
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.profile-title {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+.profile-location {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Estatísticas */
+.stats-section .stat-box {
+    background-color: var(--card-light);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 6px var(--shadow-light);
+    margin: 10px;
+}
+
+.stat-box h4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.stat-box p {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+/* Introdução */
+.introduction-section .video-placeholder img {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px var(--shadow-light);
+}
+
+/* Calculadora */
+.calculator-section {
+    background-color: var(--card-light);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px var(--shadow-light);
+}
+
+.calculator-section h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.calculator-section p {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+#totalSalary {
+    background-color: #e9ecef;
+    color: #495057;
+    font-weight: bold;
+}
+
+/* Modo escuro */
+[data-bs-theme="dark"] .calculator-section {
+    background-color: var(--card-dark);
+    color: var(--text-dark);
+}
+
+[data-bs-theme="dark"] #totalSalary {
+    background-color: #495057;
+    color: #f8f9fa;
+}
