@@ -1,55 +1,55 @@
 {
     "usuarios": [
         {
-            "id": 0,
             "ativo": true,
-            "nome": "Admin",
+            "biografia": "Informações sobre o usuário",
+            "cidade": "Belo Horizonte, MG",
+            "contatos": [
+                "(31) 970707070",
+                "(31) 970707070",
+                "(31) 970707070"
+            ],
+            "cpf_cnpj": "00.000.000/0001-00",
             "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
             "email": "admin@lucremais.com",
+            "id": 0,
+            "nome": "Admin",
             "senha": "654321",
-            "tipo": "admin",
-            "cpf_cnpj": "00.000.000/0001-00",
-            "cidade": "Belo Horizonte, MG",
+            "tipo": "admin"
+        },
+        {
+            "ativo": true,
             "biografia": "Informações sobre o usuário",
+            "cidade": "Belo Horizonte, MG",
             "contatos": [
                 "(31) 970707070",
                 "(31) 970707070",
                 "(31) 970707070"
-            ]
-        },
-        {
-            "id": 1,
-            "ativo": true,
-            "nome": "Empresa do João Silva",
+            ],
+            "cpf_cnpj": "12.345.678/0001-00",
             "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
             "email": "joao.silva@empresa-do-joao.com.br",
+            "id": 1,
+            "nome": "Empresa do João Silva",
             "senha": "123456",
-            "tipo": "profissional",
-            "cpf_cnpj": "12.345.678/0001-00",
-            "cidade": "Belo Horizonte, MG",
-            "biografia": "Informações sobre o usuário",
-            "contatos": [
-                "(31) 970707070",
-                "(31) 970707070",
-                "(31) 970707070"
-            ]
+            "tipo": "profissional"
         },
         {
-            "id": 0,
             "ativo": false,
-            "nome": "Maria Oliveira",
-            "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
-            "email": "maria@email.com",
-            "senha": "654321",
-            "tipo": "cliente",
-            "cpf_cnpj": "123.456.789-10",
-            "cidade": "São Paulo, SP",
             "biografia": "Informações sobre o usuário",
+            "cidade": "São Paulo, SP",
             "contatos": [
                 "(31) 970707070",
                 "(31) 970707070",
                 "(31) 970707070"
-            ]
+            ],
+            "cpf_cnpj": "123.456.789-10",
+            "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
+            "email": "maria@email.com",
+            "id": 0,
+            "nome": "Maria Oliveira",
+            "senha": "654321",
+            "tipo": "cliente"
         }
     ]
 }

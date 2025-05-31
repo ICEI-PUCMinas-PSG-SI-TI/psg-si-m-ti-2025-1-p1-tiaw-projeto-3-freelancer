@@ -1,0 +1,21 @@
+# 
+# Lista dos status possíveis para contratos
+# Esse valor será usado nos seguintes artefatos:
+# ?
+# 
+
+# [[status_contrato]]
+# id = ID da categoria
+# nome = Nome da categoria
+
+[[status_contrato]]
+id = 0
+nome = "Aguardando Pagamento"
+
+[[status_contrato]]
+id = 1
+nome = "Pendente"
+
+[[status_contrato]]
+id = 2
+nome = "Concluído"

@@ -5,6 +5,7 @@
             "secoes": [
                 {
                     "categoriaId": 1,
+                    "descricao": "Cliente satisfeitos!",
                     "nome": "Avaliações",
                     "ordem": 0
                 },
@@ -24,6 +25,7 @@
                             "descricao": "Foto"
                         }
                     ],
+                    "descricao": "Imagens de serviços realizados",
                     "nome": "Fotos de trabalhos anteriores",
                     "ordem": 1
                 },
@@ -43,6 +45,7 @@
                             "descricao": "LinkedIn"
                         }
                     ],
+                    "descricao": "Segue lá",
                     "nome": "Links Importantes",
                     "ordem": 2
                 }

@@ -1,0 +1,152 @@
+{
+    "categorias": [
+        {
+            "id": 0,
+            "nome": "Refrigeração"
+        },
+        {
+            "id": 1,
+            "nome": "Climatização"
+        },
+        {
+            "id": 2,
+            "nome": "Eletricista"
+        }
+    ],
+    "servicos": [
+        {
+            "avaliacoes": [
+                {
+                    "comentario": "",
+                    "id": 0,
+                    "imagems": [
+                        {
+                            "id": 0,
+                            "source": "https://exemplo.com/avaliacao0.jpg"
+                        },
+                        {
+                            "id": 1,
+                            "source": "https://exemplo.com/avaliacao1.jpg"
+                        }
+                    ],
+                    "nota": 10,
+                    "usuarioId": 1
+                },
+                {
+                    "comentario": "",
+                    "id": 0,
+                    "imagems": [
+                        {
+                            "id": 0,
+                            "source": "https://exemplo.com/avaliacao3.jpg"
+                        },
+                        {
+                            "id": 1,
+                            "source": "https://exemplo.com/avaliacao4.jpg"
+                        }
+                    ],
+                    "nota": 10,
+                    "usuarioId": 2
+                }
+            ],
+            "categoriaId": 0,
+            "contato": "(11) 91234-5678",
+            "descricao": "Manutenção e conserto de geladeiras residenciais.",
+            "id": 0,
+            "imagens": [
+                {
+                    "id": 0,
+                    "source": "https://exemplo.com/geladeira0.jpg"
+                },
+                {
+                    "id": 1,
+                    "source": "https://exemplo.com/geladeira1.jpg"
+                }
+            ],
+            "titulo": "Conserto de Geladeira",
+            "usuarioId": 1
+        },
+        {
+            "avaliacoes": [],
+            "categoriaId": 1,
+            "contato": "(11) 99876-5432",
+            "descricao": "Instalação rápida e segura de aparelhos split.",
+            "id": 1,
+            "imagens": [
+                {
+                    "id": 0,
+                    "source": "https://exemplo.com/ar0.jpg"
+                },
+                {
+                    "id": 1,
+                    "source": "https://exemplo.com/ar1.jpg"
+                }
+            ],
+            "titulo": "Instalação de Ar-condicionado",
+            "usuarioId": 1
+        }
+    ],
+    "usuarios": [
+        {
+            "ativo": true,
+            "biografia": "Informações sobre o usuário",
+            "cidade": "Belo Horizonte, MG",
+            "contatos": [
+                {
+                    "contato": "(31) 970707070",
+                    "id": 0
+                }
+            ],
+            "cpf_cnpj": "00.000.000/0001-00",
+            "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
+            "email": "admin@lucremais.com",
+            "foto": "base64_encoded || url",
+            "id": 0,
+            "nome": "Admin",
+            "senha": "654321",
+            "tipo": "admin"
+        },
+        {
+            "ativo": true,
+            "biografia": "Informações sobre o usuário",
+            "cidade": "Belo Horizonte, MG",
+            "contatos": [
+                {
+                    "contato": "(31) 970707070",
+                    "id": 0
+                },
+                {
+                    "contato": "(31) 970707071",
+                    "id": 1
+                }
+            ],
+            "cpf_cnpj": "12.345.678/0001-00",
+            "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
+            "email": "joao.silva@empresa-do-joao.com.br",
+            "foto": "base64_encoded || url",
+            "id": 1,
+            "nome": "Empresa do João Silva",
+            "senha": "123456",
+            "tipo": "profissional"
+        },
+        {
+            "ativo": false,
+            "biografia": "Informações sobre o usuário",
+            "cidade": "São Paulo, SP",
+            "contatos": [
+                {
+                    "contato": "(31) 970707070",
+                    "id": 0
+                }
+            ],
+            "cpf_cnpj": "123.456.789-10",
+            "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
+            "email": "maria@email.com",
+            "foto": "base64_encoded || url",
+            "id": 0,
+            "nome": "Maria Oliveira",
+            "senha": "654321",
+            "tipo": "cliente"
+        }
+    ]
+}

@@ -28,15 +28,18 @@
 }
 
 .filter-star {
-    filter: invert(76%) sepia(16%) saturate(1613%) hue-rotate(358deg) brightness(101%) contrast(108%);
+    filter: invert(76%) sepia(16%) saturate(1613%) hue-rotate(358deg)
+        brightness(101%) contrast(108%);
 }
 
 .filter-link {
-    filter: invert(41%) sepia(100%) saturate(630%) hue-rotate(154deg) brightness(100%) contrast(102%);
+    filter: invert(41%) sepia(100%) saturate(630%) hue-rotate(154deg)
+        brightness(100%) contrast(102%);
 }
 
 .filter-images {
-    filter: invert(10%) sepia(98%) saturate(4895%) hue-rotate(103deg) brightness(95%) contrast(94%);
+    filter: invert(10%) sepia(98%) saturate(4895%) hue-rotate(103deg)
+        brightness(95%) contrast(94%);
 }
 
 #content-div button a p {

@@ -2,69 +2,68 @@
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
- * 
+ *
  * Ferramentas para CRUD referentes aos [ CONTRATOS ]
- * 
+ *
  * CRUD = Create, Read, Update, Delete
  * CLAD = Criar, Ler, Atualizar, Deletar
  * VEIA = Visualizar, Excluir, Incluir, Alterar
- * 
+ *
  * JavaScript Object Notation Query Language
- * 
+ *
  */
 
-const KEY_CONTRATOS = "contratos"
+const KEY_CONTRATOS = "contratos";
 const getContratos = () => JSON.parse(localStorage.getItem(KEY_CONTRATOS) || "[]");
 const setContratos = (contratos) => {
     try {
-        localStorage.setItem(KEY_CONTRATOS, JSON.stringify(contratos))
+        localStorage.setItem(KEY_CONTRATOS, JSON.stringify(contratos));
     } catch (err) {
         if (err instanceof DOMException) {
-            alert("O limite de armazenamento do localStorage foi atingido!\n\nDelete alguma imagem antes de adicionar outra!\n\nEsse é um problema que utilizar o json-server irá resolver futuramente");
-        } else throw err
+            alert(
+                "O limite de armazenamento do localStorage foi atingido!\n\nDelete alguma imagem antes de adicionar outra!\n\nEsse é um problema que utilizar o json-server irá resolver futuramente"
+            );
+        } else throw err;
     }
 };
 
 /**
  * Retorna null e printa o que estiver em value no console
- * 
+ *
  * @param {string} value console.log(value)
- * 
- * @return {null} 
+ *
+ * @return {null}
  */
 // TODO: Export to module and reuse
 function returnError(value) {
-    if (typeof (value) === "string")
-        console.log(value)
+    if (typeof value === "string") console.log(value);
 
     return null;
 }
 
 /**
  * Retorna true se o tipo do objeto passado como parametro é igual ao tipo desejado
- * 
+ *
  * @param {any} value Objeto para comparação
  * @param {string} type Tipo para comparação
- * 
- * @return {boolean} 
+ *
+ * @return {boolean}
  */
 // TODO: Export to module and reuse
 function ensureType(value, type) {
-    if (typeof (type) !== "string")
-        return false
+    if (typeof type !== "string") return false;
 
-    if (typeof (value) === "string" && type === "number") {
-        let parse = parseInt(value)
-        if (typeof (parse) === "number")
-            value = parse
+    if (typeof value === "string" && type === "number") {
+        let parse = parseInt(value);
+        if (typeof parse === "number") value = parse;
     }
 
-    return typeof (value) === type;
+    return typeof value === type;
 }
 
 /**
  * Cria um objeto com as informações do contrato
- * 
+ *
  * @param {number} servicoId // ID do usuário que ofereceu o serviço
  * @param {number} contratadoId // ID do usuário que ofereceu o serviço
  * @param {number} contratanteId // ID do usuário que contratou o serviço
@@ -98,35 +97,35 @@ export function validateContrato(contrato) {
 
     // ID Opcional
     if (contrato.id && !(ensureType(contrato.id, "number") || ensureType(contrato.id, "string"))) {
-        return returnError("validateContrato: id não é valido(a)")
+        return returnError("validateContrato: id não é valido(a)");
     }
 
     if (!ensureType(contrato.servicoId, "number")) {
-        return returnError("validateContrato: servicoId não é valido(a)")
+        return returnError("validateContrato: servicoId não é valido(a)");
     }
 
     if (!ensureType(contrato.contratadoId, "number")) {
-        return returnError("validateContrato: contratadoId não é valido(a)")
+        return returnError("validateContrato: contratadoId não é valido(a)");
     }
 
     if (!ensureType(contrato.contratanteId, "number")) {
-        return returnError("validateContrato: contratanteId não é valido(a)")
+        return returnError("validateContrato: contratanteId não é valido(a)");
     }
 
     if (!ensureType(contrato.data, "string")) {
-        return returnError("validateContrato: data não é valido(a)")
+        return returnError("validateContrato: data não é valido(a)");
     }
 
     if (!ensureType(contrato.valor, "number")) {
-        return returnError("validateContrato: valor não é valido(a)")
+        return returnError("validateContrato: valor não é valido(a)");
     }
 
-    return contrato
+    return contrato;
 }
 
 /**
  * Lê os contratos armazenados no local storage
- * 
+ *
  * @param  {Array} contratos_id Array com IDs dos contratos solicitados, retorna todos se vazio.
  * @returns {Array|null} Array com informações sobre os contratos
  */
@@ -142,16 +141,14 @@ export function readContratos(...contratos_id) {
     let contratos = getContratos();
 
     // Se o valor for nulo, retorna todas as ids
-    if (contratos_id.length === 0)
-        return contratos
+    if (contratos_id.length === 0) return contratos;
 
     let contratos_filter = [];
 
     for (let x = 0; x < contratos_id.length; x++) {
         let id = parseInt(contratos_id[x]);
 
-        if (isNaN(id))
-            return null
+        if (isNaN(id)) return null;
 
         for (let index = 0; index < contratos.length; index++) {
             const element = contratos[index];
@@ -169,15 +166,14 @@ export function readContratos(...contratos_id) {
 
 /**
  * Retorna a ID do último contrato cadastrado
- * 
- * @returns {Number} ID do último contrato cadastrado 
+ *
+ * @returns {Number} ID do último contrato cadastrado
  */
 export function getIdLastContrato() {
     let contratos = readContratos();
 
     // Se não há contratos cadastrados, retorna o valor 0
-    if (!contratos)
-        return 0
+    if (!contratos) return 0;
 
     let last_id = 0;
 
@@ -186,36 +182,32 @@ export function getIdLastContrato() {
         if (id > last_id) {
             last_id = id;
         }
-    })
+    });
 
     return last_id;
 }
 
 /**
  * Atualiza as informações de um contrato utilizando a ID
- *  
- * @param {Number} contrato_id ID do contrato a ser atualizado 
+ *
+ * @param {Number} contrato_id ID do contrato a ser atualizado
  * @param {any} contrato_new Informações do contrato para ser atualizado
- * @returns {boolean | null} Retorna true se as informações foram cadastradas corretamente 
+ * @returns {boolean | null} Retorna true se as informações foram cadastradas corretamente
  */
 export function updateContrato(contrato_id, contrato_new) {
     // TODO: Create a validateId func
     // 1. check if number (accept string to number)
     // 2. ensure number > 0
-    if (!ensureType(contrato_id, "number"))
-        return null
+    if (!ensureType(contrato_id, "number")) return null;
 
-    if (contrato_id < 1)
-        return null
+    if (contrato_id < 1) return null;
 
     // Verifica se as informações do contrato são validas
-    if (!validateContrato(contrato_new))
-        return null
+    if (!validateContrato(contrato_new)) return null;
 
     let contratos = readContratos();
 
-    if (!contratos?.length)
-        return false
+    if (!contratos?.length) return false;
 
     for (let index = 0; index < contratos.length; index++) {
         const element = contratos[index];
@@ -234,22 +226,19 @@ export function updateContrato(contrato_id, contrato_new) {
 
 /**
  * Deleta as informações de um contrato utilizando a ID
- *  
+ *
  * @param {Number} contrato_id ID do contrato a ser deletado
- * @returns {boolean | null} Retorna true se as informações foram encontradas e deletadas 
+ * @returns {boolean | null} Retorna true se as informações foram encontradas e deletadas
  */
 // TODO: Receber array
 export function deleteContrato(contrato_id) {
-    if (!ensureType(contrato_id, "number"))
-        return null
+    if (!ensureType(contrato_id, "number")) return null;
 
-    if (contrato_id < 1)
-        return null
+    if (contrato_id < 1) return null;
 
     let contratos = readContratos();
 
-    if (!contratos?.length)
-        return false
+    if (!contratos?.length) return false;
 
     for (let index = 0; index < contratos.length; index++) {
         const element = contratos[index];
@@ -267,7 +256,7 @@ export function deleteContrato(contrato_id) {
 
 /**
  * Limpa todas as informações de contratos do localStorage
- *  
+ *
  * @returns {void}
  */
 export function clearContratos() {
@@ -276,9 +265,9 @@ export function clearContratos() {
 
 /**
  * Cadastra um novo contrato
- *  
+ *
  * @param {any} contrato_new Informações do contrato a ser cadastrado
- * @returns {Number | null} Retorna o ID do contrato se as informações foram cadastradas corretamente 
+ * @returns {Number | null} Retorna o ID do contrato se as informações foram cadastradas corretamente
  */
 export function createContrato(contrato_new) {
     if (!contrato_new) {
@@ -292,12 +281,10 @@ export function createContrato(contrato_new) {
         return returnError("createContrato: Não foi possível validar os argumentos");
     }
 
-    if (!contratos)
-        contratos = []
+    if (!contratos) contratos = [];
 
-    contrato_new.id = getIdLastContrato()
-    if (!ensureType(contrato_new.id, "number"))
-        return null
+    contrato_new.id = getIdLastContrato();
+    if (!ensureType(contrato_new.id, "number")) return null;
 
     // Incrementa a ID
     contrato_new.id += 1;

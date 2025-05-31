@@ -11,9 +11,11 @@
 }
 
 #content-div {
-    background: repeating-linear-gradient(45deg,
-            var(--bs-secondary-bg),
-            var(--bs-secondary-bg) 10px,
-            var(--bs-body-bg) 10px,
-            var(--bs-body-bg) 20px);
+    background: repeating-linear-gradient(
+        45deg,
+        var(--bs-secondary-bg),
+        var(--bs-secondary-bg) 10px,
+        var(--bs-body-bg) 10px,
+        var(--bs-body-bg) 20px
+    );
 }
