@@ -1,0 +1,2 @@
+Abrir o vscode nessa pasta para conseguir rodar o projeto.
+Utilizar também o live-server poís nessa etapa não foi utilizado o json-server.
