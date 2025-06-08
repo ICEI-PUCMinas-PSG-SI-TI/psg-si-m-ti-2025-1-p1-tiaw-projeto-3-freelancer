@@ -153,55 +153,14 @@ class Context {
 const context = new Context();
 
 /**
- * @param {number} id
+ *
+ * @param {object} array
+ * @returns {object | null}
  */
-function readPortfolio(id) {
-    const p_id = ensureInteger(id);
-    if (typeof p_id !== "number") return null;
+function getFirstOrNull(array) {
+    if (!Array.isArray(array) || array.length <= 0) return null;
 
-    const portfolios = JSONQL_P.readPortfolios(p_id);
-    if (!portfolios || !portfolios.length) return null;
-
-    return portfolios[0];
-}
-
-/**
- * @param {number} user_id
- */
-function readUser(user_id) {
-    const u_id = ensureInteger(user_id);
-    if (typeof u_id !== "number") return null;
-
-    const users = JSONQL_U.readUsuarios(u_id);
-    if (!users || !users.length) return null;
-
-    return users[0];
-}
-
-/**
- * @param {number} contract_id
- */
-function readContract(contract_id) {
-    const c_id = ensureInteger(contract_id);
-    if (typeof c_id !== "number") return null;
-
-    const contracts = JSONQL_C.readContratos(c_id);
-    if (!contracts || !contracts.length) return null;
-
-    return contracts[0];
-}
-
-/**
- * @param {number} services_id
- */
-function readService(services_id) {
-    const s_id = ensureInteger(services_id);
-    if (typeof s_id !== "number") return null;
-
-    const services = JSONQL_S.readServicos(s_id);
-    if (!services || !services.length) return null;
-
-    return services[0];
+    return array[0];
 }
 
 /**
@@ -355,8 +314,7 @@ function commitAddAsection() {
     const form_section_description = html_popup_add_description.value;
     const form_section_categoria = html_popup_add_categoria.value;
 
-    const _portfolio = readPortfolio(_portfolio_id);
-
+    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
     if (!_portfolio) {
         console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
         return;
@@ -408,7 +366,7 @@ function commitDeleteSection() {
 
     if (!_portfolio_id || !_section_id) return;
 
-    const _portfolio = readPortfolio(_portfolio_id);
+    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
     if (!_portfolio || !_portfolio.secoes.length) {
         console.error(`Erro ao editar o portfólio ${_portfolio_id}.`);
         return;
@@ -461,7 +419,7 @@ function commitEditSectionInfo() {
 
     if (!_portfolio_id || !_section_id) return;
 
-    const _portfolio = readPortfolio(_portfolio_id);
+    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
 
     if (!_portfolio || !_portfolio.secoes.length) {
         console.error(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
@@ -498,7 +456,7 @@ function commitEditSectionPosition(editSectionPositionContext) {
 
     if (!_portfolio_id || !_section_id) return;
 
-    const _portfolio = readPortfolio(_portfolio_id);
+    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
 
     if (!_portfolio || !_portfolio.secoes.length) {
         console.error(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
@@ -580,7 +538,7 @@ function commitAddLink() {
     let new_url = popup_add_link_url.value;
     let new_description = popup_add_link_description.value;
 
-    const _portfolio = readPortfolio(_portfolio_id);
+    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
 
     if (!_portfolio || !_portfolio.secoes.length) {
         console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
@@ -633,7 +591,7 @@ function commitDeleteLink() {
 
     if (!_portfolio_id || !_section_id) return;
 
-    const _portfolio = readPortfolio(_portfolio_id);
+    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
 
     if (!_portfolio || !_portfolio.secoes.length) {
         console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
@@ -698,7 +656,7 @@ async function commitAddImage(p_id, s_id, blob) {
 
     if (!_portfolio_id || !_section_id) return;
 
-    const _portfolio = readPortfolio(_portfolio_id);
+    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
 
     if (!_portfolio || !_portfolio.secoes.length) {
         console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
@@ -737,7 +695,7 @@ function commitDeleteImage() {
 
     if (!_portfolio_id || !_section_id) return;
 
-    const _portfolio = readPortfolio(_portfolio_id);
+    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
 
     if (!_portfolio || !_portfolio.secoes.length) {
         console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
@@ -986,7 +944,7 @@ function getMediaAvaliacoes(userId) {
     let media = 0;
     let quantidade = 0;
     for (let i = 0; i < avaliacoes.length; i++) {
-        const contratado = readContract(avaliacoes[i].contratoId);
+        const contratado = getFirstOrNull(JSONQL_C.readContratos(avaliacoes[i].contratoId));
         if (!contratado || ensureInteger(contratado) !== userId_int) continue;
 
         media += avaliacoes[i].nota;
@@ -1144,7 +1102,7 @@ function createReviewSection(
             const _contract_id = avaliacao_element.contratoId;
             if (!_contract_id) return;
 
-            const contrato = readContract(_contract_id);
+            const contrato = getFirstOrNull(JSONQL_C.readContratos(_contract_id));
             if (!contrato) return;
 
             const contratadoId = contrato.contratadoId;
@@ -1154,10 +1112,10 @@ function createReviewSection(
             // A partir daqui, continue apenas os contratos que possuem a mesma id que o usuario do portfolio
             if (contratadoId !== _portfolio_user_id) return;
 
-            const service = readService(_service_id);
+            const service = getFirstOrNull(JSONQL_S.readServicos(_service_id));
             if (!service) return;
 
-            let user = readUser(contratanteId);
+            const user = getFirstOrNull(JSONQL_U.readUsuarios(contratanteId));
             if (!user) return;
 
             // TODO: replace 'placeholder_profile'
@@ -1454,7 +1412,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
     if (typeof enable_edit !== "boolean") enable_edit = false;
 
     // INFO: Repo 14 escolhido para desenvolvimento porque contem as 3 categorias necessárias geradas aleatoriamente
-    const portfolio = readPortfolio(portf_id);
+    const portfolio = getFirstOrNull(JSONQL_P.readPortfolios(portf_id));
     if (!portfolio) {
         console.log("setupPortfolioPage: nenhum portfólio cadastrado!");
         alert("A id informada para o portfólio não existe!");
@@ -1537,7 +1495,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
     }
 
     const portfolio_user_id = portfolio.usuarioId;
-    const portfolio_user = readUser(portfolio_user_id);
+    const portfolio_user = getFirstOrNull(JSONQL_U.readUsuarios(portfolio_user_id));
     if (!portfolio_user) {
         console.log("setupPortfolioPage: no user");
         return;

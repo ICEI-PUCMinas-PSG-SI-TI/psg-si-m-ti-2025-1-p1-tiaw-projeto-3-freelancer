@@ -201,7 +201,7 @@ function setupPortfolioCRUD() {
     let dev_read_portfolios = document.getElementById("dev-read-portfolios");
 
     if (
-        !(dev_create_portfolios_n instanceof HTMLInputElement) ||   
+        !(dev_create_portfolios_n instanceof HTMLInputElement) ||
         !(dev_create_portfolios instanceof HTMLButtonElement) ||
         !(dev_delete_portfolios_all instanceof HTMLButtonElement) ||
         !(dev_delete_portfolios_id instanceof HTMLInputElement) ||
