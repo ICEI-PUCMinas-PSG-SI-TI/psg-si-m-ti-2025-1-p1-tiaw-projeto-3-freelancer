@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "start": "json-server --static src --watch src/db/db.json -p 3000"
+    "start": "json-server --static src --watch db/db.json -p 3000"
   },
   "repository": {
     "type": "git",
