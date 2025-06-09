@@ -1,3 +1,54 @@
 {
-    
+    "avaliacoes": [],
+    "categorias_secoes": [
+        {
+            "id": 0,
+            "nome": "Imagens"
+        },
+        {
+            "id": 1,
+            "nome": "Avaliações"
+        },
+        {
+            "id": 2,
+            "nome": "Links Externos"
+        }
+    ],
+    "categorias_servicos": [
+        {
+            "id": 0,
+            "nome": "Refrigeração"
+        },
+        {
+            "id": 1,
+            "nome": "Climatização"
+        },
+        {
+            "id": 2,
+            "nome": "Eletricista"
+        },
+        {
+            "id": 3,
+            "nome": "Outro"
+        }
+    ],
+    "contratos": [],
+    "portfolios": [],
+    "servicos": [],
+    "status_contrato": [
+        {
+            "id": 0,
+            "nome": "Aguardando Pagamento"
+        },
+        {
+            "id": 1,
+            "nome": "Pendente"
+        },
+        {
+            "id": 2,
+            "nome": "Concluído"
+        }
+    ],
+    "usuarios": [],
+    "exemplos": []
 }
