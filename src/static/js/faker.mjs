@@ -5,7 +5,7 @@ import * as JSONQL_U from "./jsonql.user.mjs"; // Usuários
 import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
-import { generateRandomNumber, ensureInteger } from "./tools.mjs";
+import { generateRandomNumber, ensureInteger, assertPositiveInt } from "./tools.mjs";
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -59,16 +59,14 @@ var exemplos = new ExemploFetcher();
  * @param {number} quantidade
  */
 export async function criarNPortfolios(quantidade) {
-    const quantidade_int = ensureInteger(quantidade);
-    if (typeof quantidade_int !== "number" || quantidade_int <= 0)
-        throw new Error("Criação de portfólios: A quantidade informada é inválida!");
+    assertPositiveInt(quantidade);
 
     await exemplos.getFakeData().then((json) => {
         if (!json) return;
 
         let portfolios = [];
 
-        for (let index = 0; index < quantidade_int; index++) {
+        for (let index = 0; index < quantidade; index++) {
             const usuarios = JSONQL_U.readUsuarios();
 
             if (!usuarios || !usuarios.length)
@@ -168,13 +166,11 @@ export async function criarNPortfolios(quantidade) {
  * @param {number} quantidade
  */
 export async function criarNContratos(quantidade) {
-    const quantidade_int = ensureInteger(quantidade);
-    if (typeof quantidade_int !== "number" || quantidade_int <= 0)
-        throw new Error("Criação de contratos: A quantidade informada é inválida!");
+    assertPositiveInt(quantidade);
 
     let contratos = [];
 
-    for (let index = 0; index < quantidade_int; index++) {
+    for (let index = 0; index < quantidade; index++) {
         const usuarios = JSONQL_U.readUsuarios();
         if (!usuarios || !usuarios.length)
             throw new Error(
@@ -226,16 +222,14 @@ export async function criarNContratos(quantidade) {
  * @param {number} quantidade
  */
 export async function criarNAvaliacoes(quantidade) {
-    const quantidade_int = ensureInteger(quantidade);
-    if (typeof quantidade_int !== "number" || quantidade_int <= 0)
-        throw new Error("Criação de avaliações: A quantidade informada é inválida!");
+    assertPositiveInt(quantidade);
 
     await exemplos.getFakeData().then((json) => {
         if (!json) return;
 
         let avaliacoes = [];
 
-        for (let index = 0; index < quantidade_int; index++) {
+        for (let index = 0; index < quantidade; index++) {
             const usuarios = JSONQL_U.readUsuarios();
             if (!usuarios || !usuarios.length)
                 throw new Error(
@@ -280,16 +274,14 @@ export async function criarNAvaliacoes(quantidade) {
  * @param {number} quantidade
  */
 export async function criarNUsuarios(quantidade) {
-    const quantidade_int = ensureInteger(quantidade);
-    if (typeof quantidade_int !== "number" || quantidade_int <= 0)
-        throw new Error("Criação de usuários: A quantidade informada é inválida!");
+    assertPositiveInt(quantidade);
 
     await exemplos.getFakeData().then((json) => {
         if (!json) return;
 
         let usuarios = [];
 
-        for (let index = 0; index < quantidade_int; index++) {
+        for (let index = 0; index < quantidade; index++) {
             const nome_index = generateRandomNumber(json.nomes.length);
             const sobrenomes_index = generateRandomNumber(json.sobrenomes.length);
             const foto_seed = generateRandomNumber(200);
@@ -349,16 +341,14 @@ export async function criarNUsuarios(quantidade) {
  * @param {number} quantidade
  */
 export async function criarNServicos(quantidade) {
-    const quantidade_int = ensureInteger(quantidade);
-    if (typeof quantidade_int !== "number" || quantidade_int <= 0)
-        throw new Error("Criação de serviços: A quantidade informada é inválida!");
+    assertPositiveInt(quantidade);
 
     await exemplos.getFakeData().then((json) => {
         if (!json) return;
 
         let servicos = [];
 
-        for (let index = 0; index < quantidade_int; index++) {
+        for (let index = 0; index < quantidade; index++) {
             const categorias_servicos_index = generateRandomNumber(json.categorias_servicos.length);
             const contato_index = generateRandomNumber(json.contatos.length);
             const descricao_index = generateRandomNumber(json.descricoes.length);

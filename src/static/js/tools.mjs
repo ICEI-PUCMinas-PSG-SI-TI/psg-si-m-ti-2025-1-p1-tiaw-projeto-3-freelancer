@@ -84,3 +84,8 @@ export async function imageFileToBase64(file) {
 export function isNonEmptyString(value) {
     return typeof value === "string" && value.length > 0;
 }
+
+export function assertPositiveInt(value) {
+    if (typeof value !== "number" || Number.isNaN(value)) throw new Error("Value is not a number!");
+    if (value <= 0) throw new Error("Value is not positive!");
+}
