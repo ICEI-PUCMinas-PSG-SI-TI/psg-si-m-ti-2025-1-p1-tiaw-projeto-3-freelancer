@@ -1,5 +1,7 @@
 //@ts-check
 
+import { ensureType } from "./tools.mjs";
+
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
  *
@@ -39,26 +41,6 @@ function returnError(value) {
     if (typeof value === "string") console.log(value);
 
     return null;
-}
-
-/**
- * Retorna true se o tipo do objeto passado como parametro é igual ao tipo desejado
- *
- * @param {any} value Objeto para comparação
- * @param {string} type Tipo para comparação
- *
- * @return {boolean}
- */
-// TODO: Export to module and reuse
-function ensureType(value, type) {
-    if (typeof type !== "string") return false;
-
-    if (typeof value === "string" && type === "number") {
-        let parse = parseInt(value);
-        if (typeof parse === "number") value = parse;
-    }
-
-    return typeof value === type;
 }
 
 /**
