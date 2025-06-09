@@ -1,6 +1,6 @@
 //@ts-check
 
-import { ensureType } from "./tools.mjs";
+import { ensureType, isNonNegativeInt } from "./tools.mjs";
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -14,20 +14,6 @@ import { ensureType } from "./tools.mjs";
  * JavaScript Object Notation Query Language
  *
  */
-
-const KEY_SERVICOS = "servicos";
-const getServicos = () => JSON.parse(localStorage.getItem(KEY_SERVICOS) || "[]");
-const setServicos = (servicos) => {
-    try {
-        localStorage.setItem(KEY_SERVICOS, JSON.stringify(servicos));
-    } catch (err) {
-        if (err instanceof DOMException) {
-            alert(
-                "O limite de armazenamento do localStorage foi atingido!\n\nDelete alguma imagem antes de adicionar outra!\n\nEsse é um problema que utilizar o json-server irá resolver futuramente"
-            );
-        } else throw err;
-    }
-};
 
 /**
  * Retorna null e printa o que estiver em value no console
@@ -43,19 +29,18 @@ function returnError(value) {
     return null;
 }
 
-/**
- * Cria um objeto com as informações do serviço
- *
- * @param {string} titulo Título do serviço
- * @param {number} categoriaId ID da categoria do serviço
- * @param {string} descricao Descrição do serviço
- * @param {string} contato Descrição do serviço
- * @returns {object|null} Se valido, retorna o objeto com as informações do serviço
- */
-export function factoryServicos(titulo, categoriaId, descricao, contato, categoria) {
-    // Struct :: Serviço
-    function Servico(id, titulo, categoria, categoriaId, descricao, contato) {
-        this.id = id;
+// Cria um objeto com as informações do serviço
+export class Servico {
+    /**
+     * @param {string | number | null} id
+     * @param {string} titulo Título do serviço
+     * @param {any} categoria Categoria do serviço
+     * @param {any} categoriaId ID da categoria do serviço
+     * @param {any} descricao Descrição do serviço
+     * @param {any} contato Descrição do serviço
+     */
+    constructor(id, titulo, categoria, categoriaId, descricao, contato) {
+        if (id) this.id = id;
         this.titulo = titulo;
         // TODO: campo temporario, remover depois
         this.categoria = categoria;
@@ -64,216 +49,144 @@ export function factoryServicos(titulo, categoriaId, descricao, contato, categor
         this.descricao = descricao;
         this.contato = contato;
     }
-
-    const servico = new Servico(null, titulo, categoriaId, descricao, contato, categoria);
-    return validateServicos(servico);
 }
 
-/**
- * Validação da struct dos serviços
- *
- * @param {object} servico Objeto com as informações do serviço
- * @returns {object|null} Se valido, retorna o objeto com as informações do serviço
- */
-export function validateServicos(servico) {
-    // ID Opcional
-    if (servico.id && !(ensureType(servico.id, "string") || ensureType(servico.id, "number"))) {
-        return returnError("validateServicos: id não é valido");
-    }
-
-    if (!ensureType(servico.titulo, "string")) {
-        return returnError("validateServicos: titulo não é valido");
-    }
-
-    // TODO: campo temporario para compatibilidade com o serviços.html, remover depois
-    /*
-    if (!ensureType(servico.categoria, "string")) {
-        console.log("validateServicos: categoria não é valido")
-        return null
-    }
-    */
-
-    if (!ensureType(servico.categoriaId, "number")) {
-        return returnError("validateServicos: categoriaId não é valido");
-    }
-
-    if (!ensureType(servico.descricao, "string")) {
-        return returnError("validateServicos: descricao não é valida");
-    }
-
-    if (!ensureType(servico.contato, "string")) {
-        return returnError("validateServicos: contato não é valido");
-    }
-
-    return servico;
-}
-
-/**
- * Lê os serviços armazenados no local storage
- *
- * @param  {...any} servicos_id Array com IDs dos serviços solicitados, retorna todos se vazio.
- * @returns {Array|null} Array com informações sobre os serviço
- */
-export function readServicos(...servicos_id) {
-    if (!servicos_id) {
-        return returnError("readServicos: nulo");
-    }
-
-    if (!Array.isArray(servicos_id)) {
-        return returnError("readServicos: não é um array");
-    }
-
-    let servicos = getServicos();
-
-    // Se o valor for nulo, retorna todas as ids
-    if (servicos_id.length === 0) return servicos;
-
-    let servicos_filter = [];
-
-    for (let x = 0; x < servicos_id.length; x++) {
-        let id = parseInt(servicos_id[x]);
-
-        if (isNaN(id)) return null;
-
-        for (let index = 0; index < servicos.length; index++) {
-            const element = servicos[index];
-
-            if (id === parseInt(element.id)) {
-                servicos_filter.push(element);
-                // Remove o servico da lista
-                servicos.splice(index, 1);
-            }
+export class CRUDServicos {
+    /**
+     * Validação da struct dos serviços
+     *
+     * @param {object} servico Objeto com as informações do serviço
+     * @returns {object|null} Se valido, retorna o objeto com as informações do serviço
+     */
+    validateServicos(servico) {
+        // ID Opcional
+        if (servico.id && !(ensureType(servico.id, "string") || ensureType(servico.id, "number"))) {
+            return returnError("validateServicos: id não é valido");
         }
-    }
 
-    return servicos_filter;
-}
-
-/**
- * Retorna a ID do último serviço cadastrado
- *
- * @returns {Number} ID do último serviço cadastrado
- */
-export function getIdLastServico() {
-    let servicos = readServicos();
-
-    // Se não há serviços cadastrados, retorna o valor 0
-    if (!servicos) return 0;
-
-    let last_id = 0;
-
-    servicos.forEach((servico) => {
-        let id = parseInt(servico.id);
-        if (id > last_id) {
-            last_id = id;
+        if (!ensureType(servico.titulo, "string")) {
+            return returnError("validateServicos: titulo não é valido");
         }
-    });
 
-    return last_id;
-}
-
-/**
- * Atualiza as informações de um serviço utilizando a ID
- *
- * @param {Number} servico_id ID do serviço a ser atualizado
- * @param {any} servico_new Informações do serviço para ser atualizado
- * @returns {boolean | null} Retorna true se as informações foram cadastradas corretamente
- */
-export function updateServicos(servico_id, servico_new) {
-    if (!ensureType(servico_id, "number")) return null;
-
-    if (servico_id < 1) return null;
-
-    // Verifica se as informações no serviço são validas
-    if (!validateServicos(servico_new)) return null;
-
-    let servicos = readServicos();
-
-    if (!servicos?.length) return false;
-
-    for (let index = 0; index < servicos.length; index++) {
-        const element = servicos[index];
-        if (servico_id === parseInt(element.id)) {
-            // Remove o serviço da lista
-            servicos.splice(index, 1);
-            // Adiciona o serviço com as novas informações, salva no localStorage, retorna true
-            servicos.push(servico_new);
-            setServicos(servicos);
-            return true;
+        // TODO: campo temporario para compatibilidade com o serviços.html, remover depois
+        /*
+        if (!ensureType(servico.categoria, "string")) {
+            console.log("validateServicos: categoria não é valido")
+            return null
         }
-    }
+        */
 
-    return false;
-}
-
-/**
- * Deleta as informações de um serviço utilizando a ID
- *
- * @param {Number} servico_id ID do serviço a ser atualizado
- * @returns {boolean | null} Retorna true se as informações foram encontradas e deletadas
- */
-// TODO: Receber array
-export function deleteServicos(servico_id) {
-    if (!ensureType(servico_id, "number")) return null;
-
-    if (servico_id < 1) return null;
-
-    let servicos = readServicos();
-
-    if (!servicos?.length) return false;
-
-    for (let index = 0; index < servicos.length; index++) {
-        const element = servicos[index];
-        if (servico_id === parseInt(element.id, 10)) {
-            // Remove o serviço da lista
-            servicos.splice(index, 1);
-            // Após remover o serviço, armazena a nova lista e retorna true
-            setServicos(servicos);
-            return true;
+        if (!ensureType(servico.categoriaId, "number")) {
+            return returnError("validateServicos: categoriaId não é valido");
         }
+
+        if (!ensureType(servico.descricao, "string")) {
+            return returnError("validateServicos: descricao não é valida");
+        }
+
+        if (!ensureType(servico.contato, "string")) {
+            return returnError("validateServicos: contato não é valido");
+        }
+
+        return servico;
     }
 
-    return false;
-}
+    /**
+     * Lê os serviços armazenados, paginado
+     * @param {{page?: number;per_page?: number;}} opts
+     * @returns {Promise<Object | null>}
+     */
+    // TODO: Alterar função para ler 1 objeto ou varios
+    async lerServicos(opts = {}) {
+        // 0 = all
+        const _page = isNonNegativeInt(opts.page) ? opts.page : 1;
+        // 0 = default(10)
+        const _per_page = isNonNegativeInt(opts.per_page) ? opts.per_page : 10;
 
-/**
- * Limpa todas as informações dos serviços do localStorage
- *
- * @returns {void}
- */
-export function clearServicos() {
-    return setServicos([]);
-}
-
-/**
- * Cadastra um novo serviço
- *
- * @param {any} servico_new Informações do serviço a ser cadastrado
- * @returns {Number | null} Retorna o ID do serviço se as informações foram cadastradas corretamente
- */
-export function createServicos(servico_new) {
-    if (!servico_new) {
-        return returnError("createServicos: Não há argumentos");
+        return fetch(`/servicos?_page=${_page}&_per_page=${_per_page}`, {
+            method: "GET",
+        })
+            .then((res) => res.json())
+            .then((res) => (Array.isArray(res) ? res : res.data ? res.data : null));
     }
 
-    let servicos = readServicos();
+    /**
+     * @param {number | string?} id
+     * @returns {Promise<Object | null>}
+     */
+    async lerServico(id) {
+        if (typeof id !== "number" && typeof id !== "string") return null;
 
-    // Verifica se as informações no serviço são validas
-    if (!validateServicos(servico_new)) {
-        return returnError("createServicos: Não foi possível validar os argumentos");
+        return fetch(`/servicos/${id}`, {
+            method: "GET",
+        }).then((res) => res.json());
     }
 
-    if (!servicos) servicos = [];
+    /**
+     * Atualiza as informações de um serviço, retorna uma Promessa com as informações atualizadas
+     * @param {Servico} servico
+     */
+    async updateUsuario(servico) {
+        if (!(servico instanceof Servico)) return null;
+        if (!servico.id) return null;
 
-    servico_new.id = getIdLastServico();
-    if (!ensureType(servico_new.id, "number")) return null;
+        // Verifica se as informações do serviço são validas
+        // if (!validateServico(servico)) return null;
 
-    // Incrementa a ID
-    servico_new.id += 1;
+        return fetch(`/servicos/${servico.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: JSON.stringify(servico),
+        }).then((res) => res.json());
+    }
 
-    servicos.push(servico_new);
+    /**
+     * Deleta as informações de um serviço utilizando a de (id), retorna uma Promessa do id
+     * @param {string | number} id ID do serviço a ser atualizado
+     */
+    async deleteUsuario(id) {
+        // id not always number
+        if (typeof id !== "number" && typeof id !== "string") return null;
+        if (typeof id === "string" && id.length === 0) return null;
 
-    setServicos(servicos);
+        // returns the deleted json
+        return fetch(`/servicos/${id}`, {
+            method: "DELETE",
+        })
+            .then((res) => res.json())
+            .then((res) => res.id);
+    }
 
-    return servico_new.id;
+    /**
+     * Limpa todas as informações dos serviços
+     */
+    // TODO: Verificar melhor forma de excluir todos os dados não recursivamente
+    async limparServicos() {}
+
+    /**
+     * Cadastra um novo serviços
+     * @param {Servico} servico Informações do serviços a ser cadastrado
+     * @returns {Promise<Object|null>} Retorna o json do serviços se as informações foram cadastradas corretamente
+     */
+    async criarServico(servico) {
+        if (!(servico instanceof Servico)) return null;
+
+        // // Verifica se as informações no servico são validas
+        // if (!validateServico(servico)) return null;
+
+        // TODO: Verificar se id foi informado e recusar transação se id existe
+        delete servico.id;
+
+        return fetch("/servicos", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: JSON.stringify(servico),
+        }).then((res) => res.json());
+    }
 }

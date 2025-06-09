@@ -187,7 +187,7 @@ export class CRUDUsuarios {
      * Limpa todas as informações dos usuários
      */
     // TODO: Verificar melhor forma de excluir todos os dados não recursivamente
-    async clearUsuarios() {}
+    async limparUsuarios() {}
 
     /**
      * Cadastra um novo usuário
