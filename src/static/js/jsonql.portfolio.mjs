@@ -138,7 +138,7 @@ export function validatePortfolio(portfolio) {
         return returnError("validatePortfolio: id não é valido(a)");
     }
 
-    if (!ensureType(portfolio.usuarioId, "number")) {
+    if (!ensureType(portfolio.usuarioId, "string") && !ensureType(portfolio.usuarioId, "number")) {
         return returnError("validatePortfolio: usuarioId não é valido(a)");
     }
 
@@ -277,7 +277,6 @@ export function updatePortfolio(portfolio_id, portfolio_new) {
     let portfolios = readPortfolios();
 
     if (!portfolios?.length) return false;
-
     for (let index = 0; index < portfolios.length; index++) {
         const element = portfolios[index];
         if (portfolio_id === parseInt(element.id)) {

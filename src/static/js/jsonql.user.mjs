@@ -1,6 +1,6 @@
 //@ts-check
 
-import { ensureType } from "./tools.mjs";
+import { ensureType, isNonNegativeInt } from "./tools.mjs";
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -15,66 +15,12 @@ import { ensureType } from "./tools.mjs";
  *
  */
 
-const KEY_USUARIOS = "usuarios";
-const getUsuarios = () => JSON.parse(localStorage.getItem(KEY_USUARIOS) || "[]");
-const setUsuarios = (usuarios) => {
-    try {
-        localStorage.setItem(KEY_USUARIOS, JSON.stringify(usuarios));
-    } catch (err) {
-        if (err instanceof DOMException) {
-            alert(
-                "O limite de armazenamento do localStorage foi atingido!\n\nDelete alguma imagem antes de adicionar outra!\n\nEsse é um problema que utilizar o json-server irá resolver futuramente"
-            );
-        } else throw err;
-    }
-};
-
-/**
- * Retorna null e printa o que estiver em value no console
- *
- * @param {string} value console.log(value)
- *
- * @return {null}
- */
-// TODO: Export to module and reuse
-function returnError(value) {
-    if (typeof value === "string") console.log(value);
-
-    return null;
-}
-
-/**
- * Cria um objeto com as informações do usuário
- *
- * @param {Boolean} ativo Usuário está ativo?
- * @param {string} nome Nome completo do usuário, validação de documentação
- * @param {string} data_nascimento Data de nascimento do usuário (ISO-8601)
- * @param {string} email E-mail do usuário
- * @param {string} senha Senha do usuário
- * @param {string} tipo Tipo de usuário, define as permissões (admin, cliente, freelancer)
- * @param {string} cpf_cnpj Documento do usuário
- * @param {string} cidade Localização do usuário
- * @param {string} biografia Informações breves sobre o usuário
- * @param {Array} contatos Lista de contatos do usuário
- * @returns {object|null} Se valido, retorna o objeto com as informações do usuário
- */
-export function factoryUsuario(
-    ativo,
-    nome,
-    data_nascimento,
-    email,
-    senha,
-    tipo,
-    cpf_cnpj,
-    cidade,
-    biografia,
-    contatos
-) {
-    // Struct :: Usuário
-    function Usuario(
+export class Usuario {
+    constructor(
         id,
         ativo,
         nome,
+        foto,
         data_nascimento,
         email,
         senha,
@@ -84,9 +30,10 @@ export function factoryUsuario(
         biografia,
         contatos
     ) {
-        this.id = id;
+        if (id) this.id = id;
         this.ativo = ativo;
         this.nome = nome;
+        this.foto = foto;
         this.data_nascimento = data_nascimento;
         this.email = email;
         this.senha = senha;
@@ -96,251 +43,173 @@ export function factoryUsuario(
         this.biografia = biografia;
         this.contatos = contatos;
     }
-
-    const usuario = new Usuario(
-        null,
-        ativo,
-        nome,
-        data_nascimento,
-        email,
-        senha,
-        tipo,
-        cpf_cnpj,
-        cidade,
-        biografia,
-        contatos
-    );
-    return validateUsuario(usuario);
 }
 
-/**
- * Validação da struct dos usuários
- *
- * @param  {object} usuario Objeto com as informações do usuários
- * @returns {object | null} Se valido, retorna o objeto com as informações do usuário
- */
-export function validateUsuario(usuario) {
-    // TODO: Check if is object
+export class CRUDUsuarios {
+    /**
+     * Validação da struct dos usuários
+     *
+     * @param  {object} usuario Objeto com as informações do usuários
+     * @returns {object | null} Se valido, retorna o objeto com as informações do usuário
+     */
+    validateUsuario(usuario) {
+        // TODO: Check if is object
 
-    // ID Opcional
-    if (usuario.id && !(ensureType(usuario.id, "number") || ensureType(usuario.id, "string"))) {
-        return returnError("validateUsuario: id não é valido(a)");
-    }
-
-    if (!ensureType(usuario.ativo, "boolean")) {
-        return returnError("validateUsuario: ativo não é valido(a)");
-    }
-
-    if (!ensureType(usuario.nome, "string")) {
-        return returnError("validateUsuario: nome não é valido(a)");
-    }
-
-    if (!ensureType(usuario.data_nascimento, "string")) {
-        return returnError("validateUsuario: data_nascimento não é valido(a)");
-    }
-
-    if (!ensureType(usuario.email, "string")) {
-        return returnError("validateUsuario: email não é valido(a)");
-    }
-
-    if (!ensureType(usuario.senha, "string")) {
-        return returnError("validateUsuario: senha não é valido(a)");
-    }
-
-    if (!ensureType(usuario.tipo, "string")) {
-        return returnError("validateUsuario: tipo não é valido(a)");
-    }
-
-    if (!ensureType(usuario.cpf_cnpj, "string")) {
-        return returnError("validateUsuario: cpf_cnpj não é valido(a)");
-    }
-
-    if (!ensureType(usuario.cidade, "string")) {
-        return returnError("validateUsuario: cidade não é valido(a)");
-    }
-
-    if (!ensureType(usuario.biografia, "string")) {
-        return returnError("validateUsuario: biografia não é valido(a)");
-    }
-
-    if (!ensureType(usuario.contatos, "object")) {
-        return returnError("validateUsuario: contatos não é valido(a)");
-    }
-
-    return usuario;
-}
-
-/**
- * Lê os usuários armazenados no local storage
- *
- * @param  {Array} usuarios_id Array com IDs dos usuários solicitados, retorna todos se vazio.
- * @returns {Array|null} Array com informações sobre os usuário
- */
-export function readUsuarios(...usuarios_id) {
-    if (!usuarios_id) {
-        return returnError("readUsuarios: nulo");
-    }
-
-    if (!Array.isArray(usuarios_id)) {
-        return returnError("readUsuarios: não é um array");
-    }
-
-    let usuarios = getUsuarios();
-
-    // Se o valor for nulo, retorna todas as ids
-    if (usuarios_id.length === 0) return usuarios;
-
-    let usuarios_filter = [];
-
-    for (let x = 0; x < usuarios_id.length; x++) {
-        let id = parseInt(usuarios_id[x]);
-
-        if (isNaN(id)) return null;
-
-        for (let index = 0; index < usuarios.length; index++) {
-            const element = usuarios[index];
-
-            if (id === parseInt(element.id)) {
-                usuarios_filter.push(element);
-                // TODO: Remove porque? Não é pra adicionar?
-                // Remove o usuário da lista
-                usuarios.splice(index, 1);
-            }
+        // ID Opcional
+        if (usuario.id && !(ensureType(usuario.id, "number") || ensureType(usuario.id, "string"))) {
+            console.log("validateUsuario: id não é valido(a)");
+            return;
         }
-    }
 
-    return usuarios_filter;
-}
-
-/**
- * Retorna a ID do último usuário cadastrado
- *
- * @returns {Number} ID do último usuário cadastrado
- */
-export function getIdLastUsuario() {
-    let usuarios = readUsuarios();
-
-    // Se não há usuários cadastrados, retorna o valor 0
-    if (!usuarios) return 0;
-
-    let last_id = 0;
-
-    usuarios.forEach((usuario) => {
-        let id = parseInt(usuario.id);
-        if (id > last_id) {
-            last_id = id;
+        if (!ensureType(usuario.ativo, "boolean")) {
+            console.log("validateUsuario: ativo não é valido(a)");
+            return;
         }
-    });
 
-    return last_id;
-}
-
-/**
- * Atualiza as informações de um usuário utilizando a ID
- *
- * @param {Number} usuario_id ID do usuário a ser atualizado
- * @param {any} usuario_new Informações do usuário para ser atualizado
- * @returns {boolean | null} Retorna true se as informações foram cadastradas corretamente
- */
-export function updateUsuario(usuario_id, usuario_new) {
-    // TODO: Create a validateId func
-    // 1. check if number (accept string to number)
-    // 2. ensure number > 0
-    if (!ensureType(usuario_id, "number")) return null;
-
-    if (usuario_id < 1) return null;
-
-    // Verifica se as informações do usuário são validas
-    if (!validateUsuario(usuario_new)) return null;
-
-    let usuarios = readUsuarios();
-
-    if (!usuarios?.length) return false;
-
-    for (let index = 0; index < usuarios.length; index++) {
-        const element = usuarios[index];
-        if (usuario_id === parseInt(element.id)) {
-            // Remove o usuário da lista
-            usuarios.splice(index, 1);
-            // Adiciona o usuário com as novas informações, salva no localStorage, retorna true
-            usuarios.push(usuario_new);
-            setUsuarios(usuarios);
-            return true;
+        if (!ensureType(usuario.nome, "string")) {
+            console.log("validateUsuario: nome não é valido(a)");
+            return;
         }
-    }
 
-    return false;
-}
-
-/**
- * Deleta as informações de um usuário utilizando a ID
- *
- * @param {Number} usuario_id ID do usuário a ser atualizado
- * @returns {boolean | null} Retorna true se as informações foram encontradas e deletadas
- */
-// TODO: Receber array
-export function deleteUsuario(usuario_id) {
-    if (!ensureType(usuario_id, "number")) return null;
-
-    if (usuario_id < 1) return null;
-
-    let usuarios = readUsuarios();
-
-    if (!usuarios?.length) return false;
-
-    for (let index = 0; index < usuarios.length; index++) {
-        const element = usuarios[index];
-        if (usuario_id === parseInt(element.id, 10)) {
-            // Remove o usuário da lista
-            usuarios.splice(index, 1);
-            // Após remover o usuário, armazena a nova lista e retorna true
-            setUsuarios(usuarios);
-            return true;
+        if (!ensureType(usuario.data_nascimento, "string")) {
+            console.log("validateUsuario: data_nascimento não é valido(a)");
+            return;
         }
+
+        if (!ensureType(usuario.email, "string")) {
+            console.log("validateUsuario: email não é valido(a)");
+            return;
+        }
+
+        if (!ensureType(usuario.senha, "string")) {
+            console.log("validateUsuario: senha não é valido(a)");
+            return;
+        }
+
+        if (!ensureType(usuario.tipo, "string")) {
+            console.log("validateUsuario: tipo não é valido(a)");
+            return;
+        }
+
+        if (!ensureType(usuario.cpf_cnpj, "string")) {
+            console.log("validateUsuario: cpf_cnpj não é valido(a)");
+            return;
+        }
+
+        if (!ensureType(usuario.cidade, "string")) {
+            console.log("validateUsuario: cidade não é valido(a)");
+            return;
+        }
+
+        if (!ensureType(usuario.biografia, "string")) {
+            console.log("validateUsuario: biografia não é valido(a)");
+            return;
+        }
+
+        if (!ensureType(usuario.contatos, "object")) {
+            console.log("validateUsuario: contatos não é valido(a)");
+            return;
+        }
+
+        return usuario;
     }
 
-    return false;
-}
+    /**
+     * Lê os usuários armazenados, paginado
+     * @param {{page?: number;per_page?: number;}} opts
+     * @returns {Promise<Object | null>}
+     */
+    // TODO: Alterar função para ler 1 objeto ou varios
+    async lerUsuarios(opts = {}) {
+        // 0 = all
+        const _page = isNonNegativeInt(opts.page) ? opts.page : 1;
+        // 0 = default(10)
+        const _per_page = isNonNegativeInt(opts.per_page) ? opts.per_page : 10;
 
-/**
- * Limpa todas as informações dos usuários do localStorage
- *
- * @returns {void}
- */
-export function clearUsuarios() {
-    return setUsuarios([]);
-}
-
-/**
- * Cadastra um novo usuário
- *
- * @param {any} usuario_new Informações do usuário a ser cadastrado
- * @returns {Number | null} Retorna o ID do usuário se as informações foram cadastradas corretamente
- */
-export function createUsuario(usuario_new) {
-    if (!usuario_new) {
-        return returnError("createUsuario: Não há argumentos");
+        return fetch(`/usuarios?_page=${_page}&_per_page=${_per_page}`, {
+            method: "GET",
+        })
+            .then((res) => res.json())
+            .then((res) => (Array.isArray(res) ? res : res.data ? res.data : null));
     }
 
-    let usuarios = readUsuarios();
+    /**
+     * @param {number | string?} id
+     * @returns {Promise<Object | null>}
+     */
+    async lerUsuario(id) {
+        if (typeof id !== "number" && typeof id !== "string") return null;
 
-    // Verifica se as informações no usuário são validas
-    if (!validateUsuario(usuario_new)) {
-        return returnError("createUsuario: Não foi possível validar os argumentos");
+        return fetch(`/usuarios/${id}`, {
+            method: "GET",
+        }).then((res) => res.json());
     }
 
-    if (!usuarios) usuarios = [];
+    /**
+     * Atualiza as informações de um usuário, retorna uma Promessa com as informações atualizadas
+     * @param {Usuario} usuario
+     */
+    async updateUsuario(usuario) {
+        if (!(usuario instanceof Usuario)) return null;
+        if (!usuario.id) return null;
 
-    usuario_new.id = getIdLastUsuario();
+        // Verifica se as informações do usuário são validas
+        // if (!validateUsuario(usuario)) return null;
 
-    if (!ensureType(usuario_new.id, "number")) return null;
+        return fetch(`/usuarios/${usuario.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: JSON.stringify(usuario),
+        }).then((res) => res.json());
+    }
 
-    // Incrementa a ID
-    usuario_new.id += 1;
+    /**
+     * Deleta as informações de um usuário utilizando a de (id), retorna uma Promessa do id
+     * @param {string | number} id ID do usuário a ser atualizado
+     */
+    async deleteUsuario(id) {
+        // id not always number
+        if (typeof id !== "number" && typeof id !== "string") return null;
+        if (typeof id === "string" && id.length === 0) return null;
 
-    usuarios.push(usuario_new);
+        // returns the deleted json
+        return fetch(`/usuarios/${id}`, {
+            method: "DELETE",
+        })
+            .then((res) => res.json())
+            .then((res) => res.id);
+    }
 
-    setUsuarios(usuarios);
+    /**
+     * Limpa todas as informações dos usuários
+     */
+    // TODO: Verificar melhor forma de excluir todos os dados não recursivamente
+    async clearUsuarios() {}
 
-    return usuario_new.id;
+    /**
+     * Cadastra um novo usuário
+     * @param {Usuario} usuario Informações do usuário a ser cadastrado
+     * @returns {Promise<Object|null>} Retorna o json do usuário se as informações foram cadastradas corretamente
+     */
+    async criarUsuario(usuario) {
+        if (!(usuario instanceof Usuario)) return null;
+
+        // // Verifica se as informações no usuário são validas
+        // if (!validateUsuario(usuario)) return null;
+
+        // TODO: Verificar se id foi informado e recusar transação se id existe
+        delete usuario.id;
+
+        return fetch("/usuarios", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: JSON.stringify(usuario),
+        }).then((res) => res.json());
+    }
 }
