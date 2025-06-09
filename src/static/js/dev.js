@@ -6,7 +6,7 @@ import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as Faker from "./faker.mjs";
-import * as Tools from "./tools.mjs";
+import { ensureInteger } from "./tools.mjs";
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -38,7 +38,7 @@ function setupUserCRUD() {
 
     dev_delete_usuarios.addEventListener("click", () => {
         const id = dev_delete_usuarios_id.value;
-        const id_int = Tools.ensureInteger(id);
+        const id_int = ensureInteger(id);
 
         if (!id_int) {
             console.log("dev_delete_usuarios: Não foi possível realizar o parse do id");
@@ -84,7 +84,7 @@ function setupServicesCRUD() {
 
     dev_delete_servicos.addEventListener("click", () => {
         const id = dev_delete_servicos_id.value;
-        const id_int = Tools.ensureInteger(id);
+        const id_int = ensureInteger(id);
         if (!id_int) {
             console.log("dev_delete_servicos: Não foi possível realizar o parse do id");
             return;
@@ -129,7 +129,7 @@ function setupContractsCRUD() {
 
     dev_delete_contratos.addEventListener("click", () => {
         const id = dev_delete_contratos_id.value;
-        const id_int = Tools.ensureInteger(id);
+        const id_int = ensureInteger(id);
         if (!id_int) {
             console.log("dev_delete_contratos: Não foi possível realizar o parse do id");
             return;
@@ -174,7 +174,7 @@ function setupReviewsCRUD() {
 
     dev_delete_avaliacoes.addEventListener("click", () => {
         const id = dev_delete_avaliacoes_id.value;
-        const id_int = Tools.ensureInteger(id);
+        const id_int = ensureInteger(id);
         if (!id_int) {
             console.log("dev_delete_avaliacoes: Não foi possível realizar o parse do id");
             return;
@@ -219,7 +219,7 @@ function setupPortfolioCRUD() {
 
     dev_delete_portfolios.addEventListener("click", () => {
         const id = dev_delete_portfolios_id.value;
-        const id_int = Tools.ensureInteger(id);
+        const id_int = ensureInteger(id);
         if (!id_int) {
             console.log("dev_delete_portfolios: Não foi possível realizar o parse do id");
             return;
