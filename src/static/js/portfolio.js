@@ -418,7 +418,7 @@ function commitEditSectionInfo() {
         break;
     }
 
-    if (JSONQL_P.updatePortfolio(_context.section_id, _portfolio)) {
+    if (JSONQL_P.updatePortfolio(_context.portfolio_id, _portfolio)) {
         toggleDisplayNoneOnElement("popup-edit", true);
         context.resetContext();
         notifySectionDataChanged();
