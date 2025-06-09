@@ -38,8 +38,9 @@ export class Servico {
      * @param {any} categoriaId ID da categoria do serviço
      * @param {any} descricao Descrição do serviço
      * @param {any} contato Descrição do serviço
+     * @param {any} imagem Imagem do serviço
      */
-    constructor(id, titulo, categoria, categoriaId, descricao, contato) {
+    constructor(id, titulo, categoria, categoriaId, descricao, contato, imagem) {
         if (id) this.id = id;
         this.titulo = titulo;
         // TODO: campo temporario, remover depois
@@ -48,6 +49,7 @@ export class Servico {
         this.categoriaId = categoriaId;
         this.descricao = descricao;
         this.contato = contato;
+        this.imagem = imagem;
     }
 }
 
@@ -94,7 +96,7 @@ export class CRUDServicos {
     /**
      * Lê os serviços armazenados, paginado
      * @param {{page?: number;per_page?: number;}} opts
-     * @returns {Promise<Object | null>}
+     * @returns {Promise<Servico[] | null>}
      */
     // TODO: Alterar função para ler 1 objeto ou varios
     async lerServicos(opts = {}) {
@@ -112,7 +114,7 @@ export class CRUDServicos {
 
     /**
      * @param {number | string?} id
-     * @returns {Promise<Object | null>}
+     * @returns {Promise<Servico | null>}
      */
     async lerServico(id) {
         if (typeof id !== "number" && typeof id !== "string") return null;
@@ -126,7 +128,7 @@ export class CRUDServicos {
      * Atualiza as informações de um serviço, retorna uma Promessa com as informações atualizadas
      * @param {Servico} servico
      */
-    async updateUsuario(servico) {
+    async updateServico(servico) {
         if (!(servico instanceof Servico)) return null;
         if (!servico.id) return null;
 
@@ -147,7 +149,7 @@ export class CRUDServicos {
      * Deleta as informações de um serviço utilizando a de (id), retorna uma Promessa do id
      * @param {string | number} id ID do serviço a ser atualizado
      */
-    async deleteUsuario(id) {
+    async excluirServico(id) {
         // id not always number
         if (typeof id !== "number" && typeof id !== "string") return null;
         if (typeof id === "string" && id.length === 0) return null;
