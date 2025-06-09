@@ -1,12 +1,14 @@
 //@ts-check
 
 import * as JSONQL_S from "./jsonql.service.mjs"; // Serviços
-import * as JSONQL_U from "./jsonql.user.mjs"; // Usuários
+import { CRUDUsuarios } from "./jsonql.user.mjs"; // Usuários
 import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as Faker from "./faker.mjs";
 import { ensureInteger } from "./tools.mjs";
+
+const crud_usuarios = new CRUDUsuarios();
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -31,22 +33,17 @@ function setupUserCRUD() {
 
     dev_create_usuarios.addEventListener("click", async () => {
         const quantidade = dev_create_usuarios_n.value || "";
+        // TODO: Check if more than $ALERT_QUANTITY
         Faker.criarNUsuarios(parseInt(quantidade));
     });
 
-    dev_delete_usuarios_all.addEventListener("click", JSONQL_U.clearUsuarios);
+    dev_delete_usuarios_all.addEventListener("click", () => crud_usuarios.clearUsuarios());
 
-    dev_delete_usuarios.addEventListener("click", () => {
+    dev_delete_usuarios.addEventListener("click", async () => {
         const id = dev_delete_usuarios_id.value;
-        const id_int = ensureInteger(id);
-
-        if (!id_int) {
-            console.log("dev_delete_usuarios: Não foi possível realizar o parse do id");
-            return;
-        }
-
-        if (JSONQL_U.deleteUsuario(id_int)) {
-            console.log(`dev_delete_usuarios: usuário ${id_int} foi deletado!`);
+        // TODO: Validate id=0? (string or nonNegativeNumber?)
+        if (await crud_usuarios.deleteUsuario(id)) {
+            console.log(`dev_delete_usuarios: usuário ${id} foi deletado!`);
         } else {
             console.log(
                 `dev_delete_usuarios: Não foi possível encontrar o usuário ou ocorreu um erro.`,
@@ -54,7 +51,9 @@ function setupUserCRUD() {
         }
     });
 
-    dev_read_usuarios.addEventListener("click", () => console.log(JSONQL_U.readUsuarios()));
+    dev_read_usuarios.addEventListener("click", async () =>
+        console.log(await crud_usuarios.lerUsuarios({ page: 0 }))
+    );
 }
 
 function setupServicesCRUD() {

@@ -1,6 +1,6 @@
 //@ts-check
 import * as JSONQL_S from "./jsonql.service.mjs"; // Serviços
-import * as JSONQL_U from "./jsonql.user.mjs"; // Usuários
+import { CRUDUsuarios } from "./jsonql.user.mjs"; // Usuários
 import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
@@ -9,6 +9,8 @@ import { ensureInteger, imageFileToBase64, isNonEmptyString, MAX_ALLOWED_SIZE } 
 
 // TODO: Mover adicionar-imagens para um popup
 // TODO: Criar popups dinamicamente e remove-los do html
+
+const crud_usuarios = new CRUDUsuarios();
 
 class AddSectionContext {
     /**
@@ -1027,7 +1029,7 @@ function setIdParam(id) {
  * @param {string} section_name
  * @param {string} section_description
  * @param {boolean} enable_edit
- * @param {number} portfolio_user_id
+ * @param {string} portfolio_user_id
  */
 function createReviewSection(
     portfolio_id,
@@ -1039,7 +1041,7 @@ function createReviewSection(
 ) {
     const _portfolio_id = ensureInteger(portfolio_id);
     const _section_id = ensureInteger(section_id);
-    const _portfolio_user_id = ensureInteger(portfolio_user_id);
+    const _portfolio_user_id = portfolio_user_id;
 
     if (!_portfolio_id || !_section_id || !_portfolio_user_id) return;
 
@@ -1094,12 +1096,12 @@ function createReviewSection(
             if (!contratadoId || !_service_id) return;
 
             // A partir daqui, continue apenas os contratos que possuem a mesma id que o usuario do portfolio
-            if (contratadoId !== _portfolio_user_id) return;
+            if (contratadoId.toString() !== _portfolio_user_id.toString()) return;
 
             const service = getFirstOrNull(JSONQL_S.readServicos(_service_id));
             if (!service) return;
 
-            const user = getFirstOrNull(JSONQL_U.readUsuarios(contratanteId));
+            const user = getFirstOrNull(crud_usuarios.lerUsuario(contratanteId));
             if (!user) return;
 
             // TODO: replace 'placeholder_profile'
@@ -1390,12 +1392,12 @@ function createLinkSection(
  * @param {number} portf_id
  * @param {boolean} enable_edit
  */
-function setupPortfolioPage(portf_id, enable_edit) {
+// TODO: Remover async dessa função ou dividir em funcoes menores
+async function setupPortfolioPage(portf_id, enable_edit) {
     if (!portf_id && typeof portf_id !== "number") return;
 
     if (typeof enable_edit !== "boolean") enable_edit = false;
 
-    // INFO: Repo 14 escolhido para desenvolvimento porque contem as 3 categorias necessárias geradas aleatoriamente
     const portfolio = getFirstOrNull(JSONQL_P.readPortfolios(portf_id));
     if (!portfolio) {
         console.log("setupPortfolioPage: nenhum portfólio cadastrado!");
@@ -1478,8 +1480,9 @@ function setupPortfolioPage(portf_id, enable_edit) {
         popup_delete_link_confirm?.addEventListener("click", () => commitDeleteLink);
     }
 
+    /** @type {string} */
     const portfolio_user_id = portfolio.usuarioId;
-    const portfolio_user = getFirstOrNull(JSONQL_U.readUsuarios(portfolio_user_id));
+    const portfolio_user = await crud_usuarios.lerUsuario(portfolio_user_id);
     if (!portfolio_user) {
         console.log("setupPortfolioPage: no user");
         return;
@@ -1600,29 +1603,69 @@ function setupPortfolioPage(portf_id, enable_edit) {
     });
 }
 
-function setupPortfolioSetup() {
-    toggleDisplayNoneOnElement("portfolio-setup", false);
+async function setupPortfolioSetupUsuarios() {
+    // OPTIMIZE: Ler os usuários anteriormente e escolher um número aleatorio
+    const _usuarios = await crud_usuarios.lerUsuarios({ page: 0 });
+    console.log(_usuarios);
 
+    const portfolio_setup_create_select = document.getElementById("portfolio-setup-create-select");
+    const portfolio_setup_create_btn = document.getElementById("portfolio-setup-create-btn");
+
+    if (
+        !(portfolio_setup_create_select instanceof HTMLSelectElement) ||
+        !(portfolio_setup_create_btn instanceof HTMLButtonElement)
+    ) {
+        console.error(`${this.name}: null check`);
+        return;
+    }
+
+    // Se existem usuários, adiciona-os à lista (criar novo portfólio)
+    if (_usuarios && _usuarios.length) {
+        for (let i = 0; i < _usuarios.length; i++) {
+            let option = document.createElement("option");
+            option.value = _usuarios[i].id;
+            option.innerText = `Usuário id(${_usuarios[i].id}): ${_usuarios[i].nome}`;
+            portfolio_setup_create_select.appendChild(option);
+        }
+        portfolio_setup_create_btn.classList.remove("disabled");
+        portfolio_setup_create_btn.addEventListener("click", () => {
+            // Criar portfólio para o usuário de id $?
+            let portfolioId = JSONQL_P.createPortfolio({
+                usuarioId: portfolio_setup_create_select.value,
+                secoes: [],
+            });
+
+            if (!portfolioId) {
+                console.error("Não foi possível criar o portfólio");
+                return;
+            }
+
+            // Abrir o portfólio de id $?
+            setIdParam(portfolioId);
+        });
+
+        return;
+    }
+
+    let option = document.createElement("option");
+    option.innerText = `Nenhum usuário criado!`;
+    portfolio_setup_create_select.appendChild(option);
+}
+
+async function setupPortfolioSetupPortfolios() {
     let portfolio_setup_select_select = document.getElementById("portfolio-setup-select-select");
     let portfolio_setup_select_btn = document.getElementById("portfolio-setup-select-btn");
-    let portfolio_setup_create_select = document.getElementById("portfolio-setup-create-select");
-    let portfolio_setup_create_btn = document.getElementById("portfolio-setup-create-btn");
-    let portfolio_setup_dev_btn = document.getElementById("portfolio-setup-dev-btn");
 
     if (
         !(portfolio_setup_select_select instanceof HTMLSelectElement) ||
-        !(portfolio_setup_select_btn instanceof HTMLButtonElement) ||
-        !(portfolio_setup_create_select instanceof HTMLSelectElement) ||
-        !(portfolio_setup_create_btn instanceof HTMLButtonElement) ||
-        !(portfolio_setup_dev_btn instanceof HTMLButtonElement)
+        !(portfolio_setup_select_btn instanceof HTMLButtonElement)
     ) {
         console.error(`${this.name}: null check`);
         return;
     }
 
     // Lê os portfolios e usuários disponíveis
-    const _portfolios = JSONQL_P.readPortfolios();
-    const _usuarios = JSONQL_U.readUsuarios();
+    const _portfolios = await JSONQL_P.readPortfolios();
 
     // Se existem portfólios, adiciona-os à lista (abrir portfólio)
     if (_portfolios && _portfolios.length) {
@@ -1642,36 +1685,13 @@ function setupPortfolioSetup() {
         option.innerText = `Nenhum portfólio criado!`;
         portfolio_setup_select_select.appendChild(option);
     }
+}
 
-    // Se existem usuários, adiciona-os à lista (criar novo portfólio)
-    if (_usuarios && _usuarios.length) {
-        for (let i = 0; i < _usuarios.length; i++) {
-            let option = document.createElement("option");
-            option.value = _usuarios[i].id;
-            option.innerText = `Usuário id(${_usuarios[i].id}): ${_usuarios[i].nome}`;
-            portfolio_setup_create_select.appendChild(option);
-        }
-        portfolio_setup_create_btn.classList.remove("disabled");
-        portfolio_setup_create_btn.addEventListener("click", () => {
-            // Criar portfólio para o usuário de id $?
-            let portfolioId = JSONQL_P.createPortfolio({
-                usuarioId: parseInt(portfolio_setup_create_select.value),
-                secoes: [],
-            });
+async function setupPortfolioSetupMicroDev() {
+    let portfolio_setup_dev_btn = document.getElementById("portfolio-setup-dev-btn");
 
-            if (!portfolioId) {
-                console.error("Não foi possível criar o portfólio");
-                return;
-            }
-
-            // Abrir o portfólio de id $?
-            setIdParam(portfolioId);
-        });
-    } else {
-        let option = document.createElement("option");
-        option.innerText = `Nenhum usuário criado!`;
-        portfolio_setup_create_select.appendChild(option);
-    }
+    if (!(portfolio_setup_dev_btn instanceof HTMLButtonElement))
+        throw new Error(`${this.name}: null check`);
 
     portfolio_setup_dev_btn.addEventListener("click", async () => {
         // Utilizar a página 'dev.js'
@@ -1681,6 +1701,19 @@ function setupPortfolioSetup() {
         await Faker.criarNAvaliacoes(120);
         notifySectionDataChanged();
     });
+}
+
+// Configura a página inicial de visualizar/criar portfólios
+function setupPortfolioSetup() {
+    // Mostra os elementos da página de setup do portfólio
+    // TODO: Adicionar a pagina dinamicamente
+    toggleDisplayNoneOnElement("portfolio-setup", false);
+    // Adiciona usuários a página de setup de portfólio
+    setupPortfolioSetupUsuarios();
+    // Adiciona portfólios a página de setup de portfólio
+    setupPortfolioSetupPortfolios();
+    // Adiciona opções de desenvolvedor a página de setup de portfólio
+    setupPortfolioSetupMicroDev();
 }
 
 function validateEntry() {

@@ -117,6 +117,15 @@ export function isNonEmptyString(value) {
     return typeof value === "string" && value.length > 0;
 }
 
+/**
+ * @param {any} value
+ */
+export function isNonNegativeInt(value) {
+    if (Number.isInteger(value) && value >= 0) return true;
+
+    return false;
+}
+
 export function assertPositiveInt(value) {
     if (typeof value !== "number" || Number.isNaN(value)) throw new Error("Value is not a number!");
     if (value <= 0) throw new Error("Value is not positive!");

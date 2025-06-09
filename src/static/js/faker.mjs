@@ -1,7 +1,7 @@
 //@ts-check
 
 import * as JSONQL_S from "./jsonql.service.mjs"; // Serviços
-import * as JSONQL_U from "./jsonql.user.mjs"; // Usuários
+import { Usuario, CRUDUsuarios } from "./jsonql.user.mjs"; // Usuários
 import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
@@ -14,18 +14,31 @@ import {
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
  */
 
+// eslint-disable-next-line no-unused-vars
 class Exemplos {
+    /** @type {any[]} */
     avaliacoes = [];
+    /** @type {any[]} */
     biografia = [];
+    /** @type {any[]} */
     categorias_servicos = [];
+    /** @type {any[]} */
     cidades = [];
+    /** @type {any[]} */
     contatos = [];
+    /** @type {any[]} */
     cpf_cnpj = [];
+    /** @type {any[]} */
     descricoes = [];
+    /** @type {any[]} */
     email = [];
+    /** @type {any[]} */
     links_externos = [];
+    /** @type {any[]} */
     nomes = [];
+    /** @type {any[]} */
     sobrenomes = [];
+    /** @type {any[]} */
     tipo = [];
 }
 
@@ -50,6 +63,7 @@ class ExemploFetcher {
 }
 
 const exemplos = new ExemploFetcher();
+const crud_usuarios = new CRUDUsuarios();
 
 /**
  * Cria N portfólios
@@ -58,13 +72,15 @@ const exemplos = new ExemploFetcher();
 export async function criarNPortfolios(quantidade) {
     assertPositiveInt(quantidade);
 
-    await exemplos.getFakeData().then((json) => {
+    await exemplos.getFakeData().then(async (json) => {
         if (!json) return;
 
         let portfolios = [];
 
         for (let index = 0; index < quantidade; index++) {
-            const usuarios = JSONQL_U.readUsuarios();
+            crud_usuarios.lerUsuarios();
+            // OPTIMIZE: Ler os usuários anteriormente e escolher um número aleatorio
+            const usuarios = await crud_usuarios.lerUsuarios({page: 0});
 
             if (!usuarios || !usuarios.length)
                 throw new Error(
@@ -168,7 +184,8 @@ export async function criarNContratos(quantidade) {
     let contratos = [];
 
     for (let index = 0; index < quantidade; index++) {
-        const usuarios = JSONQL_U.readUsuarios();
+        // OPTIMIZE: Ler os usuários anteriormente e escolher um número aleatorio
+        const usuarios = await crud_usuarios.lerUsuarios({page: 0});
         if (!usuarios || !usuarios.length)
             throw new Error(
                 "Criação de contratos: É necessário que haja usuários cadastrados para criar contratos.",
@@ -221,13 +238,14 @@ export async function criarNContratos(quantidade) {
 export async function criarNAvaliacoes(quantidade) {
     assertPositiveInt(quantidade);
 
-    await exemplos.getFakeData().then((json) => {
+    await exemplos.getFakeData().then(async (json) => {
         if (!json) return;
 
         let avaliacoes = [];
 
         for (let index = 0; index < quantidade; index++) {
-            const usuarios = JSONQL_U.readUsuarios();
+            // OPTIMIZE: Ler os usuários anteriormente e escolher um número aleatorio
+            const usuarios = await crud_usuarios.lerUsuarios({page: 0});
             if (!usuarios || !usuarios.length)
                 throw new Error(
                     "Criação de avaliações: É necessário que haja usuários cadastrados para criar avaliações.",
@@ -313,23 +331,26 @@ export async function criarNUsuarios(quantidade) {
                 continue;
             }
 
-            usuarios.push({
-                ativo: true, // bool
-                nome: `${json.nomes[nome_index]} ${json.sobrenomes[sobrenomes_index]}`, // string
-                foto: `https://picsum.photos/seed/${foto_seed}/200`, // string
-                data_nascimento: `${data_nascimento_dia}/${data_nascimento_mes}/${data_nascimento_ano}`, // string
-                email: json.email[email_index], // string
-                senha: (generateRandomNumber(999999, 100000) || 123456).toString(), // string
-                tipo: json.tipo[tipo_index], // string
-                cpf_cnpj: json.cpf_cnpj[cpf_cnpj_index], // string
-                cidade: json.cidades[cidade_index], // string
-                biografia: json.biografia[biografia_index], // string
-                contatos: [json.contatos[contato_1_index], json.contatos[contato_2_index]], // Array
-            });
+            usuarios.push(
+                new Usuario(
+                    null,
+                    true, // ativo(bool)
+                    `${json.nomes[nome_index]} ${json.sobrenomes[sobrenomes_index]}`, // nome(string)
+                    `https://picsum.photos/seed/${foto_seed}/200`, // foto(string)
+                    `${data_nascimento_dia}/${data_nascimento_mes}/${data_nascimento_ano}`, // data_nascimento(string)
+                    json.email[email_index], // email(string)
+                    (generateRandomNumber(999999, 100000) || 123456).toString(), // senha(string)
+                    json.tipo[tipo_index], // tipo(string)
+                    json.cpf_cnpj[cpf_cnpj_index], // cpf_cnpj(string)
+                    json.cidades[cidade_index], // cidade(string)
+                    json.biografia[biografia_index], // biografia(string)
+                    [json.contatos[contato_1_index], json.contatos[contato_2_index]] // contatos(Array)
+                )
+            );
         }
 
         // TODO: Do it in chunks
-        usuarios.forEach((element) => JSONQL_U.createUsuario(element));
+        usuarios.forEach(async (element) => await crud_usuarios.criarUsuario(element));
     });
 }
 
