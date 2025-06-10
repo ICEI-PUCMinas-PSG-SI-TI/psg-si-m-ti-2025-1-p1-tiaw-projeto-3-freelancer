@@ -76,7 +76,6 @@ function setupResultadosServicos(pesquisa) {
     if (!(html_row_service instanceof HTMLDivElement)) return;
 
     const servicos = readServicos();
-    console.log(servicos);
     if (!servicos) return;
 
     servicos.forEach((_servico) => {
