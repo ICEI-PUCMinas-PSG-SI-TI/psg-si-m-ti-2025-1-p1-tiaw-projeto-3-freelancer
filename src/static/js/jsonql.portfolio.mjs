@@ -1,5 +1,7 @@
 //@ts-check
 
+import { ensureType } from "./tools.mjs";
+
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
  *
@@ -39,26 +41,6 @@ function returnError(value) {
     if (typeof value === "string") console.log(value);
 
     return null;
-}
-
-/**
- * Retorna true se o tipo do objeto passado como parâmetro é igual ao tipo desejado
- *
- * @param {any} value Objeto para comparação
- * @param {string} type Tipo para comparação
- *
- * @return {boolean}
- */
-// TODO: Export to module and reuse
-function ensureType(value, type) {
-    if (typeof type !== "string") return false;
-
-    if (typeof value === "string" && type === "number") {
-        let parse = parseInt(value);
-        if (typeof parse === "number") value = parse;
-    }
-
-    return typeof value === type;
 }
 
 /**
@@ -138,7 +120,7 @@ export function validatePortfolio(portfolio) {
         return returnError("validatePortfolio: id não é valido(a)");
     }
 
-    if (!ensureType(portfolio.usuarioId, "number")) {
+    if (!ensureType(portfolio.usuarioId, "string") && !ensureType(portfolio.usuarioId, "number")) {
         return returnError("validatePortfolio: usuarioId não é valido(a)");
     }
 
@@ -277,7 +259,6 @@ export function updatePortfolio(portfolio_id, portfolio_new) {
     let portfolios = readPortfolios();
 
     if (!portfolios?.length) return false;
-
     for (let index = 0; index < portfolios.length; index++) {
         const element = portfolios[index];
         if (portfolio_id === parseInt(element.id)) {

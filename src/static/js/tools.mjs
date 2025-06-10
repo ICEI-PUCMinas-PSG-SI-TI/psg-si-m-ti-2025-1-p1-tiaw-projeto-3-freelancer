@@ -133,3 +133,44 @@ export async function imageFileToBase64(file) {
 export function isNonEmptyString(value) {
     return typeof value === "string" && value.length > 0;
 }
+
+/**
+ * @param {any} value
+ */
+export function isNonNegativeInt(value) {
+    if (Number.isInteger(value) && value >= 0) return true;
+
+    return false;
+}
+
+export function assertPositiveInt(value) {
+    if (typeof value !== "number" || Number.isNaN(value)) throw new Error("Value is not a number!");
+    if (value <= 0) throw new Error("Value is not positive!");
+}
+
+export function assertNonEmptyString(value) {
+    if (typeof value !== "string") throw new Error("Value is not a string!");
+    if (value.trim().length === 0) throw new Error("String is empty.");
+}
+
+// O json-server aceita ids númericas, mas caso não informado,
+// a ID criada é composta por 4 digitos alfanúmericos (ex: "a1b2")
+/**
+ * @param {any} value
+ * @param {{opcional?: boolean}} opts
+ */
+export function assertJSONServerID(value, opts = {}) {
+    const opcional = typeof opts.opcional === "boolean" ? opts.opcional : false;
+    if (!value) {
+        if (!opcional) throw new Error("O valor da ID é nulo!");
+        return;
+    }
+    if (typeof value !== "string" && typeof value !== "number")
+        throw new Error("O ID não é uma string ou número!");
+
+    if (typeof value === "string" && value.trim().length === 0)
+        throw new Error("O valor da ID é nulo!");
+
+    if (typeof value === "number" && value < 0) throw new Error("O valor da ID é inválido!");
+    return;
+}
