@@ -16,6 +16,20 @@ import { ensureType, isNonNegativeInt } from "./tools.mjs";
  */
 
 export class Usuario {
+    /**
+     * @param {string | number ?} id
+     * @param {boolean} ativo
+     * @param {string} nome
+     * @param {string} foto
+     * @param {string} data_nascimento
+     * @param {string} email
+     * @param {string} senha
+     * @param {string} tipo
+     * @param {string} cpf_cnpj
+     * @param {string} cidade
+     * @param {string} biografia
+     * @param {any[]} contatos
+     */
     constructor(
         id,
         ativo,
