@@ -1,6 +1,10 @@
 // @ts-check
 
+import { readUsuarios } from "./jsonql.user.mjs";
+import { readServicos } from "./jsonql.service.mjs";
+
 function createServiceCard(
+    id,
     titulo,
     nome_usuario,
     descricao,
@@ -9,8 +13,8 @@ function createServiceCard(
 ) {
     const card = document.createElement("div");
     card.classList.add("col-12", "col-md-6", "col-xl-4");
-    card.innerHTML = `<div class="card my-3 w-100">
-        <div class="card-body">
+    card.innerHTML = `<div class="card h-100 w-100">
+        <div class="card-body d-flex flex-column">
         <div class="d-flex flex-row mb-1">
             <img class="card-image me-2" src="static/img/placeholder_profile.png" />
             <div class="flex-column">
@@ -19,7 +23,7 @@ function createServiceCard(
             </div>
         </div>
         <p>${descricao}</p>
-        <div class="d-flex flex-row justify-content-between">
+        <div class="d-flex flex-row justify-content-between mt-auto">
             <p class="space-0">📝 ${quantidade_avaliacoes}</p>
             <!-- TODO: Adicionar como estrelas -->
             <p class="space-0">⭐ ${nota_avaliacoes}/10</p>
@@ -30,11 +34,18 @@ function createServiceCard(
     return card;
 }
 
-function createUserCard(nome_usuario, cidade, quantidade_avaliacoes, nota_avaliacoes, biografia) {
+function createUserCard(
+    id,
+    nome_usuario,
+    cidade,
+    quantidade_avaliacoes,
+    nota_avaliacoes,
+    biografia
+) {
     const card = document.createElement("div");
     card.classList.add("col-12", "col-md-6", "col-xl-4");
-    card.innerHTML = `<div class="card my-3 w-100">
-        <div class="card-body">
+    card.innerHTML = `<div class="card h-100 w-100">
+        <div class="card-body d-flex flex-column">
         <div class="d-flex flex-row mb-1">
             <img class="card-image me-2" src="static/img/placeholder_profile.png" />
             <div class="flex-column">
@@ -43,7 +54,7 @@ function createUserCard(nome_usuario, cidade, quantidade_avaliacoes, nota_avalia
             </div>
         </div>
         <p>${biografia}</p>
-        <div class="d-flex flex-row justify-content-between">
+        <div class="d-flex flex-row justify-content-between mt-auto">
             <p class="space-0">📝 ${quantidade_avaliacoes}</p>
             <!-- TODO: Adicionar como estrelas -->
             <p class="space-0">⭐ ${nota_avaliacoes}/10</p>
@@ -54,29 +65,59 @@ function createUserCard(nome_usuario, cidade, quantidade_avaliacoes, nota_avalia
     return card;
 }
 
-function setupResultados() {
+function setupResultadosServicos() {
     const html_row_service = document.getElementById("row-service");
-    const html_row_users = document.getElementById("row-users");
-    if (
-        !(html_row_service instanceof HTMLDivElement) ||
-        !(html_row_users instanceof HTMLDivElement)
-    )
-        return;
+    if (!(html_row_service instanceof HTMLDivElement)) return;
 
-    for (let i = 0; i < 10; i++) {
+    const servicos = readServicos();
+    console.log(servicos);
+    if (!servicos) return;
+
+    servicos.forEach((_servico) => {
+        // TODO: Criar relação do usuario com o serviço
+        const _servico_user_id = "Fulano";
+        // TODO: Ler dinamicamente
+        const _user_avaliacoes_quantidade = 12;
+        const _user_avaliacoes_nota_media = 6;
         html_row_service.appendChild(
-            createServiceCard("Serviço X", "Fulano", "Serviço de Tal Coisa", 12, 6)
-        );
-        html_row_users.appendChild(
-            createUserCard(
-                "Fulano",
-                "Belo Horizonte, MG",
-                1923,
-                8,
-                "Fulano de tal é um cara muito bacana que gosta de fazer coisas por ai."
+            createServiceCard(
+                _servico.id,
+                _servico.titulo,
+                _servico_user_id,
+                _servico.descricao,
+                _user_avaliacoes_quantidade,
+                _user_avaliacoes_nota_media
             )
         );
-    }
+    });
 }
 
-setupResultados();
+function setupResultadosUsuarios() {
+    const html_row_users = document.getElementById("row-users");
+    if (!(html_row_users instanceof HTMLDivElement)) return;
+
+    const usuarios = readUsuarios();
+    if (!usuarios) return;
+
+    usuarios.forEach((_user) => {
+        // TODO: Ler dinamicamente
+        const _user_avaliacoes_quantidade = 1923;
+        const _user_avaliacoes_nota_media = 8;
+        html_row_users.appendChild(
+            createUserCard(
+                _user.id,
+                _user.nome,
+                _user.cidade,
+                _user_avaliacoes_quantidade,
+                _user_avaliacoes_nota_media,
+                _user.biografia
+            )
+        );
+    });
+}
+
+// function setupResultados()
+(() => {
+    setupResultadosUsuarios();
+    setupResultadosServicos();
+})();
