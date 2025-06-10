@@ -71,7 +71,7 @@ function createUserCard(
     return card;
 }
 
-function setupResultadosServicos() {
+function setupResultadosServicos(pesquisa) {
     const html_row_service = document.getElementById("row-service");
     if (!(html_row_service instanceof HTMLDivElement)) return;
 
@@ -80,6 +80,11 @@ function setupResultadosServicos() {
     if (!servicos) return;
 
     servicos.forEach((_servico) => {
+        if (pesquisa) {
+            const indexer = `${_servico.id}${_servico.titulo}${_servico.descricao}`;
+            if (!indexer.toLowerCase().includes(pesquisa)) return;
+        }
+
         // TODO: Criar relação do usuario com o serviço
         const _servico_user_id = "Fulano";
         // TODO: Ler dinamicamente
@@ -99,7 +104,7 @@ function setupResultadosServicos() {
     });
 }
 
-function setupResultadosUsuarios() {
+function setupResultadosUsuarios(pesquisa) {
     const html_row_users = document.getElementById("row-users");
     if (!(html_row_users instanceof HTMLDivElement)) return;
 
@@ -107,6 +112,11 @@ function setupResultadosUsuarios() {
     if (!usuarios) return;
 
     usuarios.forEach((_user) => {
+        if (pesquisa) {
+            const indexer = `${_user.id}${_user.nome}${_user.cidade}${_user.biografia}`;
+            if (!indexer.toLowerCase().includes(pesquisa)) return;
+        }
+
         // TODO: Ler dinamicamente
         const _user_avaliacoes_quantidade = 1923;
         const _user_avaliacoes_nota_media = 8;
@@ -126,6 +136,8 @@ function setupResultadosUsuarios() {
 
 // function setupResultados()
 (() => {
-    setupResultadosUsuarios();
-    setupResultadosServicos();
+    let params = new URLSearchParams(location.search);
+    const pesquisa = params.get("q")?.toLowerCase()
+    setupResultadosUsuarios(pesquisa);
+    setupResultadosServicos(pesquisa);
 })();
