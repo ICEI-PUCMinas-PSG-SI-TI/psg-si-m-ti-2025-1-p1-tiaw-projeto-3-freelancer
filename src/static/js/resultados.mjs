@@ -12,8 +12,9 @@ function createServiceCard(
     quantidade_avaliacoes,
     nota_avaliacoes
 ) {
-    const card = document.createElement("div");
-    card.classList.add("col-12", "col-md-6", "col-xl-4");
+    const card = document.createElement("a");
+    card.classList.add("col-12", "col-md-6", "col-xl-4", "text-decoration-none");
+    card.href = "/404.html";
     card.innerHTML = `<div class="card h-100 w-100">
         <div class="card-body d-flex flex-column">
         <div class="d-flex flex-row mb-2 align-items-center">
@@ -46,8 +47,9 @@ function createUserCard(
     nota_avaliacoes,
     biografia
 ) {
-    const card = document.createElement("div");
-    card.classList.add("col-12", "col-md-6", "col-xl-4");
+    const card = document.createElement("a");
+    card.classList.add("col-12", "col-md-6", "col-xl-4", "text-decoration-none");
+    card.href = "/404.html"
     card.innerHTML = `<div class="card h-100 w-100">
         <div class="card-body d-flex flex-column">
         <div class="d-flex flex-row mb-2 align-items-center">
