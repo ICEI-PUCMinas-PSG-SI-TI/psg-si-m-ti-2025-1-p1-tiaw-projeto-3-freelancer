@@ -113,7 +113,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.log(servico.id);
                     crud_servicos.lerServico(servico.id).then((_servico) => {
                         if (!_servico) return;
-                        console.log(_servico);
 
                         // TODO: Re-add image to preview
                         // const html_imagem = document.getElementById("imagem");
@@ -135,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         html_titulo.value = _servico.titulo;
                         html_contato.value = _servico.contato;
-                        html_categoria.value = _servico.categoriaId;
+                        html_categoria.value = _servico.categoriaId.toString();
                         html_descricao.value = _servico.descricao;
                         editIdIndex = _servico.id;
                     });
@@ -206,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // CADASTRAR
                 await crud_servicos.criarServico(
                     new Servico(
-                        editIdIndex,
+                        null,
                         titulo,
                         categoria,
                         categoriaId,
