@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LUCRE+ Avaliações</title>
+  <link rel="stylesheet" href="../css/avaliacoes.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>LUCRE+ AVALIAÇÕES</h1>
+    <div class="card">
+      <div class="user-info">
+        <img src="https://via.placeholder.com/50" alt="Avatar" class="avatar" />
+        <div>
+          <p>Nome e Sobrenome</p>
+          <div class="stars" id="stars">★★★★★</div>
+        </div>
+      </div>
+      <textarea id="comentario" placeholder="Conte como foi sua experiência neste trabalho"></textarea>
+      <label class="upload-label">
+        <input type="file" id="imagem" accept="image/*" hidden />
+        <img src="../img/camera-icon.png" alt="Upload" class="camera-icon" />
+      </label>
+      <div class="buttons">
+        <button onclick="limparFormulario()">Cancelar</button>
+        <button onclick="publicar()">Publicar</button>
+      </div>
+    </div>
+  </div>
+  <script src="../js/avaliacoes.js"></script>
+</body>
+</html>
