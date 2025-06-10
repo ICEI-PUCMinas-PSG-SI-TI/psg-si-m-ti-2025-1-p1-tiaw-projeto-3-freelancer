@@ -1,0 +1,25 @@
+{
+  "name": "lucre-mais",
+  "version": "1.0.0",
+  "description": "`TÍTULO DO PROJETO:` **Lucre+**",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "json-server --watch db/db.json -p 3000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer/issues"
+  },
+  "homepage": "https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer#readme",
+  "dependencies": {
+    "json-server": "^1.0.0-beta.3"
+  }
+}
