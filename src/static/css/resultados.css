@@ -1,0 +1,16 @@
+.resultados-card-servico {
+    width: 200px;
+    height: 100px;
+}
+
+.space-0 {
+    margin: 0;
+    padding: 0;
+    --bs-gutter-y: 0;
+    --bs-gutter-x: 0;
+}
+
+.card-image {
+    width: 48px;
+    height: 48px;
+}
