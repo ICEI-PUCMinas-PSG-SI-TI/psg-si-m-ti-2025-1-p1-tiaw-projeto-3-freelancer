@@ -18,7 +18,7 @@ function createServiceCard(
     card.innerHTML = `<div class="card h-100 w-100">
         <div class="card-body d-flex flex-column">
         <div class="d-flex flex-row mb-2 align-items-center">
-            <img class="card-image me-2 rounded" src="${
+            <img class="card-image me-2 rounded border" src="${
                 foto_src || "static/img/placeholder_profile.png"
             }" />
             <div class="flex-column">
@@ -53,7 +53,7 @@ function createUserCard(
     card.innerHTML = `<div class="card h-100 w-100">
         <div class="card-body d-flex flex-column">
         <div class="d-flex flex-row mb-2 align-items-center">
-            <img class="card-image me-2 rounded" src="${
+            <img class="card-image me-2 rounded border" src="${
                 foto_src || "static/img/placeholder_profile.png"
             }" />
             <div class="flex-column">
