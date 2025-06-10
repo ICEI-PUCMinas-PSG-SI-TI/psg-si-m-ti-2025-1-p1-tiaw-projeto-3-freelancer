@@ -1,66 +1,140 @@
+/* Reset básico */
+* {
+  box-sizing: border-box;
+}
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 20px;
+  color: #333;
 }
-
 .container {
-  max-width: 500px;
-  margin: 2rem auto;
-  background-color: #ddd;
-  padding: 1.5rem;
-  border-radius: 10px;
-  text-align: center;
+  max-width: 480px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  padding: 24px 32px;
 }
-
+h1 {
+  text-align: center;
+  color: #1e88e5;
+  margin-bottom: 24px;
+  letter-spacing: 1.2px;
+}
 .card {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 16px;
 }
-
 .user-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 16px;
 }
-
 .avatar {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  object-fit: cover;
+  border: 2px solid #1e88e5;
 }
-
+.user-info > div p {
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  font-size: 1.1rem;
+  color: #1e88e5;
+}
+/* Estrelas interativas */
 .stars {
-  color: yellow;
-  font-size: 1.5rem;
+  display: flex;
+  gap: 4px;
   cursor: pointer;
+  user-select: none;
 }
-
+.stars span {
+  font-size: 28px;
+  color: #ccc;
+  transition: color 0.3s;
+}
+.stars span.hover,
+.stars span.selected {
+  color: #ffb400;
+}
 textarea {
   width: 100%;
-  height: 100px;
-  resize: none;
-  padding: 0.5rem;
+  min-height: 90px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  resize: vertical;
+  transition: border-color 0.3s;
+  font-family: inherit;
 }
-
+textarea:focus {
+  outline: none;
+  border-color: #1e88e5;
+  box-shadow: 0 0 6px rgba(30, 136, 229, 0.5);
+}
 .upload-label {
+  display: inline-flex;
+  align-items: center;
   cursor: pointer;
-  display: inline-block;
+  color: #1e88e5;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  user-select: none;
 }
-
+.upload-label:hover {
+  text-decoration: underline;
+}
+.upload-label input[type="file"] {
+  display: none;
+}
 .camera-icon {
-  width: 40px;
+  width: 24px;
+  height: 24px;
 }
-
 .buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+button {
+  background-color: #1e88e5;
+  border: none;
+  color: white;
+  padding: 10px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+button:hover {
+  background-color: #1565c0;
+}
+button.cancelar {
+  background-color: #ddd;
+  color: #555;
+}
+button.cancelar:hover {
+  background-color: #bbb;
+}
+@media (max-width: 520px) {
+  .container {
+    padding: 16px 20px;
+  }
+  h1 {
+    font-size: 1.6rem;
+  }
+  .stars span {
+    font-size: 24px;
+  }
 }
 
-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  background-color: white;
-  cursor: pointer;
-  border-radius: 5px;
-}
+
