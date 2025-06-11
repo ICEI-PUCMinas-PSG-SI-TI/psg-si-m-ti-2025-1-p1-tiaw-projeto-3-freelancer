@@ -12,6 +12,7 @@ document.getElementById("formCadastro").addEventListener("submit", function (e) 
     const data_nascimento = document.getElementById("data_nascimento").value;
     const cidade = document.getElementById("cidade").value;
     const biografia = document.getElementById("biografia").value;
+    const profissao = document.getElementById("profissao").value;
     const fotoInput = document.getElementById("foto");
 
     if (!fotoInput.files[0]) {
@@ -41,6 +42,7 @@ document.getElementById("formCadastro").addEventListener("submit", function (e) 
             cpf_cnpj,
             cidade,
             biografia,
+            profissao
         };
 
         // Recupera os usuários salvos anteriormente (ou um array vazio)
