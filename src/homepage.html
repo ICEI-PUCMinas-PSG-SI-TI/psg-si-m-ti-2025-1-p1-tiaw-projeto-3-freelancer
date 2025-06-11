@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <!-- Metadata -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- TODO: Atualizar sempre com o título da pagina -->
+    <title>Título da página</title>
+    <!-- Favicon -->
+    <link rel="icon" href="static/favicon.ico" />
+    <!-- CSS -->
+    <link rel="stylesheet" href="static/css/styles.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/home.css" type="text/css" />
+    <!-- Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+      crossorigin="anonymous" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+      crossorigin="anonymous"></script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+3&display=swap"
+      rel="stylesheet" />
+    <!-- Project Scripts -->
+    <script defer src="static/js/darkmode.js"></script>
+    <script defer src="static/js/404.js"></script>
+  </head>
+
+  <body data-bs-theme="dark">
+    <!-- Cabeçalho -->
+    <nav class="body-section body-header navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <!-- id.navbar.logo -->
+        <a
+          class="d-flex justify-content-center text-center align-items-center text-decoration-none me-3"
+          href="./">
+          <img class="m-2 icon-32px" src="static/icon.png" />
+          <p class="navbar-brand p-0 m-0 g-0">Lucre+</p>
+        </a>
+        <!-- id.navbar.toggle -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <!-- id.navbar.navigation -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Serviços
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="404.html">Em andamento</a></li>
+              </ul>
+            </li>
+            <!-- id.navbar.navigation.pares -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Revisão por Pares
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="serviços.html">Cadastro de Serviços</a></li>
+                <li><a class="dropdown-item" href="cadastro.html">Cadastro de Usuários</a></li>
+              </ul>
+            </li>
+          </ul>
+          <!-- id.navbar.darkmode -->
+          <!-- Layout será modificado por js/darkmode.js -->
+          <div class="d-none" id="toggleDarkDiv"></div>
+          <!-- id.navbar.autenticacao -->
+          <!-- TODO: Inserir dinamicamente <login-cadastre_se|search-profile_picture> -->
+          <div class="d-flex flex-column flex-lg-row justify-content-lg-center mb-2 mb-lg-0">
+            <a
+              role="button"
+              aria-disabled="true"
+              class="btn btn-primary mx-0 mx-lg-2 mb-2 mb-lg-0"
+              href="404.html"
+              >Cadastrar-se</a
+            >
+            <a
+              role="button"
+              aria-disabled="true"
+              class="btn btn-primary mx-0 mx-lg-2"
+              href="404.html"
+              >Entrar</a
+            >
+          </div>
+          <!-- id.navbar.search -->
+          <form class="d-flex" role="search">
+            <input
+              class="form-control me-2"
+              type="search"
+              placeholder="Pesquisar"
+              aria-label="Search" />
+            <a class="btn btn-outline-primary" href="404.html">🔍</a>
+            <!--
+                    <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
+                    -->
+          </form>
+          <!-- id.navbar.profile -->
+          <div class="m-2 me-0 rounded d-flex justify-content-center">
+            <img class="rounded profile-picture" src="static/img/placeholder_profile.png" />
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Conteúdo principal -->
+    <main class="container-fluid py-4">
+      <!-- Filtro por categoria -->
+      <div class="category-filter">
+        <button class="btn btn-dark active" onclick="filtrarCategoria('todos', this)">
+          <i class="bi bi-stars me-1"></i> Todos
+        </button>
+        <button class="btn btn-dark" onclick="filtrarCategoria('fotografos', this)">
+          <i class="bi bi-camera-fill me-1"></i> Fotógrafos
+        </button>
+        <button class="btn btn-dark" onclick="filtrarCategoria('designers', this)">
+          <i class="bi bi-palette-fill me-1"></i> Designers
+        </button>
+        <button class="btn btn-dark" onclick="filtrarCategoria('programadores', this)">
+          <i class="bi bi-code-slash me-1"></i> Programadores
+        </button>
+        <button class="btn btn-dark" onclick="filtrarCategoria('garcons', this)">
+          <i class="bi bi-cup-hot me-1"></i> Garçons
+        </button>
+      </div>
+
+      <!-- Top 10 Profissionais -->
+      <h2 class="section-title">Top 10 profissionais</h2>
+      <div class="scroll-row" id="top10"></div>
+      <!-- Gerado via JS -->
+
+      <!-- Carrosséis por categoria -->
+      <div class="category" id="cat-fotografos">
+        <h3>Fotógrafos:</h3>
+        <div class="scroll-row" id="fotografos"></div>
+      </div>
+
+      <div class="category" id="cat-designers">
+        <h3>Designers:</h3>
+        <div class="scroll-row" id="designers"></div>
+      </div>
+
+      <div class="category" id="cat-programadores">
+        <h3>Programadores:</h3>
+        <div class="scroll-row" id="programadores"></div>
+      </div>
+
+      <div class="category" id="cat-garcons">
+        <h3>Garçons:</h3>
+        <div class="scroll-row" id="garcons"></div>
+      </div>
+    </main>
+
+    <script src="static/js/home.js"></script>
+    <!-- Rodapé -->
+    <footer class="body-section body-footer container-fluid border-top m-0 p-0 g-0">
+      <div class="row px-4 px-md-5 pt-4 pt-md-5">
+        <div class="col-12 col-sm-6 pb-3 pb-md-4">
+          <h5>Lucre+</h5>
+          <p>Conectando talentos ao sucesso, um projeto de cada vez.</p>
+          <div class="d-flex flex-row">
+            <a
+              class="text-decoration-none"
+              href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer">
+              <img class="social-icon me-3" src="static/social/github.svg" />
+            </a>
+          </div>
+        </div>
+        <hr class="col-12 d-block d-sm-none" />
+        <!-- Social Links -->
+        <div class="col-12 col-sm-6 pb-3 pb-md-4 d-flex flex-column">
+          <h5 class="">Navegação</h5>
+          <a
+            class="mb-1"
+            href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer"
+            >Projeto</a
+          >
+          <a class="mb-1" href="404.html">Sobre o site</a>
+          <a class="mb-1" href="404.html">Suporte</a>
+          <a class="mb-1" href="404.html">FAQ</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 d-flex justify-content-center align-items-center">
+          <p class="p-3 m-0 g-0">Copyright (c) Lucre+ 2025</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
