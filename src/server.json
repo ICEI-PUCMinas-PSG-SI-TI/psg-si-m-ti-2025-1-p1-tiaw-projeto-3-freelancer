@@ -64,89 +64,28 @@
   ],
   "servicos": [
     {
-      "id": 0,
-      "imagens": [
-        {
-          "id": 0,
-          "source": "https://exemplo.com/geladeira0.jpg"
-        },
-        {
-          "id": 1,
-          "source": "https://exemplo.com/geladeira1.jpg"
-        }
-      ],
-      "contato": "(11) 91234-5678",
-      "titulo": "Conserto de Geladeira",
-      "categoriaId": 0,
-      "descricao": "Manutenção e conserto de geladeiras residenciais.",
-      "usuarioId": 1,
+      "id": 1,
+      "titulo": "Criação de Logotipo Profissional",
+      "categoria": "Design Gráfico",
+      "descricao": "Criação de logotipo moderno e profissional para sua empresa.",
+      "imagem": "static/img/logo_exemplo.jpg",
+      "freelancer": "João Silva",
+      "prazo": "7 dias úteis",
+      "preco": "R$ 500,00",
+      "avaliacao": "⭐⭐⭐⭐⭐ (4.9/5)",
       "avaliacoes": [
         {
-          "id": 0,
-          "usuarioId": 1,
-          "nota": 10,
-          "comentario": "",
-          "imagems": [
-            {
-              "id": 0,
-              "source": "https://exemplo.com/avaliacao0.jpg"
-            },
-            {
-              "id": 1,
-              "source": "https://exemplo.com/avaliacao1.jpg"
-            }
-          ]
+          "nome": "Maria Oliveira",
+          "estrelas": "⭐⭐⭐⭐⭐",
+          "comentario": "Ótimo trabalho, entregou antes do prazo e superou as expectativas!"
         },
         {
-          "id": 0,
-          "usuarioId": 2,
-          "nota": 10,
-          "comentario": "",
-          "imagems": [
-            {
-              "id": 0,
-              "source": "https://exemplo.com/avaliacao3.jpg"
-            },
-            {
-              "id": 1,
-              "source": "https://exemplo.com/avaliacao4.jpg"
-            }
-          ]
+          "nome": "Carlos Souza",
+          "estrelas": "⭐⭐⭐⭐",
+          "comentario": "Serviço de qualidade, recomendo!"
         }
       ]
-    },
-    {
-      "id": 1,
-      "imagens": [
-        {
-          "id": 0,
-          "source": "https://exemplo.com/ar0.jpg"
-        },
-        {
-          "id": 1,
-          "source": "https://exemplo.com/ar1.jpg"
-        }
-      ],
-      "contato": "(11) 99876-5432",
-      "titulo": "Instalação de Ar-condicionado",
-      "categoriaId": 1,
-      "descricao": "Instalação rápida e segura de aparelhos split.",
-      "usuarioId": 1,
-      "avaliacoes": []
-    }
-  ],
-  "categorias": [
-    {
-      "id": 0,
-      "nome": "Refrigeração"
-    },
-    {
-      "id": 1,
-      "nome": "Climatização"
-    },
-    {
-      "id": 2,
-      "nome": "Eletricista"
     }
   ]
 }
+  
