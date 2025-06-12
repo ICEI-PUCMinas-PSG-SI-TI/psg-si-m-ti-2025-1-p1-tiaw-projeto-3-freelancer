@@ -9,12 +9,12 @@ var usuarios = [];
 var servicos = [];
 
 class Filtros {
-    constructor(query, localizcao, review) {
+    constructor(query, localizacao, review) {
         if (query && typeof query === "string" && query.trim() !== "") this.query = query;
         else query = null;
-        if (localizcao && typeof localizcao === "string" && localizcao.trim() !== "")
-            this.localizcao = localizcao;
-        else localizcao = null;
+        if (localizacao && typeof localizacao === "string" && localizacao.trim() !== "")
+            this.localizacao = localizacao;
+        else localizacao = null;
         if (review && typeof review === "string" && review.trim() !== "") this.review = review;
         else review = null;
     }
@@ -179,7 +179,7 @@ function showResults() {
 
     if (filtros.localizacao)
         user_filtered = user_filtered.filter((_user) => {
-            return _user.cidade.toLowerCase().includes(filtros.localizacao);
+            return _user.cidade.toLowerCase().includes(filtros.localizacao.trim().toLowerCase());
         });
 
     const _user_avaliacoes_quantidade = 1923;
@@ -231,12 +231,12 @@ function setupFiltersElement() {
     if (usuarios) {
         usuarios.forEach((_user, i) => {
             if (!_user.cidade) return;
-            option_map.set(i, _user.cidade);
+            option_map.set(_user.cidade, i);
         });
     }
 
-    option_map.forEach((_opt) => {
-        html_select_localizacao?.appendChild(createOption(_opt));
+    option_map.forEach((_, k) => {
+        html_select_localizacao?.appendChild(createOption(k));
     });
 
     if (
@@ -250,32 +250,52 @@ function setupFiltersElement() {
         const val = html_review_range.value;
         filtros.review = val;
         html_range_info.innerText = val;
+        setParamNoReload();
         showResults();
     });
 
     html_select_localizacao.addEventListener("input", () => {
         if (!(html_select_localizacao instanceof HTMLSelectElement)) return;
-        if (html_select_localizacao.value === "0") filtros.localizacao = null;
-        else
-            filtros.localizacao = html_select_localizacao.selectedOptions[0].text
-                .trim()
-                .toLowerCase();
+        if (html_select_localizacao.value === "0") {
+            filtros.localizacao = null;
+        } else filtros.localizacao = html_select_localizacao.selectedOptions[0].text.trim();
+        setParamNoReload();
         showResults();
     });
 
+    if (option_map.has(filtros.localizacao)) {
+        let tt = option_map.get(filtros.localizacao);
+        html_select_localizacao.selectedIndex = tt + 1;
+        html_select_localizacao.value = filtros.localizacao;
+    }
     return null;
 }
 
-function setParamFilters() {
+function setOnLoadParamFilters() {
     let params = new URLSearchParams(location.search);
     const query = (params.get("q") || "").toLowerCase();
-    const localizacao = (params.get("localizacao") || "").toLowerCase();
+    const localizacao = params.get("local") || "";
     const review = (params.get("review") || "").toLowerCase();
     filtros = new Filtros(query, localizacao, review);
 }
 
+function setParamNoReload() {
+    let params = new URLSearchParams(location.search);
+    if (filtros.query) params.set("q", filtros.query);
+    else params.delete("q");
+    if (filtros.localizacao) params.set("local", filtros.localizacao);
+    else params.delete("local");
+    if (!filtros.review || filtros.review === "0") params.delete("review");
+    else params.set("review", filtros.review);
+
+    const url = new URL(window.location.href);
+    const newUrl = `${url.origin}${url.pathname}?${params.toString()}`;
+
+    window.history.replaceState(null, document.title, newUrl);
+}
+
 (() => {
-    setParamFilters();
+    setOnLoadParamFilters();
     getData();
     setupFiltersElement();
     showResults();
