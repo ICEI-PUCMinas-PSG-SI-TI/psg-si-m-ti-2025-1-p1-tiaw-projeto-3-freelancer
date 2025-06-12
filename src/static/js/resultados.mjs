@@ -101,7 +101,6 @@ function getData() {
 }
 
 function showResults() {
-    console.log(filtros);
     const pesquisa = filtros.query;
     const html_row_service = document.getElementById("row-service");
     if (!(html_row_service instanceof HTMLDivElement)) {
@@ -119,13 +118,13 @@ function showResults() {
             return indexer.toLowerCase().includes(filtros.query);
         });
 
-        if (filtros.localizacao)
-            service_filtered = service_filtered.filter((_servico) => {
+    if (filtros.localizacao)
+        service_filtered = service_filtered.filter((_servico) => {
             // INFO: Desabilitado por agora devido ao CRUD de serviços não incluir a informação de localização
-            const cidade = _servico.cidade || ""; 
+            // TODO: Add a filter to all elements of filtering
+            const cidade = _servico.cidade || "";
             return cidade.toLowerCase().includes(filtros.localizacao);
         });
-        
 
     const _service_avaliacoes_quantidade = 12;
     const _service_avaliacoes_nota_media = 6;
@@ -171,7 +170,6 @@ function showResults() {
             return indexer.toLowerCase().includes(filtros.query);
         });
 
-    console.log(filtros);
     if (filtros.localizacao)
         user_filtered = user_filtered.filter((_user) => {
             return _user.cidade.toLowerCase().includes(filtros.localizacao);
@@ -180,7 +178,6 @@ function showResults() {
     const _user_avaliacoes_quantidade = 1923;
     const _user_avaliacoes_nota_media = 8;
 
-    console.log(user_filtered);
     if (filtros.review)
         user_filtered = user_filtered.filter((_user) => {
             return _user_avaliacoes_nota_media >= parseInt(filtros.review);
@@ -202,14 +199,32 @@ function showResults() {
     });
 }
 
+function createOption(value) {
+    let option = document.createElement("option");
+    option.innerText = value;
+    return option;
+}
+
 /**
  * @returns {Filtros | null}
  */
-function setupOnFiltersChange() {
+function setupFiltersElement() {
     const html_review_range = document.getElementById("review_range");
     const html_select_localizacao = document.getElementById("localizacao_select");
-    
     const html_range_info = document.getElementById("review_range_info");
+
+    let option_map = new Map();
+
+    if (usuarios) {
+        usuarios.forEach((_user, i) => {
+            if (!_user.cidade) return;
+            option_map.set(i, _user.cidade);
+        });
+    }
+
+    option_map.forEach((_opt) => {
+        html_select_localizacao?.appendChild(createOption(_opt));
+    });
 
     if (
         !(html_review_range instanceof HTMLInputElement) ||
@@ -222,13 +237,16 @@ function setupOnFiltersChange() {
         const val = html_review_range.value;
         filtros.review = val;
         html_range_info.innerText = val;
-        console.log("change range");
         showResults();
     });
 
     html_select_localizacao.addEventListener("input", () => {
         if (!(html_select_localizacao instanceof HTMLSelectElement)) return;
-        filtros.localizacao = html_select_localizacao.selectedOptions[0].text.trim().toLowerCase();
+        if (html_select_localizacao.value === "0") filtros.localizacao = null;
+        else
+            filtros.localizacao = html_select_localizacao.selectedOptions[0].text
+                .trim()
+                .toLowerCase();
         showResults();
     });
 
@@ -246,6 +264,6 @@ function setParamFilters() {
 (() => {
     setParamFilters();
     getData();
-    setupOnFiltersChange();
+    setupFiltersElement();
     showResults();
 })();
