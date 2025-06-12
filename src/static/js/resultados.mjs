@@ -134,6 +134,13 @@ function showResults() {
             return _service_avaliacoes_nota_media >= parseInt(filtros.review);
         });
 
+    const no_found_service = document.getElementById("no_found_service");
+    if (service_filtered.length === 0) {
+        no_found_service?.classList.remove("d-none");
+    } else {
+        no_found_service?.classList.add("d-none");
+    }
+
     service_filtered.forEach((_servico) => {
         if (pesquisa) {
             const indexer = `${_servico.id}${_servico.titulo}${_servico.descricao}`;
@@ -183,6 +190,12 @@ function showResults() {
             return _user_avaliacoes_nota_media >= parseInt(filtros.review);
         });
 
+    const no_found_user = document.getElementById("no_found_user");
+    if (user_filtered.length === 0) {
+        no_found_user?.classList.remove("d-none");
+    } else {
+        no_found_user?.classList.add("d-none");
+    }
     user_filtered.forEach((_user) => {
         // TODO: Ler dinamicamente
         html_row_users.appendChild(
