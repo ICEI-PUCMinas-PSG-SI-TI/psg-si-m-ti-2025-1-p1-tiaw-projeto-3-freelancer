@@ -102,7 +102,14 @@
                 type="search"
                 placeholder="Pesquisar"
                 aria-label="Search" />
-              <button id="search-btn" class="btn btn-outline-primary">Pesquisar</button>
+              <button id="search-btn" class="btn btn-outline-primary me-2">Pesquisar</button>
+              <button id="clear-btn" class="btn btn-outline-primary d-none">
+                <img
+                  class="action-icons icon-dark"
+                  src="static/action-icons/close.svg"
+                  width="24"
+                  height="24" />
+              </button>
             </form>
           </div>
           <!-- id.navbar.profile -->
@@ -138,7 +145,9 @@
           </div>
         </div>
 
-        <div id="no_found_service" class="d-flex flex-column align-items-center justify-content-center mb-4 d-none">
+        <div
+          id="no_found_service"
+          class="d-flex flex-column align-items-center justify-content-center mb-4 d-none">
           <p class="space-0 text-center">Nenhum serviço encontrado.</p>
           <p class="space-0 text-center">Tente ajustar os filtros!</p>
         </div>
@@ -150,7 +159,9 @@
           </div>
         </div>
 
-        <div id="no_found_user" class="d-flex flex-column align-items-center justify-content-center mb-4 d-none">
+        <div
+          id="no_found_user"
+          class="d-flex flex-column align-items-center justify-content-center mb-4 d-none">
           <p class="space-0 text-center">Nenhum usuário encontrado.</p>
           <p class="space-0 text-center">Tente ajustar os filtros!</p>
         </div>

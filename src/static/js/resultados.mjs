@@ -101,7 +101,6 @@ function getData() {
 }
 
 function showResults() {
-    const pesquisa = filtros.query;
     const html_row_service = document.getElementById("row-service");
     if (!(html_row_service instanceof HTMLDivElement)) {
         console.log("not a html service");
@@ -275,14 +274,15 @@ function setupFiltersElement() {
         html_select_localizacao.selectedIndex = tt + 1;
         html_select_localizacao.value = filtros.localizacao;
     }
+
     return null;
 }
 
 function setOnLoadParamFilters() {
     let params = new URLSearchParams(location.search);
-    const query = (params.get("q") || "")
+    const query = params.get("q") || "";
     const localizacao = params.get("local") || "";
-    const review = (params.get("review") || "")
+    const review = params.get("review") || "";
     filtros = new Filtros(query, localizacao, review);
 }
 
@@ -296,14 +296,56 @@ function setParamNoReload() {
     else params.set("review", filtros.review);
 
     const url = new URL(window.location.href);
-    const newUrl = `${url.origin}${url.pathname}?${params.toString()}`;
+    const params_string = params.size === 0 ? `` : `?${params.toString()}`;
+    const newUrl = `${url.origin}${url.pathname}${params_string}`;
 
     window.history.replaceState(null, document.title, newUrl);
+}
+
+function limparFiltros() {
+    // Limpar os filtros apenas se há algum configurado
+    if (!filtros.query && !filtros.localizacao && !filtros.review) return;
+    filtros = new Filtros(null, null, null);
+    showResults();
+}
+
+function setupClearButton() {
+    const html_clear_bnt = document.getElementById("clear-btn");
+
+    if (!(html_clear_bnt instanceof HTMLButtonElement)) return;
+
+    html_clear_bnt.classList.remove("d-none");
+    html_clear_bnt.addEventListener("click", (e) => {
+        e.preventDefault();
+        limparFiltros();
+        setParamNoReload();
+
+        // Move to a function
+        const html_review_range = document.getElementById("review_range");
+        const html_select_localizacao = document.getElementById("localizacao_select");
+        const html_range_info = document.getElementById("review_range_info");
+        const html_search_bar = document.getElementById("search-bar");
+
+        if (
+            !(html_review_range instanceof HTMLInputElement) ||
+            !(html_range_info instanceof HTMLSpanElement) ||
+            !(html_select_localizacao instanceof HTMLSelectElement) ||
+            !(html_search_bar instanceof HTMLInputElement)
+        )
+            return null;
+
+        html_select_localizacao.selectedIndex = 0;
+        html_select_localizacao.value = "0";
+        html_review_range.value = "0";
+        html_range_info.innerText = "0";
+        html_search_bar.value = "";
+    });
 }
 
 (() => {
     setOnLoadParamFilters();
     getData();
+    setupClearButton();
     setupFiltersElement();
     showResults();
 })();
