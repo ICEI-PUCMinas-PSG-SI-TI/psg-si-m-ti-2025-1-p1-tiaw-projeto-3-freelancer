@@ -117,6 +117,21 @@
     <div
       id="content-div"
       class="body-section body-content d-flex flex-column align-items-center justify-content-top space-0">
+      <div class="row justify-content-center align-items-center m-3">
+        <div class="col-md-6 space-0 md-0 pe-md-3">
+          <label for="review_range" class="form-label">Avaliações (<span id="review_range_info">0</span> estrelas)</label>
+          <input type="range" class="form-range" min="0" max="10" value="0" id="review_range" />
+        </div>
+        <div class="col-md-6 space-0">
+          <label for="localizacao_select" class="form-label">Localização</label>
+          <select class="form-select" aria-label="Default select example" id="localizacao_select">
+            <option selected>Selecione uma localização</option>
+            <option value="1">Belo Horizonte, MG</option>
+            <option value="2">São Paulo, SP</option>
+            <option value="3">Rio de Janeiro, RJ</option>
+          </select>
+        </div>
+      </div>
       <div class="container-fluid w-100 space-0">
         <div class="card my-3 w-100">
           <div class="card-body">
