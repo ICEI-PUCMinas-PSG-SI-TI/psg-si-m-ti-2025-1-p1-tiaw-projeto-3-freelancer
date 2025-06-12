@@ -113,9 +113,9 @@ function showResults() {
 
     let service_filtered = servicos;
     if (filtros.query)
-        service_filtered = service_filtered.filter((_user) => {
-            const indexer = `${_user.id}${_user.nome}${_user.cidade}${_user.biografia}`;
-            return indexer.toLowerCase().includes(filtros.query);
+        service_filtered = service_filtered.filter((_servico) => {
+            const indexer = `${_servico.id}${_servico.titulo}${_servico.descricao}`;
+            return indexer.toLowerCase().includes(filtros.query.toLowerCase());
         });
 
     if (filtros.localizacao)
@@ -142,11 +142,6 @@ function showResults() {
     }
 
     service_filtered.forEach((_servico) => {
-        if (pesquisa) {
-            const indexer = `${_servico.id}${_servico.titulo}${_servico.descricao}`;
-            if (!indexer.toLowerCase().includes(pesquisa)) return;
-        }
-
         // TODO: Criar relação do usuario com o serviço
         const _servico_user_id = "Fulano";
         // TODO: Ler dinamicamente
@@ -174,7 +169,7 @@ function showResults() {
     if (filtros.query)
         user_filtered = user_filtered.filter((_user) => {
             const indexer = `${_user.id}${_user.nome}${_user.cidade}${_user.biografia}`;
-            return indexer.toLowerCase().includes(filtros.query);
+            return indexer.toLowerCase().includes(filtros.query.toLowerCase());
         });
 
     if (filtros.localizacao)
@@ -263,7 +258,19 @@ function setupFiltersElement() {
         showResults();
     });
 
-    if (option_map.has(filtros.localizacao)) {
+    if (filtros.query && filtros.query.trim() !== "") {
+        const search_bar = document.getElementById("search-bar");
+        if (search_bar instanceof HTMLInputElement) {
+            search_bar.value = filtros.query;
+        }
+    }
+
+    if (filtros.review && filtros.review !== "0") {
+        html_review_range.value = filtros.review;
+        html_range_info.innerText = filtros.review;
+    }
+
+    if (filtros.localizacao && option_map.has(filtros.localizacao)) {
         let tt = option_map.get(filtros.localizacao);
         html_select_localizacao.selectedIndex = tt + 1;
         html_select_localizacao.value = filtros.localizacao;
@@ -273,9 +280,9 @@ function setupFiltersElement() {
 
 function setOnLoadParamFilters() {
     let params = new URLSearchParams(location.search);
-    const query = (params.get("q") || "").toLowerCase();
+    const query = (params.get("q") || "")
     const localizacao = params.get("local") || "";
-    const review = (params.get("review") || "").toLowerCase();
+    const review = (params.get("review") || "")
     filtros = new Filtros(query, localizacao, review);
 }
 
