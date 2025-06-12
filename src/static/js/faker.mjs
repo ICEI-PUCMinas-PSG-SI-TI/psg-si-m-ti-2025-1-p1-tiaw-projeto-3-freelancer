@@ -18,7 +18,7 @@ export async function getFakeData() {
 
     try {
         // URL assume que você esta na página src/dev.html
-        const response = await fetch("data/json/_exemplos.json");
+        const response = await fetch("exemplos");
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
@@ -43,7 +43,7 @@ export async function criarNPortfolios(quantidade) {
         throw new Error("Criação de portfólios: A quantidade informada é inválida!");
 
     await getFakeData().then((json) => {
-        const exemplos = json.exemplos;
+        const exemplos = json;
 
         let portfolios = [];
 
@@ -211,7 +211,7 @@ export async function criarNAvaliacoes(quantidade) {
         throw new Error("Criação de avaliações: A quantidade informada é inválida!");
 
     await getFakeData().then((json) => {
-        const exemplos = json.exemplos;
+        const exemplos = json;
 
         let avaliacoes = [];
 
@@ -265,7 +265,7 @@ export async function criarNUsuarios(quantidade) {
         throw new Error("Criação de usuários: A quantidade informada é inválida!");
 
     await getFakeData().then((json) => {
-        const exemplos = json.exemplos;
+        const exemplos = json;
 
         let usuarios = [];
 
@@ -334,7 +334,7 @@ export async function criarNServicos(quantidade) {
         throw new Error("Criação de serviços: A quantidade informada é inválida!");
 
     await getFakeData().then((json) => {
-        const exemplos = json.exemplos;
+        const exemplos = json;
 
         let servicos = [];
 
