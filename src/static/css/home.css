@@ -1,128 +1,128 @@
 body {
-  background-color: #fff;
-  color: #000;
-  font-family: 'Arial', sans-serif;
+    background-color: #fff;
+    color: #000;
+    font-family: "Arial", sans-serif;
 }
 
 .section-title {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
 }
 
 .category h3 {
-  font-size: 1.5rem;
-  margin-top: 2rem;
-  margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
 }
 
 .scroll-row {
-  display: flex;
-  overflow-x: auto;
-  gap: 1rem;
-  padding-bottom: 1rem;
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    padding-bottom: 1rem;
 }
 
 .card-box {
-  min-width: 180px;
-  height: 120px;
-  background-color: #eee;
-  border: 2px solid #000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-  font-weight: bold;
-  position: relative;
+    min-width: 180px;
+    height: 120px;
+    background-color: #eee;
+    border: 2px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    font-weight: bold;
+    position: relative;
 }
 
 .card-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .card-box .number {
-  position: absolute;
-  font-size: 3rem;
-  left: -25px;
-  top: 20px;
-  font-weight: 900;
-  color: black;
+    position: absolute;
+    font-size: 3rem;
+    left: -25px;
+    top: 20px;
+    font-weight: 900;
+    color: black;
 }
 #top10 {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  overflow-x: auto;
-  padding-bottom: 1rem;
-  position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    position: relative;
 }
 
 #top10 .card-box {
-  min-width: 180px;
-  height: 180px;
-  background: #fff;
-  border: 3px solid #000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  flex-shrink: 0;
-  box-shadow: none;
+    min-width: 180px;
+    height: 180px;
+    background: #fff;
+    border: 3px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: none;
 }
 
 #top10 .number {
-  position: static;
-  font-size: 7rem;
-  font-weight: 900;
-  color: #000;
-  margin-right: -30px;
-  z-index: 2;
-  background: transparent;
-  left: unset;
-  top: unset;
+    position: static;
+    font-size: 7rem;
+    font-weight: 900;
+    color: #000;
+    margin-right: -30px;
+    z-index: 2;
+    background: transparent;
+    left: unset;
+    top: unset;
 }
 
 #top10 .card-box img {
-  display: none;
+    display: none;
 }
 
 #top10 .card-box .position-absolute {
-  display: none;
+    display: none;
 }
 
 #top10::after {
-  content: '\2192';
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #000;
-  margin-left: 1rem;
-  align-self: center;
+    content: "\2192";
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #000;
+    margin-left: 1rem;
+    align-self: center;
 }
 
 .category-filter {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    margin-top: 1.5rem;
 }
 
 .category-filter .btn {
-  display: flex;
-  align-items: center;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 2rem;
-  padding: 0.5rem 1.2rem;
-  background: #222;
-  color: #fff;
-  border: none;
-  transition: background 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 2rem;
+    padding: 0.5rem 1.2rem;
+    background: #222;
+    color: #fff;
+    border: none;
+    transition: background 0.2s, color 0.2s;
 }
 
 .category-filter .btn.active,
 .category-filter .btn:hover {
-  background: #ffc107;
-  color: #222;
+    background: #ffc107;
+    color: #222;
 }

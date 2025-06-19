@@ -42,7 +42,7 @@ document.getElementById("formCadastro").addEventListener("submit", function (e) 
             cpf_cnpj,
             cidade,
             biografia,
-            profissao
+            profissao,
         };
 
         // Recupera os usuários salvos anteriormente (ou um array vazio)
