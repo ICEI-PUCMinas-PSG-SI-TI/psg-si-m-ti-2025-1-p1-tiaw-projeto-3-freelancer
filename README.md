@@ -11,9 +11,6 @@
 Os membros do grupo são:
 
 - Arthur Melo de Andrade
-- Davi de Oliveira Cardoso Pereira
-- Davy Geremias Silva
-- Lucas Imparato
 - Marcelo Antonino Soares Juscelino
 - Mateus Junior Silva Santana
 - Ramon Jorge da Silva Correa
