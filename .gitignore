@@ -1,9 +1,14 @@
-# IDEs
-*.swp
 *.swo
-.vscode/
+*.swp
+
+# IDEs - Visual Studio
 .vs/
-_temp/
-*_test.*
+.vscode/
+
+# Node
 node_modules/
 package-lock.json
+
+# Other
+_temp/
+*_test.*
