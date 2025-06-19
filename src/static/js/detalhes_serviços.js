@@ -81,16 +81,15 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", async () => {
     // Supondo que o id do serviço venha por query string, ex: detalhes_serviços.html?id=1
     const urlParams = new URLSearchParams(window.location.search);
-    const servicoId = urlParams.get("id") || "1";
+    const servicoId = urlParams.get("id") || "detaserv";
 
     // Busca os dados do serviço no server.json
-    const response = await fetch("../server.json");
-    const data = await response.json();
-    const servico = data.servicos.find((s) => String(s.id) === String(servicoId));
-
+    // TODO: Utilizar json-server
+    const data = await fetch("/servicos?id=detaserv").then((response) => response.json());
+    const servico = data.find((s) => String(s.id) === String(servicoId));
     if (servico) {
         document.getElementById("servico-img").src =
-            servico.imagem || "static/img/servico_exemplo.jpg";
+            servico.imagem || "https://picsum.photos/250/250";
         document.getElementById("servico-titulo").textContent = servico.titulo;
         document.getElementById("servico-categoria").textContent =
             "Categoria: " + servico.categoria;

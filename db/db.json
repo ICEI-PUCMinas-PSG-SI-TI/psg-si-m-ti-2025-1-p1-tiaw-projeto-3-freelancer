@@ -15,10 +15,10 @@
         }
       ],
       "categoria": "Design Gráfico",
-      "descricao": "Criação de logotipo moderno e profissional para sua empresa.",
+      "descricao": "Criação de um logotipo moderno e profissional para sua empresa.",
       "freelancer": "João Silva",
-      "id": 1,
-      "imagem": "static/img/logo_exemplo.jpg",
+      "id": "detaserv",
+      "imagem": "static/img/background.jpg",
       "prazo": "7 dias úteis",
       "preco": "R$ 500,00",
       "titulo": "Criação de Logotipo Profissional"
