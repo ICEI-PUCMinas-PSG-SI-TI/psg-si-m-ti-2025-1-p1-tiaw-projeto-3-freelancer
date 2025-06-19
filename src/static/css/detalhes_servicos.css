@@ -2,7 +2,7 @@
 .detalhes-servico {
     background: var(--bs-body-bg, #181a1b);
     border-radius: 16px;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
     padding: 2rem 1.5rem;
 }
 
@@ -11,11 +11,11 @@
     min-width: 180px;
     object-fit: cover;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .detalhes-servico h2 {
-    font-family: 'Inter', 'Source Sans 3', Arial, sans-serif;
+    font-family: "Inter", "Source Sans 3", Arial, sans-serif;
     font-weight: 700;
 }
 

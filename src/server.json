@@ -1,91 +1,90 @@
 {
-  "usuarios": [
-    {
-      "id": 0,
-      "ativo": true,
-      "foto": "base64_encoded || url",
-      "nome": "Admin",
-      "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
-      "email": "admin@lucremais.com",
-      "senha": "654321",
-      "contatos": [
-        {
-          "id": 0,
-          "contato": "(31) 970707070"
-        }
-      ],
-      "tipo": "admin",
-      "cpf_cnpj": "00.000.000/0001-00",
-      "cidade": "Belo Horizonte, MG",
-      "biografia": "Informações sobre o usuário"
-    },
-    {
-      "id": 1,
-      "ativo": true,
-      "foto": "base64_encoded || url",
-      "nome": "Empresa do João Silva",
-      "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
-      "email": "joao.silva@empresa-do-joao.com.br",
-      "senha": "123456",
-      "contatos": [
-        {
-          "id": 0,
-          "contato": "(31) 970707070"
-        },
-        {
-          "id": 1,
-          "contato": "(31) 970707071"
-        }
-      ],
-      "tipo": "profissional",
-      "cpf_cnpj": "12.345.678/0001-00",
-      "cidade": "Belo Horizonte, MG",
-      "biografia": "Informações sobre o usuário"
-    },
-    {
-      "id": 0,
-      "ativo": false,
-      "foto": "base64_encoded || url",
-      "nome": "Maria Oliveira",
-      "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
-      "email": "maria@email.com",
-      "senha": "654321",
-      "contatos": [
-        {
-          "id": 0,
-          "contato": "(31) 970707070"
-        }
-      ],
-      "tipo": "cliente",
-      "cpf_cnpj": "123.456.789-10",
-      "cidade": "São Paulo, SP",
-      "biografia": "Informações sobre o usuário"
-    }
-  ],
   "servicos": [
     {
-      "id": 1,
-      "titulo": "Criação de Logotipo Profissional",
-      "categoria": "Design Gráfico",
-      "descricao": "Criação de logotipo moderno e profissional para sua empresa.",
-      "imagem": "static/img/logo_exemplo.jpg",
-      "freelancer": "João Silva",
-      "prazo": "7 dias úteis",
-      "preco": "R$ 500,00",
       "avaliacao": "⭐⭐⭐⭐⭐ (4.9/5)",
       "avaliacoes": [
         {
-          "nome": "Maria Oliveira",
+          "comentario": "Ótimo trabalho, entregou antes do prazo e superou as expectativas!",
           "estrelas": "⭐⭐⭐⭐⭐",
-          "comentario": "Ótimo trabalho, entregou antes do prazo e superou as expectativas!"
+          "nome": "Maria Oliveira"
         },
         {
-          "nome": "Carlos Souza",
+          "comentario": "Serviço de qualidade, recomendo!",
           "estrelas": "⭐⭐⭐⭐",
-          "comentario": "Serviço de qualidade, recomendo!"
+          "nome": "Carlos Souza"
         }
-      ]
+      ],
+      "categoria": "Design Gráfico",
+      "descricao": "Criação de logotipo moderno e profissional para sua empresa.",
+      "freelancer": "João Silva",
+      "id": 1,
+      "imagem": "static/img/logo_exemplo.jpg",
+      "prazo": "7 dias úteis",
+      "preco": "R$ 500,00",
+      "titulo": "Criação de Logotipo Profissional"
+    }
+  ],
+  "usuarios": [
+    {
+      "ativo": true,
+      "biografia": "Informações sobre o usuário",
+      "cidade": "Belo Horizonte, MG",
+      "contatos": [
+        {
+          "contato": "(31) 970707070",
+          "id": 0
+        }
+      ],
+      "cpf_cnpj": "00.000.000/0001-00",
+      "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
+      "email": "admin@lucremais.com",
+      "foto": "base64_encoded || url",
+      "id": 0,
+      "nome": "Admin",
+      "senha": "654321",
+      "tipo": "admin"
+    },
+    {
+      "ativo": true,
+      "biografia": "Informações sobre o usuário",
+      "cidade": "Belo Horizonte, MG",
+      "contatos": [
+        {
+          "contato": "(31) 970707070",
+          "id": 0
+        },
+        {
+          "contato": "(31) 970707071",
+          "id": 1
+        }
+      ],
+      "cpf_cnpj": "12.345.678/0001-00",
+      "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
+      "email": "joao.silva@empresa-do-joao.com.br",
+      "foto": "base64_encoded || url",
+      "id": 1,
+      "nome": "Empresa do João Silva",
+      "senha": "123456",
+      "tipo": "profissional"
+    },
+    {
+      "ativo": false,
+      "biografia": "Informações sobre o usuário",
+      "cidade": "São Paulo, SP",
+      "contatos": [
+        {
+          "contato": "(31) 970707070",
+          "id": 0
+        }
+      ],
+      "cpf_cnpj": "123.456.789-10",
+      "data_nascimento": "1970-01-01T00:00:00.000Z-03:00",
+      "email": "maria@email.com",
+      "foto": "base64_encoded || url",
+      "id": 0,
+      "nome": "Maria Oliveira",
+      "senha": "654321",
+      "tipo": "cliente"
     }
   ]
 }
-  
