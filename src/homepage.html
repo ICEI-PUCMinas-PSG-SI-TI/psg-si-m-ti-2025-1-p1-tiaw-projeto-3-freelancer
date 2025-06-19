@@ -4,13 +4,18 @@
     <!-- Metadata -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cadastro de Usuário</title>
+    <!-- TODO: Atualizar sempre com o título da pagina -->
+    <title>Título da página</title>
     <!-- Favicon -->
     <link rel="icon" href="static/favicon.ico" />
     <!-- CSS -->
     <link rel="stylesheet" href="static/css/styles.css" type="text/css" />
-    <link rel="stylesheet" href="static/css/cadastro.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/home.css" type="text/css" />
     <!-- Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -28,7 +33,6 @@
       href="https://fonts.googleapis.com/css2?family=Source+Sans+3&display=swap"
       rel="stylesheet" />
     <!-- Project Scripts -->
-    <script defer src="static/js/cadastro.js"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
   </head>
@@ -88,6 +92,24 @@
           <!-- id.navbar.darkmode -->
           <!-- Layout será modificado por js/darkmode.js -->
           <div class="d-none" id="toggleDarkDiv"></div>
+          <!-- id.navbar.autenticacao -->
+          <!-- TODO: Inserir dinamicamente <login-cadastre_se|search-profile_picture> -->
+          <div class="d-flex flex-column flex-lg-row justify-content-lg-center mb-2 mb-lg-0">
+            <a
+              role="button"
+              aria-disabled="true"
+              class="btn btn-primary mx-0 mx-lg-2 mb-2 mb-lg-0"
+              href="404.html">
+              Cadastrar-se
+            </a>
+            <a
+              role="button"
+              aria-disabled="true"
+              class="btn btn-primary mx-0 mx-lg-2"
+              href="404.html">
+              Entrar
+            </a>
+          </div>
           <!-- id.navbar.search -->
           <form class="d-flex" role="search">
             <input
@@ -95,10 +117,11 @@
               type="search"
               placeholder="Pesquisar"
               aria-label="Search" />
-            <a class="btn btn-outline-primary" href="404.html">Pesquisar</a>
+            <a class="btn btn-outline-primary" href="404.html">🔍</a>
             <!--
-          <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
-          --></form>
+                    <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
+                    -->
+          </form>
           <!-- id.navbar.profile -->
           <div class="m-2 me-0 rounded d-flex justify-content-center">
             <img class="rounded profile-picture" src="static/img/placeholder_profile.png" />
@@ -106,104 +129,60 @@
         </div>
       </div>
     </nav>
-    <!-- Conteúdo da página -->
-    <div
-      id="content-div"
-      class="body-section body-content d-flex flex-column align-items-center justify-content-center p-3">
-      <!-- Formulário -->
-      <form id="formCadastro" class="row g-4">
-        <div class="col-md-3 d-flex flex-column align-items-center">
-          <label for="foto" class="form-label">Foto de Perfil</label>
-          <input
-            type="file"
-            class="form-control mb-2"
-            id="foto"
-            name="foto"
-            accept="image/*"
-            onchange="previewFoto()" />
-          <img
-            id="preview"
-            src="https://www.w3schools.com/howto/img_avatar.png"
-            class="img-thumbnail rounded-circle"
-            width="180"
-            alt="Prévia da Foto" />
-        </div>
-        <div class="col-md-9 row g-3">
-          <div class="col-md-6">
-            <label class="form-label">Nome e sobrenome</label>
-            <input type="text" class="form-control" id="nome" name="nome" required />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Profissão</label>
-            <select class="form-select" id="profissao" name="profissao">
-              <option>Fotográfo</option>
-              <option>Designer</option>
-              <option>Programador</option>
-              <option>Garçom</option>
-              <option>Outro</option>
-            </select>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Contato</label>
-            <input type="tel" class="form-control" id="contato" name="contato" />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Escolaridade</label>
-            <input type="text" class="form-control" id="escolaridade" name="escolaridade" />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" name="email" required />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">CPF</label>
-            <input type="text" class="form-control" id="cpf" name="cpf_cnpj" required />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Endereço</label>
-            <input type="text" class="form-control" id="cidade" name="cidade" />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Sexo</label>
-            <select class="form-select" id="sexo" name="sexo">
-              <option selected>Selecionar</option>
-              <option>Feminino</option>
-              <option>Masculino</option>
-              <option>Outro</option>
-            </select>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Data de Nascimento</label>
-            <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" />
-          </div>
-          <div class="form-group">
-            <label for="tipo">Tipo de Usuário</label>
-            <select id="tipo" name="tipo" required class="form-select">
-              <option value="">Selecione</option>
-              <option value="profissional">Profissional</option>
-              <option value="cliente">Cliente</option>
-            </select>
-          </div>
-          <div class="col-md-12">
-            <label class="form-label">Biografia</label>
-            <textarea class="form-control" id="biografia" name="biografia" rows="3"></textarea>
-          </div>
-          <div class="col-md-12">
-            <label class="form-label">Senha</label>
-            <input type="password" class="form-control" id="senha" name="senha" required />
-          </div>
-          <div class="col-md-12 d-flex justify-content-between">
-            <button type="submit" class="btn btn-success">SALVAR</button>
-            <button type="reset" class="btn btn-secondary">CANCELAR</button>
-          </div>
-          <div class="col-md-12 text-muted small">
-            Ao preencher o formulário acima você concorda com os nossos Termos de uso e nossa
-            Política de privacidade.
-          </div>
-        </div>
-      </form>
-    </div>
 
+    <!-- Conteúdo principal -->
+    <main class="container-fluid py-4">
+      <!-- Filtro por categoria -->
+      <div class="category-filter">
+        <button class="btn btn-dark active" onclick="filtrarCategoria('todos', this)">
+          <i class="bi bi-stars me-1"></i> Todos
+        </button>
+        <button class="btn btn-dark" onclick="filtrarCategoria('fotografos', this)">
+          <i class="bi bi-camera-fill me-1"></i> Fotógrafos
+        </button>
+        <button class="btn btn-dark" onclick="filtrarCategoria('designers', this)">
+          <i class="bi bi-palette-fill me-1"></i> Designers
+        </button>
+        <button class="btn btn-dark" onclick="filtrarCategoria('programadores', this)">
+          <i class="bi bi-code-slash me-1"></i> Programadores
+        </button>
+        <button class="btn btn-dark" onclick="filtrarCategoria('garcons', this)">
+          <i class="bi bi-cup-hot me-1"></i> Garçons
+        </button>
+      </div>
+
+      <!-- Top 10 Profissionais -->
+      <h2 class="section-title">Top 10 profissionais</h2>
+      <div class="scroll-row" id="top10"></div>
+      <!-- Gerado via JS -->
+
+      <!-- Carrosséis por categoria -->
+      <div class="category" id="cat-fotografos">
+        <h3>Fotógrafos:</h3>
+        <div class="scroll-row" id="Fotográfo"></div>
+      </div>
+
+      <div class="category" id="cat-designers">
+        <h3>Designers:</h3>
+        <div class="scroll-row" id="Designer"></div>
+      </div>
+
+      <div class="category" id="cat-programadores">
+        <h3>Programadores:</h3>
+        <div class="scroll-row" id="Programador"></div>
+      </div>
+
+      <div class="category" id="cat-garcons">
+        <h3>Garçons:</h3>
+        <div class="scroll-row" id="Garçom"></div>
+      </div>
+      <div class="category" id="cat-outro">
+        <h3>Garçons:</h3>
+        <div class="scroll-row" id="Outro"></div>
+      </div>
+    </main>
+
+    <script src="static/js/home.js"></script>
     <!-- Rodapé -->
     <footer class="body-section body-footer container-fluid border-top m-0 p-0 g-0">
       <div class="row px-4 px-md-5 pt-4 pt-md-5">
