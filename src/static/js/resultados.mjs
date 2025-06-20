@@ -48,7 +48,7 @@ function createServiceCard(
     const card = document.createElement("a");
     card.classList.add("col-12", "col-md-6", "col-xl-4", "text-decoration-none");
     card.href = "404.html";
-// TODO: Adicionar avaliações como estrelas
+    // TODO: Adicionar avaliações como estrelas
     card.innerHTML = `<div class="card h-100 w-100">
         <div class="card-body d-flex flex-column">
         <div class="d-flex flex-row mb-2 align-items-center">
@@ -63,7 +63,7 @@ function createServiceCard(
         <p>${descricao}</p>
         <div class="d-flex flex-row justify-content-between mt-auto">
             <p class="space-0">📝 ${quantidade_avaliacoes}</p>
-                        <p class="space-0">⭐ ${nota_avaliacoes}/10</p>
+            <p class="space-0">⭐ ${nota_avaliacoes}/10</p>
         </div>
         </div>
     </div>`;
@@ -83,7 +83,7 @@ function createUserCard(
     const card = document.createElement("a");
     card.classList.add("col-12", "col-md-6", "col-xl-4", "text-decoration-none");
     card.href = "404.html";
-// TODO: Adicionar avaliações como estrelas
+    // TODO: Adicionar avaliações como estrelas
     card.innerHTML = `<div class="card h-100 w-100">
         <div class="card-body d-flex flex-column">
         <div class="d-flex flex-row mb-2 align-items-center">
@@ -116,7 +116,7 @@ function getData() {
 }
 
 function showResults() {
-        const html_row_service = document.getElementById("row-service");
+    const html_row_service = document.getElementById("row-service");
     if (!(html_row_service instanceof HTMLDivElement)) {
         console.log("not a html service");
         return;
@@ -148,16 +148,16 @@ function showResults() {
             return _service_avaliacoes_nota_media >= parseInt(filtros.review);
         });
 
-const search_text_service = document.getElementById("search_text_se");
+    const search_text_service = document.getElementById("search_text_se");
     const no_found_service = document.getElementById("no_found_service");
     if (service_filtered.length === 0) {
         no_found_service?.classList.remove("d-none");
-if (filtros.query.trim() !== "" && search_text_service instanceof HTMLSpanElement) {
+        if (filtros.query.trim() !== "" && search_text_service instanceof HTMLSpanElement) {
             search_text_service.innerText = ` com a pesquisa "${filtros.query}"`;
         }
     } else {
         no_found_service?.classList.add("d-none");
-if (search_text_service instanceof HTMLSpanElement) search_text_service.innerText = "";
+        if (search_text_service instanceof HTMLSpanElement) search_text_service.innerText = "";
     }
 
     service_filtered.forEach((_servico) => {
@@ -188,7 +188,7 @@ if (search_text_service instanceof HTMLSpanElement) search_text_service.innerTex
     if (filtros.query)
         user_filtered = user_filtered.filter((_user) => {
             const indexer = prepareString(
-`${_user.id}${_user.nome}${_user.cidade}${_user.biografia}`
+                `${_user.id}${_user.nome}${_user.cidade}${_user.biografia}`
             );
             return indexer.includes(prepareString(filtros.query));
         });
@@ -206,16 +206,16 @@ if (search_text_service instanceof HTMLSpanElement) search_text_service.innerTex
             return _user_avaliacoes_nota_media >= parseInt(filtros.review);
         });
 
-const search_text_user = document.getElementById("search_text_us");
+    const search_text_user = document.getElementById("search_text_us");
     const no_found_user = document.getElementById("no_found_user");
     if (user_filtered.length === 0) {
         no_found_user?.classList.remove("d-none");
-if (filtros.query.trim() !== "" && search_text_user instanceof HTMLSpanElement) {
+        if (filtros.query.trim() !== "" && search_text_user instanceof HTMLSpanElement) {
             search_text_user.innerText = ` com a pesquisa "${filtros.query}"`;
         }
     } else {
         no_found_user?.classList.add("d-none");
-if (search_text_user instanceof HTMLSpanElement) search_text_user.innerText = "";
+        if (search_text_user instanceof HTMLSpanElement) search_text_user.innerText = "";
     }
     user_filtered.forEach((_user) => {
         // TODO: Ler dinamicamente
@@ -323,14 +323,56 @@ function setParamNoReload() {
     else params.set("review", filtros.review);
 
     const url = new URL(window.location.href);
-    const newUrl = `${url.origin}${url.pathname}?${params.toString()}`;
+    const params_string = params.size === 0 ? `` : `?${params.toString()}`;
+    const newUrl = `${url.origin}${url.pathname}${params_string}`;
 
     window.history.replaceState(null, document.title, newUrl);
+}
+
+function limparFiltros() {
+    // Limpar os filtros apenas se há algum configurado
+    if (!filtros.query && !filtros.localizacao && !filtros.review) return;
+    filtros = new Filtros(null, null, null);
+    showResults();
+}
+
+function setupClearButton() {
+    const html_clear_bnt = document.getElementById("clear-btn");
+
+    if (!(html_clear_bnt instanceof HTMLButtonElement)) return;
+
+    html_clear_bnt.classList.remove("d-none");
+    html_clear_bnt.addEventListener("click", (e) => {
+        e.preventDefault();
+        limparFiltros();
+        setParamNoReload();
+
+        // Move to a function
+        const html_review_range = document.getElementById("review_range");
+        const html_select_localizacao = document.getElementById("localizacao_select");
+        const html_range_info = document.getElementById("review_range_info");
+        const html_search_bar = document.getElementById("search-bar");
+
+        if (
+            !(html_review_range instanceof HTMLInputElement) ||
+            !(html_range_info instanceof HTMLSpanElement) ||
+            !(html_select_localizacao instanceof HTMLSelectElement) ||
+            !(html_search_bar instanceof HTMLInputElement)
+        )
+            return null;
+
+        html_select_localizacao.selectedIndex = 0;
+        html_select_localizacao.value = "0";
+        html_review_range.value = "0";
+        html_range_info.innerText = "0";
+        html_search_bar.value = "";
+    });
 }
 
 (() => {
     setOnLoadParamFilters();
     getData();
+    setupClearButton();
     setupFiltersElement();
     showResults();
 })();
