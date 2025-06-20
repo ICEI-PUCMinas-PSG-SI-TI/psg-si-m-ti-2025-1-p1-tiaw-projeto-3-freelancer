@@ -25,7 +25,7 @@ export function generateRandomNumber(max, min) {
 /**
  * Retorna um número aleatório entre 0 e max, o min é opcional
  * Valor máximo
- * @param {{min?, max?, double?, convert_string?, invalid?}} [opts={}] 
+ * @param {{min?, max?, double?, convert_string?, invalid?}} [opts={}]
  * @returns {number | any} Retorna um número aleatório
  */
 export function generateRandomNumberOpts(opts = {}) {
