@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- TODO: Atualizar sempre com o título da pagina -->
-    <title>Título da página</title>
+    <title>Login/Cadastro</title>
     <!-- Favicon -->
     <link rel="icon" href="static/favicon.ico" />
     <!-- CSS -->
@@ -34,6 +34,8 @@
     <script src="static/js/redirect.js"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
+    <!-- Page Scripts -->
+    <script defer src="static/js/auth.js"></script>
   </head>
 
   <body>
@@ -142,14 +144,15 @@
       <div class="card limit_login_form w-100 p-4 m-4">
         <h1 class="mt-4 mb-3 w-100 text-center">Bem Vindo!</h1>
         <hr />
-        <form id="login_form" class="w-100">
+        <form id="form-login" class="w-100">
           <div class="form-group mb-3">
             <label class="m-1" for="input-login-username">Usuário</label>
             <input
               type="text"
               class="form-control"
               id="input-login-username"
-              placeholder="Digite o usuário" />
+              placeholder="Digite o usuário ou e-mail" />
+            <div class="m-1 form-text text-danger"></div>
           </div>
           <div class="form-group mb-3">
             <label class="m-1" for="input-login-password">Senha</label>
@@ -158,6 +161,7 @@
               class="form-control"
               id="input-login-password"
               placeholder="Senha" />
+            <div class="m-1 form-text text-danger"></div>
           </div>
           <div class="form-check mb-3">
             <input type="checkbox" class="form-check-input" id="input-login-show-password" />
@@ -190,6 +194,7 @@
                 class="form-control"
                 id="input-signup-username"
                 placeholder="Digite o usuário" />
+              <div class="m-1 form-text text-danger"></div>
             </div>
             <div class="form-group mb-3">
               <label class="m-1" for="input-signup-name">Nome Completo</label>
@@ -198,6 +203,7 @@
                 class="form-control"
                 id="input-signup-name"
                 placeholder="Nome Completo" />
+              <div class="m-1 form-text text-danger"></div>
             </div>
             <div class="form-group mb-3">
               <label class="m-1" for="input-signup-email">E-mail</label>
@@ -206,6 +212,7 @@
                 class="form-control"
                 id="input-signup-email"
                 placeholder="E-mail" />
+              <div class="m-1 form-text text-danger"></div>
             </div>
             <div class="form-group mb-3">
               <label class="m-1" for="input-signup-password">Senha</label>
@@ -214,6 +221,7 @@
                 class="form-control"
                 id="input-signup-password"
                 placeholder="Senha" />
+              <div class="m-1 form-text text-danger"></div>
             </div>
             <div class="form-group mb-3">
               <label class="m-1" for="input-signup-password-2">Senha (Confirmação)</label>
@@ -222,6 +230,7 @@
                 class="form-control"
                 id="input-signup-password-2"
                 placeholder="Senha (Confirmação)" />
+              <div class="m-1 form-text text-danger"></div>
             </div>
             <div class="row mx-0">
               <div class="col-12 col-sm-6 space-0 pe-sm-1 mb-3">

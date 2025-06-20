@@ -1,3 +1,4 @@
+// TODO: Verificar necessidade de validar /*.html
 const PATH_INDEX = "/";
 const PATH_HOMEPAGE = "/homepage";
 // @mock
