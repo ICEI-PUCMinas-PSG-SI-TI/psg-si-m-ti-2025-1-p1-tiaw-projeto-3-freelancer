@@ -133,3 +133,15 @@ export async function imageFileToBase64(file) {
 export function isNonEmptyString(value) {
     return typeof value === "string" && value.length > 0;
 }
+
+const LUCRE_KEY = "LucreM";
+
+// Função para alterar keys, isso garante que nenhuma aplicativo rodando e/ou
+// salvando dados no localStorage/sessionStorage interfica nessa aplicação.
+function lucreKey(key) {
+    return `${LUCRE_KEY}.${key}`;
+}
+
+export function isUserLoggedIn() {
+    return !!sessionStorage.getItem(lucreKey("id"));
+}

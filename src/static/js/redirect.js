@@ -5,7 +5,7 @@ const PATH_HOMEPAGE = "/homepage";
 const PATH_AUTH = "/auth";
 
 // @mock
-const mock_isUserLoggedIn = () => false;
+const mock_isUserLoggedIn = () => !!sessionStorage.getItem("LucreM.id");
 
 // Redireciona para um caminho especifico dentro do mesmo host
 function redirectToPath(path) {
