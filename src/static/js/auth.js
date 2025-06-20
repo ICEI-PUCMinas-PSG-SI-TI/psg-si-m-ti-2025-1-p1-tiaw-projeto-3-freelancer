@@ -58,6 +58,18 @@ function clearError(htmlElement) {
     htmlErrorElement.classList.add("d-none");
 }
 
+function ValidarLogin(elementLogin) {
+    try {
+        const username = elementLogin.value;
+        if (username.length < 1) throw new Error(`O campo login não pode estar vazio.`);
+        clearError(elementLogin);
+        return true;
+    } catch (err) {
+        showError(elementLogin, err.message);
+    }
+    return false;
+}
+
 function ValidarUsername(elementUsername) {
     try {
         const username = elementUsername.value;
@@ -127,6 +139,10 @@ function redirecionarParaHomepage() {
     window.location.assign("/homepage");
 }
 
+function redirecionarParaCadastroPerfil() {
+    window.location.assign("/cadastro");
+}
+
 const LUCRE_KEY = "LucreM";
 
 // Função para alterar keys, isso garante que nenhuma aplicativo rodando e/ou
@@ -139,18 +155,78 @@ function saveCredentials(obj) {
     Object.keys(obj).forEach((k) => sessionStorage.setItem(lucreKey(k), obj[k]));
 }
 
-async function realizarLogin() {}
+async function realizarLogin() {
+    console.log("object");
+    if (!ValidarLogin(htmlInputLoginUsername) || !ValidarSenha(htmlInputLoginPassword)) return;
+
+    if (
+        !(htmlInputLoginUsername instanceof HTMLInputElement) ||
+        !(htmlInputLoginPassword instanceof HTMLInputElement)
+    )
+        return;
+
+    const _login = htmlInputLoginUsername.value;
+    const _password = htmlInputLoginPassword.value;
+
+    let _users = await getAllUsers();
+    if (!checkLoginPasswordInJson(_users, _login, _password)) {
+        showError(htmlInputLoginUsername, "Cadastro não encontrado, verifique usuário e senha!");
+        return;
+    }
+
+    const credenciais = _users.filter(
+        (_user) => (_user.email === _login || _user.username === _password) && _user.senha
+    )[0];
+
+    if (!credenciais) {
+        // TODO: Validar se credenciais possuem as informações necessarias
+        showError(htmlInputLoginUsername, "Erro ao verificar cadastro, tente novamente!");
+        if (htmlFormLogin instanceof HTMLFormElement) htmlFormLogin.reset();
+        return;
+    }
+
+    saveCredentials(credenciais);
+
+    if (credenciais.formularioConcluido === true) {
+        redirecionarParaHomepage();
+    } else {
+        redirecionarParaCadastroPerfil();
+    }
+}
 
 // INFO: Não otimizado, se algum usuario não tiver a tag informada na query(?),
 // o json-server irá retornar todos os valores
-async function getUserByEmail(email) {
+async function getAllUsers() {
+    return fetch("/usuarios").then((response) => response.json());
+}
+
+// INFO: Não otimizado, se algum usuario não tiver a tag informada na query(?),
+// o json-server irá retornar todos os valores
+async function getUsersByEmail(email) {
     return fetch(`/usuarios?email=${email}`).then((response) => response.json());
 }
 
 // INFO: Não otimizado, se algum usuario não tiver a tag informada na query(?),
 // o json-server irá retornar todos os valores
-async function getUserByUsername(username) {
+async function getUsersByUsername(username) {
     return fetch(`/usuarios?username=${username}`).then((response) => response.json());
+}
+
+function checkLoginPasswordInJson(jsonArray, login, password) {
+    if (!Array.isArray(jsonArray)) throw new Error("Input inválida");
+    if (typeof login !== "string") throw new Error("Input inválida");
+    if (typeof password !== "string") throw new Error("Input inválida");
+    if (jsonArray.length === 0) return false;
+    for (const usuario of jsonArray) {
+        if (
+            (typeof usuario.email !== "string" && typeof usuario.username !== "string") ||
+            typeof usuario.username !== "string"
+        )
+            continue;
+        if ((usuario.email === login || usuario.username === login) && usuario.senha === password)
+            return true;
+    }
+    return false;
 }
 
 function checkEmailInJson(jsonArray, email) {
@@ -204,7 +280,7 @@ async function realizarCadastro() {
     // INFO: Não otimizado, se algum usuario não tiver a tag informada em ?,
     // o json-server irá retornar todos os valores
     const _email = htmlInputSignupEmail.value;
-    const existByEmail = await getUserByEmail(_email);
+    const existByEmail = await getUsersByEmail(_email);
 
     if (checkEmailInJson(existByEmail, _email)) {
         showError(htmlInputSignupEmail, "Email já cadastrado! Utilize outro e-mail");
@@ -212,7 +288,7 @@ async function realizarCadastro() {
     }
 
     const _username = htmlInputSignupUsername.value;
-    const existByUsername = await getUserByUsername(_username);
+    const existByUsername = await getUsersByUsername(_username);
 
     if (checkUsernameInJson(existByUsername, _username)) {
         showError(htmlInputSignupUsername, "Username já cadastrado! Utilize outro e-mail");
@@ -236,11 +312,11 @@ async function realizarCadastro() {
         username: _username,
         email: _email,
         // Indica que informações como foto, profissão ou outras informações não foram cadastradas
-        forumularioConcluido: false
-    })
+        formularioConcluido: false,
+    });
 
     // 3. Informar se cadastro foi realizado com sucesso
-    alert("Cadastro realizado com sucesso!\nProssiga para realizar o login!")
+    alert("Cadastro realizado com sucesso!\nProssiga para realizar o login!");
 
     // 4. Reseta a form e redireciona para o login
     if (htmlFormSignup instanceof HTMLFormElement) htmlFormSignup.reset();
@@ -267,7 +343,7 @@ function inicializarCampos() {
         realizarLogin();
     });
     // htmlButtonLogin.addEventListener("click", realizarLogin)
-    htmlFormSignup.addEventListener("keypress", (key) => {
+    htmlFormLogin.addEventListener("keypress", (key) => {
         if (key.key === "Enter") key.preventDefault();
     });
     htmlFormSignup.addEventListener("submit", (event) => {
