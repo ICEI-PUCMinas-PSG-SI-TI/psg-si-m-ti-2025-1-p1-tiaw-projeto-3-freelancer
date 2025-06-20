@@ -17,7 +17,7 @@ function navigateToResultados(query) {
     const url = new URL(window.location.href);
     let pathname = ""
     if(url.pathname.includes("src")) pathname = "/src/resultados.html";
-else pathname = "/resultados.html"
+    else pathname = "/resultados.html"
     const params = new URLSearchParams();
     params.set("q", query);
     const newUrl = `${url.origin}${pathname}?${params.toString()}`;

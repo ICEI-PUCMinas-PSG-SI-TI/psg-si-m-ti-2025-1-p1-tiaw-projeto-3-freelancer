@@ -148,11 +148,16 @@ function showResults() {
             return _service_avaliacoes_nota_media >= parseInt(filtros.review);
         });
 
+const search_text_service = document.getElementById("search_text_se");
     const no_found_service = document.getElementById("no_found_service");
     if (service_filtered.length === 0) {
         no_found_service?.classList.remove("d-none");
+if (filtros.query.trim() !== "" && search_text_service instanceof HTMLSpanElement) {
+            search_text_service.innerText = ` com a pesquisa "${filtros.query}"`;
+        }
     } else {
         no_found_service?.classList.add("d-none");
+if (search_text_service instanceof HTMLSpanElement) search_text_service.innerText = "";
     }
 
     service_filtered.forEach((_servico) => {
@@ -201,11 +206,16 @@ function showResults() {
             return _user_avaliacoes_nota_media >= parseInt(filtros.review);
         });
 
+const search_text_user = document.getElementById("search_text_us");
     const no_found_user = document.getElementById("no_found_user");
     if (user_filtered.length === 0) {
         no_found_user?.classList.remove("d-none");
+if (filtros.query.trim() !== "" && search_text_user instanceof HTMLSpanElement) {
+            search_text_user.innerText = ` com a pesquisa "${filtros.query}"`;
+        }
     } else {
         no_found_user?.classList.add("d-none");
+if (search_text_user instanceof HTMLSpanElement) search_text_user.innerText = "";
     }
     user_filtered.forEach((_user) => {
         // TODO: Ler dinamicamente
