@@ -3,6 +3,20 @@
 import { readUsuarios } from "./jsonql.user.mjs";
 import { readServicos } from "./jsonql.service.mjs";
 
+const prepareString = (str) => {
+    return (
+        str
+            // Normaliza string
+            .normalize("NFD")
+            // Remove acentos gráficos
+            .replace(/[\u0300-\u036f]/g, "")
+            // Remove espaços
+            .replace(" ", "")
+            // Converter para Lower Case
+            .toLowerCase()
+    );
+};
+
 /** @type {any[] | null} */
 var usuarios = [];
 /** @type {any[] | null} */
@@ -114,8 +128,8 @@ function showResults() {
     let service_filtered = servicos;
     if (filtros.query)
         service_filtered = service_filtered.filter((_servico) => {
-            const indexer = `${_servico.id}${_servico.titulo}${_servico.descricao}`;
-            return indexer.toLowerCase().includes(filtros.query.toLowerCase());
+            const indexer = prepareString(`${_servico.id}${_servico.titulo}${_servico.descricao}`);
+            return indexer.includes(prepareString(filtros.query));
         });
 
     if (filtros.localizacao)
@@ -168,8 +182,10 @@ function showResults() {
 
     if (filtros.query)
         user_filtered = user_filtered.filter((_user) => {
-            const indexer = `${_user.id}${_user.nome}${_user.cidade}${_user.biografia}`;
-            return indexer.toLowerCase().includes(filtros.query.toLowerCase());
+            const indexer = prepareString(
+`${_user.id}${_user.nome}${_user.cidade}${_user.biografia}`
+            );
+            return indexer.includes(prepareString(filtros.query));
         });
 
     if (filtros.localizacao)
