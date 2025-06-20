@@ -56,19 +56,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <!-- id.navbar.navigation -->
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false">
-                Serviços
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="404.html">Em andamento</a></li>
-              </ul>
-            </li>
             <!-- id.navbar.navigation.pares -->
             <li class="nav-item dropdown">
               <a
@@ -103,13 +90,13 @@
         <h3 class="mt-2 mb-5">A página solicitada não foi encontrada!</h3>
 
         <div class="d-grid gap-2 mt-4">
-          <a class="btn btn-primary" role="button" aria-disabled="true" href="./"
-            >Voltar para a página inicial</a
-          >
+          <a class="btn btn-primary" role="button" aria-disabled="true" href="./">
+            Voltar para a página inicial
+          </a>
           <!-- TODO: Inserir função onClick para voltar a página anterior -->
-          <a class="btn btn-primary" role="button" aria-disabled="true" href="./"
-            >Voltar para a página anterior</a
-          >
+          <button class="btn btn-primary" role="button" aria-disabled="true" onclick="{history.back()}">
+            Voltar para a página anterior
+          </button>
         </div>
       </div>
     </div>

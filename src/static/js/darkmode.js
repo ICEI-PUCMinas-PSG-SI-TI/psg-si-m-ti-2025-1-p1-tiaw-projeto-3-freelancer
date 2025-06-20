@@ -2,14 +2,11 @@
 
 /*
  * Esse script adiciona um configuração de tema claro/escuro
- *
  */
 
 function setupDarkMode() {
-    let toggleDarkDiv = document.getElementById("toggleDarkDiv");
-    if (!toggleDarkDiv) {
-        return;
-    }
+    const toggleDarkDiv = document.getElementById("toggleDarkDiv");
+    if (!toggleDarkDiv) return;
 
     toggleDarkDiv.classList.add(
         "d-flex",
@@ -25,10 +22,8 @@ function setupDarkMode() {
 
     /** @type { HTMLInputElement | null } */
     // @ts-ignore: HTMLInputElement é derivado de HTMLElement
-    let input = document.getElementById("toggleDark");
-    if (!input) {
-        return;
-    }
+    const input = document.getElementById("toggleDark");
+    if (!input) return;
 
     const theme_key = "data-bs-theme";
 
@@ -36,15 +31,14 @@ function setupDarkMode() {
         return localStorage.getItem(theme_key) === "dark";
     }
 
+    /**
+     * @param {boolean} darkEnabled
+     * @param {boolean} [storeConfig]
+     */
     function setDarkTheme(darkEnabled, storeConfig) {
-        let themeCfg = "light";
-        if (darkEnabled) {
-            themeCfg = "dark";
-        }
+        let themeCfg = darkEnabled ? "dark" : "light";
 
-        if (storeConfig) {
-            localStorage.setItem(theme_key, themeCfg);
-        }
+        if (storeConfig) localStorage.setItem(theme_key, themeCfg);
 
         if (input) {
             input.checked = darkEnabled;
@@ -56,13 +50,7 @@ function setupDarkMode() {
     setDarkTheme(isDarkTheme());
 
     // onDarkToggleSwitch
-    input.addEventListener("click", function () {
-        if (isDarkTheme()) {
-            setDarkTheme(false, true);
-        } else {
-            setDarkTheme(true, true);
-        }
-    });
+    input.addEventListener("click", () => setDarkTheme(!isDarkTheme(), true));
 
     // if everything is ok, display toggle
     toggleDarkDiv.classList.remove("d-none");

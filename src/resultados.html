@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
   <head>
     <!-- Metadata -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cadastro de Serviços</title>
+    <!-- TODO: Atualizar sempre com o título da pagina -->
+    <title>Resultados de Pesquisa</title>
     <!-- Favicon -->
     <link rel="icon" href="static/favicon.ico" />
     <!-- CSS -->
     <link rel="stylesheet" href="static/css/styles.css" type="text/css" />
-    <link rel="stylesheet" href="static/css/servicos.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/resultados.css" type="text/css" />
     <!-- Bootstrap -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
@@ -30,6 +31,7 @@
     <!-- Project Scripts -->
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
+    <script defer type="module" src="static/js/resultados.mjs"></script>
   </head>
 
   <body data-bs-theme="dark">
@@ -74,8 +76,6 @@
           <!-- id.navbar.darkmode -->
           <!-- Layout será modificado por js/darkmode.js -->
           <div class="d-none" id="toggleDarkDiv"></div>
-          <!-- id.navbar.autenticacao -->
-          <!-- TODO: Inserir dinamicamente <login-cadastre_se|search-profile_picture> -->
           <!-- id.navbar.search -->
           <script defer type="module" src="static/js/pesquisa.js"></script>
           <div id="inflate_pesquisa" class="d-none">
@@ -89,7 +89,14 @@
                 type="search"
                 placeholder="Pesquisar"
                 aria-label="Search" />
-              <button id="search-btn" class="btn btn-outline-primary">Pesquisar</button>
+              <button id="search-btn" class="btn btn-outline-primary me-2">Pesquisar</button>
+              <button id="clear-btn" class="btn btn-outline-primary d-none">
+                <img
+                  class="action-icons icon-dark"
+                  src="static/action-icons/close.svg"
+                  width="24"
+                  height="24" />
+              </button>
             </form>
           </div>
           <!-- id.navbar.profile -->
@@ -101,88 +108,52 @@
     </nav>
 
     <!-- Conteúdo da página -->
-    <div class="body-section body-content d-flex flex-column p-3">
-      <div class="card mb-3">
-        <div class="card-body">
-          <h5 class="m-0 y-0">
-            <strong>Cadastro de Serviço</strong>
-          </h5>
+    <div
+      id="content-div"
+      class="body-section body-content d-flex flex-column align-items-center justify-content-top space-0">
+      <div class="row justify-content-center align-items-center m-3">
+        <div class="col-md-6 space-0 md-0 pe-md-3">
+          <label for="review_range" class="form-label">
+            ⭐ Avaliações (<span id="review_range_info">0</span> estrelas)
+          </label>
+          <input type="range" class="form-range" min="0" max="10" value="0" id="review_range" />
         </div>
-      </div>
-
-      <form
-        id="form-servico"
-        enctype="multipart/form-data"
-        class="form-cadastro-servico border rounded mb-3">
-        <div class="col-md-3 d-flex flex-column align-items-center w-100">
-          <img
-            id="image_preview"
-            class="img-thumbnail rounded max-preview d-none"
-            alt="Prévia da Foto" />
-          <svg
-            id="image_placeholder"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            class="bi bi-card-image rounded border max-preview"
-            viewBox="0 0 16 16">
-            <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-            <path
-              d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54L1 12.5v-9a.5.5 0 0 1 .5-.5z" />
-          </svg>
-        </div>
-
-        <div class="mb-3">
-          <label for="imagem" class="form-label">Imagem</label>
-          <input
-            type="file"
-            class="form-control"
-            id="imagem"
-            name="foto"
-            accept="image/*"
-            onchange="previewPicture()"
-            required />
-        </div>
-
-        <div class="mb-3">
-          <label for="contato" class="form-label">Contato</label>
-          <input type="text" class="form-control" id="contato" required />
-        </div>
-
-        <div class="mb-3">
-          <label for="titulo" class="form-label">Título do Serviço</label>
-          <input type="text" class="form-control" id="titulo" required />
-        </div>
-
-        <!-- TODO: preencher categorias dinamicamente -->
-        <div class="mb-3">
-          <label for="categoriaId" class="form-label">Categoria</label>
-          <select class="form-select" id="categoriaId" required>
-            <option value="0">Refrigeração</option>
-            <option value="1">Climatização</option>
-            <option value="2">Eletricista</option>
-            <option value="3">Outro</option>
+        <div class="col-md-6 space-0">
+          <label for="localizacao_select" class="form-label">🗺️ Localização</label>
+          <select class="form-select" aria-label="Default select example" id="localizacao_select">
+            <option value="0">Selecione uma localização</option>
           </select>
         </div>
-
-        <div class="mb-3">
-          <label for="descricao" class="form-label">Descrição</label>
-          <textarea class="form-control" id="descricao" rows="3" required></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Cadastrar Serviço</button>
-      </form>
-
-      <div class="card mb-3">
-        <div class="card-body">
-          <h5 class="m-0 y-0">
-            <strong>Serviços Cadastrados</strong>
-          </h5>
-        </div>
       </div>
+      <div class="container-fluid w-100 space-0">
+        <div class="card my-3 w-100">
+          <div class="card-body">
+            <h5 class="space-0"><strong>Serviços</strong></h5>
+          </div>
+        </div>
 
-      <ul id="lista-servicos" class="list-group">
-        <!-- Os serviços serão listados aqui -->
-      </ul>
+        <div
+          id="no_found_service"
+          class="d-flex flex-column align-items-center justify-content-center mb-4 d-none">
+          <p class="space-0 text-center">Nenhum serviço encontrado<span id="search_text_se"></span>.</p>
+          <p class="space-0 text-center">Tente ajustar os filtros ou verifique se há serviços cadastrados!</p>
+        </div>
+        <div id="row-service" class="row g-4 mb-4"></div>
+
+        <div class="card my-3 w-100">
+          <div class="card-body">
+            <h5 class="space-0"><strong>Usuários</strong></h5>
+          </div>
+        </div>
+
+        <div
+          id="no_found_user"
+          class="d-flex flex-column align-items-center justify-content-center mb-4 d-none">
+          <p class="space-0 text-center">Nenhum usuário encontrado<span id="search_text_us"></span>.</p>
+          <p class="space-0 text-center">Tente ajustar os filtros ou verifique se há usuários cadastrados!</p>
+        </div>
+        <div id="row-users" class="row g-4 mb-4"></div>
+      </div>
     </div>
 
     <!-- Rodapé -->
@@ -219,7 +190,5 @@
         </div>
       </div>
     </footer>
-
-    <script src="static/js/serviços.js"></script>
-</body>
+  </body>
 </html>

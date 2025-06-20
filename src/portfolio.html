@@ -43,7 +43,7 @@
           class="d-flex justify-content-center text-center align-items-center text-decoration-none me-3"
           href="./">
           <img class="m-2 icon-32px" src="static/icon.png" />
-          <p class="navbar-brand p-0 m-0 g-0">Lucre+</p>
+          <p class="navbar-brand space-0">Lucre+</p>
         </a>
         <!-- id.navbar.toggle -->
         <button
@@ -91,17 +91,21 @@
           <!-- id.navbar.autenticacao -->
           <!-- TODO: Inserir dinamicamente <login-cadastre_se|search-profile_picture> -->
           <!-- id.navbar.search -->
-          <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Pesquisar"
-              aria-label="Search" />
-            <a class="btn btn-outline-primary" href="404.html">Pesquisar</a>
-            <!--
-                    <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
-                    -->
-          </form>
+          <script defer type="module" src="static/js/pesquisa.js"></script>
+          <div id="inflate_pesquisa" class="d-none">
+            <form
+              class="d-flex flex-column flex-sm-row"
+              role="search"
+              onsubmit="(e)=>e.preventDefault()">
+              <input
+                id="search-bar"
+                class="form-control me-sm-2 mb-2 mb-sm-0"
+                type="search"
+                placeholder="Pesquisar"
+                aria-label="Search" />
+              <button id="search-btn" class="btn btn-outline-primary">Pesquisar</button>
+            </form>
+          </div>
           <!-- id.navbar.profile -->
           <div class="m-2 me-0 rounded d-flex justify-content-center">
             <img class="rounded profile-picture" src="static/img/placeholder_profile.png" />
@@ -124,11 +128,11 @@
                 <div class="container-fluid">
                   <div class="row">
                     <div
-                      class="row-lg col-md-4 col-xl-12 p-2 m-0 g-0 d-flex align-items-center flex-column">
-                      <img id="portfolio-picture" class="rounded-circle p-0 m-0 g-0 w-100" />
+                      class="row-lg col-md-4 col-xl-12 p-2 space-0 d-flex align-items-center flex-column">
+                      <img id="portfolio-picture" class="rounded-circle space-0 w-100" />
                     </div>
                     <div
-                      class="row-lg col-md-8 col-xl-12 p-2 m-0 g-0 avoid-wide rounded-end d-flex align-items-center align-items-md-start flex-column justify-content-center">
+                      class="row-lg col-md-8 col-xl-12 space-0 p-2 avoid-wide rounded-end d-flex align-items-center align-items-md-start flex-column justify-content-center">
                       <!-- id.portfolio.name -->
                       <h5 id="portfolio-name">Nome do Usuário da Silva</h5>
                       <!-- id.portfolio.nota -->
@@ -145,12 +149,7 @@
                     </div>
                   </div>
                   <hr />
-                  <div
-                    class="col d-flex w-100 justify-content-center align-items-center g-0 m-0 p-0">
-                    <button
-                      id="toggle-edit"
-                      class="btn btn-outline-primary d-flex flex-row justify-content-center align-items-center w-100 g-0 m-0 p-2"></button>
-                  </div>
+                  <div id="toggle-edit-div" class="col d-flex w-100 center-xy space-0"></div>
                 </div>
               </div>
             </div>
@@ -162,9 +161,9 @@
               id="add-section"
               type="button"
               class="btn btn-outline-secondary mb-3 w-100 d-none">
-              <div class="d-flex d-row justify-content-center align-items-center">
+              <div class="d-flex d-row center-xy">
                 <img class="icon-24px m-2 icon-dark" src="static/action-icons/add.svg" />
-                <p class="g-0 m-0 p-0">Adicionar Seção</p>
+                <p class="space-0">Adicionar Seção</p>
               </div>
             </button>
           </div>
@@ -173,17 +172,17 @@
 
       <div
         id="portfolio-setup"
-        class="container-fluid d-flex d-none w-100 justify-content-center m-0 p-0 g-0">
-        <div class="d-flex flex-column justify-content-start m-0 p-0 g-0">
+        class="container-fluid d-flex d-none w-100 justify-content-center space-0">
+        <div class="d-flex flex-column justify-content-start space-0">
           <div class="w-100">
             <h1>// Portfólios</h1>
             <p>O que deseja fazer?</p>
             <hr />
             <p><strong>Visualizar um porfólio já criado</strong></p>
-            <div id="portfolio-setup-select" class="mb-3">
-              <label for="portfolio-setup-select-select" class="form-label"
-                >Selecionar um portfólio</label
-              >
+            <div class="mb-3">
+              <label for="portfolio-setup-select-select" class="form-label">
+                Selecionar um portfólio
+              </label>
               <select class="form-select" id="portfolio-setup-select-select" required></select>
             </div>
             <button id="portfolio-setup-select-btn" class="btn btn-primary disabled w-100">
@@ -192,9 +191,9 @@
             <hr />
             <p><strong>Criar um novo porfólio</strong></p>
             <div class="mb-3">
-              <label for="portfolio-setup-create-select" class="form-label"
-                >Selecionar usuário</label
-              >
+              <label for="portfolio-setup-create-select" class="form-label">
+                Selecionar usuário
+              </label>
               <select class="form-select" id="portfolio-setup-create-select" required></select>
             </div>
             <button id="portfolio-setup-create-btn" class="btn btn-primary disabled w-100 mb-3">
@@ -219,11 +218,11 @@
     </div>
 
     <!-- TODO: adicionar apenas se ?edit=true -->
-    <div id="popup-edit" class="d-flex popup-edit justify-content-center align-items-center d-none">
+    <div id="popup-edit" class="d-flex popup center-xy d-none">
       <div class="card position-relative w-100">
         <button
           id="popup-edit-close"
-          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex center-xy">
           <img class="icon-dark icon-24px" src="static/action-icons/close.svg" />
         </button>
         <div class="card-body">
@@ -266,11 +265,11 @@
     </div>
 
     <!-- TODO: adicionar apenas se ?edit=true -->
-    <div id="popup-add" class="d-flex popup-edit justify-content-center align-items-center d-none">
+    <div id="popup-add" class="d-flex popup center-xy d-none">
       <div class="card position-relative w-100">
         <button
           id="popup-add-close"
-          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex center-xy">
           <img class="icon-dark icon-24px" src="static/action-icons/close.svg" />
         </button>
         <div class="card-body">
@@ -316,13 +315,11 @@
     </div>
 
     <!-- TODO: adicionar apenas se ?edit=true -->
-    <div
-      id="popup-add-link"
-      class="d-flex popup-edit justify-content-center align-items-center d-none">
+    <div id="popup-add-link" class="d-flex popup center-xy d-none">
       <div class="card position-relative w-100">
         <button
           id="popup-add-link-close"
-          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex center-xy">
           <img class="icon-dark icon-24px" src="static/action-icons/close.svg" />
         </button>
         <div class="card-body">
@@ -361,13 +358,11 @@
     </div>
 
     <!-- TODO: adicionar apenas se ?edit=true -->
-    <div
-      id="popup-delete"
-      class="d-flex popup-edit justify-content-center align-items-center d-none">
+    <div id="popup-delete" class="d-flex popup center-xy d-none">
       <div class="card position-relative w-100">
         <button
           id="popup-delete-close"
-          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex center-xy">
           <img class="icon-dark icon-24px" src="static/action-icons/close.svg" />
         </button>
         <div class="card-body">
@@ -421,13 +416,11 @@
     </div>
 
     <!-- TODO: adicionar apenas se ?edit=true -->
-    <div
-      id="popup-delete-link"
-      class="d-flex popup-edit justify-content-center align-items-center d-none">
+    <div id="popup-delete-link" class="d-flex popup center-xy d-none">
       <div class="card position-relative w-100">
         <button
           id="popup-delete-link-close"
-          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex center-xy">
           <img class="icon-dark icon-24px" src="static/action-icons/close.svg" />
         </button>
         <div class="card-body">
@@ -481,13 +474,11 @@
     </div>
 
     <!-- TODO: adicionar apenas se ?edit=true -->
-    <div
-      id="popup-delete-image"
-      class="d-flex popup-edit justify-content-center align-items-center d-none">
+    <div id="popup-delete-image" class="d-flex popup center-xy d-none">
       <div class="card position-relative w-100">
         <button
           id="popup-delete-image-close"
-          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex justify-content-center align-items-center">
+          class="icon-32px position-absolute top-0 start-100 translate-middle p-2 border border-light rounded-circle d-flex center-xy">
           <img class="icon-dark icon-24px" src="static/action-icons/close.svg" />
         </button>
         <div class="card-body">
@@ -499,7 +490,7 @@
             <p>Não é possível desfazer essa ação!</p>
           </div>
           <form id="popup-delete-image-form" class="d-flex justify-content-center flex-column">
-            <div class="w-100 mb-3 limit-img d-flex justify-content-center align-items-center">
+            <div class="w-100 mb-3 limit-img d-flex center-xy">
               <!-- Limit Size -->
               <img
                 id="popup-delete-image-image"
@@ -524,7 +515,7 @@
     </div>
 
     <!-- Rodapé -->
-    <footer class="body-section body-footer container-fluid border-top m-0 p-0 g-0">
+    <footer class="body-section body-footer container-fluid border-top space-0">
       <div class="row px-4 px-md-5 pt-4 pt-md-5">
         <div class="col-12 col-sm-6 pb-3 pb-md-4">
           <h5>Lucre+</h5>
@@ -543,17 +534,17 @@
           <h5 class="">Navegação</h5>
           <a
             class="mb-1"
-            href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer"
-            >Projeto</a
-          >
+            href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer">
+            Projeto
+          </a>
           <a class="mb-1" href="404.html">Sobre o site</a>
           <a class="mb-1" href="404.html">Suporte</a>
           <a class="mb-1" href="404.html">FAQ</a>
         </div>
       </div>
       <div class="row">
-        <div class="col-12 d-flex justify-content-center align-items-center">
-          <p class="p-3 m-0 g-0">Copyright (c) Lucre+ 2025</p>
+        <div class="col-12 d-flex center-xy">
+          <p class="space-0 p-3">Copyright (c) Lucre+ 2025</p>
         </div>
       </div>
     </footer>

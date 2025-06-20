@@ -94,29 +94,33 @@
               role="button"
               aria-disabled="true"
               class="btn btn-primary mx-0 mx-lg-2 mb-2 mb-lg-0"
-              href="404.html"
-              >Cadastrar-se</a
-            >
+              href="404.html">
+              Cadastrar-se
+            </a>
             <a
               role="button"
               aria-disabled="true"
               class="btn btn-primary mx-0 mx-lg-2"
-              href="404.html"
-              >Entrar</a
-            >
+              href="404.html">
+              Entrar
+            </a>
           </div>
           <!-- id.navbar.search -->
-          <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Pesquisar"
-              aria-label="Search" />
-            <a class="btn btn-outline-primary" href="404.html">Pesquisar</a>
-            <!--
-                    <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
-                    -->
-          </form>
+          <script defer type="module" src="static/js/pesquisa.js"></script>
+          <div id="inflate_pesquisa" class="d-none">
+            <form
+              class="d-flex flex-column flex-sm-row"
+              role="search"
+              onsubmit="(e)=>e.preventDefault()">
+              <input
+                id="search-bar"
+                class="form-control me-sm-2 mb-2 mb-sm-0"
+                type="search"
+                placeholder="Pesquisar"
+                aria-label="Search" />
+              <button id="search-btn" class="btn btn-outline-primary">Pesquisar</button>
+            </form>
+          </div>
           <!-- id.navbar.profile -->
           <div class="m-2 me-0 rounded d-flex justify-content-center">
             <img class="rounded profile-picture" src="static/img/placeholder_profile.png" />
@@ -154,9 +158,9 @@
           <h5 class="">Navegação</h5>
           <a
             class="mb-1"
-            href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer"
-            >Projeto</a
-          >
+            href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer">
+            Projeto
+          </a>
           <a class="mb-1" href="404.html">Sobre o site</a>
           <a class="mb-1" href="404.html">Suporte</a>
           <a class="mb-1" href="404.html">FAQ</a>
