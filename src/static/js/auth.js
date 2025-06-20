@@ -60,9 +60,7 @@ function clearError(htmlElement) {
 
 function ValidarUsername(elementUsername) {
     try {
-        console.log(elementUsername);
         const username = elementUsername.value;
-        console.log(username);
         if (username.length < MIN_USERNAME_LENGHT)
             throw new Error(`O nome deve conter no mínimo ${MIN_USERNAME_LENGHT} caracteres.`);
         clearError(elementUsername);
@@ -133,34 +131,116 @@ const LUCRE_KEY = "LucreM";
 
 // Função para alterar keys, isso garante que nenhuma aplicativo rodando e/ou
 // salvando dados no localStorage/sessionStorage interfica nessa aplicação.
-function lucreKey(key){
-    return `${LUCRE_KEY}.${key}`
+function lucreKey(key) {
+    return `${LUCRE_KEY}.${key}`;
 }
 
 function saveCredentials(obj) {
     Object.keys(obj).forEach((k) => sessionStorage.setItem(lucreKey(k), obj[k]));
 }
 
-function realizarLogin() {}
+async function realizarLogin() {}
 
-function realizarCadastro() {
+// INFO: Não otimizado, se algum usuario não tiver a tag informada na query(?),
+// o json-server irá retornar todos os valores
+async function getUserByEmail(email) {
+    return fetch(`/usuarios?email=${email}`).then((response) => response.json());
+}
+
+// INFO: Não otimizado, se algum usuario não tiver a tag informada na query(?),
+// o json-server irá retornar todos os valores
+async function getUserByUsername(username) {
+    return fetch(`/usuarios?username=${username}`).then((response) => response.json());
+}
+
+function checkEmailInJson(jsonArray, email) {
+    if (!Array.isArray(jsonArray)) throw new Error("Input inválida");
+    if (typeof email !== "string") throw new Error("Input inválida");
+    if (jsonArray.length === 0) return false;
+    for (const usuario of jsonArray) {
+        if (typeof usuario.email !== "string") continue;
+        if (usuario.email === email) return true;
+    }
+    return false;
+}
+
+function checkUsernameInJson(jsonArray, username) {
+    if (!Array.isArray(jsonArray)) throw new Error("Input inválida");
+    if (typeof username !== "string") throw new Error("Input inválida");
+    if (jsonArray.length === 0) return false;
+    for (const usuario of jsonArray) {
+        if (typeof usuario.username !== "string") continue;
+        if (usuario.username === username) return true;
+    }
+}
+
+async function saveUsuario(usuario) {
+    // TODO: Validar se objeto contem as informações necessárias para um usuario
+    return fetch("/usuarios", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(usuario),
+    });
+}
+
+async function realizarCadastro() {
     if (
-        !ValidarEmail(htmlInputSignupEmail) ||
         !ValidarUsername(htmlInputSignupUsername) ||
         !ValidarNome(htmlInputSignupNome) ||
+        !ValidarEmail(htmlInputSignupEmail) ||
         !ValidarSenha(htmlInputSignupSenha) ||
         !ValidarSenha2(htmlInputSignupSenha, htmlInputSignupSenha2)
     )
         return;
 
+    if (
+        !(htmlInputSignupEmail instanceof HTMLInputElement) ||
+        !(htmlInputSignupUsername instanceof HTMLInputElement)
+    )
+        return;
+
     // 1. Verificar se login já existe
-    // @mock
+
+    // INFO: Não otimizado, se algum usuario não tiver a tag informada em ?,
+    // o json-server irá retornar todos os valores
+    const _email = htmlInputSignupEmail.value;
+    const existByEmail = await getUserByEmail(_email);
+
+    if (checkEmailInJson(existByEmail, _email)) {
+        showError(htmlInputSignupEmail, "Email já cadastrado! Utilize outro e-mail");
+        return;
+    }
+
+    const _username = htmlInputSignupUsername.value;
+    const existByUsername = await getUserByUsername(_username);
+
+    if (checkUsernameInJson(existByUsername, _username)) {
+        showError(htmlInputSignupUsername, "Username já cadastrado! Utilize outro e-mail");
+        return;
+    }
 
     // 2. Criar usuário
-    // @mock
+    if (
+        !(htmlInputSignupNome instanceof HTMLInputElement) ||
+        !(htmlInputSignupSenha instanceof HTMLInputElement)
+    )
+        return;
+
+    const _nome = htmlInputSignupNome.value;
+    const _senha = htmlInputSignupSenha.value;
+
+    await saveUsuario({
+        // TODO: Criar id?
+        nome: _nome,
+        senha: _senha,
+        username: _username,
+        email: _email,
+        // Indica que informações como foto, profissão ou outras informações não foram cadastradas
+        forumularioConcluido: false
+    })
 
     // 3. Informar se cadastro foi realizado com sucesso
-    // @mock
+    alert("Cadastro realizado com sucesso!\nProssiga para realizar o login!")
 
     // 4. Reseta a form e redireciona para o login
     if (htmlFormSignup instanceof HTMLFormElement) htmlFormSignup.reset();
@@ -171,8 +251,8 @@ function inicializarCampos() {
     if (
         !(htmlButtonRealizarCadastro instanceof HTMLElement) ||
         !(htmlButtonCancelarCadastro instanceof HTMLElement) ||
-        !(htmlFormLogin instanceof HTMLElement) ||
-        !(htmlFormSignup instanceof HTMLElement)
+        !(htmlFormLogin instanceof HTMLFormElement) ||
+        !(htmlFormSignup instanceof HTMLFormElement)
     ) {
         console.error("Null html instace");
         return;
@@ -187,9 +267,15 @@ function inicializarCampos() {
         realizarLogin();
     });
     // htmlButtonLogin.addEventListener("click", realizarLogin)
+    htmlFormSignup.addEventListener("keypress", (key) => {
+        if (key.key === "Enter") key.preventDefault();
+    });
     htmlFormSignup.addEventListener("submit", (event) => {
         event.preventDefault();
         realizarCadastro();
+    });
+    htmlFormSignup.addEventListener("keypress", (key) => {
+        if (key.key === "Enter") key.preventDefault();
     });
     // htmlButtonCadastrar.addEventListener("click", realizarCadastro)
 
