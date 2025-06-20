@@ -56,19 +56,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <!-- id.navbar.navigation -->
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false">
-                Serviços
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="404.html">Em andamento</a></li>
-              </ul>
-            </li>
             <!-- id.navbar.navigation.pares -->
             <li class="nav-item dropdown">
               <a
@@ -80,6 +67,7 @@
               </a>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="serviços.html">Cadastro de Serviços</a></li>
+                <li><a class="dropdown-item" href="cadastro.html">Cadastro de Usuários</a></li>
               </ul>
             </li>
           </ul>
@@ -88,17 +76,21 @@
           <div class="d-none" id="toggleDarkDiv"></div>
           <!-- TODO: Inserir dinamicamente <login-cadastre_se|search-profile_picture> -->
           <!-- id.navbar.search -->
-          <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Pesquisar"
-              aria-label="Search" />
-            <a class="btn btn-outline-primary" href="404.html">Pesquisar</a>
-            <!--
-                    <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
-                    -->
-          </form>
+          <script defer type="module" src="static/js/pesquisa.js"></script>
+          <div id="inflate_pesquisa" class="d-none">
+            <form
+              class="d-flex flex-column flex-sm-row"
+              role="search"
+              onsubmit="(e)=>e.preventDefault()">
+              <input
+                id="search-bar"
+                class="form-control me-sm-2 mb-2 mb-sm-0"
+                type="search"
+                placeholder="Pesquisar"
+                aria-label="Search" />
+              <button id="search-btn" class="btn btn-outline-primary">Pesquisar</button>
+            </form>
+          </div>
           <!-- id.navbar.profile -->
           <div class="m-2 me-0 rounded d-flex justify-content-center">
             <img class="rounded profile-picture" src="static/img/placeholder_profile.png" />
