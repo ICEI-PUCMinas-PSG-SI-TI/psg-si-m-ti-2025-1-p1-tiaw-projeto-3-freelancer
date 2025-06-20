@@ -47,7 +47,8 @@ function createServiceCard(
 ) {
     const card = document.createElement("a");
     card.classList.add("col-12", "col-md-6", "col-xl-4", "text-decoration-none");
-    card.href = "/404.html";
+    card.href = "404.html";
+// TODO: Adicionar avaliações como estrelas
     card.innerHTML = `<div class="card h-100 w-100">
         <div class="card-body d-flex flex-column">
         <div class="d-flex flex-row mb-2 align-items-center">
@@ -62,8 +63,7 @@ function createServiceCard(
         <p>${descricao}</p>
         <div class="d-flex flex-row justify-content-between mt-auto">
             <p class="space-0">📝 ${quantidade_avaliacoes}</p>
-            <!-- TODO: Adicionar como estrelas -->
-            <p class="space-0">⭐ ${nota_avaliacoes}/10</p>
+                        <p class="space-0">⭐ ${nota_avaliacoes}/10</p>
         </div>
         </div>
     </div>`;
@@ -82,7 +82,8 @@ function createUserCard(
 ) {
     const card = document.createElement("a");
     card.classList.add("col-12", "col-md-6", "col-xl-4", "text-decoration-none");
-    card.href = "/404.html";
+    card.href = "404.html";
+// TODO: Adicionar avaliações como estrelas
     card.innerHTML = `<div class="card h-100 w-100">
         <div class="card-body d-flex flex-column">
         <div class="d-flex flex-row mb-2 align-items-center">
@@ -97,7 +98,7 @@ function createUserCard(
         <p>${biografia}</p>
         <div class="d-flex flex-row justify-content-between mt-auto">
             <p class="space-0">📝 ${quantidade_avaliacoes}</p>
-            <!-- TODO: Adicionar como estrelas -->
+            
             <p class="space-0">⭐ ${nota_avaliacoes}/10</p>
         </div>
         </div>
@@ -115,8 +116,7 @@ function getData() {
 }
 
 function showResults() {
-    const pesquisa = filtros.query;
-    const html_row_service = document.getElementById("row-service");
+        const html_row_service = document.getElementById("row-service");
     if (!(html_row_service instanceof HTMLDivElement)) {
         console.log("not a html service");
         return;
@@ -291,14 +291,15 @@ function setupFiltersElement() {
         html_select_localizacao.selectedIndex = tt + 1;
         html_select_localizacao.value = filtros.localizacao;
     }
+
     return null;
 }
 
 function setOnLoadParamFilters() {
     let params = new URLSearchParams(location.search);
-    const query = (params.get("q") || "")
+    const query = params.get("q") || "";
     const localizacao = params.get("local") || "";
-    const review = (params.get("review") || "")
+    const review = params.get("review") || "";
     filtros = new Filtros(query, localizacao, review);
 }
 
