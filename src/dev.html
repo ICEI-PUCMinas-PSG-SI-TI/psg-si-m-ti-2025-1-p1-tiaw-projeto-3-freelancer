@@ -32,6 +32,7 @@
     <script src="static/js/redirect.js"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
+    <script defer src="static/js/profile.js"></script>
     <!-- Page Scripts -->
     <script defer type="module" src="static/js/dev.js"></script>
   </head>
@@ -97,7 +98,10 @@
           </div>
           <!-- id.navbar.profile -->
           <div class="m-2 me-0 rounded d-flex justify-content-center">
-            <img class="rounded profile-picture" src="static/img/placeholder_profile.png" />
+            <img
+              id="profile-picture-tiny"
+              class="rounded profile-picture d-none"
+              src="static/img/placeholder_profile.png" />
           </div>
         </div>
       </div>
@@ -414,6 +418,27 @@
                 Limpar todas as informações armazenadas no localStorage como dados ou configurações.
               </p>
               <button class="btn btn-danger" id="dev-outros-clear">Limpar localStorage</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="profile-modal"
+        class="d-flex profile-modal justify-content-end align-items-top d-none">
+        <div class="m-3">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-center align-items-center inner-profile-modal flex-column">
+                <img
+                  id="profile-picture-big"
+                  class="rounded border-2 mb-3"
+                  src="static/img/placeholder_profile.png"
+                  alt="Profile" />
+                <p id="profile-name">Nome do Usuário</p>
+                <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
+              </div>
             </div>
           </div>
         </div>

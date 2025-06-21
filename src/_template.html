@@ -33,6 +33,7 @@
     <script src="static/js/redirect.js"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
+    <script defer src="static/js/profile.js"></script>
   </head>
 
   <body>
@@ -97,14 +98,10 @@
               role="button"
               aria-disabled="true"
               class="btn btn-primary mx-0 mx-lg-2 mb-2 mb-lg-0"
-              href="404.html">
+              href="/auth#cadastro">
               Cadastrar-se
             </a>
-            <a
-              role="button"
-              aria-disabled="true"
-              class="btn btn-primary mx-0 mx-lg-2"
-              href="404.html">
+            <a role="button" aria-disabled="true" class="btn btn-primary mx-0 mx-lg-2" href="/auth">
               Entrar
             </a>
           </div>
@@ -126,7 +123,10 @@
           </div>
           <!-- id.navbar.profile -->
           <div class="m-2 me-0 rounded d-flex justify-content-center">
-            <img class="rounded profile-picture" src="static/img/placeholder_profile.png" />
+            <img
+              id="profile-picture-tiny"
+              class="rounded profile-picture d-none"
+              src="static/img/placeholder_profile.png" />
           </div>
         </div>
       </div>

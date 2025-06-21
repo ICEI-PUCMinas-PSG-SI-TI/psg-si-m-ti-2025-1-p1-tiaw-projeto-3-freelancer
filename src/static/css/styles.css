@@ -53,6 +53,7 @@ h6 {
 
 /* Seção: Conteúdo */
 .body-content {
+    position: relative;
     /* Flexbox */
     flex: 1;
     min-height: calc(100vh - var(--nav-bar-size));
@@ -119,4 +120,32 @@ h6 {
 .popup div.card {
     max-width: 500px;
     max-height: 500px;
+}
+
+.profile-modal {
+    z-index: 100;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(10px);
+    inset: 0 0 0 0;
+}
+
+.inner-profile-modal {
+    height: 200px;
+    width: 200px;
+    right: 0;
+    top: 0;
+}
+
+.inner-profile-modal img {
+    max-width: 100px;
+    max-height: 100px;
+    height: 100px;
+    width: 100px;
+    background-color: darkslateblue;
+}
+
+main {
+    position: relative;
 }

@@ -33,6 +33,7 @@
     <script src="static/js/redirect.js"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
+    <script defer src="static/js/profile.js"></script>
     <!-- Page Scripts -->
     <script defer src="static/js/detalhes_serviços.js"></script>
   </head>
@@ -62,22 +63,6 @@
             <li class="nav-item dropdown"></li>
           </ul>
           <div class="d-none" id="toggleDarkDiv"></div>
-          <div class="d-flex flex-column flex-lg-row justify-content-lg-center mb-2 mb-lg-0">
-            <a
-              role="button"
-              aria-disabled="true"
-              class="btn btn-primary mx-0 mx-lg-2 mb-2 mb-lg-0"
-              href="404.html">
-              Cadastrar-se
-            </a>
-            <a
-              role="button"
-              aria-disabled="true"
-              class="btn btn-primary mx-0 mx-lg-2"
-              href="404.html">
-              Entrar
-            </a>
-          </div>
           <form class="d-flex" role="search">
             <input
               class="form-control me-2"
@@ -86,15 +71,19 @@
               aria-label="Search" />
             <a class="btn btn-outline-primary" href="404.html">Pesquisar</a>
           </form>
+          <!-- id.navbar.profile -->
           <div class="m-2 me-0 rounded d-flex justify-content-center">
-            <img class="rounded profile-picture" src="static/img/placeholder_profile.png" />
+            <img
+              id="profile-picture-tiny"
+              class="rounded profile-picture d-none"
+              src="static/img/placeholder_profile.png" />
           </div>
         </div>
       </div>
     </nav>
 
     <!-- Conteúdo da página -->
-    <main class="container my-5 detalhes-servico">
+    <main class="body-content body-section container my-5 detalhes-servico">
       <div class="row g-4">
         <!-- Imagem do serviço -->
         <div class="col-12 col-md-4 d-flex align-items-start justify-content-center">
@@ -184,6 +173,27 @@
         </form>
         <ul id="lista-servicos" class="list-group"></ul>
       </section>
+
+      <div
+        id="profile-modal"
+        class="d-flex profile-modal justify-content-end align-items-top d-none">
+        <div class="m-3">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-center align-items-center inner-profile-modal flex-column">
+                <img
+                  id="profile-picture-big"
+                  class="rounded border-2 mb-3"
+                  src="static/img/placeholder_profile.png"
+                  alt="Profile" />
+                <p id="profile-name">Nome do Usuário</p>
+                <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
 
     <!-- Rodapé -->

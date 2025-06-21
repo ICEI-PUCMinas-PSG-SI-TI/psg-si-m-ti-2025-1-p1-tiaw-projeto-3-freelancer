@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
   <head>
     <!-- Metadata -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Resultados de Pesquisa</title>
+    <!-- TODO: Atualizar sempre com o título da pagina -->
+    <title>Login/Cadastro</title>
     <!-- Favicon -->
     <link rel="icon" href="static/favicon.ico" />
     <!-- CSS -->
     <link rel="stylesheet" href="static/css/styles.css" type="text/css" />
-    <link rel="stylesheet" href="static/css/resultados.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/auth.css" type="text/css" />
     <!-- Bootstrap -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
@@ -33,9 +34,8 @@
     <script src="static/js/redirect.js"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
-    <script defer src="static/js/profile.js"></script>
     <!-- Page Scripts -->
-    <script defer type="module" src="static/js/resultados.mjs"></script>
+    <script defer src="static/js/auth.js"></script>
   </head>
 
   <body>
@@ -62,6 +62,19 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <!-- id.navbar.navigation -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Serviços
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="404.html">Em andamento</a></li>
+              </ul>
+            </li>
             <!-- id.navbar.navigation.pares -->
             <li class="nav-item dropdown">
               <a
@@ -93,22 +106,8 @@
                 type="search"
                 placeholder="Pesquisar"
                 aria-label="Search" />
-              <button id="search-btn" class="btn btn-outline-primary me-2">Pesquisar</button>
-              <button id="clear-btn" class="btn btn-outline-primary d-none">
-                <img
-                  class="action-icons icon-dark"
-                  src="static/action-icons/close.svg"
-                  width="24"
-                  height="24" />
-              </button>
+              <button id="search-btn" class="btn btn-outline-primary">Pesquisar</button>
             </form>
-          </div>
-          <!-- id.navbar.profile -->
-          <div class="m-2 me-0 rounded d-flex justify-content-center">
-            <img
-              id="profile-picture-tiny"
-              class="rounded profile-picture d-none"
-              src="static/img/placeholder_profile.png" />
           </div>
         </div>
       </div>
@@ -117,77 +116,111 @@
     <!-- Conteúdo da página -->
     <div
       id="content-div"
-      class="body-section body-content d-flex flex-column align-items-center justify-content-top space-0">
-      <div class="row justify-content-center align-items-center m-3">
-        <div class="col-md-6 space-0 md-0 pe-md-3">
-          <label for="review_range" class="form-label">
-            ⭐ Avaliações (<span id="review_range_info">0</span> estrelas)
-          </label>
-          <input type="range" class="form-range" min="0" max="10" value="0" id="review_range" />
-        </div>
-        <div class="col-md-6 space-0">
-          <label for="localizacao_select" class="form-label">🗺️ Localização</label>
-          <select class="form-select" aria-label="Default select example" id="localizacao_select">
-            <option value="0">Selecione uma localização</option>
-          </select>
+      class="body-section body-content d-flex flex-column align-items-center justify-content-center">
+      <!-- CONTEÚDO -->
+      <!-- Login -->
+      <div class="card limit_login_form w-100 p-4 m-4">
+        <h1 class="mt-4 mb-3 w-100 text-center">Bem Vindo!</h1>
+        <hr />
+        <form id="form-login" class="w-100">
+          <div class="form-group mb-3">
+            <label class="m-1" for="input-login-username">Usuário</label>
+            <input
+              type="text"
+              class="form-control"
+              id="input-login-username"
+              placeholder="Digite o usuário ou e-mail" />
+            <div class="m-1 form-text text-danger"></div>
+          </div>
+          <div class="form-group mb-3">
+            <label class="m-1" for="input-login-password">Senha</label>
+            <input
+              type="password"
+              class="form-control"
+              id="input-login-password"
+              placeholder="Senha" />
+            <div class="m-1 form-text text-danger"></div>
+          </div>
+          <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="input-login-show-password" />
+            <label class="form-check-label" for="input-login-show-password">Mostrar senha</label>
+          </div>
+          <button id="button-login" type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+        </form>
+        <p class="w-100 mb-3 text-center">ou</p>
+        <div class="limit_login_form d-flex flex-column w-100">
+          <button id="button-realizar-cadastro" class="btn btn-primary w-100">
+            Realizar cadastro
+          </button>
         </div>
       </div>
-      <div class="container-fluid w-100 space-0">
-        <div class="card my-3 w-100">
-          <div class="card-body">
-            <h5 class="space-0"><strong>Serviços</strong></h5>
-          </div>
-        </div>
+    </div>
 
-        <div
-          id="no_found_service"
-          class="d-flex flex-column align-items-center justify-content-center mb-4 d-none">
-          <p class="space-0 text-center">
-            Nenhum serviço encontrado<span id="search_text_se"></span>.
-          </p>
-          <p class="space-0 text-center">
-            Tente ajustar os filtros ou verifique se há serviços cadastrados!
-          </p>
-        </div>
-        <div id="row-service" class="row g-4 mb-4"></div>
-
-        <div class="card my-3 w-100">
-          <div class="card-body">
-            <h5 class="space-0"><strong>Usuários</strong></h5>
-          </div>
-        </div>
-
-        <div
-          id="no_found_user"
-          class="d-flex flex-column align-items-center justify-content-center mb-4 d-none">
-          <p class="space-0 text-center">
-            Nenhum usuário encontrado<span id="search_text_us"></span>.
-          </p>
-          <p class="space-0 text-center">
-            Tente ajustar os filtros ou verifique se há usuários cadastrados!
-          </p>
-        </div>
-        <div id="row-users" class="row g-4 mb-4"></div>
-      </div>
-
-      <div
-        id="profile-modal"
-        class="d-flex profile-modal justify-content-end align-items-top d-none">
-        <div class="m-3">
-          <div class="card">
-            <div class="card-body">
-              <div
-                class="d-flex justify-content-center align-items-center inner-profile-modal flex-column">
-                <img
-                  id="profile-picture-big"
-                  class="rounded border-2 mb-3"
-                  src="static/img/placeholder_profile.png"
-                  alt="Profile" />
-                <p id="profile-name">Nome do Usuário</p>
-                <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
+    <!-- Modal -->
+    <div
+      id="modal"
+      class="d-flex position-fixed body-section body-modal justify-content-center align-items-center d-none">
+      <div class="limit_login_form w-100 p-3">
+        <div class="card">
+          <form id="form-signup" class="card-body">
+            <h1 class="my-3 w-100 text-center">Cadastro</h1>
+            <hr />
+            <div class="form-group mb-3">
+              <label class="m-1" for="input-signup-username">Usuário</label>
+              <input
+                type="text"
+                class="form-control"
+                id="input-signup-username"
+                placeholder="Digite o usuário" />
+              <div class="m-1 form-text text-danger"></div>
+            </div>
+            <div class="form-group mb-3">
+              <label class="m-1" for="input-signup-name">Nome Completo</label>
+              <input
+                type="text"
+                class="form-control"
+                id="input-signup-name"
+                placeholder="Nome Completo" />
+              <div class="m-1 form-text text-danger"></div>
+            </div>
+            <div class="form-group mb-3">
+              <label class="m-1" for="input-signup-email">E-mail</label>
+              <input
+                type="text"
+                class="form-control"
+                id="input-signup-email"
+                placeholder="E-mail" />
+              <div class="m-1 form-text text-danger"></div>
+            </div>
+            <div class="form-group mb-3">
+              <label class="m-1" for="input-signup-password">Senha</label>
+              <input
+                type="password"
+                class="form-control"
+                id="input-signup-password"
+                placeholder="Senha" />
+              <div class="m-1 form-text text-danger"></div>
+            </div>
+            <div class="form-group mb-3">
+              <label class="m-1" for="input-signup-password-2">Senha (Confirmação)</label>
+              <input
+                type="password"
+                class="form-control"
+                id="input-signup-password-2"
+                placeholder="Senha (Confirmação)" />
+              <div class="m-1 form-text text-danger"></div>
+            </div>
+            <div class="row mx-0">
+              <div class="col-12 col-sm-6 space-0 pe-sm-1 mb-3">
+                <button id="button-signup-cancelar" class="btn btn-danger w-100">Cancelar</button>
+              </div>
+              <div class="col-12 col-sm-6 space-0 ps-sm-1 mb-3">
+                <button id="button-signup-cadastro" type="submit" class="btn btn-primary w-100">
+                  Cadastrar
+                </button>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

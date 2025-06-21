@@ -33,6 +33,7 @@
     <script src="static/js/redirect.js"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
+    <script defer src="static/js/profile.js"></script>
   </head>
 
   <body>
@@ -90,24 +91,6 @@
           <!-- id.navbar.darkmode -->
           <!-- Layout será modificado por js/darkmode.js -->
           <div class="d-none" id="toggleDarkDiv"></div>
-          <!-- id.navbar.autenticacao -->
-          <!-- TODO: Inserir dinamicamente <login-cadastre_se|search-profile_picture> -->
-          <div class="d-flex flex-column flex-lg-row justify-content-lg-center mb-2 mb-lg-0">
-            <a
-              role="button"
-              aria-disabled="true"
-              class="btn btn-primary mx-0 mx-lg-2 mb-2 mb-lg-0"
-              href="404.html">
-              Cadastrar-se
-            </a>
-            <a
-              role="button"
-              aria-disabled="true"
-              class="btn btn-primary mx-0 mx-lg-2"
-              href="404.html">
-              Entrar
-            </a>
-          </div>
           <!-- id.navbar.search -->
           <form class="d-flex" role="search">
             <input
@@ -120,14 +103,17 @@
           </form>
           <!-- id.navbar.profile -->
           <div class="m-2 me-0 rounded d-flex justify-content-center">
-            <img class="rounded profile-picture" src="static/img/placeholder_profile.png" />
+            <img
+              id="profile-picture-tiny"
+              class="rounded profile-picture d-none"
+              src="static/img/placeholder_profile.png" />
           </div>
         </div>
       </div>
     </nav>
 
     <!-- Conteúdo principal -->
-    <main class="container-fluid py-4">
+    <main class="body-section body-content container-fluid py-4">
       <!-- Filtro por categoria -->
       <div class="category-filter">
         <button class="btn btn-dark active" onclick="filtrarCategoria('todos', this)">
@@ -175,6 +161,27 @@
       <div class="category" id="cat-outro">
         <h3>Garçons:</h3>
         <div class="scroll-row" id="Outro"></div>
+      </div>
+
+      <div
+        id="profile-modal"
+        class="d-flex profile-modal justify-content-end align-items-top d-none">
+        <div class="m-3">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-center align-items-center inner-profile-modal flex-column">
+                <img
+                  id="profile-picture-big"
+                  class="rounded border-2 mb-3"
+                  src="static/img/placeholder_profile.png"
+                  alt="Profile" />
+                <p id="profile-name">Nome do Usuário</p>
+                <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
 
