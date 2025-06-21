@@ -1,6 +1,10 @@
 //@ts-check
 
+import { Usuarios } from "../jsonf/usuarios.mjs";
+
 const maxAllowedSizeCad = 5 * 1024 * 1024; // 5 MB in bytes
+
+const crud_usuarios = new Usuarios();
 
 // TODO: Move to module
 /**
@@ -33,8 +37,17 @@ const htmlCadastroTextAreaBiografia = document.getElementById("biografia");
 const htmlCadastroInputFoto = document.getElementById("foto");
 const htmlCadastroImgPreview = document.getElementById("preview");
 const htmlCadastroSelectProfissao = document.getElementById("profissao");
+const htmlCadastroSelectSexo = document.getElementById("sexo");
+const htmlCadastroInputEscolaridade = document.getElementById("escolaridade");
 
 const htmlCadastroForm = document.getElementById("formCadastro");
+
+// TODO: Verificar ou resetar credenciais
+function idUsuarioCorrente() {
+    const id = localStorage.getItem("LucreM.id");
+    if (!id) throw new Error("ID não identificada");
+    return id;
+}
 
 async function atualizarCadastro() {
     if (
@@ -49,7 +62,9 @@ async function atualizarCadastro() {
         !(htmlCadastroTextAreaBiografia instanceof HTMLTextAreaElement) ||
         !(htmlCadastroInputFoto instanceof HTMLInputElement) ||
         !(htmlCadastroImgPreview instanceof HTMLImageElement) ||
-        !(htmlCadastroSelectProfissao instanceof HTMLSelectElement)
+        !(htmlCadastroSelectProfissao instanceof HTMLSelectElement) ||
+        !(htmlCadastroSelectSexo instanceof HTMLSelectElement) ||
+        !(htmlCadastroInputEscolaridade instanceof HTMLInputElement)
     )
         throw new Error("Null checking");
 
@@ -65,7 +80,10 @@ async function atualizarCadastro() {
     const biografia = htmlCadastroTextAreaBiografia.value;
     const fotoInput_files = htmlCadastroInputFoto.files;
     const profissao = htmlCadastroSelectProfissao.value;
+    const sexo = htmlCadastroSelectSexo.value;
+    const escolaridade = htmlCadastroInputEscolaridade.value;
 
+    // Tornar foto opcional
     if (!fotoInput_files?.length) {
         alert("Por favor, selecione uma foto.");
         return;
@@ -75,12 +93,11 @@ async function atualizarCadastro() {
     fileToBase64(fotoInput_files[0])
         .then((result) => {
             const novoUsuario = {
-                //* Perigoso?
-                id: Date.now(),
+                id: idUsuarioCorrente(),
                 ativo: true,
                 foto: result,
                 nome,
-                data_nascimento,
+                data_nascimento: new Date(data_nascimento).toISOString(),
                 email,
                 senha,
                 contatos: [
@@ -95,24 +112,60 @@ async function atualizarCadastro() {
                 cidade,
                 biografia,
                 profissao,
+                sexo,
+                escolaridade,
             };
 
-            // Recupera os usuários salvos anteriormente (ou um array vazio)
-            const usuarios = JSON.parse(localStorage.getItem("usuarios") || "[]") || [];
-
-            // Adiciona o novo usuário à lista
-            usuarios.push(novoUsuario);
-
-            // Salva a lista de volta no localStorage
-            localStorage.setItem("usuarios", JSON.stringify(usuarios));
-
-            alert("Usuário cadastrado com sucesso!");
-            if (htmlCadastroForm instanceof HTMLFormElement) htmlCadastroForm.reset();
-            htmlCadastroImgPreview.src = "https://www.w3schools.com/howto/img_avatar.png";
+            crud_usuarios.atualizarUsuario(novoUsuario).then(() => {
+                alert("Usuário cadastrado com sucesso!");
+                if (htmlCadastroForm instanceof HTMLFormElement) htmlCadastroForm.reset();
+                htmlCadastroImgPreview.src = "https://www.w3schools.com/howto/img_avatar.png";
+            });
         })
         .catch((error) => {
             alert(error);
         });
+}
+
+async function preencherValores() {
+    if (
+        !(htmlCadastroInputNome instanceof HTMLInputElement) ||
+        !(htmlCadastroInputEmail instanceof HTMLInputElement) ||
+        !(htmlCadastroInputSenha instanceof HTMLInputElement) ||
+        !(htmlCadastroSelectTipo instanceof HTMLSelectElement) ||
+        !(htmlCadastroInputCpfCnpj instanceof HTMLInputElement) ||
+        !(htmlCadastroInputContato instanceof HTMLInputElement) ||
+        !(htmlCadastroInputDataNascimento instanceof HTMLInputElement) ||
+        !(htmlCadastroInputCidade instanceof HTMLInputElement) ||
+        !(htmlCadastroTextAreaBiografia instanceof HTMLTextAreaElement) ||
+        !(htmlCadastroInputFoto instanceof HTMLInputElement) ||
+        !(htmlCadastroImgPreview instanceof HTMLImageElement) ||
+        !(htmlCadastroSelectProfissao instanceof HTMLSelectElement) ||
+        !(htmlCadastroSelectSexo instanceof HTMLSelectElement) ||
+        !(htmlCadastroInputEscolaridade instanceof HTMLInputElement)
+    )
+        throw new Error("Null checking");
+
+    const usuario = await crud_usuarios.lerUsuario(idUsuarioCorrente());
+    if (usuario.nome) htmlCadastroInputNome.value = usuario.nome;
+    if (usuario.email) htmlCadastroInputEmail.value = usuario.email;
+    if (usuario.senha) htmlCadastroInputSenha.value = usuario.senha;
+    if (usuario.cpf_cnpj) htmlCadastroInputCpfCnpj.value = usuario.cpf_cnpj;
+    if (usuario.cidade) htmlCadastroInputCidade.value = usuario.cidade;
+    if (usuario.biografia) htmlCadastroTextAreaBiografia.value = usuario.biografia;
+    if (usuario.escolaridade) htmlCadastroInputEscolaridade.value = usuario.escolaridade;
+
+    if (usuario.contatos?.length) htmlCadastroInputContato.value = usuario.contatos[0].contato;
+
+    if (usuario.profissao) htmlCadastroSelectProfissao.value = usuario.profissao;
+    if (usuario.tipo) htmlCadastroSelectTipo.value = usuario.tipo;
+    if (usuario.sexo) htmlCadastroSelectSexo.value = usuario.sexo;
+
+    if (usuario.data_nascimento)
+        htmlCadastroInputDataNascimento.value = new Date(usuario.data_nascimento)
+            .toISOString()
+            .slice(0, 10);
+    if (usuario.foto) htmlCadastroImgPreview.src = usuario.foto;
 }
 
 function inicializarCadastro() {
@@ -121,6 +174,8 @@ function inicializarCadastro() {
         event.preventDefault();
         atualizarCadastro();
     });
+
+    preencherValores();
 
     htmlCadastroInputFoto?.addEventListener("change", async () => {
         if (

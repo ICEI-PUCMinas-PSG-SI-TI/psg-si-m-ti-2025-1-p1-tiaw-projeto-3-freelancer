@@ -35,7 +35,7 @@
     <script defer src="static/js/404.js"></script>
     <script defer src="static/js/profile.js"></script>
     <!-- Page Scripts -->
-    <script defer src="static/js/cadastro.js"></script>
+    <script defer type="module" src="static/js/page/cadastro.mjs"></script>
   </head>
 
   <body>
@@ -109,6 +109,7 @@
           <div class="col-md-6">
             <label class="form-label" for="profissao">Profissão</label>
             <select class="form-select" id="profissao" name="profissao">
+              <option selected value="">Selecione o principal cargo</option>
               <option>Fotográfo</option>
               <option>Designer</option>
               <option>Programador</option>
@@ -139,7 +140,7 @@
           <div class="col-md-6">
             <label class="form-label" for="sexo">Sexo</label>
             <select class="form-select" id="sexo" name="sexo">
-              <option selected>Selecionar</option>
+              <option selected value="">Selecionar</option>
               <option>Feminino</option>
               <option>Masculino</option>
               <option>Outro</option>
@@ -152,9 +153,9 @@
           <div class="form-group">
             <label for="tipo">Tipo de Usuário</label>
             <select id="tipo" name="tipo" required class="form-select">
-              <option value="">Selecione</option>
-              <option value="profissional">Profissional</option>
-              <option value="cliente">Cliente</option>
+              <option selected value="">Selecione</option>
+              <option>Profissional</option>
+              <option>Cliente</option>
             </select>
           </div>
           <div class="col-md-12">

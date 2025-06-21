@@ -12,20 +12,28 @@
 # [[usuarios]]
 # id = ID do usuário
 # ativo = Usuário está ativo?
-# imagemId = ID da foto de perfil do usuário
+# foto = Foto de perfil do usuário
 # nome = Nome completo do usuário, validação de documentação
 # data_nascimento = Data de nascimento do usuário (ISO-8601)
 # email = E-mail do usuário
 # senha = Senha do usuário
 # tipo = Tipo de usuário, define as permissões (admin, cliente, freelancer)
+# username = username do usuário, útil para links
 # cpf_cnpj = Documento do usuário
 # cidade = Localização do usuário
 # biografia = Informações breves sobre o usuário
 # contatos = Lista de contatos do usuário
+# formularioConcluido = Informa se apenas as informações iniciais foram preenchidas
+# @deprecate
+# profissao = Profissão principal do freelancer
+# sexo
+# escolaridade
+
+# @deprecated
+# imagemId = ID da foto de perfil do usuário
 
 # TODO: Armazenar novos parametros (não importantes no momento):
 # data_cadastro = Data de cadastro do usuário (ISO-8601)
-# username = username do usuário, útil para links
 # apelido = apelido, útil para empresas (Nome Fantasia)
 
 [[usuarios]]
