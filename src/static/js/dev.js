@@ -49,7 +49,7 @@ function setupUserCRUD() {
             console.log(`dev_delete_usuarios: usuário ${id_int} foi deletado!`);
         } else {
             console.log(
-                `dev_delete_usuarios: Não foi possível encontrar o usuário ou ocorreu um erro.`
+                `dev_delete_usuarios: Não foi possível encontrar o usuário ou ocorreu um erro.`,
             );
         }
     });
@@ -94,7 +94,7 @@ function setupServicesCRUD() {
             console.log(`dev_delete_servicos: serviço ${id_int} foi deletado!`);
         } else {
             console.log(
-                `dev_delete_servicos: Não foi possível encontrar o serviço ou ocorreu um erro.`
+                `dev_delete_servicos: Não foi possível encontrar o serviço ou ocorreu um erro.`,
             );
         }
     });
@@ -139,7 +139,7 @@ function setupContractsCRUD() {
             console.log(`dev_delete_contratos: contrato ${id_int} foi deletado!`);
         } else {
             console.log(
-                `dev_delete_contratos: Não foi possível encontrar o contrato ou ocorreu um erro.`
+                `dev_delete_contratos: Não foi possível encontrar o contrato ou ocorreu um erro.`,
             );
         }
     });
@@ -184,7 +184,7 @@ function setupReviewsCRUD() {
             console.log(`dev_delete_avaliacoes: avaliação ${id_int} foi deletado!`);
         } else {
             console.log(
-                `dev_delete_avaliacoes: Não foi possível encontrar a avaliação ou ocorreu um erro.`
+                `dev_delete_avaliacoes: Não foi possível encontrar a avaliação ou ocorreu um erro.`,
             );
         }
     });
@@ -229,7 +229,7 @@ function setupPortfolioCRUD() {
             console.log(`dev_delete_portfolios: portfolio ${id_int} foi deletado!`);
         } else {
             console.log(
-                `dev_delete_portfolios: Não foi possível encontrar o portfolio ou ocorreu um erro.`
+                `dev_delete_portfolios: Não foi possível encontrar o portfolio ou ocorreu um erro.`,
             );
         }
     });

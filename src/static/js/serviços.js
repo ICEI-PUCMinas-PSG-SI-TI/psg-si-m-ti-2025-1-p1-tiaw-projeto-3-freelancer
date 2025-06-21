@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         getServicos().forEach(
             (
                 /** @type {{ imagem: any; titulo: any; categoria: any; descricao: any; contato: any; }} */ servico,
-                /** @type {any} */ index
+                /** @type {any} */ index,
             ) => {
                 const li = document.createElement("li");
                 li.className =
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>`;
 
                 html_ul_lista.appendChild(li);
-            }
+            },
         );
     };
 

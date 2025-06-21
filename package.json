@@ -26,7 +26,7 @@
   "scripts": {
     "start": "json-server --static ./src --watch db/db.json -p 3000",
     "dev": "json-server --static ./src --watch db/db.json -p 3001",
-    "p": "npx prettier --write ./src/*.html --config ./.prettierrc.toml"
+    "p": "prettier --write ./src/*.html ./src/static/js/*.js ./src/static/css/*.css --config ./.prettierrc.toml"
   },
   "version": "1.0.0"
 }

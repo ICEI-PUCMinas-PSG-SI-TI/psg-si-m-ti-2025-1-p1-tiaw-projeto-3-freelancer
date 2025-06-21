@@ -38,11 +38,11 @@ function inicializarProfile() {
     }
     htmlImageProfile.addEventListener("click", mostrarModalProfile);
     htmlLogout.addEventListener("click", () => {
-        localStorage.clear()
-        location.reload()
+        localStorage.clear();
+        location.reload();
     });
     htmlDivModalProfile.addEventListener("click", esconderModalProfile);
-    htmlImageProfile.classList.remove("d-none")
+    htmlImageProfile.classList.remove("d-none");
 }
 
-inicializarProfile()
+inicializarProfile();

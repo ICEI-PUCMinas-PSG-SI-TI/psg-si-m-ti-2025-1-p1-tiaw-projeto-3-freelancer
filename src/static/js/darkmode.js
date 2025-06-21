@@ -13,7 +13,7 @@ function setupDarkMode() {
         "p-2",
         "flex-row",
         "justify-content-center",
-        "align-items-center"
+        "align-items-center",
     );
     toggleDarkDiv.innerHTML += `<img class="dark-toggle" src="static/dark.svg">
         <div class="form-check form-switch form-check-reverse">

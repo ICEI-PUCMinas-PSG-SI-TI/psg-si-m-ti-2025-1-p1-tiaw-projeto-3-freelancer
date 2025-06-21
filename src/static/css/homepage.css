@@ -118,7 +118,9 @@ body {
     background: #222;
     color: #fff;
     border: none;
-    transition: background 0.2s, color 0.2s;
+    transition:
+        background 0.2s,
+        color 0.2s;
 }
 
 .category-filter .btn.active,

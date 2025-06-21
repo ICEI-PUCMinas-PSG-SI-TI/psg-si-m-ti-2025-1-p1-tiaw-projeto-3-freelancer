@@ -43,7 +43,7 @@ function showError(htmlElement, error) {
     htmlElement.classList.add("border-danger");
     htmlElement.classList.remove("d-none");
     let htmlErrorElement = htmlElement.parentElement?.querySelector(
-        "div .m-1.form-text.text-danger"
+        "div .m-1.form-text.text-danger",
     );
     if (!(htmlErrorElement instanceof HTMLElement)) return;
     htmlErrorElement.classList.remove("d-none");
@@ -54,7 +54,7 @@ function clearError(htmlElement) {
     if (!(htmlElement instanceof HTMLElement)) return;
     htmlElement.classList.remove("border-danger");
     let htmlErrorElement = htmlElement.parentElement?.querySelector(
-        "div .m-1.form-text.text-danger"
+        "div .m-1.form-text.text-danger",
     );
     if (!(htmlErrorElement instanceof HTMLElement)) return;
     htmlErrorElement.classList.add("d-none");
@@ -177,7 +177,7 @@ async function realizarLogin() {
     }
 
     const credenciais = _users.filter(
-        (_user) => (_user.email === _login || _user.username === _password) && _user.senha
+        (_user) => (_user.email === _login || _user.username === _password) && _user.senha,
     )[0];
 
     if (!credenciais) {
@@ -398,7 +398,7 @@ function inicializarCampos() {
         if (timeout_signin_senha_2) clearTimeout(timeout_signin_senha_2);
         timeout_signin_senha_2 = setTimeout(
             () => ValidarSenha2(htmlInputSignupSenha, htmlInputSignupSenha2),
-            1000
+            1000,
         );
     }
 

@@ -19,7 +19,7 @@ profissionais.slice(0, 10).forEach((pro, index) => {
         "rounded",
         "bg-light",
         "position-relative",
-        "overflow-hidden"
+        "overflow-hidden",
     );
     box.style.cursor = "pointer";
     box.onclick = () => (window.location.href = "perfil.html?nome=" + encodeURIComponent(pro.nome));
@@ -60,7 +60,7 @@ function renderCategoria(categoriaId) {
             "rounded",
             "bg-light",
             "position-relative",
-            "overflow-hidden"
+            "overflow-hidden",
         );
         box.style.cursor = "pointer";
         box.onclick = () =>

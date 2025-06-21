@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Verifica se os valores são válidos
         if (isNaN(hoursWorked) || isNaN(hourlyRate) || hoursWorked <= 0 || hourlyRate <= 0) {
             alert(
-                "Por favor, insira valores válidos para as horas trabalhadas e o salário por hora."
+                "Por favor, insira valores válidos para as horas trabalhadas e o salário por hora.",
             );
             return;
         }

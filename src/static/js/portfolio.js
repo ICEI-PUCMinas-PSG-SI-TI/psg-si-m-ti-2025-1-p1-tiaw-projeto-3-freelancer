@@ -774,7 +774,7 @@ function createSectionHeader(icon, icon_class, title, subtitle) {
         "p-3",
         "d-flex",
         "align-items-center",
-        "justify-content-start"
+        "justify-content-start",
     );
     content_header.innerHTML = `<div>
             <img class="icon-32px me-3 ${icon_class}" src="static/icons/${icon}.svg">
@@ -813,8 +813,8 @@ function createActionMenu(portfolio_id, section_id, name, description) {
 
     let content_button_edit = createActionButton("edit", () =>
         triggerEditSectionInfo(
-            new EditSectionInfoContext(portfolio_id, section_id, name, description)
-        )
+            new EditSectionInfoContext(portfolio_id, section_id, name, description),
+        ),
     );
 
     let content_button_up = createActionButton("up", () =>
@@ -824,9 +824,9 @@ function createActionMenu(portfolio_id, section_id, name, description) {
                 section_id,
                 name,
                 description,
-                EditSectionPositionContext.MOVE_UP
-            )
-        )
+                EditSectionPositionContext.MOVE_UP,
+            ),
+        ),
     );
 
     let content_button_down = createActionButton("down", () =>
@@ -836,13 +836,13 @@ function createActionMenu(portfolio_id, section_id, name, description) {
                 section_id,
                 name,
                 description,
-                EditSectionPositionContext.MOVE_DOWN
-            )
-        )
+                EditSectionPositionContext.MOVE_DOWN,
+            ),
+        ),
     );
 
     let content_button_delete = createActionButton("delete", () =>
-        triggerDeleteSection(new DeleteSectionContext(portfolio_id, section_id, name, description))
+        triggerDeleteSection(new DeleteSectionContext(portfolio_id, section_id, name, description)),
     );
 
     content_actions.appendChild(content_button_edit);
@@ -866,10 +866,10 @@ function createAddLinkSubSection(portfolio_id, section_id) {
         "btn",
         "btn-outline-primary",
         "text-decoration-none",
-        "w-100"
+        "w-100",
     );
     add_new_link_button.addEventListener("click", () =>
-        triggerAddLink(new AddLinkContext(portfolio_id, section_id))
+        triggerAddLink(new AddLinkContext(portfolio_id, section_id)),
     );
 
     add_new_link_button.innerHTML = `<div class="d-flex justify-content-center m-2">
@@ -904,7 +904,7 @@ function createEditPortfolioButton(edit) {
         "center-xy",
         "space-0",
         "w-100",
-        "p-2"
+        "p-2",
     );
 
     let toggle_edit_element_img = document.createElement("img");
@@ -1051,7 +1051,7 @@ function createReviewSection(
     section_name,
     section_description,
     enable_edit,
-    portfolio_user_id
+    portfolio_user_id,
 ) {
     const _portfolio_id = ensureInteger(portfolio_id);
     const _section_id = ensureInteger(section_id);
@@ -1066,7 +1066,7 @@ function createReviewSection(
         "star",
         "filter-star",
         _section_name,
-        _section_description
+        _section_description,
     );
 
     let content_container = createSectionContainer();
@@ -1074,7 +1074,7 @@ function createReviewSection(
 
     if (enable_edit) {
         section_header.appendChild(
-            createActionMenu(_portfolio_id, _section_id, _section_name, _section_description)
+            createActionMenu(_portfolio_id, _section_id, _section_name, _section_description),
         );
     }
 
@@ -1165,7 +1165,7 @@ function createImageSection(
     section_name,
     section_description,
     enable_edit,
-    content
+    content,
 ) {
     const _portfolio_id = ensureInteger(portfolio_id);
     const _section_id = ensureInteger(section_id);
@@ -1179,12 +1179,12 @@ function createImageSection(
         "images",
         "filter-images",
         section_name,
-        section_description
+        section_description,
     );
 
     if (enable_edit) {
         section_header.appendChild(
-            createActionMenu(_portfolio_id, _section_id, _section_name, _section_description)
+            createActionMenu(_portfolio_id, _section_id, _section_name, _section_description),
         );
     }
 
@@ -1220,7 +1220,7 @@ function createImageSection(
                     "border-light",
                     "rounded-circle",
                     "d-flex",
-                    "center-xy"
+                    "center-xy",
                 );
                 remove_button.addEventListener("click", () =>
                     triggerDeleteImage(
@@ -1228,9 +1228,9 @@ function createImageSection(
                             _portfolio_id,
                             _section_id,
                             content[i].blob,
-                            content[i].descricao
-                        )
-                    )
+                            content[i].descricao,
+                        ),
+                    ),
                 );
                 image_div.appendChild(remove_button);
             }
@@ -1264,7 +1264,7 @@ function createImageSection(
             watchImageInputChange(content_add_div_1_input.files).catch((error) => {
                 alert(error);
                 content_add_div_1_input.value = "";
-            })
+            }),
         );
 
         let content_add_div_2 = document.createElement("div");
@@ -1275,7 +1275,7 @@ function createImageSection(
             "btn",
             "btn-outline-primary",
             "text-decoration-none",
-            "w-100"
+            "w-100",
         );
         content_add_div_2_button.role = "button";
         content_add_div_2_button.innerHTML = `<div class="d-flex justify-content-center m-2">
@@ -1314,7 +1314,7 @@ function createLinkSection(
     section_name,
     section_description,
     enable_edit,
-    content
+    content,
 ) {
     const _portfolio_id = ensureInteger(portfolio_id);
     const _section_id = ensureInteger(section_id);
@@ -1328,12 +1328,12 @@ function createLinkSection(
         "link",
         "filter-link",
         section_name,
-        section_description
+        section_description,
     );
 
     if (enable_edit) {
         section_header.appendChild(
-            createActionMenu(_portfolio_id, _section_id, _section_name, _section_description)
+            createActionMenu(_portfolio_id, _section_id, _section_name, _section_description),
         );
     }
 
@@ -1372,7 +1372,7 @@ function createLinkSection(
                     "border-light",
                     "rounded-circle",
                     "d-flex",
-                    "center-xy"
+                    "center-xy",
                 );
                 link_div.appendChild(remove_button);
                 remove_button.addEventListener("click", () =>
@@ -1381,9 +1381,9 @@ function createLinkSection(
                             _portfolio_id,
                             _section_id,
                             content[i].blob,
-                            content[i].descricao
-                        )
-                    )
+                            content[i].descricao,
+                        ),
+                    ),
                 );
             }
 
@@ -1433,7 +1433,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
         const popup_edit_section_confirm = document.getElementById("popup-edit-confirm");
 
         popup_edit_section_close?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-edit", true)
+            toggleDisplayNoneOnElement("popup-edit", true),
         );
         popup_edit_section_confirm?.addEventListener("click", commitEditSectionInfo);
 
@@ -1443,17 +1443,17 @@ function setupPortfolioPage(portf_id, enable_edit) {
 
         // Botão de adicionar seção
         add_section?.addEventListener("click", () =>
-            triggerAddSection(new AddSectionContext(portfolio.id))
+            triggerAddSection(new AddSectionContext(portfolio.id)),
         );
         popup_add_section_close?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-add", true)
+            toggleDisplayNoneOnElement("popup-add", true),
         );
         popup_add_section_confirm?.addEventListener("click", commitAddAsection);
 
         const popup_add_link_close = document.getElementById("popup-add-link-close");
         const popup_add_link_confirm = document.getElementById("popup-add-link-confirm");
         popup_add_link_close?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-add-link", true)
+            toggleDisplayNoneOnElement("popup-add-link", true),
         );
         popup_add_link_confirm?.addEventListener("click", commitAddLink);
 
@@ -1462,10 +1462,10 @@ function setupPortfolioPage(portf_id, enable_edit) {
         const popup_delete_section_confirm = document.getElementById("popup-delete-confirm");
 
         popup_delete_section_close?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-delete", true)
+            toggleDisplayNoneOnElement("popup-delete", true),
         );
         popup_delete_section_cancel?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-delete", true)
+            toggleDisplayNoneOnElement("popup-delete", true),
         );
         popup_delete_section_confirm?.addEventListener("click", commitDeleteSection);
 
@@ -1474,10 +1474,10 @@ function setupPortfolioPage(portf_id, enable_edit) {
         const popup_delete_image_confirm = document.getElementById("popup-delete-image-confirm");
 
         popup_delete_image_close?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-delete-image", true)
+            toggleDisplayNoneOnElement("popup-delete-image", true),
         );
         popup_delete_image_cancel?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-delete-image", true)
+            toggleDisplayNoneOnElement("popup-delete-image", true),
         );
         popup_delete_image_confirm?.addEventListener("click", () => commitDeleteImage);
 
@@ -1486,10 +1486,10 @@ function setupPortfolioPage(portf_id, enable_edit) {
         const popup_delete_link_confirm = document.getElementById("popup-delete-link-confirm");
 
         popup_delete_link_close?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-delete-link", true)
+            toggleDisplayNoneOnElement("popup-delete-link", true),
         );
         popup_delete_link_cancel?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-delete-link", true)
+            toggleDisplayNoneOnElement("popup-delete-link", true),
         );
         popup_delete_link_confirm?.addEventListener("click", () => commitDeleteLink);
     }
@@ -1579,7 +1579,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         e_section_name,
                         e_section_description,
                         enable_edit,
-                        portfolio_user_id
+                        portfolio_user_id,
                     );
                     if (child) portfolio_secoes.appendChild(child);
                 }
@@ -1593,7 +1593,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         e_section_name,
                         e_section_description,
                         enable_edit,
-                        e_secao_content
+                        e_secao_content,
                     );
                     if (child) portfolio_secoes.appendChild(child);
                 }
@@ -1607,7 +1607,7 @@ function setupPortfolioPage(portf_id, enable_edit) {
                         e_section_name,
                         e_section_description,
                         enable_edit,
-                        e_secao_content
+                        e_secao_content,
                     );
                     if (child) portfolio_secoes.appendChild(child);
                 }
@@ -1651,7 +1651,7 @@ function setupPortfolioSetup() {
         portfolio_setup_select_btn.classList.remove("disabled");
         portfolio_setup_select_btn.addEventListener("click", () =>
             // Abrir o portfólio de id $?
-            setIdParam(parseInt(portfolio_setup_select_select.value))
+            setIdParam(parseInt(portfolio_setup_select_select.value)),
         );
     } else {
         let option = document.createElement("option");
