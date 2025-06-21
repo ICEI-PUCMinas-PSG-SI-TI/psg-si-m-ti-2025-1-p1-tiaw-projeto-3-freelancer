@@ -40,6 +40,8 @@ const htmlCadastroSelectProfissao = document.getElementById("profissao");
 const htmlCadastroSelectSexo = document.getElementById("sexo");
 const htmlCadastroInputEscolaridade = document.getElementById("escolaridade");
 
+let username = "";
+
 const htmlCadastroForm = document.getElementById("formCadastro");
 
 // TODO: Verificar ou resetar credenciais
@@ -98,6 +100,7 @@ async function atualizarCadastro() {
                     ativo: true,
                     foto: result,
                     nome,
+                    username,
                     data_nascimento: new Date(data_nascimento).toISOString(),
                     email,
                     senha,
@@ -160,6 +163,7 @@ async function preencherValores() {
             .toISOString()
             .slice(0, 10);
     if (usuario.foto) htmlCadastroImgPreview.src = usuario.foto;
+    if (usuario.username) htmlCadastroInputContato.value = usuario.username;
 }
 
 function inicializarCadastro() {

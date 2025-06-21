@@ -52,7 +52,7 @@ function setupUserCRUD() {
     });
 
     dev_read_usuarios.addEventListener("click", async () =>
-        console.log(await crud_usuarios.lerUsuarios({ page: 0 }))
+        console.log(await crud_usuarios.lerUsuarios({ page: 0 })),
     );
 }
 

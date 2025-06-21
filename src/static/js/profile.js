@@ -4,7 +4,6 @@ const htmlDivModalProfile = document.getElementById("profile-modal");
 const mock2_isUserLoggedIn = () => !!localStorage.getItem("LucreM.id");
 
 function mostrarModalProfile() {
-    console.log("object");
     htmlDivModalProfile?.classList.remove("d-none");
 }
 

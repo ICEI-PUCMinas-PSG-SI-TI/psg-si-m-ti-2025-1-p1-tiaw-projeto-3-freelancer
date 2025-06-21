@@ -80,7 +80,7 @@ export async function criarNPortfolios(quantidade) {
         for (let index = 0; index < quantidade; index++) {
             crud_usuarios.lerUsuarios();
             // OPTIMIZE: Ler os usuários anteriormente e escolher um número aleatorio
-            const usuarios = await crud_usuarios.lerUsuarios({page: 0});
+            const usuarios = await crud_usuarios.lerUsuarios({ page: 0 });
 
             if (!usuarios || !usuarios.length)
                 throw new Error(
@@ -185,7 +185,7 @@ export async function criarNContratos(quantidade) {
 
     for (let index = 0; index < quantidade; index++) {
         // OPTIMIZE: Ler os usuários anteriormente e escolher um número aleatorio
-        const usuarios = await crud_usuarios.lerUsuarios({page: 0});
+        const usuarios = await crud_usuarios.lerUsuarios({ page: 0 });
         if (!usuarios || !usuarios.length)
             throw new Error(
                 "Criação de contratos: É necessário que haja usuários cadastrados para criar contratos.",
@@ -245,7 +245,7 @@ export async function criarNAvaliacoes(quantidade) {
 
         for (let index = 0; index < quantidade; index++) {
             // OPTIMIZE: Ler os usuários anteriormente e escolher um número aleatorio
-            const usuarios = await crud_usuarios.lerUsuarios({page: 0});
+            const usuarios = await crud_usuarios.lerUsuarios({ page: 0 });
             if (!usuarios || !usuarios.length)
                 throw new Error(
                     "Criação de avaliações: É necessário que haja usuários cadastrados para criar avaliações.",
@@ -344,8 +344,8 @@ export async function criarNUsuarios(quantidade) {
                     json.cpf_cnpj[cpf_cnpj_index], // cpf_cnpj(string)
                     json.cidades[cidade_index], // cidade(string)
                     json.biografia[biografia_index], // biografia(string)
-                    [json.contatos[contato_1_index], json.contatos[contato_2_index]] // contatos(Array)
-                )
+                    [json.contatos[contato_1_index], json.contatos[contato_2_index]], // contatos(Array)
+                ),
             );
         }
 
