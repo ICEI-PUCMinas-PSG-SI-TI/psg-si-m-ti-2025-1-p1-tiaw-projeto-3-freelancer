@@ -146,6 +146,20 @@ h6 {
     background-color: darkslateblue;
 }
 
-main {
-    position: relative;
+.center-xy {
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.justify-text-align-center {
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+}
+
+.space-0 {
+    margin: 0 !important;
+    padding: 0 !important;
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
 }
