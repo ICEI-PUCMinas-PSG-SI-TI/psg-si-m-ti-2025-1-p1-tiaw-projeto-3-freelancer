@@ -137,11 +137,11 @@ export function isNonEmptyString(value) {
 const LUCRE_KEY = "LucreM";
 
 // Função para alterar keys, isso garante que nenhuma aplicativo rodando e/ou
-// salvando dados no localStorage/sessionStorage interfica nessa aplicação.
+// salvando dados no localStorage/localStorage interfica nessa aplicação.
 function lucreKey(key) {
     return `${LUCRE_KEY}.${key}`;
 }
 
 export function isUserLoggedIn() {
-    return !!sessionStorage.getItem(lucreKey("id"));
+    return !!localStorage.getItem(lucreKey("id"));
 }

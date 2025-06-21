@@ -6,7 +6,7 @@ const PATH_404 = "/404";
 const PATH_AUTH = "/auth";
 
 // @mock
-const mock_isUserLoggedIn = () => !!sessionStorage.getItem("LucreM.id");
+const mock_isUserLoggedIn = () => !!localStorage.getItem("LucreM.id");
 
 // Redireciona para um caminho especifico dentro do mesmo host
 function redirectToPath(path) {

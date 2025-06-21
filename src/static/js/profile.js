@@ -1,7 +1,7 @@
 //@ts-check
 const htmlDivModalProfile = document.getElementById("profile-modal");
 
-const mock2_isUserLoggedIn = () => !!sessionStorage.getItem("LucreM.id");
+const mock2_isUserLoggedIn = () => !!localStorage.getItem("LucreM.id");
 
 function mostrarModalProfile() {
     console.log("object");
@@ -30,15 +30,15 @@ function inicializarProfile() {
         return;
 
     // TODO: Limpar apenas keys necessárias
-    htmlParProfile.innerText = sessionStorage.getItem("LucreM.nome") || "Usuário";
-    const _img = sessionStorage.getItem("LucreM.imagem");
+    htmlParProfile.innerText = localStorage.getItem("LucreM.nome") || "Usuário";
+    const _img = localStorage.getItem("LucreM.imagem");
     if (_img) {
         htmlImageProfileBig.src = _img;
         htmlImageProfile.src = _img;
     }
     htmlImageProfile.addEventListener("click", mostrarModalProfile);
     htmlLogout.addEventListener("click", () => {
-        sessionStorage.clear()
+        localStorage.clear()
         location.reload()
     });
     htmlDivModalProfile.addEventListener("click", esconderModalProfile);
