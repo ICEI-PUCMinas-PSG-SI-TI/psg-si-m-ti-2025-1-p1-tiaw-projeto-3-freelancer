@@ -12,7 +12,7 @@ async function fileToBase64(file) {
     if (file.size > maxAllowedSizeCad)
         throw new Error("O tamanho do arquivo deve ser menor que 5MB!");
 
-    if (!file.type.match("image.*")) throw new Error("O arquivo não é uma imagem!");
+    if (!/image.*/.exec(file.type)) throw new Error("O arquivo não é uma imagem!");
 
     return new Promise((resolve, reject) => {
         reader.onload = () => resolve(reader.result);
@@ -21,84 +21,58 @@ async function fileToBase64(file) {
     });
 }
 
-/** @type {HTMLFormElement} */
-// @ts-ignore Casting HTMLElement as HTMLFormElement
-let form_cadastro_usuario = document.getElementById("formCadastro");
-form_cadastro_usuario?.addEventListener("submit", async (event) => {
-    event.preventDefault();
+const htmlCadastroInputNome = document.getElementById("nome");
+const htmlCadastroInputEmail = document.getElementById("email");
+const htmlCadastroInputSenha = document.getElementById("senha");
+const htmlCadastroSelectTipo = document.getElementById("tipo");
+const htmlCadastroInputCpfCnpj = document.getElementById("cpf");
+const htmlCadastroInputContato = document.getElementById("contato");
+const htmlCadastroInputDataNascimento = document.getElementById("data_nascimento");
+const htmlCadastroInputCidade = document.getElementById("cidade");
+const htmlCadastroTextAreaBiografia = document.getElementById("biografia");
+const htmlCadastroInputFoto = document.getElementById("foto");
+const htmlCadastroImgPreview = document.getElementById("preview");
+const htmlCadastroSelectProfissao = document.getElementById("profissao");
 
-    // TODO: Validar campos
-    /** @type {HTMLInputElement} */
-    // @ts-ignore Casting HTMLElement as HTMLInputElement
-    const html_input_nome = document.getElementById("nome");
-    /** @type {HTMLInputElement} */
-    // @ts-ignore Casting HTMLElement as HTMLInputElement
-    const html_input_email = document.getElementById("email");
-    /** @type {HTMLInputElement} */
-    // @ts-ignore Casting HTMLElement as HTMLInputElement
-    const html_input_senha = document.getElementById("senha");
-    /** @type {HTMLInputElement} */
-    // @ts-ignore Casting HTMLElement as HTMLInputElement
-    const html_input_tipo = document.getElementById("tipo");
-    /** @type {HTMLInputElement} */
-    // @ts-ignore Casting HTMLElement as HTMLInputElement
-    const html_input_cpf_cnpj = document.getElementById("cpf");
-    /** @type {HTMLInputElement} */
-    // @ts-ignore Casting HTMLElement as HTMLInputElement
-    const html_input_contato = document.getElementById("contato");
-    /** @type {HTMLInputElement} */
-    // @ts-ignore Casting HTMLElement as HTMLInputElement
-    const html_input_data_nascimento = document.getElementById("data_nascimento");
-    /** @type {HTMLInputElement} */
-    // @ts-ignore Casting HTMLElement as HTMLInputElement
-    const html_input_cidade = document.getElementById("cidade");
-    /** @type {HTMLInputElement} */
-    // @ts-ignore Casting HTMLElement as HTMLInputElement
-    const html_input_biografia = document.getElementById("biografia");
-    /** @type {HTMLInputElement} */
-    // @ts-ignore Casting HTMLElement as HTMLInputElement
-    const html_input_foto = document.getElementById("foto");
-    /** @type {HTMLImageElement} */
-    // @ts-ignore Casting HTMLElement as HTMLImageElement
-    const html_img_preview = document.getElementById("preview");
+const htmlCadastroForm = document.getElementById("formCadastro");
 
+async function atualizarCadastro() {
     if (
-        !html_input_nome ||
-        !html_input_email ||
-        !html_input_senha ||
-        !html_input_tipo ||
-        !html_input_cpf_cnpj ||
-        !html_input_contato ||
-        !html_input_data_nascimento ||
-        !html_input_cidade ||
-        !html_input_biografia ||
-        !html_input_foto ||
-        !html_img_preview
-    ) {
-        return;
-    }
+        !(htmlCadastroInputNome instanceof HTMLInputElement) ||
+        !(htmlCadastroInputEmail instanceof HTMLInputElement) ||
+        !(htmlCadastroInputSenha instanceof HTMLInputElement) ||
+        !(htmlCadastroSelectTipo instanceof HTMLSelectElement) ||
+        !(htmlCadastroInputCpfCnpj instanceof HTMLInputElement) ||
+        !(htmlCadastroInputContato instanceof HTMLInputElement) ||
+        !(htmlCadastroInputDataNascimento instanceof HTMLInputElement) ||
+        !(htmlCadastroInputCidade instanceof HTMLInputElement) ||
+        !(htmlCadastroTextAreaBiografia instanceof HTMLTextAreaElement) ||
+        !(htmlCadastroInputFoto instanceof HTMLInputElement) ||
+        !(htmlCadastroImgPreview instanceof HTMLImageElement) ||
+        !(htmlCadastroSelectProfissao instanceof HTMLSelectElement)
+    )
+        throw new Error("Null checking");
 
     // TODO: Validar campos
-    const nome = html_input_nome.value;
-    const email = html_input_email.value;
-    const senha = html_input_senha.value;
-    const tipo = html_input_tipo.value;
-    const cpf_cnpj = html_input_cpf_cnpj.value.replace(/\D/g, "");
-    const contato = html_input_contato.value.replace(/\D/g, "");
-    const data_nascimento = html_input_data_nascimento.value;
-    const cidade = html_input_cidade.value;
-    const biografia = html_input_biografia.value;
-    const fotoInput_files = html_input_foto.files;
+    const nome = htmlCadastroInputNome.value;
+    const email = htmlCadastroInputEmail.value;
+    const senha = htmlCadastroInputSenha.value;
+    const tipo = htmlCadastroSelectTipo.value;
+    const cpf_cnpj = htmlCadastroInputCpfCnpj.value.replace(/\D/g, "");
+    const contato = htmlCadastroInputContato.value.replace(/\D/g, "");
+    const data_nascimento = htmlCadastroInputDataNascimento.value;
+    const cidade = htmlCadastroInputCidade.value;
+    const biografia = htmlCadastroTextAreaBiografia.value;
+    const fotoInput_files = htmlCadastroInputFoto.files;
+    const profissao = htmlCadastroSelectProfissao.value;
 
-    if (!fotoInput_files || !fotoInput_files.length) {
+    if (!fotoInput_files?.length) {
         alert("Por favor, selecione uma foto.");
         return;
     }
 
-    const fotoInput = fotoInput_files[0];
-
     // TODO: Clear input if image is invalid
-    fileToBase64(fotoInput)
+    fileToBase64(fotoInput_files[0])
         .then((result) => {
             const novoUsuario = {
                 //* Perigoso?
@@ -120,6 +94,7 @@ form_cadastro_usuario?.addEventListener("submit", async (event) => {
                 cpf_cnpj,
                 cidade,
                 biografia,
+                profissao,
             };
 
             // Recupera os usuários salvos anteriormente (ou um array vazio)
@@ -132,31 +107,33 @@ form_cadastro_usuario?.addEventListener("submit", async (event) => {
             localStorage.setItem("usuarios", JSON.stringify(usuarios));
 
             alert("Usuário cadastrado com sucesso!");
-            form_cadastro_usuario?.reset();
-            html_img_preview.src = "https://www.w3schools.com/howto/img_avatar.png";
+            if (htmlCadastroForm instanceof HTMLFormElement) htmlCadastroForm.reset();
+            htmlCadastroImgPreview.src = "https://www.w3schools.com/howto/img_avatar.png";
         })
         .catch((error) => {
             alert(error);
         });
-});
+}
 
-// Preview da imagem
-// eslint-disable-next-line no-unused-vars
-function previewFoto() {
-    /** @type {HTMLInputElement} */
-    // @ts-ignore Casting HTMLElement as HTMLInputElement
-    const html_input_foto = document.getElementById("foto");
-    /** @type {HTMLImageElement} */
-    // @ts-ignore Casting HTMLElement as HTMLImageElement
-    const html_img_preview = document.getElementById("preview");
+function inicializarCadastro() {
+    if (!(htmlCadastroForm instanceof HTMLFormElement)) return;
+    htmlCadastroForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        atualizarCadastro();
+    });
 
-    if (!html_input_foto || !html_img_preview) return;
+    htmlCadastroInputFoto?.addEventListener("change", async () => {
+        if (
+            !(htmlCadastroInputFoto instanceof HTMLInputElement) ||
+            !(htmlCadastroImgPreview instanceof HTMLImageElement)
+        )
+            return;
 
-    if (!html_input_foto.files || !html_input_foto.files.length) return;
-
-    const file = html_input_foto.files[0];
-
-    fileToBase64(file).then((result) => {
-        html_img_preview.src = result;
+        if (!htmlCadastroInputFoto.files?.length) return;
+        fileToBase64(htmlCadastroInputFoto.files[0]).then((result) => {
+            htmlCadastroImgPreview.src = result;
+        });
     });
 }
+
+inicializarCadastro();
