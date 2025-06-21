@@ -92,39 +92,33 @@ async function atualizarCadastro() {
     // TODO: Clear input if image is invalid
     fileToBase64(fotoInput_files[0])
         .then((result) => {
-            const novoUsuario = {
-                id: idUsuarioCorrente(),
-                ativo: true,
-                foto: result,
-                nome,
-                data_nascimento: new Date(data_nascimento).toISOString(),
-                email,
-                senha,
-                contatos: [
-                    {
-                        id: 1,
-                        // TODO: Check this
-                        contato,
-                    },
-                ],
-                tipo,
-                cpf_cnpj,
-                cidade,
-                biografia,
-                profissao,
-                sexo,
-                escolaridade,
-            };
-
-            crud_usuarios.atualizarUsuario(novoUsuario).then(() => {
-                alert("Usuário cadastrado com sucesso!");
-                if (htmlCadastroForm instanceof HTMLFormElement) htmlCadastroForm.reset();
-                htmlCadastroImgPreview.src = "https://www.w3schools.com/howto/img_avatar.png";
-            });
+            crud_usuarios
+                .atualizarUsuario({
+                    id: idUsuarioCorrente(),
+                    ativo: true,
+                    foto: result,
+                    nome,
+                    data_nascimento: new Date(data_nascimento).toISOString(),
+                    email,
+                    senha,
+                    contatos: [
+                        {
+                            id: 1,
+                            // TODO: Check this
+                            contato,
+                        },
+                    ],
+                    tipo,
+                    cpf_cnpj,
+                    cidade,
+                    biografia,
+                    profissao,
+                    sexo,
+                    escolaridade,
+                })
+                .then(() => alert("Informações atualizadas com sucesso!"));
         })
-        .catch((error) => {
-            alert(error);
-        });
+        .catch((error) => alert(error));
 }
 
 async function preencherValores() {
