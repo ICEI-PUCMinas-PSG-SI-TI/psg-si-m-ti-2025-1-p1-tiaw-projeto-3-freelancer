@@ -61,7 +61,46 @@ function previewPicture() {
         });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+function setupServicos() {
+    const html_imagem = document.getElementById("imagem");
+    if (!(html_imagem instanceof HTMLInputElement)) return;
+    html_imagem.addEventListener("change", previewPicture);
+}
+
+let editIdIndex = null;
+
+function _editarServico(servico_id) {
+    if (!servico_id) return;
+    crud_servicos.lerServico(servico_id).then((_servico) => {
+        if (!_servico) return;
+
+        // TODO: Re-add image to preview
+        // const html_imagem = document.getElementById("imagem");
+        const html_titulo = document.getElementById("titulo");
+        const html_contato = document.getElementById("contato");
+        const html_categoria = document.getElementById("categoriaId");
+        const html_descricao = document.getElementById("descricao");
+
+        if (
+            // !(html_imagem instanceof HTMLInputElement) ||
+            !(html_titulo instanceof HTMLInputElement) ||
+            !(html_contato instanceof HTMLInputElement) ||
+            !(html_categoria instanceof HTMLSelectElement) ||
+            !(html_descricao instanceof HTMLTextAreaElement)
+        ) {
+            console.log("null check");
+            return;
+        }
+
+        html_titulo.value = _servico.titulo;
+        html_contato.value = _servico.contato;
+        html_categoria.value = _servico.categoriaId.toString();
+        html_descricao.value = _servico.descricao;
+        editIdIndex = _servico.id;
+    });
+}
+
+function render() {
     /** @type {HTMLFormElement} */
     // @ts-ignore Casting HTMLElement as HTMLFormElement
     const html_form = document.getElementById("form-servico");
@@ -69,19 +108,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!html_form || !html_ul_lista) return;
 
-    let editIdIndex = null;
+    html_ul_lista.innerHTML = "";
+    crud_servicos.lerServicos().then((res) => {
+        if (!res || !res.length) return;
 
-    const render = () => {
-        html_ul_lista.innerHTML = "";
-        crud_servicos.lerServicos().then((res) => {
-            if (!res || !res.length) return;
+        res.forEach((/** @type {Servico} */ servico) => {
+            const li = document.createElement("li");
+            li.className =
+                "list-group-item d-flex justify-content-between align-items-center flex-wrap";
 
-            res.forEach((/** @type {Servico} */ servico) => {
-                const li = document.createElement("li");
-                li.className =
-                    "list-group-item d-flex justify-content-between align-items-center flex-wrap";
-
-                li.innerHTML = `<div class="d-flex me-3">
+            li.innerHTML = `<div class="d-flex me-3">
                     <img width="64px" heigth="64px" src="${
                         servico.imagem || "static/icons/images.svg"
                     }" />
@@ -97,60 +133,41 @@ document.addEventListener("DOMContentLoaded", () => {
                     <button class="btn btn-sm btn-danger">Excluir</button>
                 </div>`;
 
-                const html_edit = li.getElementsByTagName("button")[0];
-                const html_delete = li.getElementsByTagName("button")[1];
+            const html_edit = li.getElementsByTagName("button")[0];
+            const html_delete = li.getElementsByTagName("button")[1];
 
-                if (
-                    !(html_edit instanceof HTMLButtonElement) ||
-                    !(html_delete instanceof HTMLButtonElement)
-                ) {
-                    console.log("null check");
-                    return;
-                }
+            if (
+                !(html_edit instanceof HTMLButtonElement) ||
+                !(html_delete instanceof HTMLButtonElement)
+            ) {
+                console.log("null check");
+                return;
+            }
 
-                html_edit.addEventListener("click", () => {
-                    if (!servico.id) return;
-                    console.log(servico.id);
-                    crud_servicos.lerServico(servico.id).then((_servico) => {
-                        if (!_servico) return;
+            html_edit.addEventListener("click", () => _editarServico(servico.id));
 
-                        // TODO: Re-add image to preview
-                        // const html_imagem = document.getElementById("imagem");
-                        const html_titulo = document.getElementById("titulo");
-                        const html_contato = document.getElementById("contato");
-                        const html_categoria = document.getElementById("categoriaId");
-                        const html_descricao = document.getElementById("descricao");
-
-                        if (
-                            // !(html_imagem instanceof HTMLInputElement) ||
-                            !(html_titulo instanceof HTMLInputElement) ||
-                            !(html_contato instanceof HTMLInputElement) ||
-                            !(html_categoria instanceof HTMLSelectElement) ||
-                            !(html_descricao instanceof HTMLTextAreaElement)
-                        ) {
-                            console.log("null check");
-                            return;
-                        }
-
-                        html_titulo.value = _servico.titulo;
-                        html_contato.value = _servico.contato;
-                        html_categoria.value = _servico.categoriaId.toString();
-                        html_descricao.value = _servico.descricao;
-                        editIdIndex = _servico.id;
-                    });
-                });
-
-                html_delete.addEventListener("click", () => {
-                    if (!servico.id) return;
-                    // TODO: avoid deleting if editing
-                    if (servico.id === editIdIndex) return;
-                    crud_servicos.excluirServico(servico.id).then(() => render());
-                });
-
-                html_ul_lista.appendChild(li);
+            html_delete.addEventListener("click", async () => {
+                if (!servico.id) return;
+                // TODO: avoid deleting if editing
+                if (servico.id === editIdIndex) return;
+                await crud_servicos.excluirServico(servico.id);
+                render();
             });
+
+            html_ul_lista.appendChild(li);
         });
-    };
+    });
+}
+
+function iniciarlizarPaginaServicos() {
+    setupServicos();
+
+    /** @type {HTMLFormElement} */
+    // @ts-ignore Casting HTMLElement as HTMLFormElement
+    const html_form = document.getElementById("form-servico");
+    const html_ul_lista = document.getElementById("lista-servicos");
+
+    if (!html_form || !html_ul_lista) return;
 
     html_form.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -197,22 +214,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         categoriaId,
                         descricao,
                         contato,
-                        imagem
-                    )
+                        imagem,
+                    ),
                 );
                 editIdIndex = null;
             } else {
                 // CADASTRAR
                 await crud_servicos.criarServico(
-                    new Servico(
-                        null,
-                        titulo,
-                        categoria,
-                        categoriaId,
-                        descricao,
-                        contato,
-                        imagem
-                    )
+                    new Servico(null, titulo, categoria, categoriaId, descricao, contato, imagem),
                 );
             }
 
@@ -222,12 +231,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     render();
-});
-
-function setupServicos() {
-    const html_imagem = document.getElementById("imagem");
-    if (!(html_imagem instanceof HTMLInputElement)) return;
-    html_imagem.addEventListener("change", previewPicture);
 }
 
-setupServicos();
+document.addEventListener("DOMContentLoaded", iniciarlizarPaginaServicos);

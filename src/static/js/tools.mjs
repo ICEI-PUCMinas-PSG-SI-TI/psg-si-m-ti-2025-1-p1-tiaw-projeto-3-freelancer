@@ -121,9 +121,7 @@ export function isNonEmptyString(value) {
  * @param {any} value
  */
 export function isNonNegativeInt(value) {
-    if (Number.isInteger(value) && value >= 0) return true;
-
-    return false;
+    return Number.isInteger(value) && value >= 0;
 }
 
 export function assertPositiveInt(value) {
