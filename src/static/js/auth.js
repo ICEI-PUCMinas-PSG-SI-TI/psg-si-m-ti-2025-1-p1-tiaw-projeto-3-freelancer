@@ -8,6 +8,8 @@ const htmlFormSignup = document.getElementById("form-signup");
 
 const htmlDivSignupModal = document.getElementById("modal");
 
+const htmlInputShowPassword = document.getElementById("input-login-show-password");
+
 const htmlInputSignupUsername = document.getElementById("input-signup-username");
 const htmlInputSignupNome = document.getElementById("input-signup-name");
 const htmlInputSignupEmail = document.getElementById("input-signup-email");
@@ -405,6 +407,16 @@ function inicializarCampos() {
     htmlInputSignupEmail.addEventListener("input", updateTimeoutValidacaoEmail);
     htmlInputSignupSenha.addEventListener("input", updateTimeoutValidacaoSenha);
     htmlInputSignupSenha2.addEventListener("input", updateTimeoutValidacaoSenha2);
+
+    if (!(htmlInputShowPassword instanceof HTMLInputElement)) return;
+    htmlInputShowPassword.addEventListener("change", () => {
+        if (!(htmlInputLoginPassword instanceof HTMLInputElement)) return;
+        if (htmlInputShowPassword.checked) {
+            htmlInputLoginPassword.type = "text";
+        } else {
+            htmlInputLoginPassword.type = "password";
+        }
+    });
 }
 
 inicializarCampos();
