@@ -5,13 +5,13 @@ import * as JSONQL_U from "./jsonql.user.mjs"; // Usuários
 import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
-import { generateRandomNumber, ensureInteger } from "./tools.mjs";
+import { generateRandomNumberOld, ensureInteger } from "./tools.mjs";
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
  */
 
-var exemplos_json = null;
+let exemplos_json = null;
 
 export async function getFakeData() {
     if (exemplos_json) return exemplos_json;
@@ -53,7 +53,7 @@ export async function criarNPortfolios(quantidade) {
                 let secao = {
                     ordem: ordem_int,
                     // TODO: Verificar dinamicamente as categorias possíveis
-                    categoriaId: generateRandomNumber(3),
+                    categoriaId: generateRandomNumberOld(3),
                     // TODO: Verificar dinamicamente os nomes de acordo com a categoria
                     nome: "Seção de Informações",
                 };
@@ -66,11 +66,11 @@ export async function criarNPortfolios(quantidade) {
                         {
                             // TODO: Adicionar imagens reais
                             secao.contents = [];
-                            const quant_imagens = generateRandomNumber(10, 5) || 5;
+                            const quant_imagens = generateRandomNumberOld(10, 5) || 5;
                             for (let j = 0; j < quant_imagens; j++) {
                                 secao.contents.push({
                                     blob: `https://picsum.photos/seed/${
-                                        generateRandomNumber(200) || "lucremais"
+                                        generateRandomNumberOld(200) || "lucremais"
                                     }/200`, // portfolios.secao.contents.blob - string
                                     descricao: "Foto", // portfolios.secao.contents.descricao - string
                                 });
@@ -90,9 +90,9 @@ export async function criarNPortfolios(quantidade) {
                     case 2:
                         {
                             secao.contents = [];
-                            const quant_links = generateRandomNumber(6, 3) || 3;
+                            const quant_links = generateRandomNumberOld(6, 3) || 3;
                             for (let j = 0; j < quant_links; j++) {
-                                const link_ext_index = generateRandomNumber(
+                                const link_ext_index = generateRandomNumberOld(
                                     exemplos.links_externos.length
                                 );
 
@@ -121,14 +121,14 @@ export async function criarNPortfolios(quantidade) {
                     "Criação de portfólios: É necessário que haja usuários cadastrados para criar portfólios."
                 );
 
-            const userId_index = generateRandomNumber(usuarios.length);
+            const userId_index = generateRandomNumberOld(usuarios.length);
             if (!userId_index) continue;
 
             // TODO: Avoid creating more than 1 portfolios per user
             let secoes = [];
 
             // Gera entre 2 e 5 seções para cada portfolio
-            const quant_secoes = generateRandomNumber(5, 2) || 2;
+            const quant_secoes = generateRandomNumberOld(5, 2) || 2;
             for (let i = 0; i < quant_secoes; i++) secoes.push(createSecao(i));
 
             portfolios.push({
@@ -167,13 +167,13 @@ export async function criarNContratos(quantidade) {
                 "Criação de contratos: É necessário que haja serviços cadastrados para criar contratos."
             );
 
-        const servicoId_index = generateRandomNumber(servicos.length);
-        const contratadoId_index = generateRandomNumber(usuarios.length);
-        const contratanteId_index = generateRandomNumber(usuarios.length);
+        const servicoId_index = generateRandomNumberOld(servicos.length);
+        const contratadoId_index = generateRandomNumberOld(usuarios.length);
+        const contratanteId_index = generateRandomNumberOld(usuarios.length);
 
-        const data_dia = generateRandomNumber(28, 1);
-        const data_mes = generateRandomNumber(12, 1);
-        const data_ano = generateRandomNumber(2026, 1970);
+        const data_dia = generateRandomNumberOld(28, 1);
+        const data_mes = generateRandomNumberOld(12, 1);
+        const data_ano = generateRandomNumberOld(2026, 1970);
 
         if (
             typeof servicoId_index !== "number" ||
@@ -192,7 +192,7 @@ export async function criarNContratos(quantidade) {
             contratadoId: usuarios[contratadoId_index].id, // number
             contratanteId: usuarios[contratanteId_index].id, // number
             data: `${data_dia}/${data_mes}/${data_ano}`, // string
-            valor: generateRandomNumber(5000, 1518) || 1518, // number
+            valor: generateRandomNumberOld(5000, 1518) || 1518, // number
         });
     }
 
@@ -228,9 +228,9 @@ export async function criarNAvaliacoes(quantidade) {
                     "Criação de avaliações: É necessário que haja contratos cadastrados para criar avaliações."
                 );
 
-            const contratoId_index = generateRandomNumber(contratos.length);
-            const contratanteId_index = generateRandomNumber(usuarios.length);
-            const comentario_index = generateRandomNumber(exemplos.avaliacoes.length);
+            const contratoId_index = generateRandomNumberOld(contratos.length);
+            const contratanteId_index = generateRandomNumberOld(usuarios.length);
+            const comentario_index = generateRandomNumberOld(exemplos.avaliacoes.length);
 
             if (
                 typeof contratoId_index !== "number" ||
@@ -245,7 +245,7 @@ export async function criarNAvaliacoes(quantidade) {
             avaliacoes.push({
                 contratoId: contratos[contratoId_index].id, // number
                 contratanteId: usuarios[contratanteId_index].id, // number
-                nota: generateRandomNumber(11) || 0, // number
+                nota: generateRandomNumberOld(11) || 0, // number
                 comentario: exemplos.avaliacoes[comentario_index], // string
             });
         }
@@ -270,20 +270,20 @@ export async function criarNUsuarios(quantidade) {
         let usuarios = [];
 
         for (let index = 0; index < quantidade_int; index++) {
-            const nome_index = generateRandomNumber(exemplos.nomes.length);
-            const sobrenomes_index = generateRandomNumber(exemplos.sobrenomes.length);
-            const foto_seed = generateRandomNumber(200);
-            const email_index = generateRandomNumber(exemplos.email.length);
-            const tipo_index = generateRandomNumber(exemplos.tipo.length);
-            const cpf_cnpj_index = generateRandomNumber(exemplos.cpf_cnpj.length);
-            const cidade_index = generateRandomNumber(exemplos.cidades.length);
-            const biografia_index = generateRandomNumber(exemplos.biografia.length);
-            const contato_1_index = generateRandomNumber(exemplos.contatos.length);
-            const contato_2_index = generateRandomNumber(exemplos.contatos.length);
+            const nome_index = generateRandomNumberOld(exemplos.nomes.length);
+            const sobrenomes_index = generateRandomNumberOld(exemplos.sobrenomes.length);
+            const foto_seed = generateRandomNumberOld(200);
+            const email_index = generateRandomNumberOld(exemplos.email.length);
+            const tipo_index = generateRandomNumberOld(exemplos.tipo.length);
+            const cpf_cnpj_index = generateRandomNumberOld(exemplos.cpf_cnpj.length);
+            const cidade_index = generateRandomNumberOld(exemplos.cidades.length);
+            const biografia_index = generateRandomNumberOld(exemplos.biografia.length);
+            const contato_1_index = generateRandomNumberOld(exemplos.contatos.length);
+            const contato_2_index = generateRandomNumberOld(exemplos.contatos.length);
 
-            const data_nascimento_dia = generateRandomNumber(28, 1);
-            const data_nascimento_mes = generateRandomNumber(12, 1);
-            const data_nascimento_ano = generateRandomNumber(2006, 1970);
+            const data_nascimento_dia = generateRandomNumberOld(28, 1);
+            const data_nascimento_mes = generateRandomNumberOld(12, 1);
+            const data_nascimento_ano = generateRandomNumberOld(2006, 1970);
 
             if (
                 typeof nome_index !== "number" ||
@@ -310,7 +310,7 @@ export async function criarNUsuarios(quantidade) {
                 foto: `https://picsum.photos/seed/${foto_seed}/200`, // string
                 data_nascimento: `${data_nascimento_dia}/${data_nascimento_mes}/${data_nascimento_ano}`, // string
                 email: exemplos.email[email_index], // string
-                senha: (generateRandomNumber(999999, 100000) || 123456).toString(), // string
+                senha: (generateRandomNumberOld(999999, 100000) || 123456).toString(), // string
                 tipo: exemplos.tipo[tipo_index], // string
                 cpf_cnpj: exemplos.cpf_cnpj[cpf_cnpj_index], // string
                 cidade: exemplos.cidades[cidade_index], // string
@@ -339,11 +339,11 @@ export async function criarNServicos(quantidade) {
         let servicos = [];
 
         for (let index = 0; index < quantidade_int; index++) {
-            const categorias_servicos_index = generateRandomNumber(
+            const categorias_servicos_index = generateRandomNumberOld(
                 exemplos.categorias_servicos.length
             );
-            const contato_index = generateRandomNumber(exemplos.contatos.length);
-            const descricao_index = generateRandomNumber(exemplos.descricoes.length);
+            const contato_index = generateRandomNumberOld(exemplos.contatos.length);
+            const descricao_index = generateRandomNumberOld(exemplos.descricoes.length);
 
             if (
                 typeof categorias_servicos_index !== "number" ||

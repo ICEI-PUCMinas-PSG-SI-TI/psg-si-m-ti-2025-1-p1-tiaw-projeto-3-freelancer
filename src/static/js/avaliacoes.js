@@ -58,6 +58,7 @@ function getImagemBase64(file) {
     });
 }
 
+// eslint-disable-next-line no-unused-vars
 async function publicar() {
     const comentario = document.getElementById("comentario").value.trim();
     const imagemInput = document.getElementById("imagem");

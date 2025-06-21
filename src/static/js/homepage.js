@@ -110,6 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
     filtrarCategoria("todos", document.querySelector(".category-filter .btn"));
 });
 
+// eslint-disable-next-line no-unused-vars
 function rolar(id, dir) {
     const el = document.getElementById(id);
     el.scrollBy({ left: dir * 200, behavior: "smooth" });

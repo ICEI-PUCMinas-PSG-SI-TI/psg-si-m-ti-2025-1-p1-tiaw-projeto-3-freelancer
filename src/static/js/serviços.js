@@ -3,11 +3,11 @@
 const maxAllowedSize = 5 * 1024 * 1024; // 5 MB in bytes
 
 // eslint-disable-next-line no-unused-vars
-var editarServico = () => {};
+let editarServico = () => {};
 // eslint-disable-next-line no-unused-vars
-var deletarServico = () => {};
+let deletarServico = () => {};
 // eslint-disable-next-line no-unused-vars
-var previewPicture = () => {};
+let previewPicture = () => {};
 const getServicos = () => JSON.parse(localStorage.getItem("servicos") || "[]");
 const salvarServicos = (/** @type {Object} */ servicos) =>
     localStorage.setItem("servicos", JSON.stringify(servicos));

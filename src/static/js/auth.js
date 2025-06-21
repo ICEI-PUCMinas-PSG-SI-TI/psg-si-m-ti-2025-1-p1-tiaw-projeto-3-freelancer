@@ -16,10 +16,8 @@ const htmlInputSignupEmail = document.getElementById("input-signup-email");
 const htmlInputSignupSenha = document.getElementById("input-signup-password");
 const htmlInputSignupSenha2 = document.getElementById("input-signup-password-2");
 
-const htmlButtonLogin = document.getElementById("button-login");
 const htmlButtonRealizarCadastro = document.getElementById("button-realizar-cadastro");
 const htmlButtonCancelarCadastro = document.getElementById("button-signup-cancelar");
-const htmlButtonCadastrar = document.getElementById("button-signup-cadastro");
 
 const MIN_PASSWORD_LENGHT = 8;
 const MIN_USERNAME_LENGHT = 4;

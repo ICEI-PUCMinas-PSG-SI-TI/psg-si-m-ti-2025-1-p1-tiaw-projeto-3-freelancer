@@ -26,10 +26,10 @@ function setup404Toast() {
     // eslint-disable-next-line no-undef
     let toastBootstrap = bootstrap.Toast.getOrCreateInstance(toast);
 
-    for (let i = 0; i < document_links.length; i++) {
-        if (!document_links[i].href.endsWith("404.html")) continue;
+    for (const element of document_links) {
+        if (!element.href.endsWith("404.html")) continue;
 
-        document_links[i].addEventListener("click", (event) => {
+        element.addEventListener("click", (event) => {
             toastBootstrap.show();
             event.preventDefault();
         });

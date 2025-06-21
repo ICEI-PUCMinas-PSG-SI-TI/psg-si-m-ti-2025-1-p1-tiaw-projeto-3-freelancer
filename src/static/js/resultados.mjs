@@ -18,9 +18,9 @@ const prepareString = (str) => {
 };
 
 /** @type {any[] | null} */
-var usuarios = [];
+let usuarios = [];
 /** @type {any[] | null} */
-var servicos = [];
+let servicos = [];
 
 class Filtros {
     constructor(query, localizacao, review) {
@@ -34,7 +34,7 @@ class Filtros {
     }
 }
 
-var filtros = null;
+let filtros = null;
 
 function createServiceCard(
     id,
@@ -43,7 +43,7 @@ function createServiceCard(
     nome_usuario,
     descricao,
     quantidade_avaliacoes,
-    nota_avaliacoes
+    nota_avaliacoes,
 ) {
     const card = document.createElement("a");
     card.classList.add("col-12", "col-md-6", "col-xl-4", "text-decoration-none");
@@ -78,7 +78,7 @@ function createUserCard(
     localizacao,
     quantidade_avaliacoes,
     nota_avaliacoes,
-    biografia
+    biografia,
 ) {
     const card = document.createElement("a");
     card.classList.add("col-12", "col-md-6", "col-xl-4", "text-decoration-none");
@@ -115,7 +115,7 @@ function getData() {
     if (!usuarios) return;
 }
 
-function showResults() {
+function showResultsServices() {
     const html_row_service = document.getElementById("row-service");
     if (!(html_row_service instanceof HTMLDivElement)) {
         console.log("not a html service");
@@ -144,9 +144,9 @@ function showResults() {
     const _service_avaliacoes_nota_media = 6;
 
     if (filtros.review)
-        service_filtered = service_filtered.filter((_servico) => {
-            return _service_avaliacoes_nota_media >= parseInt(filtros.review);
-        });
+        service_filtered = service_filtered.filter(
+            () => _service_avaliacoes_nota_media >= parseInt(filtros.review),
+        );
 
     const search_text_service = document.getElementById("search_text_se");
     const no_found_service = document.getElementById("no_found_service");
@@ -172,11 +172,13 @@ function showResults() {
                 _servico_user_id,
                 _servico.descricao,
                 _service_avaliacoes_quantidade,
-                _service_avaliacoes_nota_media
-            )
+                _service_avaliacoes_nota_media,
+            ),
         );
     });
+}
 
+function showResultsUsers() {
     const html_row_users = document.getElementById("row-users");
     if (!(html_row_users instanceof HTMLDivElement)) return;
     html_row_users.innerHTML = "";
@@ -188,7 +190,7 @@ function showResults() {
     if (filtros.query)
         user_filtered = user_filtered.filter((_user) => {
             const indexer = prepareString(
-                `${_user.id}${_user.nome}${_user.cidade}${_user.biografia}`
+                `${_user.id}${_user.nome}${_user.cidade}${_user.biografia}`,
             );
             return indexer.includes(prepareString(filtros.query));
         });
@@ -202,9 +204,9 @@ function showResults() {
     const _user_avaliacoes_nota_media = 8;
 
     if (filtros.review)
-        user_filtered = user_filtered.filter((_user) => {
-            return _user_avaliacoes_nota_media >= parseInt(filtros.review);
-        });
+        user_filtered = user_filtered.filter(
+            () => _user_avaliacoes_nota_media >= parseInt(filtros.review),
+        );
 
     const search_text_user = document.getElementById("search_text_us");
     const no_found_user = document.getElementById("no_found_user");
@@ -227,10 +229,15 @@ function showResults() {
                 _user.cidade,
                 _user_avaliacoes_quantidade,
                 _user_avaliacoes_nota_media,
-                _user.biografia
-            )
+                _user.biografia,
+            ),
         );
     });
+}
+
+function showResults() {
+    showResultsServices();
+    showResultsUsers();
 }
 
 function createOption(value) {
@@ -239,9 +246,6 @@ function createOption(value) {
     return option;
 }
 
-/**
- * @returns {Filtros | null}
- */
 function setupFiltersElement() {
     const html_review_range = document.getElementById("review_range");
     const html_select_localizacao = document.getElementById("localizacao_select");
@@ -265,7 +269,7 @@ function setupFiltersElement() {
         !(html_range_info instanceof HTMLSpanElement) ||
         !(html_select_localizacao instanceof HTMLSelectElement)
     )
-        return null;
+        return;
 
     html_review_range.addEventListener("input", () => {
         const val = html_review_range.value;
@@ -301,8 +305,6 @@ function setupFiltersElement() {
         html_select_localizacao.selectedIndex = tt + 1;
         html_select_localizacao.value = filtros.localizacao;
     }
-
-    return null;
 }
 
 function setOnLoadParamFilters() {

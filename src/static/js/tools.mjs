@@ -9,7 +9,7 @@
  * @returns {number | null} Retorna um número aleatório
  */
 // TODO: check types
-export function generateRandomNumber(max, min) {
+export function generateRandomNumberOld(max, min) {
     if (min) {
         let val = Math.random() * (max - min) + min;
         // TODO: why convert to string? avoid IDE warning
@@ -25,46 +25,29 @@ export function generateRandomNumber(max, min) {
 /**
  * Retorna um número aleatório entre 0 e max, o min é opcional
  * Valor máximo
- * @param {{min?, max?, double?, convert_string?, invalid?}} [opts={}]
+ * @param {{min?, max?, double?, convert_string?}} [opts={}]
  * @returns {number | any} Retorna um número aleatório
  */
-export function generateRandomNumberOpts(opts = {}) {
+export function generateRandomNumber(opts = {}) {
     // opts.min(number): Limite mínimo do valor gerado (default: 0)
+    let _min = opts.min || 0;
     // opts.max(number): Limite máximo do valor gerado (default: 10 000)
+    let _max = opts.max || 10000;
     // opts.double(boolean): Retorna double como argumento
-    // opts.convert_string(boolean): Aceita string como argumento
-    // opts.invalid
-    const _min = opts.min || 0;
-    const _max = opts.max || 10000;
-    const double = typeof opts.double === "boolean" ? opts.double : false;
-    const convert_string = typeof opts.convert_string === "boolean" ? opts.convert_string : true;
-    const invalid = opts.invalid || null;
+    const double = opts.double === true;
 
-    let min =
-        typeof _min === "number"
-            ? double
-                ? _min
-                : Math.floor(_min)
-            : typeof _min === "string" && convert_string
-            ? double
-                ? parseFloat(_min)
-                : parseInt(_min)
-            : null;
+    if (typeof _min !== "number" || typeof _max !== "number")
+        throw new Error("generateRandomNumber: Invalid Params");
 
-    let max =
-        typeof _max === "number"
-            ? double
-                ? _max
-                : Math.floor(_max)
-            : typeof _max === "string" && convert_string
-            ? double
-                ? parseFloat(_max)
-                : parseInt(_max)
-            : null;
+    if(!double){
+        _min = Math.floor(_min);
+        _max = Math.floor(_max);
+    }
 
-    if (typeof min !== "number" || typeof max !== "number" || max < min) return invalid;
+    // TODO: Should this function return error?
+    if (_max < _min) return;
 
-    const ret = Math.random() * (max - min) + min;
+    const ret = Math.random() * (_max - _min) + _min;
 
     if (!double) return Math.floor(ret);
 

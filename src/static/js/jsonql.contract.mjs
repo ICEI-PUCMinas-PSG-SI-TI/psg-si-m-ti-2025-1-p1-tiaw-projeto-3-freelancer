@@ -147,7 +147,6 @@ export function readContratos(...contratos_id) {
         if (typeof id !== "number") return null;
 
         for (let index = 0; index < contratos.length; index++) {
-            // console.log(`race cond ${index}`);
             if (id === parseInt(contratos[index].id)) {
                 // Remove o contrato da lista original e adiciona a lista filtrada
                 contratos_filter.push(contratos.splice(index, 1));

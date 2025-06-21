@@ -90,22 +90,7 @@ class AddLinkContext {
     }
 }
 
-class DeleteLinkContext {
-    /**
-     * @param {number} portfolio_id
-     * @param {number} section_id
-     * @param {any} blob
-     * @param {string} description
-     */
-    constructor(portfolio_id, section_id, blob, description) {
-        this.portfolio_id = portfolio_id;
-        this.section_id = section_id;
-        this.blob = blob;
-        this.description = description;
-    }
-}
-
-class DeleteImageContext {
+class DeleteBlobContext {
     /**
      * @param {number} portfolio_id
      * @param {number} section_id
@@ -126,7 +111,7 @@ class Context {
     }
 
     /**
-     * @param {AddSectionContext | DeleteSectionContext | EditSectionInfoContext | AddLinkContext | DeleteLinkContext | DeleteImageContext} context
+     * @param {AddSectionContext | DeleteSectionContext | EditSectionInfoContext | AddLinkContext | DeleteBlobContext | DeleteBlobContext} context
      */
     setupContext(context) {
         if (
@@ -134,8 +119,7 @@ class Context {
             context instanceof DeleteSectionContext ||
             context instanceof EditSectionInfoContext ||
             context instanceof AddLinkContext ||
-            context instanceof DeleteLinkContext ||
-            context instanceof DeleteImageContext
+            context instanceof DeleteBlobContext
         )
             this.context = context;
     }
@@ -245,10 +229,10 @@ function triggerAddLink(addLinkContext) {
 }
 
 /**
- * @param {DeleteLinkContext} deleteLinkContext
+ * @param {DeleteBlobContext} deleteLinkContext
  */
 function triggerDeleteLink(deleteLinkContext) {
-    if (!(deleteLinkContext instanceof DeleteLinkContext)) return;
+    if (!(deleteLinkContext instanceof DeleteBlobContext)) return;
 
     preparePopup();
     toggleDisplayNoneOnElement("popup-delete-link", false);
@@ -270,10 +254,10 @@ function triggerDeleteLink(deleteLinkContext) {
 }
 
 /**
- * @param {DeleteImageContext} deleteImageContext
+ * @param {DeleteBlobContext} deleteImageContext
  */
 function triggerDeleteImage(deleteImageContext) {
-    if (!(deleteImageContext instanceof DeleteImageContext)) return;
+    if (!(deleteImageContext instanceof DeleteBlobContext)) return;
 
     preparePopup();
     toggleDisplayNoneOnElement("popup-delete-image", false);
@@ -580,7 +564,7 @@ function commitAddLink() {
 function commitDeleteLink() {
     const _context = context.getContext();
 
-    if (!(_context instanceof DeleteLinkContext)) return;
+    if (!(_context instanceof DeleteBlobContext)) return;
 
     // TODO: ensurePositiveInteger()
     const _portfolio_id = ensureInteger(_context.portfolio_id);
@@ -685,7 +669,7 @@ async function commitAddImage(p_id, s_id, blob) {
 function commitDeleteImage() {
     const _context = context.getContext();
 
-    if (!(_context instanceof DeleteImageContext)) return;
+    if (!(_context instanceof DeleteBlobContext)) return;
 
     const _portfolio_id = ensureInteger(_context.portfolio_id);
     const _section_id = ensureInteger(_context.section_id);
@@ -893,7 +877,7 @@ function createNoLinkSubSection() {
  * @param {boolean} edit
  */
 function createEditPortfolioButton(edit) {
-    if (!(typeof edit !== "boolean")) document.createElement("span");
+    const _edit = edit === true;
 
     const button = document.createElement("button");
     button.classList.add(
@@ -912,7 +896,7 @@ function createEditPortfolioButton(edit) {
     toggle_edit_element_img.classList.add("icon-dark", "icon-24px", "space-0", "me-2");
     toggle_edit_element_p.classList.add("space-0");
 
-    if (edit) {
+    if (_edit) {
         toggle_edit_element_img.src = "static/action-icons/close.svg";
         toggle_edit_element_p.innerText = "Finalizar edição";
     } else {
@@ -922,7 +906,7 @@ function createEditPortfolioButton(edit) {
 
     button.appendChild(toggle_edit_element_img);
     button.appendChild(toggle_edit_element_p);
-    button.addEventListener("click", () => toggleEditParam(!edit));
+    button.addEventListener("click", () => toggleEditParam(!_edit));
 
     return button;
 }
@@ -1224,7 +1208,7 @@ function createImageSection(
                 );
                 remove_button.addEventListener("click", () =>
                     triggerDeleteImage(
-                        new DeleteImageContext(
+                        new DeleteBlobContext(
                             _portfolio_id,
                             _section_id,
                             content[i].blob,
@@ -1377,7 +1361,7 @@ function createLinkSection(
                 link_div.appendChild(remove_button);
                 remove_button.addEventListener("click", () =>
                     triggerDeleteLink(
-                        new DeleteLinkContext(
+                        new DeleteBlobContext(
                             _portfolio_id,
                             _section_id,
                             content[i].blob,
@@ -1696,7 +1680,6 @@ function setupPortfolioSetup() {
         await Faker.criarNContratos(90);
         await Faker.criarNAvaliacoes(120);
         notifySectionDataChanged();
-        // Faker.createPortfolios(30);
     });
 }
 
