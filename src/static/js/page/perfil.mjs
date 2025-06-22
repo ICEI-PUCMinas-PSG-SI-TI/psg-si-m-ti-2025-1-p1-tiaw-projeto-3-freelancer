@@ -24,6 +24,7 @@ const htmlProfileLinkContato = document.getElementById("profile-contato");
 const htmlProfileLinkEmail = document.getElementById("profile-email");
 const htmlProfileParagNota = document.getElementById("profile-nota");
 const htmlProfileParagAval = document.getElementById("profile-aval");
+const htmlProfileParagBiografia = document.getElementById("profile-biografia");
 const htmlProfileButtonEditPerfil = document.getElementById("button-edit-perfil");
 
 async function inicializarPerfil(id) {
@@ -46,6 +47,7 @@ async function inicializarPerfil(id) {
         !(htmlProfileLinkContato instanceof HTMLAnchorElement) ||
         !(htmlProfileLinkEmail instanceof HTMLAnchorElement) ||
         !htmlProfileParagNota ||
+        !htmlProfileParagBiografia ||
         !htmlProfileParagAval
     ) {
         console.log("Null check2");
@@ -56,6 +58,10 @@ async function inicializarPerfil(id) {
     htmlProfileH2ProfileName.innerText = _usuarios.nome;
     htmlProfileParagTitle.innerText = _usuarios.profissao || "Profissão não informada";
     htmlProfileParagCidade.innerText = _usuarios.cidade || "Região não informada";
+    if (_usuarios.biografia) {
+        htmlProfileParagBiografia.parentElement?.classList.remove("d-none")
+        htmlProfileParagBiografia.innerText = _usuarios.biografia;
+    }
     if (_usuarios.contatos?.length) {
         const _contato = _usuarios.contatos[0];
         htmlProfileLinkContato.classList.remove("d-none");
@@ -69,7 +75,7 @@ async function inicializarPerfil(id) {
     htmlProfileParagNota.innerText = nota;
     htmlProfileParagAval.innerText = avaliacoes;
 
-    if (id === getPerfilId) {
+    if (id === getPerfilId()) {
         htmlProfileButtonEditPerfil?.classList.remove("d-none");
         htmlProfileButtonEditPerfil?.addEventListener("click", () => location.assign("/cadastro"));
     }

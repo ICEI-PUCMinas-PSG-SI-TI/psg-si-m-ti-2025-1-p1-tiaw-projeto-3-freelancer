@@ -1,7 +1,6 @@
 /* Detalhes do Serviço */
 .detalhes-servico {
     background: var(--bs-body-bg, #181a1b);
-    border-radius: 16px;
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
 }
 
