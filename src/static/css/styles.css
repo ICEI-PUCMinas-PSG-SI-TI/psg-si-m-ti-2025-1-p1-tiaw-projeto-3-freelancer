@@ -43,14 +43,6 @@ h6 {
     width: 100%;
 }
 
-/* Seção: Cabeçalho
-    Disabled for now
-    This setting causes expanded statusbar to not have a background
-.body-header {
-    max-height: var(--nav-bar-size);
-}
-*/
-
 /* Seção: Conteúdo */
 .body-content {
     position: relative;
@@ -58,9 +50,6 @@ h6 {
     flex: 1;
     min-height: calc(100vh - var(--nav-bar-size));
 }
-
-/* Seção: Rodapé */
-/* .body-footer {} */
 
 /* Inverte a cor dos ícones no modo escuro */
 [data-bs-theme="dark"] .icon-dark,

@@ -12,30 +12,17 @@
     --shadow-dark: rgba(255, 255, 255, 0.1);
 }
 
-body {
-    background-color: var(--background-light);
-    color: var(--text-light);
-}
 
 /* Seção: Conteúdo */
 .body-content {
-    flex: 1;
-    min-height: calc(100vh - var(--nav-bar-size));
-    padding: 20px;
     background-color: var(--background-light);
+    /* default background, changes on js code*/
+    background-image: url("../img/background.jpg");
+    background-position: center;
+    background-size: cover;
 }
 
 [data-bs-theme="dark"] .body-content {
-    background-color: var(--background-dark);
-}
-
-/* Alterna para modo escuro */
-[data-bs-theme="dark"] {
-    background-color: var(--background-dark);
-    color: var(--text-dark);
-}
-
-[data-bs-theme="dark"] .body-section {
     background-color: var(--background-dark);
 }
 
@@ -67,7 +54,7 @@ body {
     box-shadow: 0 4px 6px var(--shadow-light);
 }
 
-.profile-picture {
+.profile-picture-perfil {
     width: 150px;
     height: 150px;
     object-fit: cover;
@@ -95,7 +82,10 @@ body {
     border-radius: 10px;
     padding: 15px;
     box-shadow: 0 4px 6px var(--shadow-light);
-    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .stat-box h4 {
@@ -148,4 +138,8 @@ body {
 [data-bs-theme="dark"] #totalSalary {
     background-color: #495057;
     color: #f8f9fa;
+}
+
+.limit900px {
+    max-width: 900px;
 }
