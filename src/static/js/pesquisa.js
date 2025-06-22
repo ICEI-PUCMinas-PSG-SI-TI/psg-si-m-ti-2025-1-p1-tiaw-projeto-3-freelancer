@@ -15,9 +15,7 @@ function navigateToResultados(query) {
     if (query.length === 0) throw new Error("Pesquisa sem parâmetros!");
 
     const url = new URL(window.location.href);
-    let pathname = "";
-    if (url.pathname.includes("src")) pathname = "/src/resultados.html";
-    else pathname = "/resultados.html";
+    let pathname = "/resultados";
     const params = new URLSearchParams();
     params.set("q", query);
     const newUrl = `${url.origin}${pathname}?${params.toString()}`;
