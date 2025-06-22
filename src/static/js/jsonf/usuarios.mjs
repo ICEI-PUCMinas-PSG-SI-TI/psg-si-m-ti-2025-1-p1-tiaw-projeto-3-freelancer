@@ -23,7 +23,7 @@ export class Usuarios {
 
     // TODO: paginate (_page) (_per_page)
     /**
-     * @returns {Promise<Array[]>}
+     * @returns {Promise<Array>}
      */
     async lerUsuarios() {
         return fetch(API_URL, {
