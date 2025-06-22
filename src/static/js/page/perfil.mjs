@@ -1,3 +1,9 @@
+//@ts-check
+
+import { Usuarios } from "../jsonf/usuarios.mjs";
+
+const crud_usuarios = new Usuarios();
+
 const htmlBackgroundImage = document.querySelector("div.body-section.body-content");
 // TODO: Use username for background photos
 const id = false || "lucremais";
@@ -13,19 +19,13 @@ const htmlProfileLinkContato = document.getElementById("profile-contato");
 const htmlProfileLinkEmail = document.getElementById("profile-email");
 const htmlProfileParagNota = document.getElementById("profile-nota");
 const htmlProfileParagAval = document.getElementById("profile-aval");
+const htmlProfileButtonEditPerfil = document.getElementById("button-edit-perfil");
 
-function inicializarPerfil() {
-    const _temp_informacoes = {
-        foto: "https://picsum.photos/150",
-        profissao: "Analista Financeiro",
-        cidade: "Belo Horizonte, MG",
-        nome: "Arthur Melo",
-        contato: "+55 (31) 123456789",
-        email: "arthur.andrade@gmail.com",
-    };
+async function inicializarPerfil() {
+    const _usuarios = await crud_usuarios.lerUsuario(localStorage.getItem("LucreM.id") || "");
 
-    const nota = 4.4;
-    const avaliacoes = 152;
+    const nota = "4.4";
+    const avaliacoes = "152";
 
     if (
         !htmlProfileImgPicture ||
@@ -41,18 +41,25 @@ function inicializarPerfil() {
         return;
     }
 
-    htmlProfileImgPicture.src = _temp_informacoes.foto;
-    htmlProfileH2ProfileName.innerText = _temp_informacoes.nome;
-    htmlProfileParagTitle.innerText = _temp_informacoes.profissao;
-    htmlProfileParagCidade.innerText = _temp_informacoes.cidade;
-    htmlProfileLinkContato.innerText = _temp_informacoes.contato;
-    const _strip_contato = _temp_informacoes.contato.replace(/[^0-9+]/gm, "");
-    htmlProfileLinkContato.href = `tel:${_strip_contato}`;
-    htmlProfileLinkEmail.innerText = _temp_informacoes.email;
-    htmlProfileLinkEmail.href = `mailto:${_temp_informacoes.email}`;
+    htmlProfileImgPicture.src = _usuarios.foto || "static/img/placeholder_profile.png";
+    htmlProfileH2ProfileName.innerText = _usuarios.nome;
+    htmlProfileParagTitle.innerText = _usuarios.profissao || "Profissão não informada";
+    htmlProfileParagCidade.innerText = _usuarios.cidade || "Região não informada";
+    if (_usuarios.contato) {
+        htmlProfileLinkContato.classList.remove("d-none");
+        htmlProfileLinkContato.innerText = _usuarios.contato;
+        const _strip_contato = _usuarios.contato.replace(/[^0-9+]/gm, "");
+        htmlProfileLinkContato.href = `tel:${_strip_contato}`;
+    }
+    htmlProfileLinkEmail.innerText = _usuarios.email;
+    htmlProfileLinkEmail.href = `mailto:${_usuarios.email}`;
 
     htmlProfileParagNota.innerText = nota;
     htmlProfileParagAval.innerText = avaliacoes;
+
+    // if(localStorage.id === id)
+    htmlProfileButtonEditPerfil?.classList.remove("d-none")
+    htmlProfileButtonEditPerfil?.addEventListener("click", () => location.assign("/cadastro"));
 }
 
 inicializarPerfil();

@@ -142,3 +142,8 @@
 .limit900px {
     max-width: 900px;
 }
+
+.button-edit-perfil {
+    top: 0;
+    right: 0;
+}

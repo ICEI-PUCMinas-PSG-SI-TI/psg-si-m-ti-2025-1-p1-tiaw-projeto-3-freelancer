@@ -35,7 +35,7 @@
     <script defer src="static/js/404.js"></script>
     <script defer src="static/js/profile.js"></script>
     <!-- Page Scripts -->
-    <script defer src="static/js/perfil.js"></script>
+    <script defer type="module" src="static/js/page/perfil.mjs"></script>
   </head>
 
   <body>
@@ -121,7 +121,12 @@
     <!-- Conteúdo da página -->
     <div class="body-section body-content d-flex flex-column align-items-center space-0 p-3">
       <!-- Perfil -->
-      <div class="profile-section container-fluid text-center mb-3 limit900px">
+      <div class="profile-section container-fluid text-center mb-3 limit900px position-relative">
+        <button
+          id="button-edit-perfil"
+          class="btn btn-primary position-absolute button-edit-perfil m-2 d-none">
+          Editar
+        </button>
         <div class="profile-header d-flex flex-column align-items-center">
           <img
             id="profile-picture-perfil"
@@ -133,7 +138,7 @@
           <p id="profile-location" class="profile-location">Belo Horizonte, MG</p>
         </div>
         <div class="profile-contact d-flex justify-content-center gap-3 mt-3">
-          <a id="profile-contato" href="tel:+7910018830" class="btn btn-outline-primary">
+          <a id="profile-contato" href="tel:+7910018830" class="btn btn-outline-primary d-none">
             +55 (31) 123456789
           </a>
           <a
@@ -181,6 +186,7 @@
                   src="static/img/placeholder_profile.png"
                   alt="Profile" />
                 <p id="profile-name">Nome do Usuário</p>
+                <button id="profile-show-perfil" class="btn btn-primary w-100 mb-3">Ver Perfil</button>
                 <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
               </div>
             </div>
