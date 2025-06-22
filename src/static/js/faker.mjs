@@ -1,15 +1,18 @@
 //@ts-check
 
 import * as JSONQL_S from "./jsonql.service.mjs"; // Serviços
-import { Usuario, CRUDUsuarios } from "./jsonql.user.mjs"; // Usuários
 import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
+
 import {
     generateRandomNumberOld as generateRandomNumber,
     ensureInteger,
     assertPositiveInt,
 } from "./tools.mjs";
+
+import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
+
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
  */
@@ -63,7 +66,7 @@ class ExemploFetcher {
 }
 
 const exemplos = new ExemploFetcher();
-const crud_usuarios = new CRUDUsuarios();
+const crud_usuarios = new Usuarios();
 
 /**
  * Cria N portfólios
@@ -80,9 +83,9 @@ export async function criarNPortfolios(quantidade) {
         for (let index = 0; index < quantidade; index++) {
             crud_usuarios.lerUsuarios();
             // OPTIMIZE: Ler os usuários anteriormente e escolher um número aleatorio
-            const usuarios = await crud_usuarios.lerUsuarios({ page: 0 });
+            const usuarios = await crud_usuarios.lerUsuarios();
 
-            if (!usuarios || !usuarios.length)
+            if (!usuarios?.length)
                 throw new Error(
                     "Criação de portfólios: É necessário que haja usuários cadastrados para criar portfólios.",
                 );
@@ -185,14 +188,14 @@ export async function criarNContratos(quantidade) {
 
     for (let index = 0; index < quantidade; index++) {
         // OPTIMIZE: Ler os usuários anteriormente e escolher um número aleatorio
-        const usuarios = await crud_usuarios.lerUsuarios({ page: 0 });
-        if (!usuarios || !usuarios.length)
+        const usuarios = await crud_usuarios.lerUsuarios();
+        if (!usuarios?.length)
             throw new Error(
                 "Criação de contratos: É necessário que haja usuários cadastrados para criar contratos.",
             );
 
         const servicos = JSONQL_S.readServicos();
-        if (!servicos || !servicos.length)
+        if (!servicos?.length)
             throw new Error(
                 "Criação de contratos: É necessário que haja serviços cadastrados para criar contratos.",
             );
@@ -245,14 +248,14 @@ export async function criarNAvaliacoes(quantidade) {
 
         for (let index = 0; index < quantidade; index++) {
             // OPTIMIZE: Ler os usuários anteriormente e escolher um número aleatorio
-            const usuarios = await crud_usuarios.lerUsuarios({ page: 0 });
-            if (!usuarios || !usuarios.length)
+            const usuarios = await crud_usuarios.lerUsuarios();
+            if (!usuarios?.length)
                 throw new Error(
                     "Criação de avaliações: É necessário que haja usuários cadastrados para criar avaliações.",
                 );
 
             const contratos = JSONQL_C.readContratos();
-            if (!contratos || !contratos.length)
+            if (!contratos?.length)
                 throw new Error(
                     "Criação de avaliações: É necessário que haja contratos cadastrados para criar avaliações.",
                 );
@@ -331,22 +334,20 @@ export async function criarNUsuarios(quantidade) {
                 continue;
             }
 
-            usuarios.push(
-                new Usuario(
-                    null,
-                    true, // ativo(bool)
-                    `${json.nomes[nome_index]} ${json.sobrenomes[sobrenomes_index]}`, // nome(string)
-                    `https://picsum.photos/seed/${foto_seed}/200`, // foto(string)
-                    `${data_nascimento_dia}/${data_nascimento_mes}/${data_nascimento_ano}`, // data_nascimento(string)
-                    json.email[email_index], // email(string)
-                    (generateRandomNumber(999999, 100000) || 123456).toString(), // senha(string)
-                    json.tipo[tipo_index], // tipo(string)
-                    json.cpf_cnpj[cpf_cnpj_index], // cpf_cnpj(string)
-                    json.cidades[cidade_index], // cidade(string)
-                    json.biografia[biografia_index], // biografia(string)
-                    [json.contatos[contato_1_index], json.contatos[contato_2_index]], // contatos(Array)
-                ),
-            );
+            // TODO: pendente alguns parametros
+            usuarios.push({
+                ativo: true, // ativo(bool)
+                nome: `${json.nomes[nome_index]} ${json.sobrenomes[sobrenomes_index]}`, // nome(string)
+                foto: `https://picsum.photos/seed/${foto_seed}/200`, // foto(string)
+                data_nascimento: `${data_nascimento_dia}/${data_nascimento_mes}/${data_nascimento_ano}`, // data_nascimento(string)
+                email: json.email[email_index], // email(string)
+                senha: (generateRandomNumber(999999, 100000) || 123456).toString(), // senha(string)
+                tipo: json.tipo[tipo_index], // tipo(string)
+                cpf_cnpj: json.cpf_cnpj[cpf_cnpj_index], // cpf_cnpj(string)
+                cidade: json.cidades[cidade_index], // cidade(string)
+                biografia: json.biografia[biografia_index], // biografia(string)
+                contatos: [json.contatos[contato_1_index], json.contatos[contato_2_index]], // contatos(Array)
+            });
         }
 
         // TODO: Do it in chunks
