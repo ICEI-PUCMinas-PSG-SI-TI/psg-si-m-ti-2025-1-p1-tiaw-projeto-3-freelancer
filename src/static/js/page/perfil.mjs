@@ -1,6 +1,7 @@
 //@ts-check
 
 import { Usuarios } from "../jsonf/usuarios.mjs";
+import { assertStringNonEmpty } from "../validate.mjs";
 
 const crud_usuarios = new Usuarios();
 
@@ -25,8 +26,14 @@ const htmlProfileParagNota = document.getElementById("profile-nota");
 const htmlProfileParagAval = document.getElementById("profile-aval");
 const htmlProfileButtonEditPerfil = document.getElementById("button-edit-perfil");
 
-async function inicializarPerfil() {
-    const _usuarios = await crud_usuarios.lerUsuario(getPerfilId());
+async function inicializarPerfil(id) {
+    assertStringNonEmpty(id);
+
+    const _usuarios = await crud_usuarios.lerUsuario(id);
+    if (!_usuarios) {
+        alert("Não foi possível ler as informações desse usuário!");
+        return;
+    }
 
     const nota = "4.4";
     const avaliacoes = "152";
@@ -49,10 +56,11 @@ async function inicializarPerfil() {
     htmlProfileH2ProfileName.innerText = _usuarios.nome;
     htmlProfileParagTitle.innerText = _usuarios.profissao || "Profissão não informada";
     htmlProfileParagCidade.innerText = _usuarios.cidade || "Região não informada";
-    if (_usuarios.contato) {
+    if (_usuarios.contatos?.length) {
+        const _contato = _usuarios.contatos[0].contato;
         htmlProfileLinkContato.classList.remove("d-none");
-        htmlProfileLinkContato.innerText = _usuarios.contato;
-        const _strip_contato = _usuarios.contato.replace(/[^0-9+]/gm, "");
+        htmlProfileLinkContato.innerText = _contato;
+        const _strip_contato = _contato.replace(/[^0-9+]/gm, "");
         htmlProfileLinkContato.href = `tel:${_strip_contato}`;
     }
     htmlProfileLinkEmail.innerText = _usuarios.email;
@@ -66,4 +74,16 @@ async function inicializarPerfil() {
     htmlProfileButtonEditPerfil?.addEventListener("click", () => location.assign("/cadastro"));
 }
 
-inicializarPerfil();
+function carregarDadosDaUrl() {
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
+    // Mostrar perfil do usuário
+    if (id) {
+        inicializarPerfil(id);
+        return;
+    }
+
+    inicializarPerfil(getPerfilId());
+}
+
+carregarDadosDaUrl();

@@ -147,3 +147,7 @@
     top: 0;
     right: 0;
 }
+
+.limit300px {
+    max-width: 300px;
+}
