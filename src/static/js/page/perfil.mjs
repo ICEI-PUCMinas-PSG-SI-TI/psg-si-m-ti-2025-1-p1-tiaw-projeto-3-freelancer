@@ -36,8 +36,8 @@ async function inicializarPerfil() {
         !htmlProfileH2ProfileName ||
         !htmlProfileParagTitle ||
         !htmlProfileParagCidade ||
-        !(htmlProfileLinkContato instanceof HTMLLinkElement) ||
-        !(htmlProfileLinkEmail instanceof HTMLLinkElement) ||
+        !(htmlProfileLinkContato instanceof HTMLAnchorElement) ||
+        !(htmlProfileLinkEmail instanceof HTMLAnchorElement) ||
         !htmlProfileParagNota ||
         !htmlProfileParagAval
     ) {
