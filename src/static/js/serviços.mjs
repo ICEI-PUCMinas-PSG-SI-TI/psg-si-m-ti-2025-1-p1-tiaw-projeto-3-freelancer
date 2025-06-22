@@ -1,8 +1,8 @@
 //@ts-check
 
-import { CRUDServicos, Servico } from "./jsonql.service.mjs";
+import { Servicos } from "./jsonf/servicos.mjs";
 
-const crud_servicos = new CRUDServicos();
+const crud_servicos = new Servicos();
 
 const maxAllowedSize = 5 * 1024 * 1024; // 5 MB in bytes
 
@@ -15,7 +15,7 @@ async function fileToBase64(file) {
 
     if (file.size > maxAllowedSize) throw new Error("O tamanho do arquivo deve ser menor que 5MB!");
 
-    if (!file.type.match("image.*")) throw new Error("O arquivo não é uma imagem!");
+    if (!/image.*/.exec(file.type)) throw new Error("O arquivo não é uma imagem!");
 
     return new Promise((resolve, reject) => {
         reader.onload = () => resolve(reader.result);
@@ -24,18 +24,31 @@ async function fileToBase64(file) {
     });
 }
 
+class EditContext {
+    constructor(id, foto) {
+        this.id = id;
+        this.foto = foto;
+    }
+}
+
+/** @type {EditContext|null} */
+let editContext = null;
+
 function previewPicture() {
-    /** @type {HTMLInputElement} */
-    // @ts-ignore Casting HTMLElement as HTMLInputElement
     const html_input_picture = document.getElementById("imagem");
-    /** @type {HTMLImageElement} */
-    // @ts-ignore Casting HTMLElement as HTMLInputElement
     const html_img_preview = document.getElementById("image_preview");
-    /** @type {SVGElement} */
-    // @ts-ignore Casting HTMLElement as HTMLInputElement
     const html_svg_placeholder = document.getElementById("image_placeholder");
 
-    if (!html_input_picture.files || !html_input_picture.files.length) return;
+    if (
+        !(html_input_picture instanceof HTMLInputElement) ||
+        !(html_img_preview instanceof HTMLImageElement) ||
+        !(html_svg_placeholder instanceof SVGElement)
+    ) {
+        console.log("Null check");
+        return;
+    }
+
+    if (!html_input_picture.files?.length) return;
 
     fileToBase64(html_input_picture.files[0])
         .then((/** @type {string} */ result) => {
@@ -67,22 +80,22 @@ function setupServicos() {
     html_imagem.addEventListener("change", previewPicture);
 }
 
-let editIdIndex = null;
-
 function _editarServico(servico_id) {
     if (!servico_id) return;
     crud_servicos.lerServico(servico_id).then((_servico) => {
         if (!_servico) return;
 
         // TODO: Re-add image to preview
-        // const html_imagem = document.getElementById("imagem");
+        const html_svg_placeholder = document.getElementById("image_placeholder");
+        const html_image_preview = document.getElementById("image_preview");
         const html_titulo = document.getElementById("titulo");
         const html_contato = document.getElementById("contato");
         const html_categoria = document.getElementById("categoriaId");
         const html_descricao = document.getElementById("descricao");
 
         if (
-            // !(html_imagem instanceof HTMLInputElement) ||
+            !(html_image_preview instanceof HTMLImageElement) ||
+            !(html_svg_placeholder instanceof SVGElement) ||
             !(html_titulo instanceof HTMLInputElement) ||
             !(html_contato instanceof HTMLInputElement) ||
             !(html_categoria instanceof HTMLSelectElement) ||
@@ -96,7 +109,13 @@ function _editarServico(servico_id) {
         html_contato.value = _servico.contato;
         html_categoria.value = _servico.categoriaId.toString();
         html_descricao.value = _servico.descricao;
-        editIdIndex = _servico.id;
+        if (_servico.imagem) {
+            html_svg_placeholder.classList.add("d-none");
+            html_image_preview.classList.remove("d-none");
+            html_image_preview.src = _servico.imagem;
+        }
+        editContext = new EditContext(_servico.id, _servico.imagem);
+        document.querySelector(".body-content")?.scrollIntoView();
     });
 }
 
@@ -110,9 +129,12 @@ function render() {
 
     html_ul_lista.innerHTML = "";
     crud_servicos.lerServicos().then((res) => {
-        if (!res || !res.length) return;
+        if (!res?.length) return;
 
-        res.forEach((/** @type {Servico} */ servico) => {
+        const logged_id = localStorage.getItem("LucreM.id");
+        if (!logged_id) return;
+        for (const servico of res) {
+            if (servico.usuariosId !== logged_id) continue;
             const li = document.createElement("li");
             li.className =
                 "list-group-item d-flex justify-content-between align-items-center flex-wrap";
@@ -149,13 +171,13 @@ function render() {
             html_delete.addEventListener("click", async () => {
                 if (!servico.id) return;
                 // TODO: avoid deleting if editing
-                if (servico.id === editIdIndex) return;
+                if (servico.id === editContext?.id) return;
                 await crud_servicos.excluirServico(servico.id);
                 render();
             });
 
             html_ul_lista.appendChild(li);
-        });
+        }
     });
 }
 
@@ -169,7 +191,7 @@ function iniciarlizarPaginaServicos() {
 
     if (!html_form || !html_ul_lista) return;
 
-    html_form.addEventListener("submit", (event) => {
+    html_form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         // TODO: declare 1 time
@@ -190,44 +212,56 @@ function iniciarlizarPaginaServicos() {
             return;
         }
 
-        if (!html_input_picture.files || !html_input_picture.files.length) return;
+        if (!html_input_picture.files?.length && !editContext?.foto) {
+            alert("Selecione uma imagem!");
+            return;
+        }
+        let _bs64img;
+        if (html_input_picture.files?.length && !editContext?.foto)
+            _bs64img = await fileToBase64(html_input_picture.files[0]);
+        else _bs64img = editContext?.foto;
 
-        fileToBase64(html_input_picture.files[0]).then(async (imagem) => {
-            if (!imagem.startsWith("data:image/")) {
-                alert("Ocorreu um erro ao validar as informações!");
-                return;
-            }
+        if (!_bs64img.startsWith("data:image/")) {
+            alert("Ocorreu um erro ao validar as informações!");
+            return;
+        }
 
-            const titulo = html_titulo.value.trim();
-            const contato = html_contato.value.trim();
-            const categoriaId = html_categoriaId.value;
-            const descricao = html_descricao.value.trim();
-            const categoria = html_categoriaId.selectedOptions[0].text;
+        const titulo = html_titulo.value.trim();
+        const contato = html_contato.value.trim();
+        const categoriaId = html_categoriaId.value;
+        const descricao = html_descricao.value.trim();
+        const categoria = html_categoriaId.selectedOptions[0].text;
 
-            if (editIdIndex !== null) {
-                // ATUALIZAR
-                await crud_servicos.updateServico(
-                    new Servico(
-                        editIdIndex,
-                        titulo,
-                        categoria,
-                        categoriaId,
-                        descricao,
-                        contato,
-                        imagem,
-                    ),
-                );
-                editIdIndex = null;
-            } else {
-                // CADASTRAR
-                await crud_servicos.criarServico(
-                    new Servico(null, titulo, categoria, categoriaId, descricao, contato, imagem),
-                );
-            }
+        // TODO: Get realId
+        const usuariosId = localStorage.getItem("LucreM.id");
+        if (editContext !== null) {
+            // ATUALIZAR
+            await crud_servicos.atualizarServico({
+                usuariosId,
+                id: editContext.id,
+                titulo,
+                categoria,
+                categoriaId,
+                contato,
+                descricao,
+                imagem: _bs64img,
+            });
+            editContext = null;
+        } else {
+            // CADASTRAR
+            await crud_servicos.criarServico({
+                usuariosId,
+                titulo,
+                categoria,
+                categoriaId,
+                contato,
+                descricao,
+                imagem: _bs64img,
+            });
+        }
 
-            html_form.reset();
-            render();
-        });
+        html_form.reset();
+        render();
     });
 
     render();
