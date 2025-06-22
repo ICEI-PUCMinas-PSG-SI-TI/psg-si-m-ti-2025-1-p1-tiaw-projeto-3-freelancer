@@ -16,6 +16,11 @@ async function inicializarDetalhes(id) {
         return;
     }
 
+    // Change background
+    const htmlBackgroundImage = document.querySelector("div.body-section.body-content");
+    if (htmlBackgroundImage instanceof HTMLDivElement)
+        htmlBackgroundImage.style.backgroundImage = `url(https://picsum.photos/seed/${id}/1080)`;
+
     if (servico.imagem) document.getElementById("servico-img").src = servico.imagem;
     document.getElementById("servico-titulo").textContent = servico.titulo;
     document.getElementById("servico-categoria").textContent = "Categoria: " + servico.categoria;

@@ -1,4 +1,9 @@
 //@ts-check
+
+import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
+
+const crud_usuarios = new Usuarios();
+
 const htmlDivModalProfile = document.getElementById("profile-modal");
 const htmlButtonShowPerfil = document.getElementById("profile-show-perfil");
 
@@ -13,7 +18,10 @@ function esconderModalProfile() {
 }
 
 function inicializarProfile() {
-    if (!mock2_isUserLoggedIn()) return;
+    const userId = localStorage.getItem("LucreM.id");
+    if (!userId) return;
+
+    const userInfo = crud_usuarios.lerUsuario(userId);
 
     const htmlImageProfileBig = document.getElementById("profile-picture-big");
     const htmlImageProfile = document.getElementById("profile-picture-tiny");
@@ -31,11 +39,6 @@ function inicializarProfile() {
 
     // TODO: Limpar apenas keys necessárias
     htmlParProfile.innerText = localStorage.getItem("LucreM.nome") || "Usuário";
-    const _img = localStorage.getItem("LucreM.imagem");
-    if (_img) {
-        htmlImageProfileBig.src = _img;
-        htmlImageProfile.src = _img;
-    }
     htmlImageProfile.addEventListener("click", mostrarModalProfile);
     htmlLogout.addEventListener("click", () => {
         localStorage.clear();
@@ -46,6 +49,11 @@ function inicializarProfile() {
     htmlButtonShowPerfil?.addEventListener("click", () => {
         location.assign("/perfil");
     });
+
+    userInfo.then((response) => {
+        htmlImageProfileBig.src = response.foto;
+        htmlImageProfile.src = response.foto;
+    })
 }
 
 inicializarProfile();
