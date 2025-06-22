@@ -134,7 +134,7 @@ function render() {
         const logged_id = localStorage.getItem("LucreM.id");
         if (!logged_id) return;
         for (const servico of res) {
-            if (servico.usuariosId !== logged_id) continue;
+            if (servico.usuarioId !== logged_id) continue;
             const li = document.createElement("li");
             li.className =
                 "list-group-item d-flex justify-content-between align-items-center flex-wrap";
@@ -233,11 +233,11 @@ function iniciarlizarPaginaServicos() {
         const categoria = html_categoriaId.selectedOptions[0].text;
 
         // TODO: Get realId
-        const usuariosId = localStorage.getItem("LucreM.id");
+        const usuarioId = localStorage.getItem("LucreM.id");
         if (editContext !== null) {
             // ATUALIZAR
             await crud_servicos.atualizarServico({
-                usuariosId,
+                usuarioId,
                 id: editContext.id,
                 titulo,
                 categoria,
@@ -250,7 +250,7 @@ function iniciarlizarPaginaServicos() {
         } else {
             // CADASTRAR
             await crud_servicos.criarServico({
-                usuariosId,
+                usuarioId,
                 titulo,
                 categoria,
                 categoriaId,
