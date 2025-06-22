@@ -55,3 +55,10 @@
 .limit1000px {
     max-width: 1000px;
 }
+
+/* Seção: Conteúdo */
+.body-content {
+    /* default background, changes on js code*/
+    background-image: url("../img/background.jpg");
+    background-size: cover;
+}

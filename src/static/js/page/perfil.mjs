@@ -69,9 +69,10 @@ async function inicializarPerfil(id) {
     htmlProfileParagNota.innerText = nota;
     htmlProfileParagAval.innerText = avaliacoes;
 
-    // if(localStorage.id === id)
-    htmlProfileButtonEditPerfil?.classList.remove("d-none");
-    htmlProfileButtonEditPerfil?.addEventListener("click", () => location.assign("/cadastro"));
+    if (id === getPerfilId) {
+        htmlProfileButtonEditPerfil?.classList.remove("d-none");
+        htmlProfileButtonEditPerfil?.addEventListener("click", () => location.assign("/cadastro"));
+    }
 }
 
 function carregarDadosDaUrl() {
