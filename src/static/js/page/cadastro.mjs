@@ -104,13 +104,7 @@ async function atualizarCadastro() {
                     data_nascimento: new Date(data_nascimento).toISOString(),
                     email,
                     senha,
-                    contatos: [
-                        {
-                            id: 1,
-                            // TODO: Check this
-                            contato,
-                        },
-                    ],
+                    contatos: [contato],
                     tipo,
                     cpf_cnpj,
                     cidade,
@@ -152,7 +146,7 @@ async function preencherValores() {
     if (usuario.biografia) htmlCadastroTextAreaBiografia.value = usuario.biografia;
     if (usuario.escolaridade) htmlCadastroInputEscolaridade.value = usuario.escolaridade;
 
-    if (usuario.contatos?.length) htmlCadastroInputContato.value = usuario.contatos[0].contato;
+    if (usuario.contatos?.length) htmlCadastroInputContato.value = usuario.contatos[0];
 
     if (usuario.profissao) htmlCadastroSelectProfissao.value = usuario.profissao;
     if (usuario.tipo) htmlCadastroSelectTipo.value = usuario.tipo;

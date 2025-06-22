@@ -57,7 +57,7 @@ async function inicializarPerfil(id) {
     htmlProfileParagTitle.innerText = _usuarios.profissao || "Profissão não informada";
     htmlProfileParagCidade.innerText = _usuarios.cidade || "Região não informada";
     if (_usuarios.contatos?.length) {
-        const _contato = _usuarios.contatos[0].contato;
+        const _contato = _usuarios.contatos[0];
         htmlProfileLinkContato.classList.remove("d-none");
         htmlProfileLinkContato.innerText = _contato;
         const _strip_contato = _contato.replace(/[^0-9+]/gm, "");
