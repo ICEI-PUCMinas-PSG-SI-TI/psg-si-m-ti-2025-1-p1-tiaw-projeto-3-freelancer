@@ -15,30 +15,24 @@ const categoriaIcons = {
     designers: '<i class="bi bi-palette-fill"></i>',
 };
 
-// Renderiza Top 10
-const top10Container = document.getElementById("top10");
-profissionais.slice(0, 10).forEach((_profissional, index) => {
-    const box = document.createElement("div");
-    box.classList.add(
+function createProfileCard(id, index, foto, nome, categoria) {
+    const card = document.createElement("a");
+    card.classList.add(
         "card-box",
         "shadow",
         "rounded",
+        "border",
         "bg-light",
         "position-relative",
         "overflow-hidden",
+        "text-decoration-none",
     );
-    box.style.cursor = "pointer";
-    box.addEventListener("click", () =>
-        location.assign("perfil.html?nome=" + encodeURIComponent(_profissional.nome)),
-    );
-
-    const number = document.createElement("span");
-    number.classList.add("number");
-    number.textContent = String(index + 1);
+    card.style.cursor = "pointer";
+    card.href = `/perfil?id=${id}`;
 
     const img = document.createElement("img");
-    img.src = _profissional.imagem;
-    img.alt = _profissional.nome;
+    img.src = foto;
+    img.alt = nome;
 
     // Overlay com nome e ícone
     const overlay = document.createElement("div");
@@ -54,56 +48,69 @@ profissionais.slice(0, 10).forEach((_profissional, index) => {
         "d-flex",
         "align-items-center",
     );
-    overlay.innerHTML = `${categoriaIcons[_profissional.categoria] || ""}<span class="ms-2">${
-        _profissional.nome
-    }</span>`;
+    overlay.innerHTML = `${categoriaIcons[categoria] || ""}<span class="ms-2">${nome}</span>`;
 
-    box.appendChild(number);
-    box.appendChild(img);
-    box.appendChild(overlay);
-    top10Container.appendChild(box);
-});
+    if (typeof index === "number") {
+        const number_div = document.createElement("div");
+        number_div.classList.add("number-div");
+        const number = document.createElement("h5");
+        number.classList.add("number", "space-0");
+        number.textContent = String(index + 1);
+        number_div.appendChild(number);
+        card.appendChild(number_div);
+    }
+
+    card.appendChild(img);
+    card.appendChild(overlay);
+
+    return card;
+}
+
+// Renderiza Top 10
+function renderizarTop10() {
+    const top10Container = document.getElementById("top10");
+    if (!top10Container) return;
+    profissionais.slice(0, 10).forEach((_profissional, index) => {
+        top10Container.appendChild(
+            createProfileCard(
+                _profissional.id,
+                index,
+                _profissional.foto,
+                _profissional.nome,
+                _profissional.categoria,
+            ),
+        );
+    });
+}
+
+renderizarTop10();
 
 // Renderiza por categoria (15 por categoria)
 function renderCategoria(categoriaId) {
     const container = document.getElementById(categoriaId);
+    if (!container) return;
     // Limpa antes de renderizar
     container.innerHTML = "";
     const filtrados = profissionais.filter((p) => p.profissao === categoriaId).slice(0, 15);
-    filtrados.forEach((p) => {
-        const box = document.createElement("div");
-        box.classList.add(
-            "card-box",
-            "shadow",
-            "rounded",
-            "bg-light",
-            "position-relative",
-            "overflow-hidden",
+    if (filtrados.length === 0) container.parentElement?.classList.add("d-none");
+    else container.parentElement?.classList.remove("d-none");
+    for (const _profissional of filtrados) {
+        const card = createProfileCard(
+            _profissional.id,
+            null,
+            _profissional.foto,
+            _profissional.nome,
+            _profissional.categoria,
         );
-        box.style.cursor = "pointer";
-        box.onclick = () =>
-            (window.location.href = "perfil.html?nome=" + encodeURIComponent(p.nome));
 
-        const img = document.createElement("img");
-        img.src = p.imagem;
-        img.alt = p.nome;
-
-        // Overlay com nome e ícone
-        const overlay = document.createElement("div");
-        overlay.className =
-            "position-absolute bottom-0 start-0 w-100 p-2 bg-dark bg-opacity-75 text-white d-flex align-items-center";
-        overlay.innerHTML = `${categoriaIcons[categoriaId] || ""}<span class="ms-2">${
-            p.nome
-        }</span>`;
-
-        box.appendChild(img);
-        box.appendChild(overlay);
-        container.appendChild(box);
-    });
+        container.appendChild(card);
+    }
 }
 
-let array_categorias = new Set(["Fotográfo", "Designer", "Programador", "Garçom"]);
-array_categorias.forEach((value) => renderCategoria(value));
+let array_categorias = new Set(["Fotográfo", "Designer", "Programador", "Garçom", "Outro"]);
+array_categorias.forEach((value) => {
+    renderCategoria(value);
+});
 
 // Função para filtrar categorias
 function filtrarCategoria(cat, btn) {
@@ -133,9 +140,3 @@ document
     .forEach((_button) =>
         _button.addEventListener("click", () => filtrarCategoria(_button.value, _button)),
     );
-
-// eslint-disable-next-line no-unused-vars
-function rolar(id, dir) {
-    const el = document.getElementById(id);
-    el.scrollBy({ left: dir * 200, behavior: "smooth" });
-}
