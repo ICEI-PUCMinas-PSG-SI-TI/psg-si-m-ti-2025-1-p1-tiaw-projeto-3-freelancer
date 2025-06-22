@@ -34,6 +34,8 @@
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
     <script defer src="static/js/profile.js"></script>
+    <!-- Page Scripts-->
+    <script defer type="module" src="static/js/page/homepage.mjs"></script>
   </head>
 
   <body>
@@ -111,54 +113,63 @@
     </nav>
 
     <!-- Conteúdo principal -->
-    <main class="body-section body-content container-fluid py-4">
+    <main class="body-section body-content space-0 p-3 w-100">
       <!-- Filtro por categoria -->
-      <div class="category-filter">
-        <button class="btn btn-dark active" onclick="filtrarCategoria('todos', this)">
+      <div class="category-filter mb-3">
+        <button class="btn btn-dark active" value="todos">
           <i class="bi bi-stars me-1"></i> Todos
         </button>
-        <button class="btn btn-dark" onclick="filtrarCategoria('fotografos', this)">
+        <button class="btn btn-dark" value="fotografos">
           <i class="bi bi-camera-fill me-1"></i> Fotógrafos
         </button>
-        <button class="btn btn-dark" onclick="filtrarCategoria('designers', this)">
+        <button class="btn btn-dark" value="designers">
           <i class="bi bi-palette-fill me-1"></i> Designers
         </button>
-        <button class="btn btn-dark" onclick="filtrarCategoria('programadores', this)">
+        <button class="btn btn-dark" value="programadores">
           <i class="bi bi-code-slash me-1"></i> Programadores
         </button>
-        <button class="btn btn-dark" onclick="filtrarCategoria('garcons', this)">
+        <button class="btn btn-dark" value="garcons">
           <i class="bi bi-cup-hot me-1"></i> Garçons
         </button>
       </div>
 
-      <!-- Top 10 Profissionais -->
-      <h2 class="section-title">Top 10 profissionais</h2>
-      <div class="scroll-row" id="top10"></div>
-      <!-- Gerado via JS -->
-
       <!-- Carrosséis por categoria -->
-      <div class="category" id="cat-fotografos">
-        <h3>Fotógrafos:</h3>
-        <div class="scroll-row" id="Fotográfo"></div>
-      </div>
+      <div id="categorias">
+        <!-- Top 10 Profissionais -->
+        <div class="category" id="cat-top10">
+          <h3>Top 10 profissionais</h3>
+          <hr />
+          <div class="scroll-row" id="top10"></div>
+        </div>
 
-      <div class="category" id="cat-designers">
-        <h3>Designers:</h3>
-        <div class="scroll-row" id="Designer"></div>
-      </div>
+        <div class="category" id="cat-fotografos">
+          <h3>Fotógrafos</h3>
+          <hr />
+          <div class="scroll-row" id="Fotográfo"></div>
+        </div>
 
-      <div class="category" id="cat-programadores">
-        <h3>Programadores:</h3>
-        <div class="scroll-row" id="Programador"></div>
-      </div>
+        <div class="category" id="cat-designers">
+          <h3>Designers</h3>
+          <hr />
+          <div class="scroll-row" id="Designer"></div>
+        </div>
 
-      <div class="category" id="cat-garcons">
-        <h3>Garçons:</h3>
-        <div class="scroll-row" id="Garçom"></div>
-      </div>
-      <div class="category" id="cat-outro">
-        <h3>Garçons:</h3>
-        <div class="scroll-row" id="Outro"></div>
+        <div class="category" id="cat-programadores">
+          <h3>Programadores</h3>
+          <hr />
+          <div class="scroll-row" id="Programador"></div>
+        </div>
+
+        <div class="category" id="cat-garcons">
+          <h3>Garçons</h3>
+          <hr />
+          <div class="scroll-row" id="Garçom"></div>
+        </div>
+        <div class="category" id="cat-outro">
+          <h3>Garçons</h3>
+          <hr />
+          <div class="scroll-row" id="Outro"></div>
+        </div>
       </div>
 
       <div
@@ -182,7 +193,6 @@
       </div>
     </main>
 
-    <script src="static/js/homepage.js"></script>
     <!-- Rodapé -->
     <footer class="body-section body-footer container-fluid border-top m-0 p-0 g-0">
       <div class="row px-4 px-md-5 pt-4 pt-md-5">

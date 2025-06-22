@@ -163,7 +163,7 @@ async function preencherValores() {
             .toISOString()
             .slice(0, 10);
     if (usuario.foto) htmlCadastroImgPreview.src = usuario.foto;
-    if (usuario.username) htmlCadastroInputContato.value = usuario.username;
+    if (usuario.username) username = usuario.username;
 }
 
 function inicializarCadastro() {
