@@ -1,11 +1,14 @@
 //@ts-check
 
-import { Usuarios } from "../jsonf/usuarios.mjs";
+import { Usuarios } from "../jsonf/usuarios.mjs"; // Usuários
+import { Servicos } from "../jsonf/servicos.mjs"; // Serviços
 
 const crud_usuarios = new Usuarios();
+const crud_servicos = new Servicos();
 
 // Dados dos profissionais
 const profissionais = await crud_usuarios.lerUsuarios();
+const servicos = await crud_servicos.lerServicos();
 
 // Ícones por categoria
 const categoriaIcons = {
@@ -15,7 +18,7 @@ const categoriaIcons = {
     designers: '<i class="bi bi-palette-fill"></i>',
 };
 
-function createProfileCard(id, index, foto, nome, categoria) {
+function createProfileCard(id, index, foto, nome, categoria, path) {
     const card = document.createElement("a");
     card.classList.add(
         "card-box",
@@ -28,7 +31,7 @@ function createProfileCard(id, index, foto, nome, categoria) {
         "text-decoration-none",
     );
     card.style.cursor = "pointer";
-    card.href = `/perfil?id=${id}`;
+    card.href = `/${path}?id=${id}`;
 
     const img = document.createElement("img");
     img.src = foto;
@@ -66,8 +69,7 @@ function createProfileCard(id, index, foto, nome, categoria) {
     return card;
 }
 
-// Renderiza Top 10
-function renderizarTop10() {
+function renderizarTop10Profissionais() {
     const top10Container = document.getElementById("top10");
     if (!top10Container) return;
     profissionais.slice(0, 10).forEach((_profissional, index) => {
@@ -78,12 +80,31 @@ function renderizarTop10() {
                 _profissional.foto,
                 _profissional.nome,
                 _profissional.categoria,
+                "perfil",
             ),
         );
     });
 }
 
-renderizarTop10();
+function renderizarTop10Servicos() {
+    const top10Container = document.getElementById("top10-serv");
+    if (!top10Container) return;
+    servicos.slice(0, 10).forEach((_profissional, index) => {
+        top10Container.appendChild(
+            createProfileCard(
+                _profissional.id,
+                index,
+                _profissional.imagem,
+                _profissional.titulo,
+                _profissional.categoria,
+                "detalhes",
+            ),
+        );
+    });
+}
+
+renderizarTop10Profissionais();
+renderizarTop10Servicos();
 
 // Renderiza por categoria (15 por categoria)
 function renderCategoria(categoriaId) {
@@ -101,6 +122,7 @@ function renderCategoria(categoriaId) {
             _profissional.foto,
             _profissional.nome,
             _profissional.categoria,
+            "perfil",
         );
 
         container.appendChild(card);
