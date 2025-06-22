@@ -1,5 +1,6 @@
 //@ts-check
 const htmlDivModalProfile = document.getElementById("profile-modal");
+const htmlButtonShowPerfil = document.getElementById("profile-show-perfil");
 
 const mock2_isUserLoggedIn = () => !!localStorage.getItem("LucreM.id");
 
@@ -42,6 +43,9 @@ function inicializarProfile() {
     });
     htmlDivModalProfile.addEventListener("click", esconderModalProfile);
     htmlImageProfile.classList.remove("d-none");
+    htmlButtonShowPerfil?.addEventListener("click", () => {
+        location.assign("/perfil")
+    });
 }
 
 inicializarProfile();

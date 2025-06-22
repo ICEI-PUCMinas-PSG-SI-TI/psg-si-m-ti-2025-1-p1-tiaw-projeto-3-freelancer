@@ -1074,7 +1074,7 @@ function createReviewSection(
     if (!avaliacoes || !avaliacoes.length) {
         let information = document.createElement("p");
         information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
-        information.innerHTML = `Não há avaliações para este usuário, você pode utilizar a&nbsp;<a href="dev.html">página de desenvolvimento</a>&nbsp;para gerar uma avaliação.`;
+        information.innerHTML = `Não há avaliações para este usuário, você pode utilizar a&nbsp;<a href="/dev">página de desenvolvimento</a>&nbsp;para gerar uma avaliação.`;
         content_blobs_scrool.appendChild(information);
     } else {
         console.log("avaliacoes");

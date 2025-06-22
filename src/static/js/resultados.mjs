@@ -47,7 +47,7 @@ function createServiceCard(
 ) {
     const card = document.createElement("a");
     card.classList.add("col-12", "col-md-6", "col-xl-4", "text-decoration-none");
-    card.href = "404.html";
+    card.href = "/404";
     // TODO: Adicionar avaliações como estrelas
     card.innerHTML = `<div class="card h-100 w-100">
         <div class="card-body d-flex flex-column">
@@ -82,7 +82,7 @@ function createUserCard(
 ) {
     const card = document.createElement("a");
     card.classList.add("col-12", "col-md-6", "col-xl-4", "text-decoration-none");
-    card.href = "404.html";
+    card.href = "/404";
     // TODO: Adicionar avaliações como estrelas
     card.innerHTML = `<div class="card h-100 w-100">
         <div class="card-body d-flex flex-column">
