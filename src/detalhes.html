@@ -9,7 +9,7 @@
     <link rel="icon" href="static/favicon.ico" />
     <!-- CSS -->
     <link rel="stylesheet" href="static/css/styles.css" type="text/css" />
-    <link rel="stylesheet" href="static/css/detalhes_servicos.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/detalhes.css" type="text/css" />
     <!-- Bootstrap -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
@@ -35,7 +35,7 @@
     <script defer src="static/js/404.js"></script>
     <script defer src="static/js/profile.js"></script>
     <!-- Page Scripts -->
-    <script defer src="static/js/detalhes_serviços.js"></script>
+    <script defer src="static/js/detalhes.js"></script>
   </head>
 
   <body>
@@ -75,14 +75,20 @@
             </li>
           </ul>
           <div class="d-none" id="toggleDarkDiv"></div>
-          <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Pesquisar"
-              aria-label="Search" />
-            <a class="btn btn-outline-primary" href="/404">Pesquisar</a>
-          </form>
+          <div id="inflate_pesquisa" class="d-none">
+            <form
+              class="d-flex flex-column flex-sm-row"
+              role="search"
+              onsubmit="(e)=>e.preventDefault()">
+              <input
+                id="search-bar"
+                class="form-control me-sm-2 mb-2 mb-sm-0"
+                type="search"
+                placeholder="Pesquisar"
+                aria-label="Search" />
+              <button id="search-btn" class="btn btn-outline-primary">Pesquisar</button>
+            </form>
+          </div>
           <!-- id.navbar.profile -->
           <div class="m-2 me-0 rounded d-flex justify-content-center">
             <img
@@ -225,6 +231,7 @@
           </div>
         </div>
         <hr class="col-12 d-block d-sm-none" />
+        <!-- Social Links -->
         <div class="col-12 col-sm-6 pb-3 pb-md-4 d-flex flex-column">
           <h5 class="">Navegação</h5>
           <a
