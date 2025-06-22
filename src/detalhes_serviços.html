@@ -42,10 +42,12 @@
     <!-- Cabeçalho -->
     <nav class="body-section body-header navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <a class="d-flex justify-text-align-center text-decoration-none me-3" href="./">
+        <!-- id.navbar.logo -->
+        <a class="d-flex center-xy text-center text-decoration-none me-3" href="./">
           <img class="m-2 icon-32px" src="static/icon.png" />
           <p class="navbar-brand p-0 m-0 g-0">Lucre+</p>
         </a>
+        <!-- id.navbar.toggle -->
         <button
           class="navbar-toggler"
           type="button"
@@ -58,7 +60,19 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item dropdown"></li>
+            <!-- id.navbar.navigation -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Serviços
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/serviços">Cadastrar serviços</a></li>
+              </ul>
+            </li>
           </ul>
           <div class="d-none" id="toggleDarkDiv"></div>
           <form class="d-flex" role="search">
@@ -185,7 +199,9 @@
                   src="static/img/placeholder_profile.png"
                   alt="Profile" />
                 <p id="profile-name">Nome do Usuário</p>
-                <button id="profile-show-perfil" class="btn btn-primary w-100 mb-3">Ver Perfil</button>
+                <button id="profile-show-perfil" class="btn btn-primary w-100 mb-3">
+                  Ver Perfil
+                </button>
                 <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
               </div>
             </div>
