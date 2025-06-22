@@ -1,16 +1,18 @@
 //@ts-check
-import * as JSONQL_S from "./jsonql.service.mjs"; // Serviços
-import { CRUDUsuarios } from "./jsonql.user.mjs"; // Usuários
 import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as Faker from "./faker.mjs";
 import { ensureInteger, imageFileToBase64, isNonEmptyString, MAX_ALLOWED_SIZE } from "./tools.mjs";
 
+import { Usuarios } from "./jsonf/usuarios.mjs";
+import { Servicos } from "./jsonf/servicos.mjs";
+
+const crud_usuarios = new Usuarios();
+const crud_servicos = new Servicos();
+
 // TODO: Mover adicionar-imagens para um popup
 // TODO: Criar popups dinamicamente e remove-los do html
-
-const crud_usuarios = new CRUDUsuarios();
 
 class AddSectionContext {
     /**
@@ -313,7 +315,7 @@ function commitAddAsection() {
 
     let maior = 0;
     // Como estamos adicionando uma seção, não é problema se ela esta vazia
-    if (_portfolio.secoes && _portfolio.secoes.length) {
+    if (_portfolio.secoes?.length) {
         // Verificar o maior valor para json.ordem
 
         _portfolio.secoes.forEach((element) => {
@@ -1031,7 +1033,7 @@ function setIdParam(id) {
  * @param {boolean} enable_edit
  * @param {string} portfolio_user_id
  */
-function createReviewSection(
+async function createReviewSection(
     portfolio_id,
     section_id,
     section_name,
@@ -1071,16 +1073,15 @@ function createReviewSection(
     content_blobs_scrool.classList.add("px-3");
 
     let avaliacoes = JSONQL_A.readAvaliacoes();
-    if (!avaliacoes || !avaliacoes.length) {
+    if (!avaliacoes?.length) {
         let information = document.createElement("p");
         information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
         information.innerHTML = `Não há avaliações para este usuário, você pode utilizar a&nbsp;<a href="/dev">página de desenvolvimento</a>&nbsp;para gerar uma avaliação.`;
         content_blobs_scrool.appendChild(information);
     } else {
-        console.log("avaliacoes");
         // Lê todas as avaliações
         // TODO: Otimizar > Informações do serviço da avaliação
-        avaliacoes.forEach((avaliacao_element) => {
+        for (const avaliacao_element of avaliacoes) {
             const comentario = avaliacao_element.comentario.substring(0, 200);
             const nota = avaliacao_element.nota;
             const contratanteId = avaliacao_element.contratanteId;
@@ -1092,16 +1093,16 @@ function createReviewSection(
             if (!contrato) return;
 
             const contratadoId = contrato.contratadoId;
-            const _service_id = ensureInteger(contrato.servicoId);
+            const _service_id = String(contrato.servicoId);
             if (!contratadoId || !_service_id) return;
 
             // A partir daqui, continue apenas os contratos que possuem a mesma id que o usuario do portfolio
             if (contratadoId.toString() !== _portfolio_user_id.toString()) return;
 
-            const service = getFirstOrNull(JSONQL_S.readServicos(_service_id));
+            const service = await crud_servicos.lerServico(_service_id);
             if (!service) return;
 
-            const user = getFirstOrNull(crud_usuarios.lerUsuario(contratanteId));
+            const user = await crud_usuarios.lerUsuario(contratanteId);
             if (!user) return;
 
             // TODO: replace 'placeholder_profile'
@@ -1128,7 +1129,7 @@ function createReviewSection(
                     </div>
                 </a>
             </div>`;
-        });
+        }
     }
 
     content_blobs.appendChild(content_blobs_scrool);
@@ -1539,7 +1540,7 @@ async function setupPortfolioPage(portf_id, enable_edit) {
     }
 
     // TODO: Permitir apenas 1 seção de avaliações
-    portfolio.secoes.forEach((element) => {
+    for (const element of portfolio.secoes) {
         const e_section_name = element.nome;
         const e_section_description = element.descricao;
         const e_section_id = element.ordem;
@@ -1560,7 +1561,7 @@ async function setupPortfolioPage(portf_id, enable_edit) {
             // categoriaId(1): Avaliações
             case 1:
                 {
-                    const child = createReviewSection(
+                    const child = await createReviewSection(
                         portfolio.id,
                         e_section_id,
                         e_section_name,
@@ -1600,13 +1601,12 @@ async function setupPortfolioPage(portf_id, enable_edit) {
                 }
                 break;
         }
-    });
+    }
 }
 
 async function setupPortfolioSetupUsuarios() {
     // OPTIMIZE: Ler os usuários anteriormente e escolher um número aleatorio
-    const _usuarios = await crud_usuarios.lerUsuarios({ page: 0 });
-    console.log(_usuarios);
+    const _usuarios = await crud_usuarios.lerUsuarios();
 
     const portfolio_setup_create_select = document.getElementById("portfolio-setup-create-select");
     const portfolio_setup_create_btn = document.getElementById("portfolio-setup-create-btn");
@@ -1696,7 +1696,7 @@ async function setupPortfolioSetupMicroDev() {
     portfolio_setup_dev_btn.addEventListener("click", async () => {
         // Utilizar a página 'dev.js'
         await Faker.criarNUsuarios(30);
-        await Faker.criarNServicos(60);
+        await Faker.criarNServicos(60, true);
         await Faker.criarNContratos(90);
         await Faker.criarNAvaliacoes(120);
         notifySectionDataChanged();
