@@ -31,7 +31,7 @@ async function inicializarDetalhes(id) {
     } catch (err) {
         console.error(err.message);
     }
-    if(servico.contato) document.getElementById("servico-contato").textContent = servico.contato;
+    if (servico.contato) document.getElementById("servico-contato").textContent = servico.contato;
     // document.getElementById("prazo-servico").textContent = servico.prazo;
     // document.getElementById("preco-servico").textContent = servico.preco;
     // document.getElementById("avaliacao-servico").textContent = servico.avaliacao;
