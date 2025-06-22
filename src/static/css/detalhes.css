@@ -3,12 +3,13 @@
     background: var(--bs-body-bg, #181a1b);
     border-radius: 16px;
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
-    padding: 2rem 1.5rem;
 }
 
 .detalhes-servico-img {
-    max-width: 320px;
-    min-width: 180px;
+    max-width: 300px;
+    max-height: 300px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -51,11 +52,6 @@
     font-weight: 600;
 }
 
-@media (max-width: 767px) {
-    .detalhes-servico {
-        padding: 1rem 0.5rem;
-    }
-    .detalhes-servico-img {
-        max-width: 100%;
-    }
+.limit1000px{
+    max-width: 1000px;
 }
