@@ -1,15 +1,17 @@
 //@ts-check
-import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
+
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as Faker from "./lib/faker.mjs";
 import { ensureInteger, imageFileToBase64, isNonEmptyString, MAX_ALLOWED_SIZE } from "./tools.mjs";
 
-import { Usuarios } from "./jsonf/usuarios.mjs";
-import { Servicos } from "./jsonf/servicos.mjs";
+import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
+import { Servicos } from "./jsonf/servicos.mjs"; // Serviços
+import { Contratos } from "./jsonf/contratos.mjs"; // Contratos
 
 const crud_usuarios = new Usuarios();
 const crud_servicos = new Servicos();
+const crud_contratos = new Contratos();
 
 // TODO: Mover adicionar-imagens para um popup
 // TODO: Criar popups dinamicamente e remove-los do html
@@ -921,7 +923,7 @@ function createEditPortfolioButton(edit) {
  * @param {string | number} userId
  * @returns {number | null}
  */
-function getMediaAvaliacoes(userId) {
+async function getMediaAvaliacoes(userId) {
     const userId_int = ensureInteger(userId);
     if (typeof userId_int !== "number") return null;
 
@@ -932,7 +934,7 @@ function getMediaAvaliacoes(userId) {
     let media = 0;
     let quantidade = 0;
     for (let i = 0; i < avaliacoes.length; i++) {
-        const contratado = getFirstOrNull(JSONQL_C.readContratos(avaliacoes[i].contratoId));
+        const contratado = await crud_contratos.lerContrato(avaliacoes[i].contratoId);
         if (!contratado || ensureInteger(contratado) !== userId_int) continue;
 
         media += avaliacoes[i].nota;
@@ -1089,7 +1091,7 @@ async function createReviewSection(
             const _contract_id = avaliacao_element.contratoId;
             if (!_contract_id) return;
 
-            const contrato = getFirstOrNull(JSONQL_C.readContratos(_contract_id));
+            const contrato = await crud_contratos.lerContrato(_contract_id);
             if (!contrato) return;
 
             const contratadoId = contrato.contratadoId;
@@ -1525,7 +1527,7 @@ async function setupPortfolioPage(portf_id, enable_edit) {
     portfolio_picture.src = portfolio_user_picture;
     portfolio_descricao.innerText = portfolio_user_about;
 
-    const media = getMediaAvaliacoes(portfolio_user_id);
+    const media = await getMediaAvaliacoes(portfolio_user_id);
     if (media) {
         portfolio_nota.innerText = media.toString();
     }

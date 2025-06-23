@@ -1,6 +1,5 @@
 //@ts-check
 
-import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as Faker from "./lib/faker.mjs";
@@ -8,9 +7,11 @@ import { ensureInteger } from "./tools.mjs";
 
 import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
 import { Servicos } from "./jsonf/servicos.mjs"; // Serviços
+import { Contratos } from "./jsonf/contratos.mjs"; // Contratos
 
 const crud_usuarios = new Usuarios();
 const crud_servicos = new Servicos();
+const crud_contratos = new Contratos();
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -122,18 +123,12 @@ function setupContractsCRUD() {
         Faker.criarNContratos(parseInt(quantidade));
     });
 
-    dev_delete_contratos_all.addEventListener("click", JSONQL_C.clearContratos);
+    dev_delete_contratos_all.addEventListener("click", crud_contratos.limparContratos);
 
-    dev_delete_contratos.addEventListener("click", () => {
+    dev_delete_contratos.addEventListener("click", async () => {
         const id = dev_delete_contratos_id.value;
-        const id_int = ensureInteger(id);
-        if (!id_int) {
-            console.log("dev_delete_contratos: Não foi possível realizar o parse do id");
-            return;
-        }
-
-        if (JSONQL_C.deleteContrato(id_int)) {
-            console.log(`dev_delete_contratos: contrato ${id_int} foi deletado!`);
+        if (await crud_contratos.excluirContrato(id)) {
+            console.log(`dev_delete_contratos: contrato ${id} foi deletado!`);
         } else {
             console.log(
                 `dev_delete_contratos: Não foi possível encontrar o contrato ou ocorreu um erro.`,
@@ -141,7 +136,7 @@ function setupContractsCRUD() {
         }
     });
 
-    dev_read_contratos.addEventListener("click", () => console.log(JSONQL_C.readContratos()));
+    dev_read_contratos.addEventListener("click", () => console.log(crud_contratos.lerContratos()));
 }
 
 function setupReviewsCRUD() {

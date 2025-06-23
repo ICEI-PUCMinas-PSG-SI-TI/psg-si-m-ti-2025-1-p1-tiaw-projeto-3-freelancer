@@ -1,30 +1,27 @@
 {
     "contratos": [
         {
-            "contratadoId": 0,
-            "contratanteId": 1,
             "data": "1970-01-01T00:00:00.000Z-03:00",
             "id": 0,
             "servicoId": 0,
             "status": 0,
+            "usuarioId": 1,
             "valor": 300
         },
         {
-            "contratadoId": 0,
-            "contratanteId": 2,
             "data": "1970-01-01T00:00:00.000Z-03:00",
             "id": 1,
-            "servicoId": 2,
+            "servicoId": 0,
             "status": 1,
+            "usuarioId": 1,
             "valor": 552
         },
         {
-            "contratadoId": 0,
-            "contratanteId": 3,
             "data": "1970-01-01T00:00:00.000Z-03:00",
             "id": 2,
-            "servicoId": 1,
+            "servicoId": 0,
             "status": 1,
+            "usuarioId": 1,
             "valor": 4896
         }
     ]

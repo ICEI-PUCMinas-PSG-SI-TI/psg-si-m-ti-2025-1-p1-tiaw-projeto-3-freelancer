@@ -1,8 +1,7 @@
 //@ts-check
 
-import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
-import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
-import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
+import * as JSONQL_A from "../jsonql/jsonql.review.mjs"; // Avaliações
+import * as JSONQL_P from "../jsonql/jsonql.portfolio.mjs"; // Portfólios
 
 import { generateRandomNumber as genRandNumber } from "../tools.mjs";
 
@@ -10,9 +9,11 @@ import { assertBoolean, assertPositiveInt } from "../lib/validate.mjs";
 
 import { Usuarios } from "../jsonf/usuarios.mjs"; // Usuários
 import { Servicos } from "../jsonf/servicos.mjs"; // Serviços
+import { Contratos } from "../jsonf/contratos.mjs"; // Contratos
 
 const crud_usuarios = new Usuarios();
 const crud_servicos = new Servicos();
+const crud_contratos = new Contratos();
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -192,8 +193,7 @@ export async function criarNContratos(quantidade) {
             );
 
         const servicoIdIndex = genRandNumber({ max: servicos.length });
-        const contratadoIdIndex = genRandNumber({ max: usuarios.length });
-        const contratanteIdIndex = genRandNumber({ max: usuarios.length });
+        const usuarioIdIndex = genRandNumber({ max: usuarios.length });
 
         const dataDia = genRandNumber({ min: 1, max: 29 });
         const dataMes = genRandNumber({ min: 1, max: 13 });
@@ -201,8 +201,7 @@ export async function criarNContratos(quantidade) {
 
         if (
             typeof servicoIdIndex !== "number" ||
-            typeof contratadoIdIndex !== "number" ||
-            typeof contratanteIdIndex !== "number" ||
+            typeof usuarioIdIndex !== "number" ||
             typeof dataDia !== "number" ||
             typeof dataMes !== "number" ||
             typeof dataAno !== "number"
@@ -213,16 +212,16 @@ export async function criarNContratos(quantidade) {
 
         contratos.push({
             servicoId: servicos[servicoIdIndex].id, // number
-            contratadoId: usuarios[contratadoIdIndex].id, // number
-            contratanteId: usuarios[contratanteIdIndex].id, // number
+            usuarioid: usuarios[usuarioIdIndex].id, // number
             data: `${dataDia}/${dataMes}/${dataAno}`, // string
-            valor: genRandNumber({ min: 1518, max: 500 }), // number
+            valor: genRandNumber({ min: 1518, max: 8000 }), // number
+            status: genRandNumber({ max: 3 }), // number
         });
     }
 
     // TODO: Verificar os pós/contras de inserir os valoroes diretamentev
     // na base de dados sem necessidade de um vetor
-    contratos.forEach((contrato) => JSONQL_C.createContrato(contrato));
+    contratos.forEach((contrato) => crud_contratos.criarContrato(contrato));
 }
 
 // TODO: Otimizar query de serviços
@@ -246,7 +245,7 @@ export async function criarNAvaliacoes(quantidade) {
                     "Criação de avaliações: É necessário que haja usuários cadastrados para criar avaliações.",
                 );
 
-            const contratos = JSONQL_C.readContratos();
+            const contratos = await crud_contratos.lerContratos();
             if (!contratos?.length)
                 throw new Error(
                     "Criação de avaliações: É necessário que haja contratos cadastrados para criar avaliações.",
