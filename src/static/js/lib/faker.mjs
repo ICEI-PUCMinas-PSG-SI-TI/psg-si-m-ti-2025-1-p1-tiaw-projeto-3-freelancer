@@ -4,14 +4,12 @@ import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 
-import {
-    generateRandomNumber as genRandNumber,
-    ensureInteger,
-    assertPositiveInt,
-} from "./tools.mjs";
+import { generateRandomNumber as genRandNumber } from "../tools.mjs";
 
-import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
-import { Servicos } from "./jsonf/servicos.mjs"; // Serviços
+import { assertBoolean, assertPositiveInt } from "../lib/validate.mjs";
+
+import { Usuarios } from "../jsonf/usuarios.mjs"; // Usuários
+import { Servicos } from "../jsonf/servicos.mjs"; // Serviços
 
 const crud_usuarios = new Usuarios();
 const crud_servicos = new Servicos();
@@ -82,8 +80,7 @@ export async function criarNPortfolios(quantidade) {
 
         let portfolios = [];
 
-        for (let index = 0; index < quantidade; index++) {
-            crud_usuarios.lerUsuarios();
+        for (let i = 0; i < quantidade; i++) {
             // OPTIMIZE: Ler os usuários anteriormente e escolher um número aleatorio
             const usuarios = await crud_usuarios.lerUsuarios();
 
@@ -92,8 +89,7 @@ export async function criarNPortfolios(quantidade) {
                     "Criação de portfólios: É necessário que haja usuários cadastrados para criar portfólios.",
                 );
 
-            const userId_index = genRandNumber({ max: usuarios.length });
-            if (!userId_index) continue;
+            const userIdIndex = genRandNumber({ max: usuarios.length });
 
             // TODO: Avoid creating more than 1 portfolios per user
             let secoes = [];
@@ -101,14 +97,11 @@ export async function criarNPortfolios(quantidade) {
             // Gera entre 2 e 5 seções para cada portfolio
             const quant_secoes = genRandNumber({ min: 2, max: 6 });
 
-            for (let ordem = 0; ordem < quant_secoes; ordem++) {
-                let ordem_int = ensureInteger(ordem);
+            for (let i = 0; i < quant_secoes; i++) {
                 let secao = {
-                    ordem: ordem_int,
+                    ordem: i,
                     // TODO: Verificar dinamicamente as categorias possíveis
                     categoriaId: genRandNumber({ max: 3 }),
-                    // TODO: Verificar dinamicamente os nomes de acordo com a categoria
-                    nome: "Seção de Informações",
                 };
 
                 // TODO: Criar dinamicamente
@@ -116,9 +109,11 @@ export async function criarNPortfolios(quantidade) {
                 switch (secao.categoriaId) {
                     // 0: Imagens
                     case 0:
+                        // TODO: Adicionar imagens reais
+                        secao.contents = [];
+                        secao.nome = "Imagens";
+                        secao.descricao = "Imagens de serviços realizados";
                         {
-                            // TODO: Adicionar imagens reais
-                            secao.contents = [];
                             const quant_imagens = genRandNumber({ min: 5, max: 11 });
                             for (let j = 0; j < quant_imagens; j++) {
                                 secao.contents.push({
@@ -128,39 +123,32 @@ export async function criarNPortfolios(quantidade) {
                                     descricao: "Foto", // portfolios.secao.contents.descricao - string
                                 });
                             }
-                            secao.nome = "Imagens";
-                            secao.descricao = "Imagens de serviços realizados";
                         }
                         break;
                     // 1: Avaliações
-                    case 1: {
+                    case 1:
                         // Faz nada: Essa categoria deve ser controlada pela pagina que mostra as informações
                         secao.nome = "Avaliações";
                         secao.descricao = "Cliente satisfeitos!";
                         break;
-                    }
                     // 2: Links Externos
                     case 2:
+                        secao.contents = [];
+                        secao.nome = "Redes Sociais";
+                        secao.descricao = "Segue lá!";
                         {
-                            secao.contents = [];
-                            const quant_links = genRandNumber({ min: 3, max: 7 }) || 3;
+                            const quant_links = genRandNumber({ min: 3, max: 7 });
                             for (let j = 0; j < quant_links; j++) {
-                                const link_ext_index = genRandNumber({
+                                const linkIndex = genRandNumber({
                                     max: json.links_externos.length,
                                 });
 
-                                if (!link_ext_index) continue;
                                 secao.contents.push({
-                                    blob: json.links_externos[link_ext_index], // portfolios.secao.contents.blob - string
+                                    blob: json.links_externos[linkIndex], // portfolios.secao.contents.blob - string
                                     descricao: "Link Externo", // portfolios.secao.contents.descricao - string
                                 });
-                                secao.nome = "Redes Sociais";
-                                secao.descricao = "Segue lá!";
                             }
                         }
-                        break;
-                    default:
-                        console.log("createNPortfolios: categoria informada não encontrada!");
                         break;
                 }
 
@@ -168,13 +156,14 @@ export async function criarNPortfolios(quantidade) {
             }
 
             portfolios.push({
-                usuarioId: usuarios[userId_index].id, // number
+                usuarioId: usuarios[userIdIndex].id, // number
                 secoes: secoes,
             });
         }
 
-        // TODO: Do it in chunks
-        portfolios.forEach((element) => JSONQL_P.createPortfolio(element));
+        // TODO: Verificar os pós/contras de inserir os valoroes diretamente
+        // na base de dados sem necessidade de um vetor
+        portfolios.forEach((portfolio) => JSONQL_P.createPortfolio(portfolio));
     });
 }
 
@@ -188,7 +177,7 @@ export async function criarNContratos(quantidade) {
 
     let contratos = [];
 
-    for (let index = 0; index < quantidade; index++) {
+    for (let i = 0; i < quantidade; i++) {
         // OPTIMIZE: Ler os usuários anteriormente e escolher um número aleatorio
         const usuarios = await crud_usuarios.lerUsuarios();
         if (!usuarios?.length)
@@ -202,18 +191,18 @@ export async function criarNContratos(quantidade) {
                 "Criação de contratos: É necessário que haja serviços cadastrados para criar contratos.",
             );
 
-        const servicoId_index = genRandNumber({ max: servicos.length });
-        const contratadoId_index = genRandNumber({ max: usuarios.length });
-        const contratanteId_index = genRandNumber({ max: usuarios.length });
+        const servicoIdIndex = genRandNumber({ max: servicos.length });
+        const contratadoIdIndex = genRandNumber({ max: usuarios.length });
+        const contratanteIdIndex = genRandNumber({ max: usuarios.length });
 
         const dataDia = genRandNumber({ min: 1, max: 29 });
         const dataMes = genRandNumber({ min: 1, max: 13 });
         const dataAno = genRandNumber({ min: 1970, max: 2026 });
 
         if (
-            typeof servicoId_index !== "number" ||
-            typeof contratadoId_index !== "number" ||
-            typeof contratanteId_index !== "number" ||
+            typeof servicoIdIndex !== "number" ||
+            typeof contratadoIdIndex !== "number" ||
+            typeof contratanteIdIndex !== "number" ||
             typeof dataDia !== "number" ||
             typeof dataMes !== "number" ||
             typeof dataAno !== "number"
@@ -223,16 +212,17 @@ export async function criarNContratos(quantidade) {
         }
 
         contratos.push({
-            servicoId: servicos[servicoId_index].id, // number
-            contratadoId: usuarios[contratadoId_index].id, // number
-            contratanteId: usuarios[contratanteId_index].id, // number
+            servicoId: servicos[servicoIdIndex].id, // number
+            contratadoId: usuarios[contratadoIdIndex].id, // number
+            contratanteId: usuarios[contratanteIdIndex].id, // number
             data: `${dataDia}/${dataMes}/${dataAno}`, // string
             valor: genRandNumber({ min: 1518, max: 500 }), // number
         });
     }
 
-    // TODO: Do it in chunks
-    contratos.forEach((element) => JSONQL_C.createContrato(element));
+    // TODO: Verificar os pós/contras de inserir os valoroes diretamentev
+    // na base de dados sem necessidade de um vetor
+    contratos.forEach((contrato) => JSONQL_C.createContrato(contrato));
 }
 
 // TODO: Otimizar query de serviços
@@ -248,7 +238,7 @@ export async function criarNAvaliacoes(quantidade) {
 
         let avaliacoes = [];
 
-        for (let index = 0; index < quantidade; index++) {
+        for (let i = 0; i < quantidade; i++) {
             // OPTIMIZE: Ler os usuários anteriormente e escolher um número aleatorio
             const usuarios = await crud_usuarios.lerUsuarios();
             if (!usuarios?.length)
@@ -284,8 +274,9 @@ export async function criarNAvaliacoes(quantidade) {
             });
         }
 
-        // TODO: Do it in chunks
-        avaliacoes.forEach((element) => JSONQL_A.createAvaliacao(element));
+        // TODO: Verificar os pós/contras de inserir os valoroes diretamente
+        // na base de dados sem necessidade de um vetor
+        avaliacoes.forEach((avaliacao) => JSONQL_A.createAvaliacao(avaliacao));
     });
 }
 
@@ -343,7 +334,7 @@ export async function criarNUsuarios(quantidade) {
                 foto: `https://picsum.photos/seed/${fotoSeed}/200`, // foto(string)
                 dataNascimento: `${dataNascimentoDia}/${dataNascimentoMes}/${dataNascimentoAno}`, // dataNascimento(string)
                 email: json.email[emailIndex], // email(string)
-                senha: (genRandNumber({ min: 100000, max: 1000000 }) || 123456).toString(), // senha(string)
+                senha: genRandNumber({ min: 100000, max: 1000000 }).toString(), // senha(string)
                 tipo: json.tipo[tipoIndex], // tipo(string)
                 cpfCnpj: json.cpfCnpj[cpfCnpjIndex], // cpfCnpj(string)
                 cidade: json.cidades[cidadeIndex], // cidade(string)
@@ -353,8 +344,9 @@ export async function criarNUsuarios(quantidade) {
             });
         }
 
-        // TODO: Do it in chunks
-        usuarios.forEach(async (element) => await crud_usuarios.criarUsuario(element));
+        // TODO: Verificar os pós/contras de inserir os valoroes diretamente
+        // na base de dados sem necessidade de um vetor
+        usuarios.forEach((usuario) => JSONQL_A.createAvaliacao(usuario));
     });
 }
 
@@ -365,6 +357,7 @@ export async function criarNUsuarios(quantidade) {
  */
 export async function criarNServicos(quantidade, onlyForFakeUsers) {
     assertPositiveInt(quantidade);
+    assertBoolean(onlyForFakeUsers);
 
     await exemplos.getFakeData().then(async (json) => {
         if (!json) return;
@@ -381,7 +374,7 @@ export async function criarNServicos(quantidade, onlyForFakeUsers) {
         }
         let servicos = [];
 
-        for (let index = 0; index < quantidade; index++) {
+        for (let i = 0; i < quantidade; i++) {
             const categorias_servicos_index = genRandNumber({
                 max: json.categorias_servicos.length,
             });
@@ -398,19 +391,20 @@ export async function criarNServicos(quantidade, onlyForFakeUsers) {
             }
 
             servicos.push({
-                usuarioId: usuarios[genRandNumber({ min: 0, max: usuarios.length })].id,
+                usuarioId: usuarios[genRandNumber({ max: usuarios.length })].id,
                 titulo: json.categorias_servicos[categorias_servicos_index],
                 // TODO: categorias_servicos -> array, use id only
                 categoriaId: categorias_servicos_index,
                 categoria: json.categorias_servicos[categorias_servicos_index],
                 contato: json.contatos[contato_index],
                 descricao: json.descricoes[descricao_index],
-                imagem: `https://picsum.photos/seed/${genRandNumber({ min: 0, max: 100 })}/200`,
+                imagem: `https://picsum.photos/seed/${genRandNumber({ max: 100 })}/200`,
                 fake: true,
             });
         }
 
-        // TODO: Do it in chunks
-        servicos.forEach((element) => crud_servicos.criarServico(element));
+        // TODO: Verificar os pós/contras de inserir os valoroes diretamente
+        // na base de dados sem necessidade de um vetor
+        servicos.forEach((servico) => crud_servicos.criarServico(servico));
     });
 }

@@ -1,7 +1,7 @@
 //@ts-check
 
 import { Usuarios } from "../jsonf/usuarios.mjs";
-import { assertStringNonEmpty } from "../validate.mjs";
+import { assertStringNonEmpty } from "../lib/validate.mjs";
 
 const crud_usuarios = new Usuarios();
 
@@ -59,7 +59,7 @@ async function inicializarPerfil(id) {
     htmlProfileParagTitle.innerText = _usuarios.profissao || "Profissão não informada";
     htmlProfileParagCidade.innerText = _usuarios.cidade || "Região não informada";
     if (_usuarios.biografia) {
-        htmlProfileParagBiografia.parentElement?.classList.remove("d-none")
+        htmlProfileParagBiografia.parentElement?.classList.remove("d-none");
         htmlProfileParagBiografia.innerText = _usuarios.biografia;
     }
     if (_usuarios.contatos?.length) {

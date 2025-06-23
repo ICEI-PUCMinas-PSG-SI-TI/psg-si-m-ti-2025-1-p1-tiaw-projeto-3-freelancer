@@ -1,6 +1,6 @@
 //@ts-check
 
-import { assertStringNonEmpty } from "../validate.mjs";
+import { assertStringNonEmpty } from "../lib/validate.mjs";
 
 /*
  * Esse script adiciona os recursos necessários para o CRUD de serviços

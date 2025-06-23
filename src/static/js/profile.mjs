@@ -53,7 +53,7 @@ function inicializarProfile() {
     userInfo.then((response) => {
         htmlImageProfileBig.src = response.foto;
         htmlImageProfile.src = response.foto;
-    })
+    });
 }
 
 inicializarProfile();

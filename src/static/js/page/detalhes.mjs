@@ -2,7 +2,7 @@
 
 import { Usuarios } from "../jsonf/usuarios.mjs";
 import { Servicos } from "../jsonf/servicos.mjs";
-import { assertStringNonEmpty } from "../validate.mjs";
+import { assertStringNonEmpty } from "../lib/validate.mjs";
 
 const crud_usuarios = new Usuarios();
 const crud_servicos = new Servicos();

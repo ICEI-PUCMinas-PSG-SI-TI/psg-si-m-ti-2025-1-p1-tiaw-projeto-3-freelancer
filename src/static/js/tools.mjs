@@ -1,12 +1,12 @@
 //@ts-check
 
-import { assertBoolean, assertNumber } from "./validate.mjs";
+import { assertBoolean, assertNumber } from "./lib/validate.mjs";
 
 /**
  * Retorna um número aleatório, default: {min(0), max(10000)}
  *
  * O valor máximo não é inclusivo
- * @param {{min?, max?, double?}} [opts={}]
+ * @param {{min?: number, max?: number, double?: boolean}} [opts={}]
  * @returns {number} Retorna um número aleatório
  */
 export function generateRandomNumber(opts = {}) {
@@ -104,11 +104,6 @@ export function isNonEmptyString(value) {
  */
 export function isNonNegativeInt(value) {
     return Number.isInteger(value) && value >= 0;
-}
-
-export function assertPositiveInt(value) {
-    if (typeof value !== "number" || Number.isNaN(value)) throw new Error("Value is not a number!");
-    if (value <= 0) throw new Error("Value is not positive!");
 }
 
 const LUCRE_KEY = "LucreM";
