@@ -2,28 +2,9 @@
 
 import { Servicos } from "./jsonf/servicos.mjs";
 import { retornarIdSeLogado } from "./lib/credenciais.mjs";
+import { imageFileToBase64 } from "./lib/tools.mjs";
 
 const crud_servicos = new Servicos();
-
-const maxAllowedSize = 5 * 1024 * 1024; // 5 MB in bytes
-
-// TODO: Move to module
-/**
- * @param {Blob} file
- */
-async function fileToBase64(file) {
-    const reader = new FileReader();
-
-    if (file.size > maxAllowedSize) throw new Error("O tamanho do arquivo deve ser menor que 5MB!");
-
-    if (!/image.*/.exec(file.type)) throw new Error("O arquivo não é uma imagem!");
-
-    return new Promise((resolve, reject) => {
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-}
 
 class EditContext {
     constructor(id, foto) {
@@ -51,7 +32,7 @@ function previewPicture() {
 
     if (!html_input_picture.files?.length) return;
 
-    fileToBase64(html_input_picture.files[0])
+    imageFileToBase64(html_input_picture.files[0])
         .then((/** @type {string} */ result) => {
             if (result.startsWith("data:image/")) {
                 html_img_preview.src = result;

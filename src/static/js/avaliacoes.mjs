@@ -1,4 +1,13 @@
-const API_URL = "http://localhost:3000/avaliacoes";
+// @ts-check
+
+import { Avaliacoes } from "./jsonf/avaliacoes.mjs";
+import { retornarIdSeLogado } from "./lib/credenciais.mjs";
+import { imageFileToBase64 } from "./lib/tools.mjs"
+
+const crud_avaliacoes = new Avaliacoes();
+
+const htmlButtonCancelar = document.getElementById("btn-cancelar");
+const htmlButtonPublicar = document.getElementById("btn-publicar");
 
 // Script para interação das estrelas
 const stars = document.querySelectorAll(".stars span");
@@ -37,9 +46,6 @@ function updateStars() {
     });
 }
 
-// Inicializa as estrelas
-updateStars();
-
 function limparFormulario() {
     selectedRating = 0;
     updateStars();
@@ -47,18 +53,6 @@ function limparFormulario() {
     document.getElementById("imagem").value = "";
 }
 
-// Função para converter imagem em base64 para envio simples (opcional)
-function getImagemBase64(file) {
-    return new Promise((resolve, reject) => {
-        if (!file) resolve(null);
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-}
-
-// eslint-disable-next-line no-unused-vars
 async function publicar() {
     const comentario = document.getElementById("comentario").value.trim();
     const imagemInput = document.getElementById("imagem");
@@ -71,27 +65,34 @@ async function publicar() {
         return;
     }
 
-    const imagemFile = imagemInput.files[0];
-    const imagemBase64 = await getImagemBase64(imagemFile);
-
-    const avaliacao = {
-        nome: "Nome e Sobrenome",
-        estrelas: selectedRating,
-        comentario,
-        imagem: imagemBase64 || null,
-        data: new Date().toISOString(),
-    };
+    const imagemBase64 = await imageFileToBase64(imagemInput.files[0]);
 
     try {
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(avaliacao),
+        await crud_avaliacoes.criarAvaliacao({
+            usuarioId: retornarIdSeLogado(),
+            nota: selectedRating,
+            comentario,
+            imagem: imagemBase64,
+            data: new Date().toISOString(),
+            // TODO: contratoId
         });
-        if (!response.ok) throw new Error("Erro ao enviar avaliação.");
+
         alert("Avaliação enviada com sucesso!");
         limparFormulario();
     } catch (error) {
         alert("Erro ao enviar avaliação: " + error.message);
     }
 }
+
+(() => {
+    // Inicializa as estrelas
+    updateStars();
+
+    if (
+        htmlButtonCancelar instanceof HTMLButtonElement &&
+        htmlButtonPublicar instanceof HTMLButtonElement
+    ) {
+        htmlButtonCancelar.addEventListener("click", limparFormulario);
+        htmlButtonPublicar.addEventListener("click", publicar);
+    }
+})();

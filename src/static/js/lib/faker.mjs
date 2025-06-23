@@ -1,6 +1,5 @@
 //@ts-check
 
-import * as JSONQL_A from "../jsonql/jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "../jsonql/jsonql.portfolio.mjs"; // Portfólios
 
 import { generateRandomNumber as genRandNumber } from "../tools.mjs";
@@ -10,10 +9,12 @@ import { assertBoolean, assertPositiveInt } from "../lib/validate.mjs";
 import { Usuarios } from "../jsonf/usuarios.mjs"; // Usuários
 import { Servicos } from "../jsonf/servicos.mjs"; // Serviços
 import { Contratos } from "../jsonf/contratos.mjs"; // Contratos
+import { Avaliacoes } from "../jsonf/avaliacoes.mjs"; // Avaliações
 
 const crud_usuarios = new Usuarios();
 const crud_servicos = new Servicos();
 const crud_contratos = new Contratos();
+const crud_avaliacoes = new Avaliacoes();
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -275,7 +276,7 @@ export async function criarNAvaliacoes(quantidade) {
 
         // TODO: Verificar os pós/contras de inserir os valoroes diretamente
         // na base de dados sem necessidade de um vetor
-        avaliacoes.forEach((avaliacao) => JSONQL_A.createAvaliacao(avaliacao));
+        avaliacoes.forEach((avaliacao) => crud_avaliacoes.criarAvaliacao(avaliacao));
     });
 }
 
@@ -345,7 +346,7 @@ export async function criarNUsuarios(quantidade) {
 
         // TODO: Verificar os pós/contras de inserir os valoroes diretamente
         // na base de dados sem necessidade de um vetor
-        usuarios.forEach((usuario) => JSONQL_A.createAvaliacao(usuario));
+        usuarios.forEach((usuario) => crud_usuarios.criarUsuario(usuario));
     });
 }
 

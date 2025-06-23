@@ -2,29 +2,9 @@
 
 import { Usuarios } from "../jsonf/usuarios.mjs";
 import { retornarIdSeLogado } from "../lib/credenciais.mjs";
-
-const maxAllowedSizeCad = 5 * 1024 * 1024; // 5 MB in bytes
+import { imageFileToBase64 } from "../lib/tools.mjs";
 
 const crud_usuarios = new Usuarios();
-
-// TODO: Move to module
-/**
- * @param {Blob} file
- */
-async function fileToBase64(file) {
-    const reader = new FileReader();
-
-    if (file.size > maxAllowedSizeCad)
-        throw new Error("O tamanho do arquivo deve ser menor que 5MB!");
-
-    if (!/image.*/.exec(file.type)) throw new Error("O arquivo não é uma imagem!");
-
-    return new Promise((resolve, reject) => {
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-}
 
 const htmlCadastroInputNome = document.getElementById("nome");
 const htmlCadastroInputEmail = document.getElementById("email");
@@ -120,7 +100,7 @@ async function atualizarCadastro() {
     let base64Image;
     if (fotoInput_files?.length) {
         try {
-            base64Image = await fileToBase64(fotoInput_files[0]);
+            base64Image = await imageFileToBase64(fotoInput_files[0]);
         } catch (err) {
             alert(err);
         }

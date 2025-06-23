@@ -1,17 +1,19 @@
 //@ts-check
 
-import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as Faker from "./lib/faker.mjs";
-import { ensureInteger, imageFileToBase64, isNonEmptyString, MAX_ALLOWED_SIZE } from "./tools.mjs";
+import { ensureInteger, isNonEmptyString } from "./tools.mjs";
+import { assertBase64ConvertableImage, imageFileToBase64 } from "./lib/tools.mjs";
 
 import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
 import { Servicos } from "./jsonf/servicos.mjs"; // Serviços
 import { Contratos } from "./jsonf/contratos.mjs"; // Contratos
+import { Avaliacoes } from "./jsonf/avaliacoes.mjs"; // Avaliações
 
 const crud_usuarios = new Usuarios();
 const crud_servicos = new Servicos();
 const crud_contratos = new Contratos();
+const crud_avaliacoes = new Avaliacoes();
 
 // TODO: Mover adicionar-imagens para um popup
 // TODO: Criar popups dinamicamente e remove-los do html
@@ -728,19 +730,6 @@ function commitDeleteImage() {
 }
 
 /**
- * Watch change in input of files and check if they are valid
- * @param {FileList | null} files
- */
-async function watchImageInputChange(files) {
-    if (!files || !files.length) return;
-
-    if (files[0].size > MAX_ALLOWED_SIZE)
-        throw new Error("O tamanho do arquivo deve ser menor que 5MB!");
-
-    if (!files[0].type.match("image.*")) throw new Error("O arquivo não é uma imagem!");
-}
-
-/**
  * @returns {HTMLDivElement}
  */
 function createSectionContainer() {
@@ -927,7 +916,7 @@ async function getMediaAvaliacoes(userId) {
     const userId_int = ensureInteger(userId);
     if (typeof userId_int !== "number") return null;
 
-    let avaliacoes = JSONQL_A.readAvaliacoes() || [];
+    let avaliacoes = (await crud_avaliacoes.lerAvaliacoes()) || [];
     // Sem avaliações
     if (!avaliacoes || !avaliacoes.length) return null;
 
@@ -1074,7 +1063,7 @@ async function createReviewSection(
     let content_blobs_scrool = document.createElement("div");
     content_blobs_scrool.classList.add("px-3");
 
-    let avaliacoes = JSONQL_A.readAvaliacoes();
+    let avaliacoes = await crud_avaliacoes.lerAvaliacoes();
     if (!avaliacoes?.length) {
         let information = document.createElement("p");
         information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
@@ -1249,12 +1238,15 @@ function createImageSection(
         content_add_div_1.appendChild(content_add_div_1_input);
         content_add.appendChild(content_add_div_1);
 
-        content_add_div_1_input.addEventListener("change", () =>
-            watchImageInputChange(content_add_div_1_input.files).catch((error) => {
+        content_add_div_1_input.addEventListener("change", () => {
+            // Watch change in input of files and check if they are valid
+            try {
+                assertBase64ConvertableImage(content_add_div_1_input.files);
+            } catch (error) {
                 alert(error);
                 content_add_div_1_input.value = "";
-            }),
-        );
+            }
+        });
 
         let content_add_div_2 = document.createElement("div");
         content_add_div_2.classList.add("col-12", "space-0", "px-4", "pb-4");

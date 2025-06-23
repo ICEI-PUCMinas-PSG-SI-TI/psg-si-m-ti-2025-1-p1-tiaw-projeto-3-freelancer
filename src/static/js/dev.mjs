@@ -1,6 +1,5 @@
 //@ts-check
 
-import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as Faker from "./lib/faker.mjs";
 import { ensureInteger } from "./tools.mjs";
@@ -8,10 +7,12 @@ import { ensureInteger } from "./tools.mjs";
 import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
 import { Servicos } from "./jsonf/servicos.mjs"; // Serviços
 import { Contratos } from "./jsonf/contratos.mjs"; // Contratos
+import { Avaliacoes } from "./jsonf/avaliacoes.mjs"; // Avaliações
 
 const crud_usuarios = new Usuarios();
 const crud_servicos = new Servicos();
 const crud_contratos = new Contratos();
+const crud_avaliacoes = new Avaliacoes();
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -162,18 +163,12 @@ function setupReviewsCRUD() {
         Faker.criarNAvaliacoes(parseInt(quantidade));
     });
 
-    dev_delete_avaliacoes_all.addEventListener("click", JSONQL_A.clearAvaliacoes);
+    dev_delete_avaliacoes_all.addEventListener("click", crud_avaliacoes.limparAvaliacoes);
 
-    dev_delete_avaliacoes.addEventListener("click", () => {
+    dev_delete_avaliacoes.addEventListener("click", async () => {
         const id = dev_delete_avaliacoes_id.value;
-        const id_int = ensureInteger(id);
-        if (!id_int) {
-            console.log("dev_delete_avaliacoes: Não foi possível realizar o parse do id");
-            return;
-        }
-
-        if (JSONQL_A.deleteAvaliacao(id_int)) {
-            console.log(`dev_delete_avaliacoes: avaliação ${id_int} foi deletado!`);
+        if (await crud_avaliacoes.excluirAvaliacao(id)) {
+            console.log(`dev_delete_avaliacoes: avaliação ${id} foi deletado!`);
         } else {
             console.log(
                 `dev_delete_avaliacoes: Não foi possível encontrar a avaliação ou ocorreu um erro.`,
@@ -181,7 +176,7 @@ function setupReviewsCRUD() {
         }
     });
 
-    dev_read_avaliacoes.addEventListener("click", () => console.log(JSONQL_A.readAvaliacoes()));
+    dev_read_avaliacoes.addEventListener("click", () => console.log(crud_avaliacoes.lerAvaliacoes()));
 }
 
 function setupPortfolioCRUD() {

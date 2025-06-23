@@ -2,38 +2,48 @@
     "avaliacoes": [
         {
             "comentario": "Um comentário simples sobre o serviço de id {id}",
-            "contratanteId": 5,
             "contratoId": 0,
+            "data": "1970-01-01T00:00:00.000Z-03:00",
             "id": 0,
-            "nota": 5
+            "imagem": "base64|url",
+            "nota": 5,
+            "usuarioId": 5
         },
         {
             "comentario": "Um comentário simples sobre o serviço de id {id}",
-            "contratanteId": 4,
             "contratoId": 0,
+            "data": "1970-01-01T00:00:00.000Z-03:00",
             "id": 1,
-            "nota": 1
+            "imagem": "base64|url",
+            "nota": 1,
+            "usuarioId": 4
         },
         {
             "comentario": "Um comentário simples sobre o serviço de id {id}",
-            "contratanteId": 3,
             "contratoId": 1,
+            "data": "1970-01-01T00:00:00.000Z-03:00",
             "id": 2,
-            "nota": 2
+            "imagem": "base64|url",
+            "nota": 2,
+            "usuarioId": 3
         },
         {
             "comentario": "Um comentário simples sobre o serviço de id {id}",
-            "contratanteId": 2,
             "contratoId": 1,
+            "data": "1970-01-01T00:00:00.000Z-03:00",
             "id": 3,
-            "nota": 8
+            "imagem": "base64|url",
+            "nota": 8,
+            "usuarioId": 2
         },
         {
             "comentario": "Um comentário simples sobre o serviço de id {id}",
-            "contratanteId": 2,
             "contratoId": 1,
+            "data": "1970-01-01T00:00:00.000Z-03:00",
             "id": 4,
-            "nota": 10
+            "imagem": "base64|url",
+            "nota": 10,
+            "usuarioId": 2
         }
     ]
 }

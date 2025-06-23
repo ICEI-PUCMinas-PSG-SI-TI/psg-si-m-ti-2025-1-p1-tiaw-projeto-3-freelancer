@@ -34,6 +34,8 @@
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
     <script defer type="module" src="static/js/profile.mjs"></script>
+    <!-- Page Scripts -->
+    <script defer type="module" src="static/js/avaliacoes.mjs"></script>
   </head>
 
   <body>
@@ -177,8 +179,8 @@
             </div>
           </div>
           <div class="buttons">
-            <button class="cancelar" type="button" onclick="limparFormulario()">Cancelar</button>
-            <button type="button" onclick="publicar()">Publicar</button>
+            <button id="btn-cancelar" class="cancelar" type="button">Cancelar</button>
+            <button id="btn-publicar" type="button">Publicar</button>
           </div>
         </section>
       </div>
@@ -241,7 +243,5 @@
         </div>
       </div>
     </footer>
-
-    <script src="static/js/avaliacoes.js"></script>
   </body>
 </html>
