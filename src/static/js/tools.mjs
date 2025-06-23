@@ -1,56 +1,37 @@
 //@ts-check
 
-/**
- * Retorna um número aleatório entre 0 e max, o min é opcional
- * Valor máximo
- * @param {number} max Valor máximo
- * @param {number} [min] Valor mínimo (opcional = 0)
- *
- * @returns {number | null} Retorna um número aleatório
- */
-// TODO: check types
-export function generateRandomNumberOld(max, min) {
-    if (min) {
-        let val = Math.random() * (max - min) + min;
-        // TODO: why convert to string? avoid IDE warning
-        // Avoid double values
-        return parseInt(val.toString(), 10);
-    }
-
-    if (!max) return 0;
-
-    return Math.floor(Math.random() * max);
-}
+import { assertBoolean, assertNumber } from "./lib/validate.mjs";
 
 /**
  * Retorna um número aleatório, default: {min(0), max(10000)}
  *
  * O valor máximo não é inclusivo
- * @param {{min?, max?, double?}} [opts={}]
- * @returns {number | any} Retorna um número aleatório
+ * @param {{min?: number, max?: number, double?: boolean}} [opts={}]
+ * @returns {number} Retorna um número aleatório
  */
 export function generateRandomNumber(opts = {}) {
+    if (Object.hasOwn(opts, "min")) assertNumber(opts.min);
+    if (Object.hasOwn(opts, "max")) assertNumber(opts.max);
+    if (Object.hasOwn(opts, "double")) assertBoolean(opts.double);
+
     // opts.min(number): Limite mínimo do valor gerado (default: 0)
     let _min = opts.min || 0;
     // opts.max(number): Limite máximo do valor gerado (default: 10 000)
     let _max = opts.max || 10000;
     // opts.double(boolean): Retorna double como argumento
-    const double = opts.double === true;
+    const _double = opts.double || true;
 
-    if (typeof _min !== "number" || typeof _max !== "number")
-        throw new Error("generateRandomNumber: Invalid Params");
-
-    if (!double) {
+    if (!_double) {
         _min = Math.floor(_min);
         _max = Math.floor(_max);
     }
 
     // TODO: Should this function return error?
-    if (_max < _min) return;
+    if (_min > _max) throw new Error("MIN is greatter than MAX!");
 
     const ret = Math.random() * (_max - _min) + _min;
 
-    if (!double) return Math.floor(ret);
+    if (!_double) return Math.floor(ret);
 
     return ret;
 }
@@ -123,23 +104,6 @@ export function isNonEmptyString(value) {
  */
 export function isNonNegativeInt(value) {
     return Number.isInteger(value) && value >= 0;
-}
-
-export function assertPositiveInt(value) {
-    if (typeof value !== "number" || Number.isNaN(value)) throw new Error("Value is not a number!");
-    if (value <= 0) throw new Error("Value is not positive!");
-}
-
-const LUCRE_KEY = "LucreM";
-
-// Função para alterar keys, isso garante que nenhuma aplicativo rodando e/ou
-// salvando dados no localStorage/localStorage interfica nessa aplicação.
-function lucreKey(key) {
-    return `${LUCRE_KEY}.${key}`;
-}
-
-export function isUserLoggedIn() {
-    return !!localStorage.getItem(lucreKey("id"));
 }
 
 export function assertNonEmptyString(value) {

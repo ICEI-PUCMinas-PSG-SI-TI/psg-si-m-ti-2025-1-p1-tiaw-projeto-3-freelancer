@@ -33,7 +33,7 @@
     <script src="static/js/redirect.js"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
-    <script defer src="static/js/profile.js"></script>
+    <script defer type="module" src="static/js/profile.mjs"></script>
     <!-- Page Scripts-->
     <script defer type="module" src="static/js/page/homepage.mjs"></script>
   </head>
@@ -78,15 +78,21 @@
           <!-- Layout será modificado por js/darkmode.js -->
           <div class="d-none" id="toggleDarkDiv"></div>
           <!-- id.navbar.search -->
-          <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Pesquisar"
-              aria-label="Search" />
-            <a class="btn btn-outline-primary" href="/404">🔍</a>
-            <!-- TODO: Adicionar botão de pesquisa -->
-          </form>
+          <script defer type="module" src="static/js/pesquisa.js"></script>
+          <div id="inflate_pesquisa" class="d-none">
+            <form
+              class="d-flex flex-column flex-sm-row"
+              role="search"
+              onsubmit="(e)=>e.preventDefault()">
+              <input
+                id="search-bar"
+                class="form-control me-sm-2 mb-2 mb-sm-0"
+                type="search"
+                placeholder="Pesquisar"
+                aria-label="Search" />
+              <button id="search-btn" class="btn btn-outline-primary">Pesquisar</button>
+            </form>
+          </div>
           <!-- id.navbar.profile -->
           <div class="m-2 me-0 rounded d-flex justify-content-center">
             <img
@@ -126,6 +132,13 @@
           <h3>Top 10 profissionais</h3>
           <hr />
           <div class="scroll-row" id="top10"></div>
+        </div>
+
+        <!-- Top 10 Serviços -->
+        <div class="category" id="cat-top10-serv">
+          <h3>Top 10 Serviços</h3>
+          <hr />
+          <div class="scroll-row" id="top10-serv"></div>
         </div>
 
         <div class="category" id="cat-fotografos">

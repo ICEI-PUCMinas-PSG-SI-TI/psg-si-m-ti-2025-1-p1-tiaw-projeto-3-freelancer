@@ -33,7 +33,7 @@
     <script src="static/js/redirect.js"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
-    <script defer src="static/js/profile.js"></script>
+    <script defer type="module" src="static/js/profile.mjs"></script>
     <!-- Page Scripts -->
     <script defer type="module" src="static/js/page/perfil.mjs"></script>
   </head>
@@ -117,42 +117,52 @@
           <img
             id="profile-picture-perfil"
             class="profile-picture-perfil rounded-circle mb-3"
-            src="https://picsum.photos/150"
+            src="static/img/placeholder_profile.png"
             alt="Profile" />
-          <h2 id="profile-name-perfil" class="profile-name">Arthur Melo</h2>
-          <p id="profile-title" class="profile-title">Analista Financeiro.</p>
-          <p id="profile-location" class="profile-location">Belo Horizonte, MG</p>
+          <h2 id="profile-name-perfil" class="profile-name">Nome Completo</h2>
+          <p id="profile-title" class="profile-title">Profissão</p>
+          <p id="profile-location" class="profile-location">Cidade</p>
         </div>
-        <div class="profile-contact d-flex justify-content-center gap-3 mt-3">
-          <a id="profile-contato" href="tel:+7910018830" class="btn btn-outline-primary d-none">
-            +55 (31) 123456789
+        <div class="profile-contact d-flex center-xy space-0 gap-3 mx-auto flex-wrap">
+          <a
+            id="profile-contato"
+            href="tel:+7910018830"
+            class="btn btn-outline-primary text-nowrap d-none">
+            +55 (31) 970707070
           </a>
           <a
             id="profile-email"
             href="mailto:kevin.smith@stripe.com"
-            class="btn btn-outline-secondary">
-            arthur.andrade@gmail.com
+            class="btn btn-outline-secondary text-nowrap">
+            email@example.com
           </a>
         </div>
+      </div>
+
+      <div
+        class="profile-section container-fluid text-center space-0 mb-3 limit900px position-relative p-3 d-none">
+        <p id="profile-biografia" class="border rounded space-0 p-2">
+          Descrição do usuário. Diferenciais e qualquer informação relevante para o cliente.
+        </p>
       </div>
 
       <!-- Estatísticas -->
       <div class="stats-section container-fluid text-center mb-3 limit900px">
         <div class="row">
-          <div class="col-12 col-md-4 space-0 mb-3">
-            <div class="mx-2 mb-2 stat-box h-100">
+          <div class="col-12 col-md-4 space-0">
+            <div class="stat-box h-100 mb-2 me-0 me-md-3">
               <h4 id="profile-nota">4.5</h4>
               <p class="space-0">Nota</p>
             </div>
           </div>
-          <div class="col-12 col-md-4 space-0 mb-3">
-            <div class="mx-2 mb-2 stat-box h-100">
+          <div class="col-12 col-md-4 space-0">
+            <div class="stat-box h-100 mb-2 me-0 me-md-3">
               <h4 id="profile-aval">153</h4>
               <p class="space-0">Avaliações</p>
             </div>
           </div>
-          <div class="col-12 col-md-4 space-0 mb-3">
-            <div class="mx-2 mb-2 stat-box h-100">
+          <div class="col-12 col-md-4 space-0">
+            <div class="stat-box h-100 mb-2">
               <a class="btn btn-primary" href="/404">Chat</a>
             </div>
           </div>

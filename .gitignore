@@ -12,3 +12,6 @@ package-lock.json
 # Other
 _temp/
 *_test.*
+
+# Dev
+db/dev.json

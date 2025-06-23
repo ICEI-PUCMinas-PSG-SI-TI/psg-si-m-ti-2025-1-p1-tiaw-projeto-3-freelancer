@@ -466,7 +466,7 @@ email = [
     "pedrohenrique.carvalho@example.com",
 ]
 
-cpf_cnpj = [
+cpfCnpj = [
     "678.104.703-04",
     "596.569.356-51",
     "491.586.840-73",

@@ -2,7 +2,7 @@
 import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
-import * as Faker from "./faker.mjs";
+import * as Faker from "./lib/faker.mjs";
 import { ensureInteger, imageFileToBase64, isNonEmptyString, MAX_ALLOWED_SIZE } from "./tools.mjs";
 
 import { Usuarios } from "./jsonf/usuarios.mjs";

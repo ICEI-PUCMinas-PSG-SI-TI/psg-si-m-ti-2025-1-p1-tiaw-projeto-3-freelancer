@@ -1,20 +1,12 @@
 //@ts-check
 
 import { Usuarios } from "../jsonf/usuarios.mjs";
+import { assertStringNonEmpty } from "../lib/validate.mjs";
+import { retornarIdSeLogado } from "../lib/credenciais.mjs";
 
 const crud_usuarios = new Usuarios();
 
 const htmlBackgroundImage = document.querySelector("div.body-section.body-content");
-
-function getPerfilId() {
-    return localStorage.getItem("LucreM.id") || "lucremais";
-}
-
-// TODO: Use username for background photos
-if (htmlBackgroundImage instanceof HTMLDivElement) {
-    htmlBackgroundImage.style.backgroundImage = `url(https://picsum.photos/seed/${getPerfilId() || "lucremais"}/1080)`;
-}
-
 const htmlProfileImgPicture = document.getElementById("profile-picture-perfil");
 const htmlProfileH2ProfileName = document.getElementById("profile-name-perfil");
 const htmlProfileParagTitle = document.getElementById("profile-title");
@@ -23,10 +15,17 @@ const htmlProfileLinkContato = document.getElementById("profile-contato");
 const htmlProfileLinkEmail = document.getElementById("profile-email");
 const htmlProfileParagNota = document.getElementById("profile-nota");
 const htmlProfileParagAval = document.getElementById("profile-aval");
+const htmlProfileParagBiografia = document.getElementById("profile-biografia");
 const htmlProfileButtonEditPerfil = document.getElementById("button-edit-perfil");
 
-async function inicializarPerfil() {
-    const _usuarios = await crud_usuarios.lerUsuario(getPerfilId());
+async function inicializarPerfil(id, allowEdit) {
+    assertStringNonEmpty(id);
+
+    const _usuarios = await crud_usuarios.lerUsuario(id);
+    if (!_usuarios) {
+        alert("Não foi possível ler as informações desse usuário!");
+        return;
+    }
 
     const nota = "4.4";
     const avaliacoes = "152";
@@ -39,20 +38,31 @@ async function inicializarPerfil() {
         !(htmlProfileLinkContato instanceof HTMLAnchorElement) ||
         !(htmlProfileLinkEmail instanceof HTMLAnchorElement) ||
         !htmlProfileParagNota ||
+        !htmlProfileParagBiografia ||
         !htmlProfileParagAval
     ) {
         console.log("Null check2");
         return;
     }
 
+    // TODO: Use username for background photos
+    if (htmlBackgroundImage instanceof HTMLDivElement) {
+        htmlBackgroundImage.style.backgroundImage = `url(https://picsum.photos/seed/${id}/1080)`;
+    }
+
     htmlProfileImgPicture.src = _usuarios.foto || "static/img/placeholder_profile.png";
     htmlProfileH2ProfileName.innerText = _usuarios.nome;
     htmlProfileParagTitle.innerText = _usuarios.profissao || "Profissão não informada";
     htmlProfileParagCidade.innerText = _usuarios.cidade || "Região não informada";
-    if (_usuarios.contato) {
+    if (_usuarios.biografia) {
+        htmlProfileParagBiografia.parentElement?.classList.remove("d-none");
+        htmlProfileParagBiografia.innerText = _usuarios.biografia;
+    }
+    if (_usuarios.contatos?.length) {
+        const _contato = _usuarios.contatos[0];
         htmlProfileLinkContato.classList.remove("d-none");
-        htmlProfileLinkContato.innerText = _usuarios.contato;
-        const _strip_contato = _usuarios.contato.replace(/[^0-9+]/gm, "");
+        htmlProfileLinkContato.innerText = _contato;
+        const _strip_contato = _contato.replace(/[^0-9+]/gm, "");
         htmlProfileLinkContato.href = `tel:${_strip_contato}`;
     }
     htmlProfileLinkEmail.innerText = _usuarios.email;
@@ -61,9 +71,22 @@ async function inicializarPerfil() {
     htmlProfileParagNota.innerText = nota;
     htmlProfileParagAval.innerText = avaliacoes;
 
-    // if(localStorage.id === id)
-    htmlProfileButtonEditPerfil?.classList.remove("d-none");
-    htmlProfileButtonEditPerfil?.addEventListener("click", () => location.assign("/cadastro"));
+    if (allowEdit) {
+        htmlProfileButtonEditPerfil?.classList.remove("d-none");
+        htmlProfileButtonEditPerfil?.addEventListener("click", () => location.assign("/cadastro"));
+    }
 }
 
-inicializarPerfil();
+function carregarDadosDaUrl() {
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
+    // Mostrar perfil do usuário
+    if (id) {
+        inicializarPerfil(id, false);
+        return;
+    }
+
+    inicializarPerfil(retornarIdSeLogado(), true);
+}
+
+carregarDadosDaUrl();

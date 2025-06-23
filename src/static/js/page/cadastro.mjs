@@ -1,6 +1,7 @@
 //@ts-check
 
 import { Usuarios } from "../jsonf/usuarios.mjs";
+import { retornarIdSeLogado } from "../lib/credenciais.mjs";
 
 const maxAllowedSizeCad = 5 * 1024 * 1024; // 5 MB in bytes
 
@@ -31,7 +32,7 @@ const htmlCadastroInputSenha = document.getElementById("senha");
 const htmlCadastroSelectTipo = document.getElementById("tipo");
 const htmlCadastroInputCpfCnpj = document.getElementById("cpf");
 const htmlCadastroInputContato = document.getElementById("contato");
-const htmlCadastroInputDataNascimento = document.getElementById("data_nascimento");
+const htmlCadastroInputDataNascimento = document.getElementById("data-nascimento");
 const htmlCadastroInputCidade = document.getElementById("cidade");
 const htmlCadastroTextAreaBiografia = document.getElementById("biografia");
 const htmlCadastroInputFoto = document.getElementById("foto");
@@ -40,16 +41,21 @@ const htmlCadastroSelectProfissao = document.getElementById("profissao");
 const htmlCadastroSelectSexo = document.getElementById("sexo");
 const htmlCadastroInputEscolaridade = document.getElementById("escolaridade");
 
-let username = "";
+class EditContext {
+    constructor(json, id, foto, username, dataCadastro, formularioConcluido) {
+        this.json = json;
+        this.id = id;
+        this.foto = foto;
+        this.username = username;
+        this.dataCadastro = dataCadastro;
+        this.formularioConcluido = formularioConcluido;
+    }
+}
+
+/** @type {EditContext | null} */
+let editContext = null;
 
 const htmlCadastroForm = document.getElementById("formCadastro");
-
-// TODO: Verificar ou resetar credenciais
-function idUsuarioCorrente() {
-    const id = localStorage.getItem("LucreM.id");
-    if (!id) throw new Error("ID não identificada");
-    return id;
-}
 
 async function atualizarCadastro() {
     if (
@@ -75,9 +81,9 @@ async function atualizarCadastro() {
     const email = htmlCadastroInputEmail.value;
     const senha = htmlCadastroInputSenha.value;
     const tipo = htmlCadastroSelectTipo.value;
-    const cpf_cnpj = htmlCadastroInputCpfCnpj.value.replace(/\D/g, "");
+    const cpfCnpj = htmlCadastroInputCpfCnpj.value.replace(/\D/g, "");
     const contato = htmlCadastroInputContato.value.replace(/\D/g, "");
-    const data_nascimento = htmlCadastroInputDataNascimento.value;
+    const dataNascimento = htmlCadastroInputDataNascimento.value;
     const cidade = htmlCadastroInputCidade.value;
     const biografia = htmlCadastroTextAreaBiografia.value;
     const fotoInput_files = htmlCadastroInputFoto.files;
@@ -85,43 +91,50 @@ async function atualizarCadastro() {
     const sexo = htmlCadastroSelectSexo.value;
     const escolaridade = htmlCadastroInputEscolaridade.value;
 
-    // Tornar foto opcional
-    if (!fotoInput_files?.length) {
+    if (!editContext) {
+        alert("Houve erros ao realizar a atualização das informações!");
+        return;
+    }
+
+    let informacoesUsuario = {
+        id: retornarIdSeLogado(),
+        ativo: true,
+        nome,
+        username: editContext.username,
+        dataNascimento: new Date(dataNascimento).toISOString(),
+        email,
+        senha,
+        contatos: [contato],
+        tipo,
+        cpfCnpj,
+        cidade,
+        biografia,
+        profissao,
+        sexo,
+        escolaridade,
+        dataCadastro: editContext.dataCadastro,
+        formularioConcluido: editContext.formularioConcluido,
+    };
+
+    // TODO: Tornar foto opcional?
+    let base64Image;
+    if (fotoInput_files?.length) {
+        try {
+            base64Image = await fileToBase64(fotoInput_files[0]);
+        } catch (err) {
+            alert(err);
+        }
+    } else if (editContext.foto) {
+        base64Image = editContext.foto;
+    } else {
         alert("Por favor, selecione uma foto.");
         return;
     }
 
-    // TODO: Clear input if image is invalid
-    fileToBase64(fotoInput_files[0])
-        .then((result) => {
-            crud_usuarios
-                .atualizarUsuario({
-                    id: idUsuarioCorrente(),
-                    ativo: true,
-                    foto: result,
-                    nome,
-                    username,
-                    data_nascimento: new Date(data_nascimento).toISOString(),
-                    email,
-                    senha,
-                    contatos: [
-                        {
-                            id: 1,
-                            // TODO: Check this
-                            contato,
-                        },
-                    ],
-                    tipo,
-                    cpf_cnpj,
-                    cidade,
-                    biografia,
-                    profissao,
-                    sexo,
-                    escolaridade,
-                })
-                .then(() => alert("Informações atualizadas com sucesso!"));
-        })
-        .catch((error) => alert(error));
+    informacoesUsuario.foto = base64Image;
+    crud_usuarios
+        .atualizarUsuario(informacoesUsuario)
+        .then(() => alert("Informações atualizadas com sucesso!"));
 }
 
 async function preencherValores() {
@@ -143,27 +156,37 @@ async function preencherValores() {
     )
         throw new Error("Null checking");
 
-    const usuario = await crud_usuarios.lerUsuario(idUsuarioCorrente());
+    const usuario = await crud_usuarios.lerUsuario(retornarIdSeLogado());
+    if (!usuario) return;
+
+    editContext = new EditContext(
+        usuario,
+        usuario.id,
+        usuario.foto,
+        usuario.username,
+        usuario.dataCadastro,
+        usuario.formularioConcluido,
+    );
+
     if (usuario.nome) htmlCadastroInputNome.value = usuario.nome;
     if (usuario.email) htmlCadastroInputEmail.value = usuario.email;
     if (usuario.senha) htmlCadastroInputSenha.value = usuario.senha;
-    if (usuario.cpf_cnpj) htmlCadastroInputCpfCnpj.value = usuario.cpf_cnpj;
+    if (usuario.cpfCnpj) htmlCadastroInputCpfCnpj.value = usuario.cpfCnpj;
     if (usuario.cidade) htmlCadastroInputCidade.value = usuario.cidade;
     if (usuario.biografia) htmlCadastroTextAreaBiografia.value = usuario.biografia;
     if (usuario.escolaridade) htmlCadastroInputEscolaridade.value = usuario.escolaridade;
 
-    if (usuario.contatos?.length) htmlCadastroInputContato.value = usuario.contatos[0].contato;
+    if (usuario.contatos?.length) htmlCadastroInputContato.value = usuario.contatos[0];
 
     if (usuario.profissao) htmlCadastroSelectProfissao.value = usuario.profissao;
     if (usuario.tipo) htmlCadastroSelectTipo.value = usuario.tipo;
     if (usuario.sexo) htmlCadastroSelectSexo.value = usuario.sexo;
 
-    if (usuario.data_nascimento)
-        htmlCadastroInputDataNascimento.value = new Date(usuario.data_nascimento)
+    if (usuario.dataNascimento)
+        htmlCadastroInputDataNascimento.value = new Date(usuario.dataNascimento)
             .toISOString()
             .slice(0, 10);
     if (usuario.foto) htmlCadastroImgPreview.src = usuario.foto;
-    if (usuario.username) username = usuario.username;
 }
 
 function inicializarCadastro() {

@@ -33,9 +33,9 @@
     <script src="static/js/redirect.js"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
-    <script defer src="static/js/profile.js"></script>
+    <script defer type="module" src="static/js/profile.mjs"></script>
     <!-- Page Scripts -->
-    <script defer src="static/js/detalhes.js"></script>
+    <script defer type="module" src="static/js/page/detalhes.mjs"></script>
   </head>
 
   <body>
@@ -75,6 +75,8 @@
             </li>
           </ul>
           <div class="d-none" id="toggleDarkDiv"></div>
+          <!-- id.navbar.search -->
+          <script defer type="module" src="static/js/pesquisa.js"></script>
           <div id="inflate_pesquisa" class="d-none">
             <form
               class="d-flex flex-column flex-sm-row"
@@ -101,120 +103,107 @@
     </nav>
 
     <!-- Conteúdo da página -->
-    <main class="body-content body-section container my-5 detalhes-servico">
-      <div class="row g-4">
-        <!-- Imagem do serviço -->
-        <div class="col-12 col-md-4 d-flex align-items-start justify-content-center">
-          <img
-            id="servico-img"
-            src="static/img/placeholder_profile.png"
-            alt="Serviço"
-            class="img-fluid rounded shadow detalhes-servico-img" />
-        </div>
-        <!-- Informações do serviço -->
-        <div class="col-12 col-md-8">
-          <h2 class="mb-3" id="servico-titulo">Título do Serviço Exemplo</h2>
-          <span class="badge bg-primary mb-2" id="servico-categoria">
-            Categoria: Design Gráfico
-          </span>
-          <p class="lead mb-4" id="servico-descricao">
-            Descrição detalhada do serviço oferecido. Explique aqui o que está incluso, prazos,
-            diferenciais e qualquer informação relevante para o cliente.
-          </p>
-          <ul class="list-group mb-4">
-            <li class="list-group-item bg-transparent text-light">
-              <strong>Freelancer:</strong>
-              <span id="freelancer-nome">João Silva</span>
-            </li>
-            <li class="list-group-item bg-transparent text-light">
-              <strong>Prazo:</strong>
-              <span id="prazo-servico">7 dias úteis</span>
-            </li>
-            <li class="list-group-item bg-transparent text-light">
-              <strong>Preço:</strong> <span id="preco-servico">R$ 500,00</span>
-            </li>
-            <li class="list-group-item bg-transparent text-light">
-              <strong>Avaliação:</strong>
-              <span id="avaliacao-servico">⭐⭐⭐⭐⭐ (4.9/5)</span>
-            </li>
-          </ul>
-          <div class="d-flex flex-wrap gap-2">
-            <a href="#" id="contratar-btn" class="btn btn-success"> Contratar Serviço </a>
-            <a href="#" id="mensagem-btn" class="btn btn-outline-secondary"> Enviar Mensagem </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Avaliações -->
-      <section class="mt-5">
-        <h4 class="mb-3">Avaliações Recentes</h4>
-        <div id="avaliacoes-lista">
-          <!-- Avaliações serão preenchidas via JS -->
-          <div class="card mb-3 bg-dark-subtle detalhes-servico-avaliacao d-none">
-            <div class="card-body">
-              <h6 class="card-title mb-1">Nome <span class="text-warning">⭐⭐⭐⭐⭐</span></h6>
-              <p class="card-text mb-0">Comentário</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Exemplo de lista de serviços dinâmica -->
-      <section class="mt-5">
-        <h4 class="mb-3">Gerenciar Serviços (Exemplo)</h4>
-        <form id="form-servico" class="mb-3">
-          <div class="row g-2">
-            <div class="col-md-3">
-              <input type="text" id="titulo" class="form-control" placeholder="Título" required />
-            </div>
-            <div class="col-md-3">
-              <input type="text" id="contato" class="form-control" placeholder="Contato" required />
-            </div>
-            <div class="col-md-3">
-              <select id="categoriaId" class="form-select" required>
-                <option value="">Categoria</option>
-                <option value="1">Design Gráfico</option>
-                <option value="2">Desenvolvimento Web</option>
-                <option value="3">Redação</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <input
-                type="text"
-                id="descricao"
-                class="form-control"
-                placeholder="Descrição"
-                required />
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary mt-2">Salvar Serviço</button>
-        </form>
-        <ul id="lista-servicos" class="list-group"></ul>
-      </section>
-
-      <div
-        id="profile-modal"
-        class="d-flex profile-modal justify-content-end align-items-top d-none">
-        <div class="m-3">
-          <div class="card">
-            <div class="card-body">
-              <div class="d-flex center-xy inner-profile-modal flex-column">
+    <div class="body-content body-section container-fluid detalhes-servico p-3">
+      <div class="d-flex w-100 center-xy flex-column">
+        <div class="card limit1000px w-100 space-0 mb-3">
+          <div class="card-body">
+            <div class="row space-0">
+              <!-- Imagem do serviço -->
+              <div class="col-12 col-md-4 d-flex center-xy space-0 mb-3 mb-md-0">
                 <img
-                  id="profile-picture-big"
-                  class="rounded border-2 mb-3"
+                  id="servico-img"
                   src="static/img/placeholder_profile.png"
-                  alt="Profile" />
-                <p id="profile-name">Nome do Usuário</p>
-                <button id="profile-show-perfil" class="btn btn-primary w-100 mb-3">
-                  Ver Perfil
-                </button>
-                <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
+                  alt="Serviço"
+                  class="img-fluid rounded shadow detalhes-servico-img" />
+              </div>
+              <!-- Informações do serviço -->
+              <div class="col-12 col-md-8 align-items-center space-0 ps-md-4">
+                <h2 class="mb-3" id="servico-titulo">Título do Serviço</h2>
+                <span class="badge bg-primary mb-2" id="servico-categoria">
+                  Categoria do Serviço
+                </span>
+                <p class="lead mb-4" id="servico-descricao">
+                  Descrição detalhada do serviço oferecido. Explique aqui o que está incluso,
+                  prazos, diferenciais e qualquer informação relevante para o cliente.
+                </p>
+                <ul class="list-group">
+                  <li class="list-group-item bg-transparent text-light">
+                    <strong>Freelancer:</strong>
+                    <a id="freelancer-nome" href="/perfil#404" class="text-decoration-none">
+                      Não disponível
+                    </a>
+                  </li>
+                  <li class="list-group-item bg-transparent text-light">
+                    <strong>Prazo:</strong>
+                    <span id="prazo-servico">Não informado</span>
+                  </li>
+                  <li class="list-group-item bg-transparent text-light">
+                    <strong>Preço:</strong>
+                    <span id="preco-servico">Não informado</span>
+                  </li>
+                  <li class="list-group-item bg-transparent text-light">
+                    <strong>Avaliação:</strong>
+                    <span id="avaliacao-servico">⭐⭐⭐⭐⭐ (4.9/5)</span>
+                  </li>
+                  <li class="list-group-item bg-transparent text-light">
+                    <strong>Contato:</strong>
+                    <span id="servico-contato">Não informado</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <hr />
+            <div class="row w-100 center-xy">
+              <div class="d-flex flex-wrap gap-2 flex-row center-xy">
+                <a href="/404" id="contratar-btn" class="btn btn-success">Contratar Serviço</a>
+                <a href="/404" id="mensagem-btn" class="btn btn-outline-secondary">
+                  Enviar Mensagem
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avaliações -->
+        <div class="card limit1000px w-100 mb-3">
+          <div class="card-body">
+            <h4 class="mb-3">Avaliações Recentes</h4>
+            <div id="avaliacoes-lista">
+              <!-- Avaliações serão preenchidas via JS -->
+              <div class="card mb-3 bg-dark-subtle detalhes-servico-avaliacao d-none">
+                <div class="card-body">
+                  <h6 class="card-title mb-1">Nome <span class="text-warning">⭐⭐⭐⭐⭐</span></h6>
+                  <p class="card-text mb-0">Comentário</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="profile-modal"
+          class="d-flex profile-modal justify-content-end align-items-top d-none">
+          <div class="m-3">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex center-xy inner-profile-modal flex-column">
+                  <img
+                    id="profile-picture-big"
+                    class="rounded border-2 mb-3"
+                    src="static/img/placeholder_profile.png"
+                    alt="Profile" />
+                  <p id="profile-name">Nome do Usuário</p>
+                  <button id="profile-show-perfil" class="btn btn-primary w-100 mb-3">
+                    Ver Perfil
+                  </button>
+                  <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </main>
+    </div>
 
     <!-- Rodapé -->
     <footer class="body-section body-footer container-fluid border-top m-0 p-0 g-0">
