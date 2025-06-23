@@ -156,7 +156,6 @@ function saveCredentials(obj) {
 }
 
 async function realizarLogin() {
-    console.log("object");
     if (!ValidarLogin(htmlInputLoginUsername) || !ValidarSenha(htmlInputLoginPassword)) return;
 
     if (
@@ -220,7 +219,7 @@ function checkLoginPasswordInJson(jsonArray, login, password) {
     for (const usuario of jsonArray) {
         if (
             (typeof usuario.email !== "string" && typeof usuario.username !== "string") ||
-            typeof usuario.username !== "string"
+            typeof usuario.senha !== "string"
         )
             continue;
         if ((usuario.email === login || usuario.username === login) && usuario.senha === password)
@@ -313,6 +312,7 @@ async function realizarCadastro() {
         email: _email,
         // Indica que informações como foto, profissão ou outras informações não foram cadastradas
         formularioConcluido: false,
+        dataCadastro: new Date().toISOString(),
     });
 
     // 3. Informar se cadastro foi realizado com sucesso

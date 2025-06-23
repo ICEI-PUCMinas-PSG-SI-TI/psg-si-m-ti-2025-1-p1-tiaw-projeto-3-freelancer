@@ -1,7 +1,10 @@
 // @ts-check
 
-import { readUsuarios } from "./jsonql.user.mjs";
-import { readServicos } from "./jsonql.service.mjs";
+import { Usuarios } from "./jsonf/usuarios.mjs";
+import { Servicos } from "./jsonf/servicos.mjs";
+
+const crud_usuarios = new Usuarios();
+const crud_servicos = new Servicos();
 
 const prepareString = (str) => {
     return (
@@ -47,7 +50,7 @@ function createServiceCard(
 ) {
     const card = document.createElement("a");
     card.classList.add("col-12", "col-md-6", "col-xl-4", "text-decoration-none");
-    card.href = "404.html";
+    card.href = `/detalhes?id=${id}`;
     // TODO: Adicionar avaliações como estrelas
     card.innerHTML = `<div class="card h-100 w-100">
         <div class="card-body d-flex flex-column">
@@ -82,7 +85,7 @@ function createUserCard(
 ) {
     const card = document.createElement("a");
     card.classList.add("col-12", "col-md-6", "col-xl-4", "text-decoration-none");
-    card.href = "404.html";
+    card.href = `/perfil?id=${id}`;
     // TODO: Adicionar avaliações como estrelas
     card.innerHTML = `<div class="card h-100 w-100">
         <div class="card-body d-flex flex-column">
@@ -107,11 +110,11 @@ function createUserCard(
     return card;
 }
 
-function getData() {
-    servicos = readServicos();
+async function getData() {
+    servicos = await crud_servicos.lerServicos();
     if (!servicos) return;
 
-    usuarios = readUsuarios();
+    usuarios = await crud_usuarios.lerUsuarios();
     if (!usuarios) return;
 }
 
@@ -126,41 +129,41 @@ function showResultsServices() {
     if (!servicos) return;
 
     let service_filtered = servicos;
-    if (filtros.query)
+    if (filtros?.query)
         service_filtered = service_filtered.filter((_servico) => {
             const indexer = prepareString(`${_servico.id}${_servico.titulo}${_servico.descricao}`);
-            return indexer.includes(prepareString(filtros.query));
+            return indexer.includes(prepareString(filtros?.query));
         });
 
-    if (filtros.localizacao)
+    if (filtros?.localizacao)
         service_filtered = service_filtered.filter((_servico) => {
             // INFO: Desabilitado por agora devido ao CRUD de serviços não incluir a informação de localização
             // TODO: Add a filter to all elements of filtering
             const cidade = _servico.cidade || "";
-            return cidade.toLowerCase().includes(filtros.localizacao);
+            return cidade.toLowerCase().includes(filtros?.localizacao);
         });
 
     const _service_avaliacoes_quantidade = 12;
     const _service_avaliacoes_nota_media = 6;
 
-    if (filtros.review)
+    if (filtros?.review)
         service_filtered = service_filtered.filter(
-            () => _service_avaliacoes_nota_media >= parseInt(filtros.review),
+            () => _service_avaliacoes_nota_media >= parseInt(filtros?.review),
         );
 
     const search_text_service = document.getElementById("search_text_se");
     const no_found_service = document.getElementById("no_found_service");
     if (service_filtered.length === 0) {
         no_found_service?.classList.remove("d-none");
-        if (filtros.query.trim() !== "" && search_text_service instanceof HTMLSpanElement) {
-            search_text_service.innerText = ` com a pesquisa "${filtros.query}"`;
+        if (filtros?.query?.trim() && search_text_service instanceof HTMLSpanElement) {
+            search_text_service.innerText = ` com a pesquisa "${filtros?.query}"`;
         }
     } else {
         no_found_service?.classList.add("d-none");
         if (search_text_service instanceof HTMLSpanElement) search_text_service.innerText = "";
     }
 
-    service_filtered.forEach((_servico) => {
+    for (const _servico of service_filtered) {
         // TODO: Criar relação do usuario com o serviço
         const _servico_user_id = "Fulano";
         // TODO: Ler dinamicamente
@@ -175,7 +178,7 @@ function showResultsServices() {
                 _service_avaliacoes_nota_media,
             ),
         );
-    });
+    }
 }
 
 function showResultsUsers() {
@@ -187,39 +190,39 @@ function showResultsUsers() {
 
     let user_filtered = usuarios;
 
-    if (filtros.query)
+    if (filtros?.query)
         user_filtered = user_filtered.filter((_user) => {
             const indexer = prepareString(
                 `${_user.id}${_user.nome}${_user.cidade}${_user.biografia}`,
             );
-            return indexer.includes(prepareString(filtros.query));
+            return indexer.includes(prepareString(filtros?.query));
         });
 
-    if (filtros.localizacao)
+    if (filtros?.localizacao)
         user_filtered = user_filtered.filter((_user) => {
-            return _user.cidade.toLowerCase().includes(filtros.localizacao.trim().toLowerCase());
+            return _user.cidade?.toLowerCase().includes(filtros?.localizacao.trim().toLowerCase());
         });
 
     const _user_avaliacoes_quantidade = 1923;
     const _user_avaliacoes_nota_media = 8;
 
-    if (filtros.review)
+    if (filtros?.review)
         user_filtered = user_filtered.filter(
-            () => _user_avaliacoes_nota_media >= parseInt(filtros.review),
+            () => _user_avaliacoes_nota_media >= parseInt(filtros?.review),
         );
 
     const search_text_user = document.getElementById("search_text_us");
     const no_found_user = document.getElementById("no_found_user");
     if (user_filtered.length === 0) {
         no_found_user?.classList.remove("d-none");
-        if (filtros.query.trim() !== "" && search_text_user instanceof HTMLSpanElement) {
-            search_text_user.innerText = ` com a pesquisa "${filtros.query}"`;
+        if (filtros?.query.trim() !== "" && search_text_user instanceof HTMLSpanElement) {
+            search_text_user.innerText = ` com a pesquisa "${filtros?.query}"`;
         }
     } else {
         no_found_user?.classList.add("d-none");
         if (search_text_user instanceof HTMLSpanElement) search_text_user.innerText = "";
     }
-    user_filtered.forEach((_user) => {
+    for (const _user of user_filtered) {
         // TODO: Ler dinamicamente
         html_row_users.appendChild(
             createUserCard(
@@ -232,7 +235,7 @@ function showResultsUsers() {
                 _user.biografia,
             ),
         );
-    });
+    }
 }
 
 function showResults() {
@@ -288,22 +291,22 @@ function setupFiltersElement() {
         showResults();
     });
 
-    if (filtros.query && filtros.query.trim() !== "") {
+    if (filtros?.query && filtros?.query.trim() !== "") {
         const search_bar = document.getElementById("search-bar");
         if (search_bar instanceof HTMLInputElement) {
-            search_bar.value = filtros.query;
+            search_bar.value = filtros?.query;
         }
     }
 
-    if (filtros.review && filtros.review !== "0") {
-        html_review_range.value = filtros.review;
-        html_range_info.innerText = filtros.review;
+    if (filtros?.review && filtros?.review !== "0") {
+        html_review_range.value = filtros?.review;
+        html_range_info.innerText = filtros?.review;
     }
 
-    if (filtros.localizacao && option_map.has(filtros.localizacao)) {
-        let tt = option_map.get(filtros.localizacao);
+    if (filtros?.localizacao && option_map.has(filtros?.localizacao)) {
+        let tt = option_map.get(filtros?.localizacao);
         html_select_localizacao.selectedIndex = tt + 1;
-        html_select_localizacao.value = filtros.localizacao;
+        html_select_localizacao.value = filtros?.localizacao;
     }
 }
 
@@ -317,12 +320,12 @@ function setOnLoadParamFilters() {
 
 function setParamNoReload() {
     let params = new URLSearchParams(location.search);
-    if (filtros.query) params.set("q", filtros.query);
+    if (filtros?.query) params.set("q", filtros?.query);
     else params.delete("q");
-    if (filtros.localizacao) params.set("local", filtros.localizacao);
+    if (filtros?.localizacao) params.set("local", filtros?.localizacao);
     else params.delete("local");
-    if (!filtros.review || filtros.review === "0") params.delete("review");
-    else params.set("review", filtros.review);
+    if (!filtros?.review || filtros?.review === "0") params.delete("review");
+    else params.set("review", filtros?.review);
 
     const url = new URL(window.location.href);
     const params_string = params.size === 0 ? `` : `?${params.toString()}`;
@@ -333,7 +336,7 @@ function setParamNoReload() {
 
 function limparFiltros() {
     // Limpar os filtros apenas se há algum configurado
-    if (!filtros.query && !filtros.localizacao && !filtros.review) return;
+    if (!filtros?.query && !filtros?.localizacao && !filtros?.review) return;
     filtros = new Filtros(null, null, null);
     showResults();
 }
@@ -371,9 +374,9 @@ function setupClearButton() {
     });
 }
 
-(() => {
+(async () => {
     setOnLoadParamFilters();
-    getData();
+    await getData();
     setupClearButton();
     setupFiltersElement();
     showResults();

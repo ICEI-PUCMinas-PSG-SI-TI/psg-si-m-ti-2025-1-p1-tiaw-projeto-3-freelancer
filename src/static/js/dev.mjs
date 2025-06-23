@@ -1,12 +1,18 @@
 //@ts-check
 
-import * as JSONQL_S from "./jsonql.service.mjs"; // Serviços
-import * as JSONQL_U from "./jsonql.user.mjs"; // Usuários
-import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
-import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
-import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
-import * as Faker from "./faker.mjs";
-import * as Tools from "./tools.mjs";
+import * as Faker from "./lib/faker.mjs";
+
+import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
+import { Servicos } from "./jsonf/servicos.mjs"; // Serviços
+import { Contratos } from "./jsonf/contratos.mjs"; // Contratos
+import { Avaliacoes } from "./jsonf/avaliacoes.mjs"; // Avaliações
+import { Portfolios } from "./jsonf/portfolios.mjs"; // Portfólios
+
+const crud_usuarios = new Usuarios();
+const crud_servicos = new Servicos();
+const crud_contratos = new Contratos();
+const crud_avaliacoes = new Avaliacoes();
+const crud_portfolios = new Portfolios();
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -31,22 +37,16 @@ function setupUserCRUD() {
 
     dev_create_usuarios.addEventListener("click", async () => {
         const quantidade = dev_create_usuarios_n.value || "";
+        // TODO: Check if more than $ALERT_QUANTITY
         Faker.criarNUsuarios(parseInt(quantidade));
     });
 
-    dev_delete_usuarios_all.addEventListener("click", JSONQL_U.clearUsuarios);
+    dev_delete_usuarios_all.addEventListener("click", crud_usuarios.limparUsuarios);
 
-    dev_delete_usuarios.addEventListener("click", () => {
+    dev_delete_usuarios.addEventListener("click", async () => {
         const id = dev_delete_usuarios_id.value;
-        const id_int = Tools.ensureInteger(id);
-
-        if (!id_int) {
-            console.log("dev_delete_usuarios: Não foi possível realizar o parse do id");
-            return;
-        }
-
-        if (JSONQL_U.deleteUsuario(id_int)) {
-            console.log(`dev_delete_usuarios: usuário ${id_int} foi deletado!`);
+        if (await crud_usuarios.excluirUsuario(id)) {
+            console.log(`dev_delete_usuarios: usuário ${id} foi deletado!`);
         } else {
             console.log(
                 `dev_delete_usuarios: Não foi possível encontrar o usuário ou ocorreu um erro.`,
@@ -54,7 +54,9 @@ function setupUserCRUD() {
         }
     });
 
-    dev_read_usuarios.addEventListener("click", () => console.log(JSONQL_U.readUsuarios()));
+    dev_read_usuarios.addEventListener("click", () =>
+        crud_usuarios.lerUsuarios().then((usuarios) => console.log(usuarios)),
+    );
 }
 
 function setupServicesCRUD() {
@@ -76,22 +78,17 @@ function setupServicesCRUD() {
         return;
 
     dev_create_servicos.addEventListener("click", async () => {
-        let quantidade = dev_create_servicos_n.value;
-        Faker.criarNServicos(parseInt(quantidade || ""));
+        const quantidade = dev_create_servicos_n.value;
+        // TODO: Adicionar opção no html (onlyFakeUsers)
+        Faker.criarNServicos(parseInt(quantidade), false);
     });
 
-    dev_delete_servicos_all.addEventListener("click", JSONQL_S.clearServicos);
+    dev_delete_servicos_all.addEventListener("click", crud_servicos.limparServicos);
 
-    dev_delete_servicos.addEventListener("click", () => {
+    dev_delete_servicos.addEventListener("click", async () => {
         const id = dev_delete_servicos_id.value;
-        const id_int = Tools.ensureInteger(id);
-        if (!id_int) {
-            console.log("dev_delete_servicos: Não foi possível realizar o parse do id");
-            return;
-        }
-
-        if (JSONQL_S.deleteServicos(id_int)) {
-            console.log(`dev_delete_servicos: serviço ${id_int} foi deletado!`);
+        if (await crud_servicos.excluirServico(id)) {
+            console.log(`dev_delete_servicos: serviço ${id} foi deletado!`);
         } else {
             console.log(
                 `dev_delete_servicos: Não foi possível encontrar o serviço ou ocorreu um erro.`,
@@ -99,7 +96,9 @@ function setupServicesCRUD() {
         }
     });
 
-    dev_read_servicos.addEventListener("click", () => console.log(JSONQL_S.readServicos()));
+    dev_read_servicos.addEventListener("click", () =>
+        crud_servicos.lerServicos().then((servicos) => console.log(servicos)),
+    );
 }
 
 function setupContractsCRUD() {
@@ -121,22 +120,16 @@ function setupContractsCRUD() {
         return;
 
     dev_create_contratos.addEventListener("click", async () => {
-        let quantidade = dev_create_contratos_n.value;
-        Faker.criarNContratos(parseInt(quantidade || ""));
+        const quantidade = dev_create_contratos_n.value;
+        Faker.criarNContratos(parseInt(quantidade));
     });
 
-    dev_delete_contratos_all.addEventListener("click", JSONQL_C.clearContratos);
+    dev_delete_contratos_all.addEventListener("click", crud_contratos.limparContratos);
 
-    dev_delete_contratos.addEventListener("click", () => {
+    dev_delete_contratos.addEventListener("click", async () => {
         const id = dev_delete_contratos_id.value;
-        const id_int = Tools.ensureInteger(id);
-        if (!id_int) {
-            console.log("dev_delete_contratos: Não foi possível realizar o parse do id");
-            return;
-        }
-
-        if (JSONQL_C.deleteContrato(id_int)) {
-            console.log(`dev_delete_contratos: contrato ${id_int} foi deletado!`);
+        if (await crud_contratos.excluirContrato(id)) {
+            console.log(`dev_delete_contratos: contrato ${id} foi deletado!`);
         } else {
             console.log(
                 `dev_delete_contratos: Não foi possível encontrar o contrato ou ocorreu um erro.`,
@@ -144,7 +137,9 @@ function setupContractsCRUD() {
         }
     });
 
-    dev_read_contratos.addEventListener("click", () => console.log(JSONQL_C.readContratos()));
+    dev_read_contratos.addEventListener("click", () =>
+        crud_contratos.lerContratos().then((contratos) => console.log(contratos)),
+    );
 }
 
 function setupReviewsCRUD() {
@@ -166,22 +161,16 @@ function setupReviewsCRUD() {
         return;
 
     dev_create_avaliacoes.addEventListener("click", async () => {
-        let quantidade = dev_create_avaliacoes_n.value;
-        Faker.criarNAvaliacoes(parseInt(quantidade || ""));
+        const quantidade = dev_create_avaliacoes_n.value;
+        Faker.criarNAvaliacoes(parseInt(quantidade));
     });
 
-    dev_delete_avaliacoes_all.addEventListener("click", JSONQL_A.clearAvaliacoes);
+    dev_delete_avaliacoes_all.addEventListener("click", crud_avaliacoes.limparAvaliacoes);
 
-    dev_delete_avaliacoes.addEventListener("click", () => {
+    dev_delete_avaliacoes.addEventListener("click", async () => {
         const id = dev_delete_avaliacoes_id.value;
-        const id_int = Tools.ensureInteger(id);
-        if (!id_int) {
-            console.log("dev_delete_avaliacoes: Não foi possível realizar o parse do id");
-            return;
-        }
-
-        if (JSONQL_A.deleteAvaliacao(id_int)) {
-            console.log(`dev_delete_avaliacoes: avaliação ${id_int} foi deletado!`);
+        if (await crud_avaliacoes.excluirAvaliacao(id)) {
+            console.log(`dev_delete_avaliacoes: avaliação ${id} foi deletado!`);
         } else {
             console.log(
                 `dev_delete_avaliacoes: Não foi possível encontrar a avaliação ou ocorreu um erro.`,
@@ -189,7 +178,9 @@ function setupReviewsCRUD() {
         }
     });
 
-    dev_read_avaliacoes.addEventListener("click", () => console.log(JSONQL_A.readAvaliacoes()));
+    dev_read_avaliacoes.addEventListener("click", () =>
+        crud_avaliacoes.lerAvaliacoes().then((avaliacoes) => console.log(avaliacoes)),
+    );
 }
 
 function setupPortfolioCRUD() {
@@ -211,22 +202,16 @@ function setupPortfolioCRUD() {
         return;
 
     dev_create_portfolios.addEventListener("click", async () => {
-        let quantidade = dev_create_portfolios_n.value;
-        Faker.criarNPortfolios(parseInt(quantidade || ""));
+        const quantidade = dev_create_portfolios_n.value;
+        Faker.criarNPortfolios(parseInt(quantidade));
     });
 
-    dev_delete_portfolios_all.addEventListener("click", JSONQL_P.clearPortfolios);
+    dev_delete_portfolios_all.addEventListener("click", crud_portfolios.limparPortfólio);
 
-    dev_delete_portfolios.addEventListener("click", () => {
+    dev_delete_portfolios.addEventListener("click", async () => {
         const id = dev_delete_portfolios_id.value;
-        const id_int = Tools.ensureInteger(id);
-        if (!id_int) {
-            console.log("dev_delete_portfolios: Não foi possível realizar o parse do id");
-            return;
-        }
-
-        if (JSONQL_P.deletePortfolio(id_int)) {
-            console.log(`dev_delete_portfolios: portfolio ${id_int} foi deletado!`);
+        if (await crud_portfolios.excluirPortfolio(id)) {
+            console.log(`dev_delete_portfolios: portfolio ${id} foi deletado!`);
         } else {
             console.log(
                 `dev_delete_portfolios: Não foi possível encontrar o portfolio ou ocorreu um erro.`,
@@ -234,7 +219,9 @@ function setupPortfolioCRUD() {
         }
     });
 
-    dev_read_portfolios.addEventListener("click", () => console.log(JSONQL_P.readPortfolios()));
+    dev_read_portfolios.addEventListener("click", async () =>
+        crud_portfolios.lerPortfolios().then((portfolios) => console.log(portfolios)),
+    );
 }
 
 function setupOtherCRUD() {

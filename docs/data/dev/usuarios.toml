@@ -7,78 +7,105 @@
 # 4. Leitura: Página de portfólio
 # 
 
-# TODO: Cadastro de categorias via UI
-
 # [[usuarios]]
 # id = ID do usuário
 # ativo = Usuário está ativo?
-# imagemId = ID da foto de perfil do usuário
+# foto = Foto de perfil do usuário
 # nome = Nome completo do usuário, validação de documentação
-# data_nascimento = Data de nascimento do usuário (ISO-8601)
+# dataNascimento = Data de nascimento do usuário (ISO-8601)
 # email = E-mail do usuário
 # senha = Senha do usuário
-# tipo = Tipo de usuário, define as permissões (admin, cliente, freelancer)
-# cpf_cnpj = Documento do usuário
+# tipo = Tipo de usuário, define as permissões (cliente, freelancer, admin)
+# username = username do usuário, útil para links
+# cpfCnpj = Documento do usuário
 # cidade = Localização do usuário
 # biografia = Informações breves sobre o usuário
 # contatos = Lista de contatos do usuário
+# formularioConcluido = Informa se apenas as informações iniciais foram preenchidas
+# profissao = Profissão principal do freelancer
+# sexo = Orientação sexual do usuário
+# escolaridade = Nivel de escolaridade do usuário
+# dataCadastro = Data de cadastro do usuário (ISO-8601)
+# fake = Informações foram criadas utilizando ferramentas de desenvolvimento
 
+# Melhorias:
 # TODO: Armazenar novos parametros (não importantes no momento):
-# data_cadastro = Data de cadastro do usuário (ISO-8601)
-# username = username do usuário, útil para links
+# imagemId = ID da foto de perfil do usuário (armazenar imagem separadamente)
 # apelido = apelido, útil para empresas (Nome Fantasia)
 
 [[usuarios]]
-id = 0
+id = "abcd"
 ativo = true
-# imagemId = 0
+foto = "base64|url"
 nome = "Admin"
-data_nascimento = "1970-01-01T00:00:00.000Z-03:00"
+dataNascimento = "1970-01-01T00:00:00.000Z-03:00"
 email = "admin@lucremais.com"
 senha = "654321"
 tipo = "admin"
-cpf_cnpj = "00.000.000/0001-00"
+username = "admin"
+cpfCnpj = "00.000.000/0001-00"
 cidade = "Belo Horizonte, MG"
 biografia = "Informações sobre o usuário"
 contatos = [
     "(31) 970707070",
-    "(31) 970707070",
-    "(31) 970707070"
+    "(31) 970707071",
+    "(31) 970707072"
 ]
+formularioConcluido = true
+profissao = "Não informado"
+sexo = "Masculino"
+escolaridade = "Curstando Sistemas de Informação"
+dataCadastro = "1970-01-01T00:00:00.000Z-03:00"
+fake = false
 
 
 [[usuarios]]
 id = 1
 ativo = true
-# imagemId = 0
+foto = "base64|url"
 nome = "Empresa do João Silva"
-data_nascimento = "1970-01-01T00:00:00.000Z-03:00"
+dataNascimento = "1970-01-01T00:00:00.000Z-03:00"
 email = "joao.silva@empresa-do-joao.com.br"
 senha = "123456"
 tipo = "profissional"
-cpf_cnpj = "12.345.678/0001-00"
+username = "joaos"
+cpfCnpj = "12.345.678/0001-00"
 cidade = "Belo Horizonte, MG"
 biografia = "Informações sobre o usuário"
 contatos = [
-    "(31) 970707070",
-    "(31) 970707070",
-    "(31) 970707070"
+    "(31) 970707073",
+    "(31) 970707074",
+    "(31) 970707075"
 ]
+formularioConcluido = true
+profissao = "Não informado"
+sexo = "Masculino"
+escolaridade = "Ensino médio concluído"
+dataCadastro = "1970-01-01T00:00:00.000Z-03:00"
+fake = false
+
 
 [[usuarios]]
 id = 0
 ativo = false
-# imagemId = 0
+foto = "base64|url"
 nome = "Maria Oliveira"
-data_nascimento = "1970-01-01T00:00:00.000Z-03:00"
+dataNascimento = "1970-01-01T00:00:00.000Z-03:00"
 email = "maria@email.com"
 senha = "654321"
 tipo = "cliente"
-cpf_cnpj = "123.456.789-10"
+username = "mariaoliv"
+cpfCnpj = "123.456.789-10"
 cidade = "São Paulo, SP"
 biografia = "Informações sobre o usuário"
 contatos = [
-    "(31) 970707070",
-    "(31) 970707070",
-    "(31) 970707070"
+    "(31) 970707076",
+    "(31) 970707077",
+    "(31) 970707078"
 ]
+formularioConcluido = true
+profissao = "Não informado"
+sexo = "Feminino"
+escolaridade = "Formada em Administração"
+dataCadastro = "1970-01-01T00:00:00.000Z-03:00"
+fake = false

@@ -33,19 +33,21 @@
     <script src="static/js/redirect.js"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
-    <script defer src="static/js/profile.js"></script>
+    <script defer type="module" src="static/js/profile.mjs"></script>
     <!-- Page Scripts -->
-    <script defer src="static/js/perfil.js"></script>
+    <script defer type="module" src="static/js/page/perfil.mjs"></script>
   </head>
 
   <body>
     <!-- Cabeçalho -->
     <nav class="body-section body-header navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <div class="d-flex justify-text-align-center">
-          <img class="m-2" src="static/icon.png" width="32px" height="32px" />
-          <a class="navbar-brand" href="#">Lucre+</a>
-        </div>
+        <!-- id.navbar.logo -->
+        <a class="d-flex center-xy text-center text-decoration-none me-3" href="./">
+          <img class="m-2 icon-32px" src="static/icon.png" />
+          <p class="navbar-brand p-0 m-0 g-0">Lucre+</p>
+        </a>
+        <!-- id.navbar.toggle -->
         <button
           class="navbar-toggler"
           type="button"
@@ -58,40 +60,39 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Início</a>
-            </li>
+            <!-- id.navbar.navigation -->
             <li class="nav-item dropdown">
               <a
                 class="nav-link dropdown-toggle"
-                href="#"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false">
                 Serviços
               </a>
               <ul class="dropdown-menu">
-                <li>
-                  <a class="dropdown-item" href="#">Em andamento</a>
-                </li>
+                <li><a class="dropdown-item" href="/serviços">Cadastrar serviços</a></li>
               </ul>
             </li>
           </ul>
-          <div id="toggleDarkDiv" style="display: none" class="d-flex p-2 flex-row center-xy">
-            <img class="dark-toggle" src="static/dark.svg" />
-            <div class="form-check form-switch form-check-reverse">
-              <label class="form-check-label" for="toggleDark"></label>
-              <input id="toggleDark" class="form-check-input" type="checkbox" />
-            </div>
+          <!-- id.navbar.darkmode -->
+          <!-- Layout será modificado por js/darkmode.js -->
+          <div class="d-none" id="toggleDarkDiv"></div>
+          <!-- id.navbar.search -->
+          <script defer type="module" src="static/js/pesquisa.js"></script>
+          <div id="inflate_pesquisa" class="d-none">
+            <form
+              class="d-flex flex-column flex-sm-row"
+              role="search"
+              onsubmit="(e)=>e.preventDefault()">
+              <input
+                id="search-bar"
+                class="form-control me-sm-2 mb-2 mb-sm-0"
+                type="search"
+                placeholder="Pesquisar"
+                aria-label="Search" />
+              <button id="search-btn" class="btn btn-outline-primary">Pesquisar</button>
+            </form>
           </div>
-          <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Pesquisar"
-              aria-label="Search" />
-            <button class="btn btn-outline-primary" type="submit">Pesquisar</button>
-          </form>
           <!-- id.navbar.profile -->
           <div class="m-2 me-0 rounded d-flex justify-content-center">
             <img
@@ -104,89 +105,68 @@
     </nav>
 
     <!-- Conteúdo da página -->
-    <div class="body-section body-content d-flex flex-column align-items-center">
-      <!-- Banner -->
-      <div class="banner w-100">
-        <img class="img-fluid w-100" src="https://picsum.photos/1600/400" alt="Banner" />
-      </div>
-
+    <div class="body-section body-content d-flex flex-column align-items-center space-0 p-3">
       <!-- Perfil -->
-      <div class="profile-section container text-center mt-4">
+      <div class="profile-section container-fluid text-center mb-3 limit900px position-relative">
+        <button
+          id="button-edit-perfil"
+          class="btn btn-primary position-absolute button-edit-perfil m-2 d-none">
+          Editar
+        </button>
         <div class="profile-header d-flex flex-column align-items-center">
           <img
-            class="profile-picture rounded-circle mb-3"
-            src="https://picsum.photos/150"
+            id="profile-picture-perfil"
+            class="profile-picture-perfil rounded-circle mb-3"
+            src="static/img/placeholder_profile.png"
             alt="Profile" />
-          <h2 class="profile-name">Arthur Melo</h2>
-          <p class="profile-title">Analista Financeiro.</p>
-          <p class="profile-location">Belo Horizonte, MG</p>
+          <h2 id="profile-name-perfil" class="profile-name">Nome Completo</h2>
+          <p id="profile-title" class="profile-title">Profissão</p>
+          <p id="profile-location" class="profile-location">Cidade</p>
         </div>
-        <div class="profile-contact d-flex justify-content-center gap-3 mt-3">
-          <a href="tel:+7910018830" class="btn btn-outline-primary">+55 (31) 123456789</a>
-          <a href="mailto:kevin.smith@stripe.com" class="btn btn-outline-secondary">
-            arthur.andrade@gmail.com
+        <div class="profile-contact d-flex center-xy space-0 gap-3 mx-auto flex-wrap">
+          <a
+            id="profile-contato"
+            href="tel:+7910018830"
+            class="btn btn-outline-primary text-nowrap d-none">
+            +55 (31) 970707070
+          </a>
+          <a
+            id="profile-email"
+            href="mailto:kevin.smith@stripe.com"
+            class="btn btn-outline-secondary text-nowrap">
+            email@example.com
           </a>
         </div>
       </div>
 
+      <div
+        class="profile-section container-fluid text-center space-0 mb-3 limit900px position-relative p-3 d-none">
+        <p id="profile-biografia" class="border rounded space-0 p-2">
+          Descrição do usuário. Diferenciais e qualquer informação relevante para o cliente.
+        </p>
+      </div>
+
       <!-- Estatísticas -->
-      <div class="stats-section container text-center mt-4">
+      <div class="stats-section container-fluid text-center mb-3 limit900px">
         <div class="row">
-          <div class="col-12 col-md-4">
-            <div class="stat-box">
-              <h4>4.5</h4>
-              <p>Nota</p>
+          <div class="col-12 col-md-4 space-0">
+            <div class="stat-box h-100 mb-2 me-0 me-md-3">
+              <h4 id="profile-nota">4.5</h4>
+              <p class="space-0">Nota</p>
             </div>
           </div>
-          <div class="col-12 col-md-4">
-            <div class="stat-box">
-              <h4>153</h4>
-              <p>Avaliações</p>
+          <div class="col-12 col-md-4 space-0">
+            <div class="stat-box h-100 mb-2 me-0 me-md-3">
+              <h4 id="profile-aval">153</h4>
+              <p class="space-0">Avaliações</p>
             </div>
           </div>
-          <div class="col-12 col-md-4">
-            <div class="stat-box">
-              <button class="btn btn-primary">Chat</button>
+          <div class="col-12 col-md-4 space-0">
+            <div class="stat-box h-100 mb-2">
+              <a class="btn btn-primary" href="/404">Chat</a>
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- Seção de Introdução -->
-      <div class="introduction-section container text-center mt-4">
-        <h3>Introdução</h3>
-        <div class="video-placeholder mt-3">
-          <img class="img-fluid" src="https://picsum.photos/600/300" alt="Video Placeholder" />
-        </div>
-      </div>
-
-      <!-- Calculadora -->
-      <div class="calculator-section container text-center mt-4">
-        <h3>Calculadora de Empregados</h3>
-        <p>Calcule as horas trabalhadas e o salário total.</p>
-        <form id="calculatorForm" class="mt-3">
-          <div class="mb-3">
-            <label for="hoursWorked" class="form-label">Horas Trabalhadas</label>
-            <input
-              type="number"
-              class="form-control"
-              id="hoursWorked"
-              placeholder="Digite as horas trabalhadas" />
-          </div>
-          <div class="mb-3">
-            <label for="hourlyRate" class="form-label">Salário por Hora (R$)</label>
-            <input
-              type="number"
-              class="form-control"
-              id="hourlyRate"
-              placeholder="Digite o salário por hora" />
-          </div>
-          <div class="mb-3">
-            <label for="totalSalary" class="form-label">Salário Total (R$)</label>
-            <input type="text" class="form-control" id="totalSalary" readonly />
-          </div>
-          <button type="button" class="btn btn-primary" id="calculateSalary">Calcular</button>
-        </form>
       </div>
 
       <div
@@ -202,6 +182,9 @@
                   src="static/img/placeholder_profile.png"
                   alt="Profile" />
                 <p id="profile-name">Nome do Usuário</p>
+                <button id="profile-show-perfil" class="btn btn-primary w-100 mb-3">
+                  Ver Perfil
+                </button>
                 <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
               </div>
             </div>
@@ -220,7 +203,7 @@
             <a
               class="text-decoration-none"
               href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer">
-              <img class="social-icon me-3" src="/src/static/social/github.svg" />
+              <img class="social-icon me-3" src="static/social/github.svg" />
             </a>
           </div>
         </div>
@@ -228,18 +211,19 @@
         <!-- Social Links -->
         <div class="col-12 col-sm-6 pb-3 pb-md-4 d-flex flex-column">
           <h5 class="">Navegação</h5>
-          <a class="mb-1" href="/src/suporte/suporte.html">Suporte</a>
           <a
             class="mb-1"
             href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer">
             Projeto
           </a>
-          <a class="mb-1" href="/src/suporte/sobre.html">Sobre o site</a>
+          <a class="mb-1" href="/404">Sobre o site</a>
+          <a class="mb-1" href="/404">Suporte</a>
+          <a class="mb-1" href="/404">FAQ</a>
         </div>
       </div>
       <div class="row">
         <div class="col-12 d-flex center-xy">
-          <p class="p-2 m-0 g-0">Copyright (c) Lucre+ 2025</p>
+          <p class="p-3 m-0 g-0">Copyright (c) Lucre+ 2025</p>
         </div>
       </div>
     </footer>

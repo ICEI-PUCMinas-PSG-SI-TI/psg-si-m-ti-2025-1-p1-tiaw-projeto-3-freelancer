@@ -4,12 +4,12 @@
     <!-- Metadata -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cadastro de Usuário</title>
+    <title>Detalhes do Serviço</title>
     <!-- Favicon -->
     <link rel="icon" href="static/favicon.ico" />
     <!-- CSS -->
     <link rel="stylesheet" href="static/css/styles.css" type="text/css" />
-    <link rel="stylesheet" href="static/css/cadastro.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/detalhes.css" type="text/css" />
     <!-- Bootstrap -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
@@ -35,7 +35,7 @@
     <script defer src="static/js/404.js"></script>
     <script defer type="module" src="static/js/profile.mjs"></script>
     <!-- Page Scripts -->
-    <script defer type="module" src="static/js/page/cadastro.mjs"></script>
+    <script defer type="module" src="static/js/page/detalhes.mjs"></script>
   </head>
 
   <body>
@@ -43,7 +43,7 @@
     <nav class="body-section body-header navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <!-- id.navbar.logo -->
-        <a class="d-flex center-xy text-center center-xy text-decoration-none me-3" href="./">
+        <a class="d-flex center-xy text-center text-decoration-none me-3" href="./">
           <img class="m-2 icon-32px" src="static/icon.png" />
           <p class="navbar-brand p-0 m-0 g-0">Lucre+</p>
         </a>
@@ -74,8 +74,6 @@
               </ul>
             </li>
           </ul>
-          <!-- id.navbar.darkmode -->
-          <!-- Layout será modificado por js/darkmode.js -->
           <div class="d-none" id="toggleDarkDiv"></div>
           <!-- id.navbar.search -->
           <script defer type="module" src="static/js/pesquisa.js"></script>
@@ -103,112 +101,103 @@
         </div>
       </div>
     </nav>
-    <!-- Conteúdo da página -->
-    <div id="content-div" class="body-section body-content d-flex flex-column center-xy p-3">
-      <!-- Formulário -->
-      <form id="formCadastro" class="row g-4">
-        <div class="col-md-3 d-flex flex-column align-items-center">
-          <label for="foto" class="form-label">Foto de Perfil</label>
-          <input type="file" class="form-control mb-2" id="foto" name="foto" accept="image/*" />
-          <img
-            id="preview"
-            src="https://www.w3schools.com/howto/img_avatar.png"
-            class="img-thumbnail rounded-circle"
-            alt="Prévia da Foto" />
-        </div>
-        <div class="col-md-9 row g-3">
-          <div class="col-md-6">
-            <label class="form-label" for="nome">Nome e sobrenome</label>
-            <input type="text" class="form-control" id="nome" name="nome" required />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label" for="profissao">Profissão</label>
-            <select class="form-select" id="profissao" name="profissao">
-              <option selected value="">Selecione o principal cargo</option>
-              <option>Fotográfo</option>
-              <option>Designer</option>
-              <option>Programador</option>
-              <option>Garçom</option>
-              <option>Outro</option>
-            </select>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label" for="contato">Contato</label>
-            <input type="tel" class="form-control" id="contato" name="contato" />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label" for="escolaridade">Escolaridade</label>
-            <input type="text" class="form-control" id="escolaridade" name="escolaridade" />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label" for="email">Email</label>
-            <input type="email" class="form-control" id="email" name="email" required />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label" for="cpf">CPF</label>
-            <input type="text" class="form-control" id="cpf" name="cpf_cnpj" required />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label" for="cidade">Endereço</label>
-            <input type="text" class="form-control" id="cidade" name="cidade" />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label" for="sexo">Sexo</label>
-            <select class="form-select" id="sexo" name="sexo">
-              <option selected value="">Selecionar</option>
-              <option>Feminino</option>
-              <option>Masculino</option>
-              <option>Outro</option>
-            </select>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label" for="data-nascimento">Data de Nascimento</label>
-            <input type="date" class="form-control" id="data-nascimento" name="data_nascimento" />
-          </div>
-          <div class="form-group">
-            <label for="tipo">Tipo de Usuário</label>
-            <select id="tipo" name="tipo" required class="form-select">
-              <option selected value="">Selecione</option>
-              <option>Profissional</option>
-              <option>Cliente</option>
-            </select>
-          </div>
-          <div class="col-md-12">
-            <label class="form-label" for="biografia">Biografia</label>
-            <textarea class="form-control" id="biografia" name="biografia" rows="3"></textarea>
-          </div>
-          <div class="col-md-12">
-            <label class="form-label" for="senha">Senha</label>
-            <input type="password" class="form-control" id="senha" name="senha" required />
-          </div>
-          <div class="col-md-12 d-flex justify-content-between">
-            <button type="submit" class="btn btn-success">SALVAR</button>
-            <button type="reset" class="btn btn-secondary">CANCELAR</button>
-          </div>
-          <div class="col-md-12 text-muted small">
-            Ao preencher o formulário acima você concorda com os nossos Termos de uso e nossa
-            Política de privacidade.
-          </div>
-        </div>
-      </form>
 
-      <div
-        id="profile-modal"
-        class="d-flex profile-modal justify-content-end align-items-top d-none">
-        <div class="m-3">
-          <div class="card">
-            <div class="card-body">
-              <div class="d-flex center-xy inner-profile-modal flex-column">
+    <!-- Conteúdo da página -->
+    <div class="body-content body-section container-fluid detalhes-servico p-3">
+      <div class="d-flex w-100 center-xy flex-column">
+        <div class="card limit1000px w-100 space-0 mb-3">
+          <div class="card-body">
+            <div class="row space-0">
+              <!-- Imagem do serviço -->
+              <div class="col-12 col-md-4 d-flex center-xy space-0 mb-3 mb-md-0">
                 <img
-                  id="profile-picture-big"
-                  class="rounded border-2 mb-3"
+                  id="servico-img"
                   src="static/img/placeholder_profile.png"
-                  alt="Profile" />
-                <p id="profile-name">Nome do Usuário</p>
-                <button id="profile-show-perfil" class="btn btn-primary w-100 mb-3">
-                  Ver Perfil
-                </button>
-                <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
+                  alt="Serviço"
+                  class="img-fluid rounded shadow detalhes-servico-img" />
+              </div>
+              <!-- Informações do serviço -->
+              <div class="col-12 col-md-8 align-items-center space-0 ps-md-4">
+                <h2 class="mb-3" id="servico-titulo">Título do Serviço</h2>
+                <span class="badge bg-primary mb-2" id="servico-categoria">
+                  Categoria do Serviço
+                </span>
+                <p class="lead mb-4" id="servico-descricao">
+                  Descrição detalhada do serviço oferecido. Explique aqui o que está incluso,
+                  prazos, diferenciais e qualquer informação relevante para o cliente.
+                </p>
+                <ul class="list-group">
+                  <li class="list-group-item bg-transparent text-light">
+                    <strong>Freelancer:</strong>
+                    <a id="freelancer-nome" href="/perfil#404" class="text-decoration-none">
+                      Não disponível
+                    </a>
+                  </li>
+                  <li class="list-group-item bg-transparent text-light">
+                    <strong>Prazo:</strong>
+                    <span id="prazo-servico">Não informado</span>
+                  </li>
+                  <li class="list-group-item bg-transparent text-light">
+                    <strong>Preço:</strong>
+                    <span id="preco-servico">Não informado</span>
+                  </li>
+                  <li class="list-group-item bg-transparent text-light">
+                    <strong>Avaliação:</strong>
+                    <span id="avaliacao-servico">⭐⭐⭐⭐⭐ (4.9/5)</span>
+                  </li>
+                  <li class="list-group-item bg-transparent text-light">
+                    <strong>Contato:</strong>
+                    <span id="servico-contato">Não informado</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <hr />
+            <div class="row w-100 center-xy">
+              <div class="d-flex flex-wrap gap-2 flex-row center-xy">
+                <a href="/404" id="contratar-btn" class="btn btn-success">Contratar Serviço</a>
+                <a href="/404" id="mensagem-btn" class="btn btn-outline-secondary">
+                  Enviar Mensagem
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avaliações -->
+        <div class="card limit1000px w-100 mb-3">
+          <div class="card-body">
+            <h4 class="mb-3">Avaliações Recentes</h4>
+            <div id="avaliacoes-lista">
+              <!-- Avaliações serão preenchidas via JS -->
+              <div class="card mb-3 bg-dark-subtle detalhes-servico-avaliacao d-none">
+                <div class="card-body">
+                  <h6 class="card-title mb-1">Nome <span class="text-warning">⭐⭐⭐⭐⭐</span></h6>
+                  <p class="card-text mb-0">Comentário</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="profile-modal"
+          class="d-flex profile-modal justify-content-end align-items-top d-none">
+          <div class="m-3">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex center-xy inner-profile-modal flex-column">
+                  <img
+                    id="profile-picture-big"
+                    class="rounded border-2 mb-3"
+                    src="static/img/placeholder_profile.png"
+                    alt="Profile" />
+                  <p id="profile-name">Nome do Usuário</p>
+                  <button id="profile-show-perfil" class="btn btn-primary w-100 mb-3">
+                    Ver Perfil
+                  </button>
+                  <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
+                </div>
               </div>
             </div>
           </div>

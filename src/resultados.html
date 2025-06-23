@@ -33,7 +33,7 @@
     <script src="static/js/redirect.js"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
-    <script defer src="static/js/profile.js"></script>
+    <script defer type="module" src="static/js/profile.mjs"></script>
     <!-- Page Scripts -->
     <script defer type="module" src="static/js/resultados.mjs"></script>
   </head>
@@ -60,18 +60,17 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <!-- id.navbar.navigation.pares -->
+            <!-- id.navbar.navigation -->
             <li class="nav-item dropdown">
               <a
                 class="nav-link dropdown-toggle"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false">
-                Revisão por Pares
+                Serviços
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="serviços.html">Cadastro de Serviços</a></li>
-                <li><a class="dropdown-item" href="cadastro.html">Cadastro de Usuários</a></li>
+                <li><a class="dropdown-item" href="/serviços">Cadastrar serviços</a></li>
               </ul>
             </li>
           </ul>
@@ -115,7 +114,7 @@
     <!-- Conteúdo da página -->
     <div
       id="content-div"
-      class="body-section body-content d-flex flex-column align-items-center justify-content-top space-0">
+      class="body-section body-content d-flex flex-column align-items-center space-0 p-4">
       <div class="row center-xy m-3">
         <div class="col-md-6 space-0 md-0 pe-md-3">
           <label for="review_range" class="form-label">
@@ -131,7 +130,7 @@
         </div>
       </div>
       <div class="container-fluid w-100 space-0">
-        <div class="card my-3 w-100">
+        <div class="card my-3 w-100 bg-primary">
           <div class="card-body">
             <h5 class="space-0"><strong>Serviços</strong></h5>
           </div>
@@ -147,7 +146,7 @@
         </div>
         <div id="row-service" class="row g-4 mb-4"></div>
 
-        <div class="card my-3 w-100">
+        <div class="card my-3 w-100 bg-primary">
           <div class="card-body">
             <h5 class="space-0"><strong>Usuários</strong></h5>
           </div>
@@ -177,6 +176,9 @@
                   src="static/img/placeholder_profile.png"
                   alt="Profile" />
                 <p id="profile-name">Nome do Usuário</p>
+                <button id="profile-show-perfil" class="btn btn-primary w-100 mb-3">
+                  Ver Perfil
+                </button>
                 <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
               </div>
             </div>
@@ -208,9 +210,9 @@
             href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer">
             Projeto
           </a>
-          <a class="mb-1" href="404.html">Sobre o site</a>
-          <a class="mb-1" href="404.html">Suporte</a>
-          <a class="mb-1" href="404.html">FAQ</a>
+          <a class="mb-1" href="/404">Sobre o site</a>
+          <a class="mb-1" href="/404">Suporte</a>
+          <a class="mb-1" href="/404">FAQ</a>
         </div>
       </div>
       <div class="row">

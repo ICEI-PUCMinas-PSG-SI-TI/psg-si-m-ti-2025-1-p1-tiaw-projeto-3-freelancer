@@ -33,7 +33,7 @@
     <script src="static/js/redirect.js"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
-    <script defer src="static/js/profile.js"></script>
+    <script defer type="module" src="static/js/profile.mjs"></script>
   </head>
 
   <body>
@@ -58,18 +58,17 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <!-- id.navbar.navigation.pares -->
+            <!-- id.navbar.navigation -->
             <li class="nav-item dropdown">
               <a
                 class="nav-link dropdown-toggle"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false">
-                Revisão por Pares
+                Serviços
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="serviços.html">Cadastro de Serviços</a></li>
-                <li><a class="dropdown-item" href="cadastro.html">Cadastro de Usuários</a></li>
+                <li><a class="dropdown-item" href="/serviços">Cadastrar serviços</a></li>
               </ul>
             </li>
           </ul>
@@ -138,14 +137,7 @@
 
         <div class="mb-3">
           <label for="imagem" class="form-label">Imagem</label>
-          <input
-            type="file"
-            class="form-control"
-            id="imagem"
-            name="foto"
-            accept="image/*"
-            onchange="previewPicture()"
-            required />
+          <input type="file" class="form-control" id="imagem" name="foto" accept="image/*" />
         </div>
 
         <div class="mb-3">
@@ -202,6 +194,9 @@
                   src="static/img/placeholder_profile.png"
                   alt="Profile" />
                 <p id="profile-name">Nome do Usuário</p>
+                <button id="profile-show-perfil" class="btn btn-primary w-100 mb-3">
+                  Ver Perfil
+                </button>
                 <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
               </div>
             </div>
@@ -233,9 +228,9 @@
             href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer">
             Projeto
           </a>
-          <a class="mb-1" href="404.html">Sobre o site</a>
-          <a class="mb-1" href="404.html">Suporte</a>
-          <a class="mb-1" href="404.html">FAQ</a>
+          <a class="mb-1" href="/404">Sobre o site</a>
+          <a class="mb-1" href="/404">Suporte</a>
+          <a class="mb-1" href="/404">FAQ</a>
         </div>
       </div>
       <div class="row">
@@ -245,6 +240,6 @@
       </div>
     </footer>
 
-    <script src="static/js/serviços.js"></script>
+    <script type="module" src="static/js/serviços.mjs"></script>
   </body>
 </html>

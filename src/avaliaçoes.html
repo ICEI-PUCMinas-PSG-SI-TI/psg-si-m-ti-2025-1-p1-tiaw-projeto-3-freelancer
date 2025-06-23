@@ -4,12 +4,12 @@
     <!-- Metadata -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Detalhes do Serviço</title>
+    <title>LUCRE+ Avaliações</title>
     <!-- Favicon -->
     <link rel="icon" href="static/favicon.ico" />
     <!-- CSS -->
     <link rel="stylesheet" href="static/css/styles.css" type="text/css" />
-    <link rel="stylesheet" href="static/css/detalhes_servicos.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/avaliacoes.css" type="text/css" />
     <!-- Bootstrap -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
@@ -33,19 +33,21 @@
     <script src="static/js/redirect.js"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
-    <script defer src="static/js/profile.js"></script>
+    <script defer type="module" src="static/js/profile.mjs"></script>
     <!-- Page Scripts -->
-    <script defer src="static/js/detalhes_serviços.js"></script>
+    <script defer type="module" src="static/js/avaliacoes.mjs"></script>
   </head>
 
   <body>
     <!-- Cabeçalho -->
     <nav class="body-section body-header navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
+        <!-- id.navbar.logo -->
         <a class="d-flex justify-text-align-center text-decoration-none me-3" href="./">
           <img class="m-2 icon-32px" src="static/icon.png" />
           <p class="navbar-brand p-0 m-0 g-0">Lucre+</p>
         </a>
+        <!-- id.navbar.toggle -->
         <button
           class="navbar-toggler"
           type="button"
@@ -58,17 +60,39 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item dropdown"></li>
+            <!-- id.navbar.navigation -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Serviços
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/serviços">Cadastrar serviços</a></li>
+              </ul>
+            </li>
           </ul>
+          <!-- id.navbar.darkmode -->
+          <!-- Layout será modificado por js/darkmode.js -->
           <div class="d-none" id="toggleDarkDiv"></div>
-          <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Pesquisar"
-              aria-label="Search" />
-            <a class="btn btn-outline-primary" href="404.html">Pesquisar</a>
-          </form>
+          <!-- id.navbar.search -->
+          <script defer type="module" src="static/js/pesquisa.js"></script>
+          <div id="inflate_pesquisa" class="d-none">
+            <form
+              class="d-flex flex-column flex-sm-row"
+              role="search"
+              onsubmit="(e)=>e.preventDefault()">
+              <input
+                id="search-bar"
+                class="form-control me-sm-2 mb-2 mb-sm-0"
+                type="search"
+                placeholder="Pesquisar"
+                aria-label="Search" />
+              <button id="search-btn" class="btn btn-outline-primary">Pesquisar</button>
+            </form>
+          </div>
           <!-- id.navbar.profile -->
           <div class="m-2 me-0 rounded d-flex justify-content-center">
             <img
@@ -81,96 +105,85 @@
     </nav>
 
     <!-- Conteúdo da página -->
-    <main class="body-content body-section container my-5 detalhes-servico">
-      <div class="row g-4">
-        <!-- Imagem do serviço -->
-        <div class="col-12 col-md-4 d-flex align-items-start justify-content-center">
-          <img
-            id="servico-img"
-            src="static/img/placeholder_profile.png"
-            alt="Serviço"
-            class="img-fluid rounded shadow detalhes-servico-img" />
-        </div>
-        <!-- Informações do serviço -->
-        <div class="col-12 col-md-8">
-          <h2 class="mb-3" id="servico-titulo">Título do Serviço Exemplo</h2>
-          <span class="badge bg-primary mb-2" id="servico-categoria">
-            Categoria: Design Gráfico
-          </span>
-          <p class="lead mb-4" id="servico-descricao">
-            Descrição detalhada do serviço oferecido. Explique aqui o que está incluso, prazos,
-            diferenciais e qualquer informação relevante para o cliente.
-          </p>
-          <ul class="list-group mb-4">
-            <li class="list-group-item bg-transparent text-light">
-              <strong>Freelancer:</strong>
-              <span id="freelancer-nome">João Silva</span>
-            </li>
-            <li class="list-group-item bg-transparent text-light">
-              <strong>Prazo:</strong>
-              <span id="prazo-servico">7 dias úteis</span>
-            </li>
-            <li class="list-group-item bg-transparent text-light">
-              <strong>Preço:</strong> <span id="preco-servico">R$ 500,00</span>
-            </li>
-            <li class="list-group-item bg-transparent text-light">
-              <strong>Avaliação:</strong>
-              <span id="avaliacao-servico">⭐⭐⭐⭐⭐ (4.9/5)</span>
-            </li>
-          </ul>
-          <div class="d-flex flex-wrap gap-2">
-            <a href="#" id="contratar-btn" class="btn btn-success"> Contratar Serviço </a>
-            <a href="#" id="mensagem-btn" class="btn btn-outline-secondary"> Enviar Mensagem </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Avaliações -->
-      <section class="mt-5">
-        <h4 class="mb-3">Avaliações Recentes</h4>
-        <div id="avaliacoes-lista">
-          <!-- Avaliações serão preenchidas via JS -->
-          <div class="card mb-3 bg-dark-subtle detalhes-servico-avaliacao d-none">
-            <div class="card-body">
-              <h6 class="card-title mb-1">Nome <span class="text-warning">⭐⭐⭐⭐⭐</span></h6>
-              <p class="card-text mb-0">Comentário</p>
+    <div id="content-div" class="body-section body-content d-flex flex-column center-xy">
+      <div class="container" role="main" aria-label="Formulário de Avaliação">
+        <h1>LUCRE+ Avaliações</h1>
+        <section class="card" aria-labelledby="form-title">
+          <header class="user-info">
+            <img src="static/img/placeholder_profile.png" alt="Avatar do usuário" class="avatar" />
+            <div>
+              <p id="form-title">Nome e Sobrenome</p>
+              <div
+                class="stars"
+                role="radiogroup"
+                aria-label="Avaliação por estrelas"
+                tabindex="0"
+                id="stars"
+                aria-live="polite">
+                <span
+                  role="radio"
+                  aria-checked="false"
+                  tabindex="-1"
+                  data-value="1"
+                  title="1 estrela">
+                  ★
+                </span>
+                <span
+                  role="radio"
+                  aria-checked="false"
+                  tabindex="-1"
+                  data-value="2"
+                  title="2 estrelas">
+                  ★
+                </span>
+                <span
+                  role="radio"
+                  aria-checked="false"
+                  tabindex="-1"
+                  data-value="3"
+                  title="3 estrelas">
+                  ★
+                </span>
+                <span
+                  role="radio"
+                  aria-checked="false"
+                  tabindex="-1"
+                  data-value="4"
+                  title="4 estrelas">
+                  ★
+                </span>
+                <span
+                  role="radio"
+                  aria-checked="false"
+                  tabindex="-1"
+                  data-value="5"
+                  title="5 estrelas">
+                  ★
+                </span>
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Exemplo de lista de serviços dinâmica -->
-      <section class="mt-5">
-        <h4 class="mb-3">Gerenciar Serviços (Exemplo)</h4>
-        <form id="form-servico" class="mb-3">
-          <div class="row g-2">
-            <div class="col-md-3">
-              <input type="text" id="titulo" class="form-control" placeholder="Título" required />
-            </div>
-            <div class="col-md-3">
-              <input type="text" id="contato" class="form-control" placeholder="Contato" required />
-            </div>
-            <div class="col-md-3">
-              <select id="categoriaId" class="form-select" required>
-                <option value="">Categoria</option>
-                <option value="1">Design Gráfico</option>
-                <option value="2">Desenvolvimento Web</option>
-                <option value="3">Redação</option>
-              </select>
-            </div>
-            <div class="col-md-3">
+          </header>
+          <textarea
+            id="comentario"
+            placeholder="Conte como foi sua experiência neste trabalho"
+            aria-label="Comentário sobre o serviço"></textarea>
+          <div class="mb-3">
+            <label for="basic-url" class="form-label">Anexar foto</label>
+            <div class="input-group">
               <input
-                type="text"
-                id="descricao"
+                type="file"
+                id="imagem"
+                accept="image/*"
                 class="form-control"
-                placeholder="Descrição"
-                required />
+                aria-label="Upload de imagem" />
             </div>
           </div>
-          <button type="submit" class="btn btn-primary mt-2">Salvar Serviço</button>
-        </form>
-        <ul id="lista-servicos" class="list-group"></ul>
-      </section>
+          <div class="buttons">
+            <button id="btn-cancelar" class="cancelar" type="button">Cancelar</button>
+            <button id="btn-publicar" type="button">Publicar</button>
+          </div>
+        </section>
+      </div>
 
       <div
         id="profile-modal"
@@ -185,13 +198,16 @@
                   src="static/img/placeholder_profile.png"
                   alt="Profile" />
                 <p id="profile-name">Nome do Usuário</p>
+                <button id="profile-show-perfil" class="btn btn-primary w-100 mb-3">
+                  Ver Perfil
+                </button>
                 <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </main>
+    </div>
 
     <!-- Rodapé -->
     <footer class="body-section body-footer container-fluid border-top m-0 p-0 g-0">
@@ -208,6 +224,7 @@
           </div>
         </div>
         <hr class="col-12 d-block d-sm-none" />
+        <!-- Social Links -->
         <div class="col-12 col-sm-6 pb-3 pb-md-4 d-flex flex-column">
           <h5 class="">Navegação</h5>
           <a
@@ -215,9 +232,9 @@
             href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer">
             Projeto
           </a>
-          <a class="mb-1" href="404.html">Sobre o site</a>
-          <a class="mb-1" href="404.html">Suporte</a>
-          <a class="mb-1" href="404.html">FAQ</a>
+          <a class="mb-1" href="/404">Sobre o site</a>
+          <a class="mb-1" href="/404">Suporte</a>
+          <a class="mb-1" href="/404">FAQ</a>
         </div>
       </div>
       <div class="row">

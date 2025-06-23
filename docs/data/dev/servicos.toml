@@ -17,6 +17,7 @@
 # categoriaId = ID da categoria do serviço
 # contato = Contato do freelancer do serviço
 # descricao = Descrição do serviço
+# imagem = Imagem sobre o serviço
 # imagemId = Lista de IDs das imagens relacionadas ao serviço
 # preco = Preço sugerido pelo serviço
 # TODO: @Deprecate freelancer for usuarioId
@@ -40,7 +41,8 @@ categoria = "Categoria em Texto"
 categoriaId = 0
 contato =  "(31) 97070-7070"
 descricao = "Nenhuma informação por enquanto"
-# usuarioId = 0
+imagem = "base64 or link"
+usuarioId = 0
 # imagemId = [ 0, 1]
 
 [[servicos]]

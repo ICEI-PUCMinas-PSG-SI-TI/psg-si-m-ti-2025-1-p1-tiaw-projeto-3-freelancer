@@ -27,7 +27,7 @@ function setup404Toast() {
     let toastBootstrap = bootstrap.Toast.getOrCreateInstance(toast);
 
     for (const element of document_links) {
-        if (!element.href.endsWith("404.html")) continue;
+        if (!element.href.endsWith("/404")) continue;
 
         element.addEventListener("click", (event) => {
             toastBootstrap.show();
