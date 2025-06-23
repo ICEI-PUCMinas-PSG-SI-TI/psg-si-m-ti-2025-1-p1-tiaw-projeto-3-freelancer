@@ -5,7 +5,6 @@ import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 
 import {
-    generateRandomNumberOld as generateRandomNumber,
     generateRandomNumber as genRandNumber,
     ensureInteger,
     assertPositiveInt,
@@ -93,21 +92,21 @@ export async function criarNPortfolios(quantidade) {
                     "Criação de portfólios: É necessário que haja usuários cadastrados para criar portfólios.",
                 );
 
-            const userId_index = generateRandomNumber(usuarios.length);
+            const userId_index = genRandNumber({ max: usuarios.length });
             if (!userId_index) continue;
 
             // TODO: Avoid creating more than 1 portfolios per user
             let secoes = [];
 
             // Gera entre 2 e 5 seções para cada portfolio
-            const quant_secoes = generateRandomNumber(5, 2) || 2;
+            const quant_secoes = genRandNumber({ min: 2, max: 6 });
 
             for (let ordem = 0; ordem < quant_secoes; ordem++) {
                 let ordem_int = ensureInteger(ordem);
                 let secao = {
                     ordem: ordem_int,
                     // TODO: Verificar dinamicamente as categorias possíveis
-                    categoriaId: generateRandomNumber(3),
+                    categoriaId: genRandNumber({ max: 3 }),
                     // TODO: Verificar dinamicamente os nomes de acordo com a categoria
                     nome: "Seção de Informações",
                 };
@@ -120,12 +119,12 @@ export async function criarNPortfolios(quantidade) {
                         {
                             // TODO: Adicionar imagens reais
                             secao.contents = [];
-                            const quant_imagens = generateRandomNumber(10, 5) || 5;
+                            const quant_imagens = genRandNumber({ min: 5, max: 11 });
                             for (let j = 0; j < quant_imagens; j++) {
                                 secao.contents.push({
-                                    blob: `https://picsum.photos/seed/${
-                                        generateRandomNumber(200) || "lucremais"
-                                    }/200`, // portfolios.secao.contents.blob - string
+                                    blob: `https://picsum.photos/seed/${genRandNumber({
+                                        max: 200,
+                                    })}/200`, // portfolios.secao.contents.blob - string
                                     descricao: "Foto", // portfolios.secao.contents.descricao - string
                                 });
                             }
@@ -144,11 +143,11 @@ export async function criarNPortfolios(quantidade) {
                     case 2:
                         {
                             secao.contents = [];
-                            const quant_links = generateRandomNumber(6, 3) || 3;
+                            const quant_links = genRandNumber({ min: 3, max: 7 }) || 3;
                             for (let j = 0; j < quant_links; j++) {
-                                const link_ext_index = generateRandomNumber(
-                                    json.links_externos.length,
-                                );
+                                const link_ext_index = genRandNumber({
+                                    max: json.links_externos.length,
+                                });
 
                                 if (!link_ext_index) continue;
                                 secao.contents.push({
@@ -203,21 +202,21 @@ export async function criarNContratos(quantidade) {
                 "Criação de contratos: É necessário que haja serviços cadastrados para criar contratos.",
             );
 
-        const servicoId_index = generateRandomNumber(servicos.length);
-        const contratadoId_index = generateRandomNumber(usuarios.length);
-        const contratanteId_index = generateRandomNumber(usuarios.length);
+        const servicoId_index = genRandNumber({ max: servicos.length });
+        const contratadoId_index = genRandNumber({ max: usuarios.length });
+        const contratanteId_index = genRandNumber({ max: usuarios.length });
 
-        const data_dia = generateRandomNumber(28, 1);
-        const data_mes = generateRandomNumber(12, 1);
-        const data_ano = generateRandomNumber(2026, 1970);
+        const dataDia = genRandNumber({ min: 1, max: 29 });
+        const dataMes = genRandNumber({ min: 1, max: 13 });
+        const dataAno = genRandNumber({ min: 1970, max: 2026 });
 
         if (
             typeof servicoId_index !== "number" ||
             typeof contratadoId_index !== "number" ||
             typeof contratanteId_index !== "number" ||
-            typeof data_dia !== "number" ||
-            typeof data_mes !== "number" ||
-            typeof data_ano !== "number"
+            typeof dataDia !== "number" ||
+            typeof dataMes !== "number" ||
+            typeof dataAno !== "number"
         ) {
             console.log("criarNContratos: null check");
             continue;
@@ -227,8 +226,8 @@ export async function criarNContratos(quantidade) {
             servicoId: servicos[servicoId_index].id, // number
             contratadoId: usuarios[contratadoId_index].id, // number
             contratanteId: usuarios[contratanteId_index].id, // number
-            data: `${data_dia}/${data_mes}/${data_ano}`, // string
-            valor: generateRandomNumber(5000, 1518) || 1518, // number
+            data: `${dataDia}/${dataMes}/${dataAno}`, // string
+            valor: genRandNumber({ min: 1518, max: 500 }), // number
         });
     }
 
@@ -263,9 +262,9 @@ export async function criarNAvaliacoes(quantidade) {
                     "Criação de avaliações: É necessário que haja contratos cadastrados para criar avaliações.",
                 );
 
-            const contratoId_index = generateRandomNumber(contratos.length);
-            const contratanteId_index = generateRandomNumber(usuarios.length);
-            const comentario_index = generateRandomNumber(json.avaliacoes.length);
+            const contratoId_index = genRandNumber({ max: contratos.length });
+            const contratanteId_index = genRandNumber({ max: usuarios.length });
+            const comentario_index = genRandNumber({ max: json.avaliacoes.length });
 
             if (
                 typeof contratoId_index !== "number" ||
@@ -280,7 +279,7 @@ export async function criarNAvaliacoes(quantidade) {
             avaliacoes.push({
                 contratoId: contratos[contratoId_index].id, // number
                 contratanteId: usuarios[contratanteId_index].id, // number
-                nota: generateRandomNumber(11) || 0, // number
+                nota: genRandNumber({ max: 11 }), // number
                 comentario: json.avaliacoes[comentario_index], // string
             });
         }
@@ -303,20 +302,20 @@ export async function criarNUsuarios(quantidade) {
         let usuarios = [];
 
         for (let i = 0; i < quantidade; i++) {
-            const nomeIndex = generateRandomNumber(json.nomes.length);
-            const sobrenomesIndex = generateRandomNumber(json.sobrenomes.length);
-            const fotoSeed = generateRandomNumber(200);
-            const emailIndex = generateRandomNumber(json.email.length);
-            const tipoIndex = generateRandomNumber(json.tipo.length);
-            const cpfCnpjIndex = generateRandomNumber(json.cpfCnpj.length);
-            const cidadeIndex = generateRandomNumber(json.cidades.length);
-            const biografiaIndex = generateRandomNumber(json.biografia.length);
-            const contato1Index = generateRandomNumber(json.contatos.length);
-            const contato2Index = generateRandomNumber(json.contatos.length);
+            const nomeIndex = genRandNumber({ max: json.nomes.length });
+            const sobrenomesIndex = genRandNumber({ max: json.sobrenomes.length });
+            const fotoSeed = genRandNumber({ max: 200 });
+            const emailIndex = genRandNumber({ max: json.email.length });
+            const tipoIndex = genRandNumber({ max: json.tipo.length });
+            const cpfCnpjIndex = genRandNumber({ max: json.cpfCnpj.length });
+            const cidadeIndex = genRandNumber({ max: json.cidades.length });
+            const biografiaIndex = genRandNumber({ max: json.biografia.length });
+            const contato1Index = genRandNumber({ max: json.contatos.length });
+            const contato2Index = genRandNumber({ max: json.contatos.length });
 
-            const dataNascimentoDia = generateRandomNumber(28, 1);
-            const dataNascimentoMes = generateRandomNumber(12, 1);
-            const dataNascimentoAno = generateRandomNumber(2006, 1970);
+            const dataNascimentoDia = genRandNumber({ min: 1, max: 29 });
+            const dataNascimentoMes = genRandNumber({ min: 1, max: 13 });
+            const dataNascimentoAno = genRandNumber({ min: 1970, max: 2006 });
 
             if (
                 typeof nomeIndex !== "number" ||
@@ -344,7 +343,7 @@ export async function criarNUsuarios(quantidade) {
                 foto: `https://picsum.photos/seed/${fotoSeed}/200`, // foto(string)
                 dataNascimento: `${dataNascimentoDia}/${dataNascimentoMes}/${dataNascimentoAno}`, // dataNascimento(string)
                 email: json.email[emailIndex], // email(string)
-                senha: (generateRandomNumber(999999, 100000) || 123456).toString(), // senha(string)
+                senha: (genRandNumber({ min: 100000, max: 1000000 }) || 123456).toString(), // senha(string)
                 tipo: json.tipo[tipoIndex], // tipo(string)
                 cpfCnpj: json.cpfCnpj[cpfCnpjIndex], // cpfCnpj(string)
                 cidade: json.cidades[cidadeIndex], // cidade(string)
@@ -383,9 +382,11 @@ export async function criarNServicos(quantidade, onlyForFakeUsers) {
         let servicos = [];
 
         for (let index = 0; index < quantidade; index++) {
-            const categorias_servicos_index = generateRandomNumber(json.categorias_servicos.length);
-            const contato_index = generateRandomNumber(json.contatos.length);
-            const descricao_index = generateRandomNumber(json.descricoes.length);
+            const categorias_servicos_index = genRandNumber({
+                max: json.categorias_servicos.length,
+            });
+            const contato_index = genRandNumber({ max: json.contatos.length });
+            const descricao_index = genRandNumber({ max: json.descricoes.length });
 
             if (
                 typeof categorias_servicos_index !== "number" ||
