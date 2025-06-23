@@ -1,6 +1,5 @@
 //@ts-check
 
-import * as JSONQL_S from "./jsonql.service.mjs"; // Serviços
 import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
@@ -8,8 +7,10 @@ import * as Faker from "./faker.mjs";
 import { ensureInteger } from "./tools.mjs";
 
 import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
+import { Servicos } from "./jsonf/servicos.mjs"; // Serviços
 
 const crud_usuarios = new Usuarios();
+const crud_servicos = new Servicos();
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -38,11 +39,10 @@ function setupUserCRUD() {
         Faker.criarNUsuarios(parseInt(quantidade));
     });
 
-    dev_delete_usuarios_all.addEventListener("click", () => crud_usuarios.limparUsuarios());
+    dev_delete_usuarios_all.addEventListener("click", crud_usuarios.limparUsuarios);
 
     dev_delete_usuarios.addEventListener("click", async () => {
         const id = dev_delete_usuarios_id.value;
-        // TODO: Validate id=0? (string or nonNegativeNumber?)
         if (await crud_usuarios.excluirUsuario(id)) {
             console.log(`dev_delete_usuarios: usuário ${id} foi deletado!`);
         } else {
@@ -76,22 +76,17 @@ function setupServicesCRUD() {
         return;
 
     dev_create_servicos.addEventListener("click", async () => {
-        let quantidade = dev_create_servicos_n.value;
-        Faker.criarNServicos(parseInt(quantidade || ""));
+        const quantidade = dev_create_servicos_n.value;
+        // TODO: Adicionar opção no html (onlyFakeUsers)
+        Faker.criarNServicos(parseInt(quantidade), false);
     });
 
-    dev_delete_servicos_all.addEventListener("click", JSONQL_S.clearServicos);
+    dev_delete_servicos_all.addEventListener("click", crud_servicos.limparServicos);
 
-    dev_delete_servicos.addEventListener("click", () => {
+    dev_delete_servicos.addEventListener("click", async () => {
         const id = dev_delete_servicos_id.value;
-        const id_int = ensureInteger(id);
-        if (!id_int) {
-            console.log("dev_delete_servicos: Não foi possível realizar o parse do id");
-            return;
-        }
-
-        if (JSONQL_S.deleteServicos(id_int)) {
-            console.log(`dev_delete_servicos: serviço ${id_int} foi deletado!`);
+        if (await crud_servicos.excluirServico(id)) {
+            console.log(`dev_delete_servicos: serviço ${id} foi deletado!`);
         } else {
             console.log(
                 `dev_delete_servicos: Não foi possível encontrar o serviço ou ocorreu um erro.`,
@@ -99,7 +94,9 @@ function setupServicesCRUD() {
         }
     });
 
-    dev_read_servicos.addEventListener("click", () => console.log(JSONQL_S.readServicos()));
+    dev_read_servicos.addEventListener("click", () =>
+        crud_servicos.lerServicos().then((_servicos) => console.log(_servicos)),
+    );
 }
 
 function setupContractsCRUD() {
@@ -121,8 +118,8 @@ function setupContractsCRUD() {
         return;
 
     dev_create_contratos.addEventListener("click", async () => {
-        let quantidade = dev_create_contratos_n.value;
-        Faker.criarNContratos(parseInt(quantidade || ""));
+        const quantidade = dev_create_contratos_n.value;
+        Faker.criarNContratos(parseInt(quantidade));
     });
 
     dev_delete_contratos_all.addEventListener("click", JSONQL_C.clearContratos);
@@ -166,8 +163,8 @@ function setupReviewsCRUD() {
         return;
 
     dev_create_avaliacoes.addEventListener("click", async () => {
-        let quantidade = dev_create_avaliacoes_n.value;
-        Faker.criarNAvaliacoes(parseInt(quantidade || ""));
+        const quantidade = dev_create_avaliacoes_n.value;
+        Faker.criarNAvaliacoes(parseInt(quantidade));
     });
 
     dev_delete_avaliacoes_all.addEventListener("click", JSONQL_A.clearAvaliacoes);
@@ -211,8 +208,8 @@ function setupPortfolioCRUD() {
         return;
 
     dev_create_portfolios.addEventListener("click", async () => {
-        let quantidade = dev_create_portfolios_n.value;
-        Faker.criarNPortfolios(parseInt(quantidade || ""));
+        const quantidade = dev_create_portfolios_n.value;
+        Faker.criarNPortfolios(parseInt(quantidade));
     });
 
     dev_delete_portfolios_all.addEventListener("click", JSONQL_P.clearPortfolios);

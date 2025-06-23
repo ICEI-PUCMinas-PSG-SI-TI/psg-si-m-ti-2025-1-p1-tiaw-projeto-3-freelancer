@@ -1,17 +1,21 @@
 //@ts-check
 
-import * as JSONQL_S from "./jsonql.service.mjs"; // Serviços
 import * as JSONQL_C from "./jsonql.contract.mjs"; // Contratos
 import * as JSONQL_A from "./jsonql.review.mjs"; // Avaliações
 import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 
 import {
     generateRandomNumberOld as generateRandomNumber,
+    generateRandomNumber as genRandNumber,
     ensureInteger,
     assertPositiveInt,
 } from "./tools.mjs";
 
 import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
+import { Servicos } from "./jsonf/servicos.mjs"; // Serviços
+
+const crud_usuarios = new Usuarios();
+const crud_servicos = new Servicos();
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -66,7 +70,6 @@ class ExemploFetcher {
 }
 
 const exemplos = new ExemploFetcher();
-const crud_usuarios = new Usuarios();
 
 /**
  * Cria N portfólios
@@ -194,7 +197,7 @@ export async function criarNContratos(quantidade) {
                 "Criação de contratos: É necessário que haja usuários cadastrados para criar contratos.",
             );
 
-        const servicos = JSONQL_S.readServicos();
+        const servicos = await crud_servicos.lerServicos();
         if (!servicos?.length)
             throw new Error(
                 "Criação de contratos: É necessário que haja serviços cadastrados para criar contratos.",
@@ -347,6 +350,7 @@ export async function criarNUsuarios(quantidade) {
                 cidade: json.cidades[cidade_index], // cidade(string)
                 biografia: json.biografia[biografia_index], // biografia(string)
                 contatos: [json.contatos[contato_1_index], json.contatos[contato_2_index]], // contatos(Array)
+                fake: true,
             });
         }
 
@@ -358,13 +362,24 @@ export async function criarNUsuarios(quantidade) {
 /**
  * Cria N serviços
  * @param {number} quantidade
+ * @param {boolean} onlyForFakeUsers
  */
-export async function criarNServicos(quantidade) {
+export async function criarNServicos(quantidade, onlyForFakeUsers) {
     assertPositiveInt(quantidade);
 
-    await exemplos.getFakeData().then((json) => {
+    await exemplos.getFakeData().then(async (json) => {
         if (!json) return;
 
+        let usuarios = await crud_usuarios.lerUsuarios();
+        // TODO: Adicionar opção de selecionar usuario individual para gera
+        // Seleciona apenas usuários que são fakes
+        if (onlyForFakeUsers && usuarios?.length) {
+            usuarios = usuarios.filter((_user) => _user.fake);
+        }
+        if (!usuarios?.length) {
+            console.error("Nenhum usuário encontrado");
+            return;
+        }
         let servicos = [];
 
         for (let index = 0; index < quantidade; index++) {
@@ -381,19 +396,20 @@ export async function criarNServicos(quantidade) {
                 continue;
             }
 
-            const element = {
+            servicos.push({
+                usuarioId: usuarios[genRandNumber({ min: 0, max: usuarios.length })].id,
                 titulo: json.categorias_servicos[categorias_servicos_index],
                 // TODO: categorias_servicos -> array, use id only
                 categoriaId: categorias_servicos_index,
                 categoria: json.categorias_servicos[categorias_servicos_index],
                 contato: json.contatos[contato_index],
                 descricao: json.descricoes[descricao_index],
-            };
-
-            servicos.push(element);
+                imagem: `https://picsum.photos/seed/${genRandNumber({ min: 0, max: 100 })}/200`,
+                fake: true,
+            });
         }
 
         // TODO: Do it in chunks
-        servicos.forEach((element) => JSONQL_S.createServicos(element));
+        servicos.forEach((element) => crud_servicos.criarServico(element));
     });
 }

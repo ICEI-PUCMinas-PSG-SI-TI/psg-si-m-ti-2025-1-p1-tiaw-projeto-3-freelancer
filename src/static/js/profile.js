@@ -44,7 +44,7 @@ function inicializarProfile() {
     htmlDivModalProfile.addEventListener("click", esconderModalProfile);
     htmlImageProfile.classList.remove("d-none");
     htmlButtonShowPerfil?.addEventListener("click", () => {
-        location.assign("/perfil")
+        location.assign("/perfil");
     });
 }
 

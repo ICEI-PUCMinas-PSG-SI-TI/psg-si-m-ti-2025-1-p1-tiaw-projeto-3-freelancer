@@ -9,7 +9,7 @@
     <link rel="icon" href="static/favicon.ico" />
     <!-- CSS -->
     <link rel="stylesheet" href="static/css/styles.css" type="text/css" />
-    <link rel="stylesheet" href="static/css/detalhes_servicos.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/detalhes.css" type="text/css" />
     <!-- Bootstrap -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
@@ -35,17 +35,19 @@
     <script defer src="static/js/404.js"></script>
     <script defer src="static/js/profile.js"></script>
     <!-- Page Scripts -->
-    <script defer src="static/js/detalhes_serviços.js"></script>
+    <script defer src="static/js/detalhes.js"></script>
   </head>
 
   <body>
     <!-- Cabeçalho -->
     <nav class="body-section body-header navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <a class="d-flex justify-text-align-center text-decoration-none me-3" href="./">
+        <!-- id.navbar.logo -->
+        <a class="d-flex center-xy text-center text-decoration-none me-3" href="./">
           <img class="m-2 icon-32px" src="static/icon.png" />
           <p class="navbar-brand p-0 m-0 g-0">Lucre+</p>
         </a>
+        <!-- id.navbar.toggle -->
         <button
           class="navbar-toggler"
           type="button"
@@ -58,17 +60,35 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item dropdown"></li>
+            <!-- id.navbar.navigation -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Serviços
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/serviços">Cadastrar serviços</a></li>
+              </ul>
+            </li>
           </ul>
           <div class="d-none" id="toggleDarkDiv"></div>
-          <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Pesquisar"
-              aria-label="Search" />
-            <a class="btn btn-outline-primary" href="/404">Pesquisar</a>
-          </form>
+          <div id="inflate_pesquisa" class="d-none">
+            <form
+              class="d-flex flex-column flex-sm-row"
+              role="search"
+              onsubmit="(e)=>e.preventDefault()">
+              <input
+                id="search-bar"
+                class="form-control me-sm-2 mb-2 mb-sm-0"
+                type="search"
+                placeholder="Pesquisar"
+                aria-label="Search" />
+              <button id="search-btn" class="btn btn-outline-primary">Pesquisar</button>
+            </form>
+          </div>
           <!-- id.navbar.profile -->
           <div class="m-2 me-0 rounded d-flex justify-content-center">
             <img
@@ -185,7 +205,9 @@
                   src="static/img/placeholder_profile.png"
                   alt="Profile" />
                 <p id="profile-name">Nome do Usuário</p>
-                <button id="profile-show-perfil" class="btn btn-primary w-100 mb-3">Ver Perfil</button>
+                <button id="profile-show-perfil" class="btn btn-primary w-100 mb-3">
+                  Ver Perfil
+                </button>
                 <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
               </div>
             </div>
@@ -209,6 +231,7 @@
           </div>
         </div>
         <hr class="col-12 d-block d-sm-none" />
+        <!-- Social Links -->
         <div class="col-12 col-sm-6 pb-3 pb-md-4 d-flex flex-column">
           <h5 class="">Navegação</h5>
           <a

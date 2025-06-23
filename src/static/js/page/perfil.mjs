@@ -5,10 +5,14 @@ import { Usuarios } from "../jsonf/usuarios.mjs";
 const crud_usuarios = new Usuarios();
 
 const htmlBackgroundImage = document.querySelector("div.body-section.body-content");
+
+function getPerfilId() {
+    return localStorage.getItem("LucreM.id") || "lucremais";
+}
+
 // TODO: Use username for background photos
-const id = false || "lucremais";
 if (htmlBackgroundImage instanceof HTMLDivElement) {
-    htmlBackgroundImage.style.backgroundImage = `url(https://picsum.photos/seed/${id}/1080)`;
+    htmlBackgroundImage.style.backgroundImage = `url(https://picsum.photos/seed/${getPerfilId() || "lucremais"}/1080)`;
 }
 
 const htmlProfileImgPicture = document.getElementById("profile-picture-perfil");
@@ -22,18 +26,18 @@ const htmlProfileParagAval = document.getElementById("profile-aval");
 const htmlProfileButtonEditPerfil = document.getElementById("button-edit-perfil");
 
 async function inicializarPerfil() {
-    const _usuarios = await crud_usuarios.lerUsuario(localStorage.getItem("LucreM.id") || "");
+    const _usuarios = await crud_usuarios.lerUsuario(getPerfilId());
 
     const nota = "4.4";
     const avaliacoes = "152";
 
     if (
-        !htmlProfileImgPicture ||
+        !(htmlProfileImgPicture instanceof HTMLImageElement) ||
         !htmlProfileH2ProfileName ||
         !htmlProfileParagTitle ||
         !htmlProfileParagCidade ||
-        !htmlProfileLinkContato ||
-        !htmlProfileLinkEmail ||
+        !(htmlProfileLinkContato instanceof HTMLAnchorElement) ||
+        !(htmlProfileLinkEmail instanceof HTMLAnchorElement) ||
         !htmlProfileParagNota ||
         !htmlProfileParagAval
     ) {
@@ -58,7 +62,7 @@ async function inicializarPerfil() {
     htmlProfileParagAval.innerText = avaliacoes;
 
     // if(localStorage.id === id)
-    htmlProfileButtonEditPerfil?.classList.remove("d-none")
+    htmlProfileButtonEditPerfil?.classList.remove("d-none");
     htmlProfileButtonEditPerfil?.addEventListener("click", () => location.assign("/cadastro"));
 }
 
