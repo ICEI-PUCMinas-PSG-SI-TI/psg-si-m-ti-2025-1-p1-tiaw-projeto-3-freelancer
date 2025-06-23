@@ -252,14 +252,14 @@ export async function criarNAvaliacoes(quantidade) {
                     "Criação de avaliações: É necessário que haja contratos cadastrados para criar avaliações.",
                 );
 
-            const contratoId_index = genRandNumber({ max: contratos.length });
-            const contratanteId_index = genRandNumber({ max: usuarios.length });
-            const comentario_index = genRandNumber({ max: json.avaliacoes.length });
+            const contratoIdIndex = genRandNumber({ max: contratos.length });
+            const contratanteIdIndex = genRandNumber({ max: usuarios.length });
+            const comentarioIndex = genRandNumber({ max: json.avaliacoes.length });
 
             if (
-                typeof contratoId_index !== "number" ||
-                typeof contratanteId_index !== "number" ||
-                typeof comentario_index !== "number"
+                typeof contratoIdIndex !== "number" ||
+                typeof contratanteIdIndex !== "number" ||
+                typeof comentarioIndex !== "number"
             ) {
                 console.log("criarNAvaliacoes: null check");
                 continue;
@@ -267,10 +267,10 @@ export async function criarNAvaliacoes(quantidade) {
 
             // TODO: Evitar que contratadoId === contratanteId
             avaliacoes.push({
-                contratoId: contratos[contratoId_index].id, // number
-                contratanteId: usuarios[contratanteId_index].id, // number
+                contratoId: contratos[contratoIdIndex].id, // number
+                contratanteId: usuarios[contratanteIdIndex].id, // number
                 nota: genRandNumber({ max: 11 }), // number
-                comentario: json.avaliacoes[comentario_index], // string
+                comentario: json.avaliacoes[comentarioIndex], // string
             });
         }
 
@@ -375,16 +375,16 @@ export async function criarNServicos(quantidade, onlyForFakeUsers) {
         let servicos = [];
 
         for (let i = 0; i < quantidade; i++) {
-            const categorias_servicos_index = genRandNumber({
+            const categoriasServicosIndex = genRandNumber({
                 max: json.categorias_servicos.length,
             });
-            const contato_index = genRandNumber({ max: json.contatos.length });
-            const descricao_index = genRandNumber({ max: json.descricoes.length });
+            const contatoIndex = genRandNumber({ max: json.contatos.length });
+            const descricaoIndex = genRandNumber({ max: json.descricoes.length });
 
             if (
-                typeof categorias_servicos_index !== "number" ||
-                typeof contato_index !== "number" ||
-                typeof descricao_index !== "number"
+                typeof categoriasServicosIndex !== "number" ||
+                typeof contatoIndex !== "number" ||
+                typeof descricaoIndex !== "number"
             ) {
                 console.log("criarNServicos: null check");
                 continue;
@@ -392,12 +392,12 @@ export async function criarNServicos(quantidade, onlyForFakeUsers) {
 
             servicos.push({
                 usuarioId: usuarios[genRandNumber({ max: usuarios.length })].id,
-                titulo: json.categorias_servicos[categorias_servicos_index],
+                titulo: json.categorias_servicos[categoriasServicosIndex],
                 // TODO: categorias_servicos -> array, use id only
-                categoriaId: categorias_servicos_index,
-                categoria: json.categorias_servicos[categorias_servicos_index],
-                contato: json.contatos[contato_index],
-                descricao: json.descricoes[descricao_index],
+                categoriaId: categoriasServicosIndex,
+                categoria: json.categorias_servicos[categoriasServicosIndex],
+                contato: json.contatos[contatoIndex],
+                descricao: json.descricoes[descricaoIndex],
                 imagem: `https://picsum.photos/seed/${genRandNumber({ max: 100 })}/200`,
                 fake: true,
             });
