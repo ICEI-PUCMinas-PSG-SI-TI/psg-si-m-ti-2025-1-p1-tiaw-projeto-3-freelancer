@@ -1,18 +1,18 @@
 //@ts-check
 
-import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as Faker from "./lib/faker.mjs";
-import { ensureInteger } from "./tools.mjs";
 
 import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
 import { Servicos } from "./jsonf/servicos.mjs"; // Serviços
 import { Contratos } from "./jsonf/contratos.mjs"; // Contratos
 import { Avaliacoes } from "./jsonf/avaliacoes.mjs"; // Avaliações
+import { Portfolios } from "./jsonf/portfolios.mjs"; // Portfólios
 
 const crud_usuarios = new Usuarios();
 const crud_servicos = new Servicos();
 const crud_contratos = new Contratos();
 const crud_avaliacoes = new Avaliacoes();
+const crud_portfolios = new Portfolios();
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -55,7 +55,7 @@ function setupUserCRUD() {
     });
 
     dev_read_usuarios.addEventListener("click", () =>
-        crud_usuarios.lerUsuarios().then((_usuarios) => console.log(_usuarios)),
+        crud_usuarios.lerUsuarios().then((usuarios) => console.log(usuarios)),
     );
 }
 
@@ -97,7 +97,7 @@ function setupServicesCRUD() {
     });
 
     dev_read_servicos.addEventListener("click", () =>
-        crud_servicos.lerServicos().then((_servicos) => console.log(_servicos)),
+        crud_servicos.lerServicos().then((servicos) => console.log(servicos)),
     );
 }
 
@@ -137,7 +137,9 @@ function setupContractsCRUD() {
         }
     });
 
-    dev_read_contratos.addEventListener("click", () => console.log(crud_contratos.lerContratos()));
+    dev_read_contratos.addEventListener("click", () =>
+        crud_contratos.lerContratos().then((contratos) => console.log(contratos)),
+    );
 }
 
 function setupReviewsCRUD() {
@@ -176,7 +178,9 @@ function setupReviewsCRUD() {
         }
     });
 
-    dev_read_avaliacoes.addEventListener("click", () => console.log(crud_avaliacoes.lerAvaliacoes()));
+    dev_read_avaliacoes.addEventListener("click", () =>
+        crud_avaliacoes.lerAvaliacoes().then((avaliacoes) => console.log(avaliacoes)),
+    );
 }
 
 function setupPortfolioCRUD() {
@@ -202,18 +206,12 @@ function setupPortfolioCRUD() {
         Faker.criarNPortfolios(parseInt(quantidade));
     });
 
-    dev_delete_portfolios_all.addEventListener("click", JSONQL_P.clearPortfolios);
+    dev_delete_portfolios_all.addEventListener("click", crud_portfolios.limparPortfólio);
 
-    dev_delete_portfolios.addEventListener("click", () => {
+    dev_delete_portfolios.addEventListener("click", async () => {
         const id = dev_delete_portfolios_id.value;
-        const id_int = ensureInteger(id);
-        if (!id_int) {
-            console.log("dev_delete_portfolios: Não foi possível realizar o parse do id");
-            return;
-        }
-
-        if (JSONQL_P.deletePortfolio(id_int)) {
-            console.log(`dev_delete_portfolios: portfolio ${id_int} foi deletado!`);
+        if (await crud_portfolios.excluirPortfolio(id)) {
+            console.log(`dev_delete_portfolios: portfolio ${id} foi deletado!`);
         } else {
             console.log(
                 `dev_delete_portfolios: Não foi possível encontrar o portfolio ou ocorreu um erro.`,
@@ -221,7 +219,9 @@ function setupPortfolioCRUD() {
         }
     });
 
-    dev_read_portfolios.addEventListener("click", () => console.log(JSONQL_P.readPortfolios()));
+    dev_read_portfolios.addEventListener("click", async () =>
+        crud_portfolios.lerPortfolios().then((portfolios) => console.log(portfolios)),
+    );
 }
 
 function setupOtherCRUD() {

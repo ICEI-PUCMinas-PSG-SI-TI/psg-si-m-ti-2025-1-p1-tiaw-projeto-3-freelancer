@@ -1,7 +1,5 @@
 //@ts-check
 
-import * as JSONQL_P from "../jsonql/jsonql.portfolio.mjs"; // Portfólios
-
 import { generateRandomNumber as genRandNumber } from "../tools.mjs";
 
 import { assertBoolean, assertPositiveInt } from "../lib/validate.mjs";
@@ -10,11 +8,13 @@ import { Usuarios } from "../jsonf/usuarios.mjs"; // Usuários
 import { Servicos } from "../jsonf/servicos.mjs"; // Serviços
 import { Contratos } from "../jsonf/contratos.mjs"; // Contratos
 import { Avaliacoes } from "../jsonf/avaliacoes.mjs"; // Avaliações
+import { Portfolios } from "../jsonf/portfolios.mjs"; // Portfólios
 
 const crud_usuarios = new Usuarios();
 const crud_servicos = new Servicos();
 const crud_contratos = new Contratos();
 const crud_avaliacoes = new Avaliacoes();
+const crud_portfolios = new Portfolios();
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
@@ -106,8 +106,7 @@ export async function criarNPortfolios(quantidade) {
                     categoriaId: genRandNumber({ max: 3 }),
                 };
 
-                // TODO: Criar dinamicamente
-                // categorias_secao.json
+                // TODO: Criar dinamicamente via categorias_secao.json
                 switch (secao.categoriaId) {
                     // 0: Imagens
                     case 0:
@@ -165,7 +164,7 @@ export async function criarNPortfolios(quantidade) {
 
         // TODO: Verificar os pós/contras de inserir os valoroes diretamente
         // na base de dados sem necessidade de um vetor
-        portfolios.forEach((portfolio) => JSONQL_P.createPortfolio(portfolio));
+        portfolios.forEach((portfolio) => crud_portfolios.criarPortfolio(portfolio));
     });
 }
 

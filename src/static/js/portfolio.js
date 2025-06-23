@@ -1,6 +1,5 @@
 //@ts-check
 
-import * as JSONQL_P from "./jsonql.portfolio.mjs"; // Portfólios
 import * as Faker from "./lib/faker.mjs";
 import { ensureInteger, isNonEmptyString } from "./tools.mjs";
 import { assertBase64ConvertableImage, imageFileToBase64 } from "./lib/tools.mjs";
@@ -9,18 +8,20 @@ import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
 import { Servicos } from "./jsonf/servicos.mjs"; // Serviços
 import { Contratos } from "./jsonf/contratos.mjs"; // Contratos
 import { Avaliacoes } from "./jsonf/avaliacoes.mjs"; // Avaliações
+import { Portfolios } from "./jsonf/portfolios.mjs"; // Portfólios
 
 const crud_usuarios = new Usuarios();
 const crud_servicos = new Servicos();
 const crud_contratos = new Contratos();
 const crud_avaliacoes = new Avaliacoes();
+const crud_portfolios = new Portfolios();
 
 // TODO: Mover adicionar-imagens para um popup
 // TODO: Criar popups dinamicamente e remove-los do html
 
 class AddSectionContext {
     /**
-     * @param {number} portfolio_id
+     * @param {string} portfolio_id
      */
     constructor(portfolio_id) {
         this.portfolio_id = portfolio_id;
@@ -143,17 +144,6 @@ class Context {
 }
 
 const context = new Context();
-
-/**
- *
- * @param {object} array
- * @returns {object | null}
- */
-function getFirstOrNull(array) {
-    if (!Array.isArray(array) || array.length <= 0) return null;
-
-    return array[0];
-}
 
 /**
  *
@@ -282,12 +272,12 @@ function triggerDeleteImage(deleteImageContext) {
     context.setupContext(deleteImageContext);
 }
 
-function commitAddAsection() {
+async function commitAddAsection() {
     const _context = context.getContext();
 
     if (!(_context instanceof AddSectionContext)) return;
 
-    const _portfolio_id = ensureInteger(_context.portfolio_id);
+    const _portfolio_id = _context.portfolio_id;
     const html_popup_add_name = document.getElementById("popup-add-name");
     const html_popup_add_description = document.getElementById("popup-add-description");
     const html_popup_add_categoria = document.getElementById("popup-add-categoria");
@@ -306,7 +296,7 @@ function commitAddAsection() {
     const form_section_description = html_popup_add_description.value;
     const form_section_categoria = html_popup_add_categoria.value;
 
-    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
+    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
     if (!_portfolio) {
         console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
         return;
@@ -339,7 +329,7 @@ function commitAddAsection() {
         contents: [],
     });
 
-    if (JSONQL_P.updatePortfolio(_portfolio_id, _portfolio)) {
+    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
         toggleDisplayNoneOnElement("popup-add", true);
         notifySectionDataChanged();
         return;
@@ -348,7 +338,7 @@ function commitAddAsection() {
     console.log("Ocorreu um erro ao atualizar o objeto!");
 }
 
-function commitDeleteSection() {
+async function commitDeleteSection() {
     const _context = context.getContext();
 
     if (!_context || !(_context instanceof DeleteSectionContext)) return;
@@ -358,7 +348,7 @@ function commitDeleteSection() {
 
     if (!_portfolio_id || !_section_id) return;
 
-    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
+    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
     if (!_portfolio || !_portfolio.secoes.length) {
         console.error(`Erro ao editar o portfólio ${_portfolio_id}.`);
         return;
@@ -371,7 +361,7 @@ function commitDeleteSection() {
         break;
     }
 
-    if (JSONQL_P.updatePortfolio(_portfolio_id, _portfolio)) {
+    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
         toggleDisplayNoneOnElement("popup-delete", true);
         context.resetContext();
         notifySectionDataChanged();
@@ -381,7 +371,7 @@ function commitDeleteSection() {
     console.log("Ocorreu um erro ao atualizar o objeto!");
 }
 
-function commitEditSectionInfo() {
+async function commitEditSectionInfo() {
     const _context = context.getContext();
 
     if (!_context || !(_context instanceof EditSectionInfoContext)) return;
@@ -411,7 +401,7 @@ function commitEditSectionInfo() {
 
     if (!_portfolio_id || !_section_id) return;
 
-    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
+    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
 
     if (!_portfolio || !_portfolio.secoes.length) {
         console.error(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
@@ -426,7 +416,7 @@ function commitEditSectionInfo() {
         break;
     }
 
-    if (JSONQL_P.updatePortfolio(_context.portfolio_id, _portfolio)) {
+    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
         toggleDisplayNoneOnElement("popup-edit", true);
         context.resetContext();
         notifySectionDataChanged();
@@ -440,7 +430,7 @@ function commitEditSectionInfo() {
  *
  * @param {EditSectionPositionContext} editSectionPositionContext
  */
-function commitEditSectionPosition(editSectionPositionContext) {
+async function commitEditSectionPosition(editSectionPositionContext) {
     if (!(editSectionPositionContext instanceof EditSectionPositionContext)) return;
 
     const _portfolio_id = ensureInteger(editSectionPositionContext.portfolio_id);
@@ -448,7 +438,7 @@ function commitEditSectionPosition(editSectionPositionContext) {
 
     if (!_portfolio_id || !_section_id) return;
 
-    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
+    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
 
     if (!_portfolio || !_portfolio.secoes.length) {
         console.error(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
@@ -498,7 +488,7 @@ function commitEditSectionPosition(editSectionPositionContext) {
             return;
     }
 
-    if (JSONQL_P.updatePortfolio(_portfolio_id, _portfolio)) {
+    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
         notifySectionDataChanged();
         return;
     }
@@ -506,7 +496,7 @@ function commitEditSectionPosition(editSectionPositionContext) {
     console.log("Ocorreu um erro ao atualizar o objeto!");
 }
 
-function commitAddLink() {
+async function commitAddLink() {
     const _context = context.getContext();
 
     if (!(_context instanceof AddLinkContext)) return;
@@ -530,7 +520,7 @@ function commitAddLink() {
     let new_url = popup_add_link_url.value;
     let new_description = popup_add_link_description.value;
 
-    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
+    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
 
     if (!_portfolio || !_portfolio.secoes.length) {
         console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
@@ -559,7 +549,7 @@ function commitAddLink() {
         break;
     }
 
-    if (JSONQL_P.updatePortfolio(_portfolio_id, _portfolio)) {
+    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
         toggleDisplayNoneOnElement("popup-add-link", true);
         context.resetContext();
         notifySectionDataChanged();
@@ -569,7 +559,7 @@ function commitAddLink() {
     console.log("Ocorreu um erro ao atualizar o objeto!");
 }
 
-function commitDeleteLink() {
+async function commitDeleteLink() {
     const _context = context.getContext();
 
     if (!(_context instanceof DeleteBlobContext)) return;
@@ -583,7 +573,7 @@ function commitDeleteLink() {
 
     if (!_portfolio_id || !_section_id) return;
 
-    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
+    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
 
     if (!_portfolio || !_portfolio.secoes.length) {
         console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
@@ -620,7 +610,7 @@ function commitDeleteLink() {
         procurando = false;
     }
 
-    if (JSONQL_P.updatePortfolio(_portfolio_id, _portfolio)) {
+    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
         toggleDisplayNoneOnElement("popup-delete-link", true);
         notifySectionDataChanged();
         return;
@@ -648,7 +638,7 @@ async function commitAddImage(p_id, s_id, blob) {
 
     if (!_portfolio_id || !_section_id) return;
 
-    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
+    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
 
     if (!_portfolio || !_portfolio.secoes.length) {
         console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
@@ -666,7 +656,7 @@ async function commitAddImage(p_id, s_id, blob) {
         break;
     }
 
-    if (JSONQL_P.updatePortfolio(_portfolio_id, _portfolio)) {
+    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
         notifySectionDataChanged();
         return;
     }
@@ -674,7 +664,7 @@ async function commitAddImage(p_id, s_id, blob) {
     console.log("Ocorreu um erro ao atualizar o objeto!");
 }
 
-function commitDeleteImage() {
+async function commitDeleteImage() {
     const _context = context.getContext();
 
     if (!(_context instanceof DeleteBlobContext)) return;
@@ -687,7 +677,7 @@ function commitDeleteImage() {
 
     if (!_portfolio_id || !_section_id) return;
 
-    const _portfolio = getFirstOrNull(JSONQL_P.readPortfolios(_portfolio_id));
+    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
 
     if (!_portfolio || !_portfolio.secoes.length) {
         console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
@@ -720,7 +710,7 @@ function commitDeleteImage() {
         procurando = false;
     }
 
-    if (JSONQL_P.updatePortfolio(_portfolio_id, _portfolio)) {
+    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
         toggleDisplayNoneOnElement("popup-delete-image", true);
         notifySectionDataChanged();
         return;
@@ -1393,7 +1383,7 @@ async function setupPortfolioPage(portf_id, enable_edit) {
 
     if (typeof enable_edit !== "boolean") enable_edit = false;
 
-    const portfolio = getFirstOrNull(JSONQL_P.readPortfolios(portf_id));
+    const portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
     if (!portfolio) {
         console.log("setupPortfolioPage: nenhum portfólio cadastrado!");
         alert("A id informada para o portfólio não existe!");
@@ -1622,9 +1612,9 @@ async function setupPortfolioSetupUsuarios() {
             portfolio_setup_create_select.appendChild(option);
         }
         portfolio_setup_create_btn.classList.remove("disabled");
-        portfolio_setup_create_btn.addEventListener("click", () => {
+        portfolio_setup_create_btn.addEventListener("click", async () => {
             // Criar portfólio para o usuário de id $?
-            let portfolioId = JSONQL_P.createPortfolio({
+            let portfolioId = await crud_portfolios.criarPortfolio({
                 usuarioId: portfolio_setup_create_select.value,
                 secoes: [],
             });
@@ -1659,7 +1649,7 @@ async function setupPortfolioSetupPortfolios() {
     }
 
     // Lê os portfolios e usuários disponíveis
-    const _portfolios = await JSONQL_P.readPortfolios();
+    const _portfolios = await crud_portfolios.lerPortfolio(_portfolio_id);
 
     // Se existem portfólios, adiciona-os à lista (abrir portfólio)
     if (_portfolios && _portfolios.length) {
