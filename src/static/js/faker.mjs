@@ -34,7 +34,7 @@ class Exemplos {
     /** @type {any[]} */
     contatos = [];
     /** @type {any[]} */
-    cpf_cnpj = [];
+    cpfCnpj = [];
     /** @type {any[]} */
     descricoes = [];
     /** @type {any[]} */
@@ -302,36 +302,36 @@ export async function criarNUsuarios(quantidade) {
 
         let usuarios = [];
 
-        for (let index = 0; index < quantidade; index++) {
-            const nome_index = generateRandomNumber(json.nomes.length);
-            const sobrenomes_index = generateRandomNumber(json.sobrenomes.length);
-            const foto_seed = generateRandomNumber(200);
-            const email_index = generateRandomNumber(json.email.length);
-            const tipo_index = generateRandomNumber(json.tipo.length);
-            const cpf_cnpj_index = generateRandomNumber(json.cpf_cnpj.length);
-            const cidade_index = generateRandomNumber(json.cidades.length);
-            const biografia_index = generateRandomNumber(json.biografia.length);
-            const contato_1_index = generateRandomNumber(json.contatos.length);
-            const contato_2_index = generateRandomNumber(json.contatos.length);
+        for (let i = 0; i < quantidade; i++) {
+            const nomeIndex = generateRandomNumber(json.nomes.length);
+            const sobrenomesIndex = generateRandomNumber(json.sobrenomes.length);
+            const fotoSeed = generateRandomNumber(200);
+            const emailIndex = generateRandomNumber(json.email.length);
+            const tipoIndex = generateRandomNumber(json.tipo.length);
+            const cpfCnpjIndex = generateRandomNumber(json.cpfCnpj.length);
+            const cidadeIndex = generateRandomNumber(json.cidades.length);
+            const biografiaIndex = generateRandomNumber(json.biografia.length);
+            const contato1Index = generateRandomNumber(json.contatos.length);
+            const contato2Index = generateRandomNumber(json.contatos.length);
 
-            const data_nascimento_dia = generateRandomNumber(28, 1);
-            const data_nascimento_mes = generateRandomNumber(12, 1);
-            const data_nascimento_ano = generateRandomNumber(2006, 1970);
+            const dataNascimentoDia = generateRandomNumber(28, 1);
+            const dataNascimentoMes = generateRandomNumber(12, 1);
+            const dataNascimentoAno = generateRandomNumber(2006, 1970);
 
             if (
-                typeof nome_index !== "number" ||
-                typeof sobrenomes_index !== "number" ||
-                typeof foto_seed !== "number" ||
-                typeof email_index !== "number" ||
-                typeof tipo_index !== "number" ||
-                typeof cpf_cnpj_index !== "number" ||
-                typeof cidade_index !== "number" ||
-                typeof biografia_index !== "number" ||
-                typeof contato_1_index !== "number" ||
-                typeof contato_2_index !== "number" ||
-                typeof data_nascimento_dia !== "number" ||
-                typeof data_nascimento_mes !== "number" ||
-                typeof data_nascimento_ano !== "number"
+                typeof nomeIndex !== "number" ||
+                typeof sobrenomesIndex !== "number" ||
+                typeof fotoSeed !== "number" ||
+                typeof emailIndex !== "number" ||
+                typeof tipoIndex !== "number" ||
+                typeof cpfCnpjIndex !== "number" ||
+                typeof cidadeIndex !== "number" ||
+                typeof biografiaIndex !== "number" ||
+                typeof contato1Index !== "number" ||
+                typeof contato2Index !== "number" ||
+                typeof dataNascimentoDia !== "number" ||
+                typeof dataNascimentoMes !== "number" ||
+                typeof dataNascimentoAno !== "number"
             ) {
                 console.log("criarNUsuarios: null check");
                 continue;
@@ -340,16 +340,16 @@ export async function criarNUsuarios(quantidade) {
             // TODO: pendente alguns parametros
             usuarios.push({
                 ativo: true, // ativo(bool)
-                nome: `${json.nomes[nome_index]} ${json.sobrenomes[sobrenomes_index]}`, // nome(string)
-                foto: `https://picsum.photos/seed/${foto_seed}/200`, // foto(string)
-                data_nascimento: `${data_nascimento_dia}/${data_nascimento_mes}/${data_nascimento_ano}`, // data_nascimento(string)
-                email: json.email[email_index], // email(string)
+                nome: `${json.nomes[nomeIndex]} ${json.sobrenomes[sobrenomesIndex]}`, // nome(string)
+                foto: `https://picsum.photos/seed/${fotoSeed}/200`, // foto(string)
+                dataNascimento: `${dataNascimentoDia}/${dataNascimentoMes}/${dataNascimentoAno}`, // dataNascimento(string)
+                email: json.email[emailIndex], // email(string)
                 senha: (generateRandomNumber(999999, 100000) || 123456).toString(), // senha(string)
-                tipo: json.tipo[tipo_index], // tipo(string)
-                cpf_cnpj: json.cpf_cnpj[cpf_cnpj_index], // cpf_cnpj(string)
-                cidade: json.cidades[cidade_index], // cidade(string)
-                biografia: json.biografia[biografia_index], // biografia(string)
-                contatos: [json.contatos[contato_1_index], json.contatos[contato_2_index]], // contatos(Array)
+                tipo: json.tipo[tipoIndex], // tipo(string)
+                cpfCnpj: json.cpfCnpj[cpfCnpjIndex], // cpfCnpj(string)
+                cidade: json.cidades[cidadeIndex], // cidade(string)
+                biografia: json.biografia[biografiaIndex], // biografia(string)
+                contatos: [json.contatos[contato1Index], json.contatos[contato2Index]], // contatos(Array)
                 fake: true,
             });
         }

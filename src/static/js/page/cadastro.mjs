@@ -31,7 +31,7 @@ const htmlCadastroInputSenha = document.getElementById("senha");
 const htmlCadastroSelectTipo = document.getElementById("tipo");
 const htmlCadastroInputCpfCnpj = document.getElementById("cpf");
 const htmlCadastroInputContato = document.getElementById("contato");
-const htmlCadastroInputDataNascimento = document.getElementById("data_nascimento");
+const htmlCadastroInputDataNascimento = document.getElementById("data-nascimento");
 const htmlCadastroInputCidade = document.getElementById("cidade");
 const htmlCadastroTextAreaBiografia = document.getElementById("biografia");
 const htmlCadastroInputFoto = document.getElementById("foto");
@@ -75,9 +75,9 @@ async function atualizarCadastro() {
     const email = htmlCadastroInputEmail.value;
     const senha = htmlCadastroInputSenha.value;
     const tipo = htmlCadastroSelectTipo.value;
-    const cpf_cnpj = htmlCadastroInputCpfCnpj.value.replace(/\D/g, "");
+    const cpfCnpj = htmlCadastroInputCpfCnpj.value.replace(/\D/g, "");
     const contato = htmlCadastroInputContato.value.replace(/\D/g, "");
-    const data_nascimento = htmlCadastroInputDataNascimento.value;
+    const dataNascimento = htmlCadastroInputDataNascimento.value;
     const cidade = htmlCadastroInputCidade.value;
     const biografia = htmlCadastroTextAreaBiografia.value;
     const fotoInput_files = htmlCadastroInputFoto.files;
@@ -141,7 +141,7 @@ async function preencherValores() {
     if (usuario.nome) htmlCadastroInputNome.value = usuario.nome;
     if (usuario.email) htmlCadastroInputEmail.value = usuario.email;
     if (usuario.senha) htmlCadastroInputSenha.value = usuario.senha;
-    if (usuario.cpf_cnpj) htmlCadastroInputCpfCnpj.value = usuario.cpf_cnpj;
+    if (usuario.cpfCnpj) htmlCadastroInputCpfCnpj.value = usuario.cpfCnpj;
     if (usuario.cidade) htmlCadastroInputCidade.value = usuario.cidade;
     if (usuario.biografia) htmlCadastroTextAreaBiografia.value = usuario.biografia;
     if (usuario.escolaridade) htmlCadastroInputEscolaridade.value = usuario.escolaridade;
@@ -152,8 +152,8 @@ async function preencherValores() {
     if (usuario.tipo) htmlCadastroSelectTipo.value = usuario.tipo;
     if (usuario.sexo) htmlCadastroSelectSexo.value = usuario.sexo;
 
-    if (usuario.data_nascimento)
-        htmlCadastroInputDataNascimento.value = new Date(usuario.data_nascimento)
+    if (usuario.dataNascimento)
+        htmlCadastroInputDataNascimento.value = new Date(usuario.dataNascimento)
             .toISOString()
             .slice(0, 10);
     if (usuario.foto) htmlCadastroImgPreview.src = usuario.foto;

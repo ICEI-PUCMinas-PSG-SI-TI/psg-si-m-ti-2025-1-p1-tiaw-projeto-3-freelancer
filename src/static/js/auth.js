@@ -312,6 +312,7 @@ async function realizarCadastro() {
         email: _email,
         // Indica que informações como foto, profissão ou outras informações não foram cadastradas
         formularioConcluido: false,
+        dataCadastro: new Date().toISOString(),
     });
 
     // 3. Informar se cadastro foi realizado com sucesso
