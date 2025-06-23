@@ -1,24 +1,15 @@
 //@ts-check
 
 import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
+import { retornaNomeSeLogado, retornarIdSeLogado, realizarLogout } from "./lib/credenciais.mjs";
 
 const crud_usuarios = new Usuarios();
 
 const htmlDivModalProfile = document.getElementById("profile-modal");
 const htmlButtonShowPerfil = document.getElementById("profile-show-perfil");
 
-const mock2_isUserLoggedIn = () => !!localStorage.getItem("LucreM.id");
-
-function mostrarModalProfile() {
-    htmlDivModalProfile?.classList.remove("d-none");
-}
-
-function esconderModalProfile() {
-    htmlDivModalProfile?.classList.add("d-none");
-}
-
 function inicializarProfile() {
-    const userId = localStorage.getItem("LucreM.id");
+    const userId = retornarIdSeLogado();
     if (!userId) return;
 
     const userInfo = crud_usuarios.lerUsuario(userId);
@@ -37,18 +28,18 @@ function inicializarProfile() {
     )
         return;
 
-    // TODO: Limpar apenas keys necessárias
-    htmlParProfile.innerText = localStorage.getItem("LucreM.nome") || "Usuário";
-    htmlImageProfile.addEventListener("click", mostrarModalProfile);
-    htmlLogout.addEventListener("click", () => {
-        localStorage.clear();
-        location.reload();
-    });
-    htmlDivModalProfile.addEventListener("click", esconderModalProfile);
+    htmlParProfile.innerText = retornaNomeSeLogado();
+    htmlImageProfile.addEventListener("click", () =>
+        // mostrarModalProfile()
+        htmlDivModalProfile?.classList.remove("d-none"),
+    );
+    htmlLogout.addEventListener("click", () => realizarLogout);
+    htmlDivModalProfile.addEventListener("click", () =>
+        // esconderModalProfile()
+        htmlDivModalProfile?.classList.add("d-none"),
+    );
     htmlImageProfile.classList.remove("d-none");
-    htmlButtonShowPerfil?.addEventListener("click", () => {
-        location.assign("/perfil");
-    });
+    htmlButtonShowPerfil?.addEventListener("click", () => location.assign("/perfil"));
 
     userInfo.then((response) => {
         htmlImageProfileBig.src = response.foto;

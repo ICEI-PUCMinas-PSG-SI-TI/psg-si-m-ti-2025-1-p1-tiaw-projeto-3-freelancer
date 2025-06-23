@@ -1,6 +1,7 @@
 //@ts-check
 
 import { Usuarios } from "../jsonf/usuarios.mjs";
+import { retornarIdSeLogado } from "../lib/credenciais.mjs";
 
 const maxAllowedSizeCad = 5 * 1024 * 1024; // 5 MB in bytes
 
@@ -96,7 +97,7 @@ async function atualizarCadastro() {
         .then((result) => {
             crud_usuarios
                 .atualizarUsuario({
-                    id: idUsuarioCorrente(),
+                    id: retornarIdSeLogado(),
                     ativo: true,
                     foto: result,
                     nome,

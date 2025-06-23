@@ -106,18 +106,6 @@ export function isNonNegativeInt(value) {
     return Number.isInteger(value) && value >= 0;
 }
 
-const LUCRE_KEY = "LucreM";
-
-// Função para alterar keys, isso garante que nenhuma aplicativo rodando e/ou
-// salvando dados no localStorage/localStorage interfica nessa aplicação.
-function lucreKey(key) {
-    return `${LUCRE_KEY}.${key}`;
-}
-
-export function isUserLoggedIn() {
-    return !!localStorage.getItem(lucreKey("id"));
-}
-
 export function assertNonEmptyString(value) {
     if (typeof value !== "string") throw new Error("Value is not a string!");
     if (value.trim().length === 0) throw new Error("String is empty.");

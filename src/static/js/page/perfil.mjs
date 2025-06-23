@@ -2,20 +2,11 @@
 
 import { Usuarios } from "../jsonf/usuarios.mjs";
 import { assertStringNonEmpty } from "../lib/validate.mjs";
+import { retornarIdSeLogado } from "../lib/credenciais.mjs";
 
 const crud_usuarios = new Usuarios();
 
 const htmlBackgroundImage = document.querySelector("div.body-section.body-content");
-
-function getPerfilId() {
-    return localStorage.getItem("LucreM.id") || "lucremais";
-}
-
-// TODO: Use username for background photos
-if (htmlBackgroundImage instanceof HTMLDivElement) {
-    htmlBackgroundImage.style.backgroundImage = `url(https://picsum.photos/seed/${getPerfilId() || "lucremais"}/1080)`;
-}
-
 const htmlProfileImgPicture = document.getElementById("profile-picture-perfil");
 const htmlProfileH2ProfileName = document.getElementById("profile-name-perfil");
 const htmlProfileParagTitle = document.getElementById("profile-title");
@@ -27,7 +18,7 @@ const htmlProfileParagAval = document.getElementById("profile-aval");
 const htmlProfileParagBiografia = document.getElementById("profile-biografia");
 const htmlProfileButtonEditPerfil = document.getElementById("button-edit-perfil");
 
-async function inicializarPerfil(id) {
+async function inicializarPerfil(id, allowEdit) {
     assertStringNonEmpty(id);
 
     const _usuarios = await crud_usuarios.lerUsuario(id);
@@ -54,6 +45,11 @@ async function inicializarPerfil(id) {
         return;
     }
 
+    // TODO: Use username for background photos
+    if (htmlBackgroundImage instanceof HTMLDivElement) {
+        htmlBackgroundImage.style.backgroundImage = `url(https://picsum.photos/seed/${id}/1080)`;
+    }
+
     htmlProfileImgPicture.src = _usuarios.foto || "static/img/placeholder_profile.png";
     htmlProfileH2ProfileName.innerText = _usuarios.nome;
     htmlProfileParagTitle.innerText = _usuarios.profissao || "Profissão não informada";
@@ -75,7 +71,7 @@ async function inicializarPerfil(id) {
     htmlProfileParagNota.innerText = nota;
     htmlProfileParagAval.innerText = avaliacoes;
 
-    if (id === getPerfilId()) {
+    if (allowEdit) {
         htmlProfileButtonEditPerfil?.classList.remove("d-none");
         htmlProfileButtonEditPerfil?.addEventListener("click", () => location.assign("/cadastro"));
     }
@@ -86,11 +82,11 @@ function carregarDadosDaUrl() {
     const id = params.get("id");
     // Mostrar perfil do usuário
     if (id) {
-        inicializarPerfil(id);
+        inicializarPerfil(id, false);
         return;
     }
 
-    inicializarPerfil(getPerfilId());
+    inicializarPerfil(retornarIdSeLogado(), true);
 }
 
 carregarDadosDaUrl();

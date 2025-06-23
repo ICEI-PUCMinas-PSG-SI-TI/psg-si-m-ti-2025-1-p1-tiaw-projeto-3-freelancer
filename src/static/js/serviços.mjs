@@ -1,6 +1,7 @@
-//@ts-check
+// @ts-check
 
 import { Servicos } from "./jsonf/servicos.mjs";
+import { retornarIdSeLogado } from "./lib/credenciais.mjs";
 
 const crud_servicos = new Servicos();
 
@@ -131,7 +132,7 @@ function render() {
     crud_servicos.lerServicos().then((res) => {
         if (!res?.length) return;
 
-        const logged_id = localStorage.getItem("LucreM.id");
+        const logged_id = retornarIdSeLogado();
         if (!logged_id) return;
         for (const servico of res) {
             if (servico.usuarioId !== logged_id) continue;
@@ -194,6 +195,8 @@ function iniciarlizarPaginaServicos() {
     html_form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
+        const usuarioId = retornarIdSeLogado();
+
         // TODO: declare 1 time
         const html_input_picture = document.getElementById("imagem");
         const html_titulo = document.getElementById("titulo");
@@ -232,8 +235,6 @@ function iniciarlizarPaginaServicos() {
         const descricao = html_descricao.value.trim();
         const categoria = html_categoriaId.selectedOptions[0].text;
 
-        // TODO: Get realId
-        const usuarioId = localStorage.getItem("LucreM.id");
         if (editContext !== null) {
             // ATUALIZAR
             await crud_servicos.atualizarServico({
