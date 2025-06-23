@@ -41,16 +41,21 @@ const htmlCadastroSelectProfissao = document.getElementById("profissao");
 const htmlCadastroSelectSexo = document.getElementById("sexo");
 const htmlCadastroInputEscolaridade = document.getElementById("escolaridade");
 
-let username = "";
+class EditContext {
+    constructor(json, id, foto, username, dataCadastro, formularioConcluido) {
+        this.json = json;
+        this.id = id;
+        this.foto = foto;
+        this.username = username;
+        this.dataCadastro = dataCadastro;
+        this.formularioConcluido = formularioConcluido;
+    }
+}
+
+/** @type {EditContext | null} */
+let editContext = null;
 
 const htmlCadastroForm = document.getElementById("formCadastro");
-
-// TODO: Verificar ou resetar credenciais
-function idUsuarioCorrente() {
-    const id = localStorage.getItem("LucreM.id");
-    if (!id) throw new Error("ID não identificada");
-    return id;
-}
 
 async function atualizarCadastro() {
     if (
@@ -86,37 +91,50 @@ async function atualizarCadastro() {
     const sexo = htmlCadastroSelectSexo.value;
     const escolaridade = htmlCadastroInputEscolaridade.value;
 
-    // Tornar foto opcional
-    if (!fotoInput_files?.length) {
+    if (!editContext) {
+        alert("Houve erros ao realizar a atualização das informações!");
+        return;
+    }
+
+    let informacoesUsuario = {
+        id: retornarIdSeLogado(),
+        ativo: true,
+        nome,
+        username: editContext.username,
+        dataNascimento: new Date(dataNascimento).toISOString(),
+        email,
+        senha,
+        contatos: [contato],
+        tipo,
+        cpfCnpj,
+        cidade,
+        biografia,
+        profissao,
+        sexo,
+        escolaridade,
+        dataCadastro: editContext.dataCadastro,
+        formularioConcluido: editContext.formularioConcluido,
+    };
+
+    // TODO: Tornar foto opcional?
+    let base64Image;
+    if (fotoInput_files?.length) {
+        try {
+            base64Image = await fileToBase64(fotoInput_files[0]);
+        } catch (err) {
+            alert(err);
+        }
+    } else if (editContext.foto) {
+        base64Image = editContext.foto;
+    } else {
         alert("Por favor, selecione uma foto.");
         return;
     }
 
-    // TODO: Clear input if image is invalid
-    fileToBase64(fotoInput_files[0])
-        .then((result) => {
-            crud_usuarios
-                .atualizarUsuario({
-                    id: retornarIdSeLogado(),
-                    ativo: true,
-                    foto: result,
-                    nome,
-                    username,
-                    dataNascimento: new Date(dataNascimento).toISOString(),
-                    email,
-                    senha,
-                    contatos: [contato],
-                    tipo,
-                    cpfCnpj,
-                    cidade,
-                    biografia,
-                    profissao,
-                    sexo,
-                    escolaridade,
-                })
-                .then(() => alert("Informações atualizadas com sucesso!"));
-        })
-        .catch((error) => alert(error));
+    informacoesUsuario.foto = base64Image;
+    crud_usuarios
+        .atualizarUsuario(informacoesUsuario)
+        .then(() => alert("Informações atualizadas com sucesso!"));
 }
 
 async function preencherValores() {
@@ -138,7 +156,18 @@ async function preencherValores() {
     )
         throw new Error("Null checking");
 
-    const usuario = await crud_usuarios.lerUsuario(idUsuarioCorrente());
+    const usuario = await crud_usuarios.lerUsuario(retornarIdSeLogado());
+    if (!usuario) return;
+
+    editContext = new EditContext(
+        usuario,
+        usuario.id,
+        usuario.foto,
+        usuario.username,
+        usuario.dataCadastro,
+        usuario.formularioConcluido,
+    );
+
     if (usuario.nome) htmlCadastroInputNome.value = usuario.nome;
     if (usuario.email) htmlCadastroInputEmail.value = usuario.email;
     if (usuario.senha) htmlCadastroInputSenha.value = usuario.senha;
@@ -158,7 +187,6 @@ async function preencherValores() {
             .toISOString()
             .slice(0, 10);
     if (usuario.foto) htmlCadastroImgPreview.src = usuario.foto;
-    if (usuario.username) username = usuario.username;
 }
 
 function inicializarCadastro() {
