@@ -9,30 +9,30 @@
 // https://getbootstrap.com/docs/5.3/components/toasts
 
 function setup404Toast() {
-    const toast_container = document.createElement("div");
-    toast_container.classList.add("toast-container", "position-fixed", "bottom-0", "end-0", "p-3");
-    toast_container.innerHTML = `<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    const toastContainer = document.createElement("div");
+    toastContainer.classList.add("toast-container", "position-fixed", "bottom-0", "end-0", "p-3");
+    toastContainer.innerHTML = `<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-body">
                 Essa página ainda não foi implementada!
             </div>
         </div>`;
 
-    document.body.appendChild(toast_container);
+    document.body.appendChild(toastContainer);
 
     let toast = document.getElementById("liveToast");
     // retorna todos os elementos <a> | href != null
-    let document_links = document.links;
+    let documentLinks = document.links;
     // @ts-ignore: bootstrap is imported in html
     // eslint-disable-next-line no-undef
     let toastBootstrap = bootstrap.Toast.getOrCreateInstance(toast);
 
-    for (const element of document_links) {
-        if (!element.href.endsWith("/404")) continue;
-
-        element.addEventListener("click", (event) => {
-            toastBootstrap.show();
-            event.preventDefault();
-        });
+    for (const element of documentLinks) {
+        if (element.href.endsWith("/404")) {
+            element.addEventListener("click", (event) => {
+                toastBootstrap.show();
+                event.preventDefault();
+            });
+        }
     }
 }
 

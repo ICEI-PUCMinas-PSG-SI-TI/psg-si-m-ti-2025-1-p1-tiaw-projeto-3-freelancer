@@ -19,7 +19,15 @@ export default defineConfig([
             "require-await": "warn",
             "no-eval": "warn",
             "no-continue": "warn",
-            eqeqeq: ["error", "always", { null: "ignore" }],
+            eqeqeq: ["warn", "always", { null: "ignore" }],
+            "no-restricted-syntax": [
+                "warn",
+                {
+                    selector:
+                        "CallExpression[callee.object.name='console'][callee.property.name!=/^(warn|error|info|trace)$/]",
+                    message: "Unexpected property on console object was called",
+                },
+            ],
         },
     },
 ]);

@@ -25,7 +25,7 @@ export class Servicos {
     /**
      * @returns {Promise<Array>}
      */
-    async lerServicos() {
+    lerServicos() {
         return fetch(API_URL, {
             method: "GET",
         }).then((response) => response.json());
@@ -35,7 +35,7 @@ export class Servicos {
      * @param {string} id
      * @returns {Promise<Object>}
      */
-    async lerServico(id) {
+    lerServico(id) {
         assertStringNonEmpty(id);
         return fetch(`${API_URL}/${id}`, {
             method: "GET",
@@ -47,7 +47,7 @@ export class Servicos {
      * @param {string} id ID do serviço a ser atualizado
      * @returns {Promise<string>}
      */
-    async excluirServico(id) {
+    excluirServico(id) {
         assertStringNonEmpty(id);
         return fetch(`${API_URL}/${id}`, {
             method: "DELETE",
@@ -60,7 +60,7 @@ export class Servicos {
      * Atualiza as informações de um serviço, retorna uma Promessa com as informações atualizadas
      * @param {Object} servico
      */
-    async atualizarServico(servico) {
+    atualizarServico(servico) {
         // TODO: validar as informações de servico
         // Obs: Retornar erro, caso necessário
         this.assertObjetoServico(servico);
@@ -80,7 +80,7 @@ export class Servicos {
      * @param {Object} servico Informações do serviço a ser cadastrado
      * @returns {Promise<Object>} Retorna o json do serviço se as informações foram cadastradas corretamente
      */
-    async criarServico(servico) {
+    criarServico(servico) {
         // TODO: Validar as informações do serviço
         // Obs: Retornar erro, caso necessário
         this.assertObjetoServico(servico);
@@ -99,7 +99,7 @@ export class Servicos {
      * Limpa todas as informações dos serviços
      */
     // TODO: Verificar melhor forma de excluir todos os dados não recursivamente
-    async limparServicos() {
+    limparServicos() {
         throw new Error("Função não implementada!");
     }
 }

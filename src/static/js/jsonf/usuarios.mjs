@@ -25,7 +25,7 @@ export class Usuarios {
     /**
      * @returns {Promise<Array>}
      */
-    async lerUsuarios() {
+    lerUsuarios() {
         return fetch(API_URL, {
             method: "GET",
         }).then((response) => response.json());
@@ -35,7 +35,7 @@ export class Usuarios {
      * @param {string} id
      * @returns {Promise<Object>}
      */
-    async lerUsuario(id) {
+    lerUsuario(id) {
         assertStringNonEmpty(id);
         return fetch(`${API_URL}/${id}`, {
             method: "GET",
@@ -47,7 +47,7 @@ export class Usuarios {
      * @param {string} id ID do usuário a ser atualizado
      * @returns {Promise<string>}
      */
-    async excluirUsuario(id) {
+    excluirUsuario(id) {
         assertStringNonEmpty(id);
         return fetch(`${API_URL}/${id}`, {
             method: "DELETE",
@@ -60,7 +60,7 @@ export class Usuarios {
      * Atualiza as informações de um usuário, retorna uma Promessa com as informações atualizadas
      * @param {Object} usuario
      */
-    async atualizarUsuario(usuario) {
+    atualizarUsuario(usuario) {
         // TODO: validar as informações de usuário
         // Obs: Retornar erro, caso necessário
         this.assertObjetoUsuario(usuario);
@@ -80,7 +80,7 @@ export class Usuarios {
      * @param {Object} usuario Informações do usuário a ser cadastrado
      * @returns {Promise<Object>} Retorna o json do usuário se as informações foram cadastradas corretamente
      */
-    async criarUsuario(usuario) {
+    criarUsuario(usuario) {
         // TODO: Validar as informações do usuário
         // Obs: Retornar erro, caso necessário
         this.assertObjetoUsuario(usuario);
@@ -99,7 +99,7 @@ export class Usuarios {
      * Limpa todas as informações dos usuários
      */
     // TODO: Verificar melhor forma de excluir todos os dados não recursivamente
-    async limparUsuarios() {
+    limparUsuarios() {
         throw new Error("Função não implementada!");
     }
 }

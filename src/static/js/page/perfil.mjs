@@ -4,7 +4,7 @@ import { Usuarios } from "../jsonf/usuarios.mjs";
 import { assertStringNonEmpty } from "../lib/validate.mjs";
 import { retornarIdSeLogado } from "../lib/credenciais.mjs";
 
-const crud_usuarios = new Usuarios();
+const crudUsuarios = new Usuarios();
 
 const htmlBackgroundImage = document.querySelector("div.body-section.body-content");
 const htmlProfileImgPicture = document.getElementById("profile-picture-perfil");
@@ -21,7 +21,7 @@ const htmlProfileButtonEditPerfil = document.getElementById("button-edit-perfil"
 async function inicializarPerfil(id, allowEdit) {
     assertStringNonEmpty(id);
 
-    const _usuarios = await crud_usuarios.lerUsuario(id);
+    const _usuarios = await crudUsuarios.lerUsuario(id);
     if (!_usuarios) {
         alert("Não foi possível ler as informações desse usuário!");
         return;
@@ -41,7 +41,7 @@ async function inicializarPerfil(id, allowEdit) {
         !htmlProfileParagBiografia ||
         !htmlProfileParagAval
     ) {
-        console.log("Null check2");
+        console.error("Some html elements are null!");
         return;
     }
 
@@ -62,8 +62,8 @@ async function inicializarPerfil(id, allowEdit) {
         const _contato = _usuarios.contatos[0];
         htmlProfileLinkContato.classList.remove("d-none");
         htmlProfileLinkContato.innerText = _contato;
-        const _strip_contato = _contato.replace(/[^0-9+]/gm, "");
-        htmlProfileLinkContato.href = `tel:${_strip_contato}`;
+        const contatoParsed = _contato.replace(/[^0-9+]/gm, "");
+        htmlProfileLinkContato.href = `tel:${contatoParsed}`;
     }
     htmlProfileLinkEmail.innerText = _usuarios.email;
     htmlProfileLinkEmail.href = `mailto:${_usuarios.email}`;

@@ -4,13 +4,18 @@ import { Usuarios } from "../jsonf/usuarios.mjs";
 import { Servicos } from "../jsonf/servicos.mjs";
 import { assertStringNonEmpty } from "../lib/validate.mjs";
 
-const crud_usuarios = new Usuarios();
-const crud_servicos = new Servicos();
+const crudUsuarios = new Usuarios();
+const crudServicos = new Servicos();
+
+function initializeIfNotNull(elementId, textContent) {
+    const element = document.getElementById(elementId);
+    if (element instanceof HTMLElement && textContent) element.textContent = textContent;
+}
 
 async function inicializarDetalhes(id) {
     assertStringNonEmpty(id);
 
-    const servico = await crud_servicos.lerServico(id);
+    const servico = await crudServicos.lerServico(id);
     if (!servico) {
         alert("Serviço não encontrado!");
         return;
@@ -21,25 +26,34 @@ async function inicializarDetalhes(id) {
     if (htmlBackgroundImage instanceof HTMLDivElement)
         htmlBackgroundImage.style.backgroundImage = `url(https://picsum.photos/seed/${id}/1080)`;
 
-    if (servico.imagem) document.getElementById("servico-img").src = servico.imagem;
-    document.getElementById("servico-titulo").textContent = servico.titulo;
-    document.getElementById("servico-categoria").textContent = "Categoria: " + servico.categoria;
-    document.getElementById("servico-descricao").textContent = servico.descricao;
+    const htmlServicoImagem = document.getElementById("servico-contato");
+    if (servico.imagem && htmlServicoImagem instanceof HTMLImageElement)
+        htmlServicoImagem.src = servico.imagem;
+
+    initializeIfNotNull("servico-img", servico.imagem);
+    initializeIfNotNull("servico-titulo", servico.titulo);
+    initializeIfNotNull("servico-categoria", servico.categoria);
+    initializeIfNotNull("servico-descricao", servico.descricao);
+
     try {
         const _userId = servico.usuarioId;
-        const _user = await crud_usuarios.lerUsuario(_userId);
+        const _user = await crudUsuarios.lerUsuario(_userId);
         if (_user) {
             // TODO: Adicionar link ao perfil
-            document.getElementById("freelancer-nome").textContent = _user.nome;
-            document.getElementById("freelancer-nome").href = `/perfil?id=${_userId}`;
+            const freelancerNome = document.getElementById("freelancer-nome");
+            if (freelancerNome instanceof HTMLAnchorElement) {
+                freelancerNome.textContent = _user.nome;
+                freelancerNome.href = `/perfil?id=${_userId}`;
+            }
         }
     } catch (err) {
         console.error(err.message);
     }
-    if (servico.contato) document.getElementById("servico-contato").textContent = servico.contato;
-    // document.getElementById("prazo-servico").textContent = servico.prazo;
-    // document.getElementById("preco-servico").textContent = servico.preco;
-    // document.getElementById("avaliacao-servico").textContent = servico.avaliacao;
+
+    initializeIfNotNull("servico-contato", servico.contato);
+    initializeIfNotNull("servico-contato", servico.prazo);
+    initializeIfNotNull("servico-contato", servico.preco);
+    initializeIfNotNull("servico-contato", servico.avaliacao);
 
     // Preenche avaliações
     const avaliacoesDiv = document.getElementById("avaliacoes-lista");

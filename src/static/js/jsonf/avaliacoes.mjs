@@ -25,7 +25,7 @@ export class Avaliacoes {
     /**
      * @returns {Promise<Array>}
      */
-    async lerAvaliacoes() {
+    lerAvaliacoes() {
         return fetch(API_URL, {
             method: "GET",
         }).then((response) => response.json());
@@ -35,7 +35,7 @@ export class Avaliacoes {
      * @param {string} id
      * @returns {Promise<Object>}
      */
-    async lerAvaliacao(id) {
+    lerAvaliacao(id) {
         assertStringNonEmpty(id);
         return fetch(`${API_URL}/${id}`, {
             method: "GET",
@@ -47,7 +47,7 @@ export class Avaliacoes {
      * @param {string} id ID do avaliacao a ser atualizado
      * @returns {Promise<string>}
      */
-    async excluirAvaliacao(id) {
+    excluirAvaliacao(id) {
         assertStringNonEmpty(id);
         return fetch(`${API_URL}/${id}`, {
             method: "DELETE",
@@ -60,7 +60,7 @@ export class Avaliacoes {
      * Atualiza as informações de um avaliacao, retorna uma Promessa com as informações atualizadas
      * @param {Object} avaliacao
      */
-    async atualizarAvaliacao(avaliacao) {
+    atualizarAvaliacao(avaliacao) {
         // TODO: validar as informações de avaliacao
         // Obs: Retornar erro, caso necessário
         this.assertObjetoAvaliacao(avaliacao);
@@ -80,7 +80,7 @@ export class Avaliacoes {
      * @param {Object} avaliacao Informações do avaliacao a ser cadastrado
      * @returns {Promise<Object>} Retorna o json do avaliacao se as informações foram cadastradas corretamente
      */
-    async criarAvaliacao(avaliacao) {
+    criarAvaliacao(avaliacao) {
         // TODO: Validar as informações do avaliacao
         // Obs: Retornar erro, caso necessário
         this.assertObjetoAvaliacao(avaliacao);
@@ -99,7 +99,7 @@ export class Avaliacoes {
      * Limpa todas as informações dos avaliacoes
      */
     // TODO: Verificar melhor forma de excluir todos os dados não recursivamente
-    async limparAvaliacoes() {
+    limparAvaliacoes() {
         throw new Error("Função não implementada!");
     }
 }

@@ -1,6 +1,7 @@
 //@ts-check
 
-export const MAX_ALLOWED_SIZE = 5 * 1024 * 1024; // 5 MB in bytes
+// 5 MB in bytes
+export const MAX_ALLOWED_SIZE = 5 * 1024 * 1024;
 
 export function assertBase64ConvertableImage(file) {
     if (!file) throw new Error("Nenhum arquivo foi identificado!");
@@ -14,8 +15,8 @@ export function assertBase64ConvertableImage(file) {
 /**
  * @param {Blob} file
  */
-export async function imageFileToBase64(file) {
-    assertBase64ConvertableImage(file)
+export function imageFileToBase64(file) {
+    assertBase64ConvertableImage(file);
 
     return new Promise((resolve, reject) => {
         const reader = new FileReader();

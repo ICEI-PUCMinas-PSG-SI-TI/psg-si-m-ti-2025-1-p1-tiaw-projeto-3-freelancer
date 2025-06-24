@@ -4,7 +4,7 @@ import { Usuarios } from "../jsonf/usuarios.mjs";
 import { retornarIdSeLogado } from "../lib/credenciais.mjs";
 import { imageFileToBase64 } from "../lib/tools.mjs";
 
-const crud_usuarios = new Usuarios();
+const crudUsuarios = new Usuarios();
 
 const htmlCadastroInputNome = document.getElementById("nome");
 const htmlCadastroInputEmail = document.getElementById("email");
@@ -66,7 +66,7 @@ async function atualizarCadastro() {
     const dataNascimento = htmlCadastroInputDataNascimento.value;
     const cidade = htmlCadastroInputCidade.value;
     const biografia = htmlCadastroTextAreaBiografia.value;
-    const fotoInput_files = htmlCadastroInputFoto.files;
+    const fotoInputFiles = htmlCadastroInputFoto.files;
     const profissao = htmlCadastroSelectProfissao.value;
     const sexo = htmlCadastroSelectSexo.value;
     const escolaridade = htmlCadastroInputEscolaridade.value;
@@ -98,9 +98,9 @@ async function atualizarCadastro() {
 
     // TODO: Tornar foto opcional?
     let base64Image;
-    if (fotoInput_files?.length) {
+    if (fotoInputFiles?.length) {
         try {
-            base64Image = await imageFileToBase64(fotoInput_files[0]);
+            base64Image = await imageFileToBase64(fotoInputFiles[0]);
         } catch (err) {
             alert(err);
         }
@@ -112,7 +112,7 @@ async function atualizarCadastro() {
     }
 
     informacoesUsuario.foto = base64Image;
-    crud_usuarios
+    crudUsuarios
         .atualizarUsuario(informacoesUsuario)
         .then(() => alert("Informações atualizadas com sucesso!"));
 }
@@ -136,7 +136,7 @@ async function preencherValores() {
     )
         throw new Error("Null checking");
 
-    const usuario = await crud_usuarios.lerUsuario(retornarIdSeLogado());
+    const usuario = await crudUsuarios.lerUsuario(retornarIdSeLogado());
     if (!usuario) return;
 
     editContext = new EditContext(
@@ -178,7 +178,7 @@ function inicializarCadastro() {
 
     preencherValores();
 
-    htmlCadastroInputFoto?.addEventListener("change", async () => {
+    htmlCadastroInputFoto?.addEventListener("change", () => {
         if (
             !(htmlCadastroInputFoto instanceof HTMLInputElement) ||
             !(htmlCadastroImgPreview instanceof HTMLImageElement)
@@ -186,7 +186,7 @@ function inicializarCadastro() {
             return;
 
         if (!htmlCadastroInputFoto.files?.length) return;
-        fileToBase64(htmlCadastroInputFoto.files[0]).then((result) => {
+        imageFileToBase64(htmlCadastroInputFoto.files[0]).then((result) => {
             htmlCadastroImgPreview.src = result;
         });
     });

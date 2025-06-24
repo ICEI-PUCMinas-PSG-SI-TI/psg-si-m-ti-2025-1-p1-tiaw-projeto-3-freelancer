@@ -25,7 +25,7 @@ export class Portfolios {
     /**
      * @returns {Promise<Array>}
      */
-    async lerPortfolios() {
+    lerPortfolios() {
         return fetch(API_URL, {
             method: "GET",
         }).then((response) => response.json());
@@ -35,7 +35,7 @@ export class Portfolios {
      * @param {string} id
      * @returns {Promise<Object>}
      */
-    async lerPortfolio(id) {
+    lerPortfolio(id) {
         assertStringNonEmpty(id);
         return fetch(`${API_URL}/${id}`, {
             method: "GET",
@@ -47,7 +47,7 @@ export class Portfolios {
      * @param {string} id ID do portfólio a ser atualizado
      * @returns {Promise<string>}
      */
-    async excluirPortfolio(id) {
+    excluirPortfolio(id) {
         assertStringNonEmpty(id);
         return fetch(`${API_URL}/${id}`, {
             method: "DELETE",
@@ -60,7 +60,7 @@ export class Portfolios {
      * Atualiza as informações de um portfólio, retorna uma Promessa com as informações atualizadas
      * @param {Object} portfolio
      */
-    async atualizarPortfolio(portfolio) {
+    atualizarPortfolio(portfolio) {
         // TODO: validar as informações de portfólio
         // Obs: Retornar erro, caso necessário
         this.assertObjetoPortfolio(portfolio);
@@ -80,7 +80,7 @@ export class Portfolios {
      * @param {Object} portfolio Informações do portfólio a ser cadastrado
      * @returns {Promise<Object>} Retorna o json do portfólio se as informações foram cadastradas corretamente
      */
-    async criarPortfolio(portfolio) {
+    criarPortfolio(portfolio) {
         // TODO: Validar as informações do portfólio
         // Obs: Retornar erro, caso necessário
         this.assertObjetoPortfolio(portfolio);
@@ -99,7 +99,7 @@ export class Portfolios {
      * Limpa todas as informações dos portfólios
      */
     // TODO: Verificar melhor forma de excluir todos os dados não recursivamente
-    async limparPortfólio() {
+    limparPortfólio() {
         throw new Error("Função não implementada!");
     }
 }

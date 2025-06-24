@@ -2,9 +2,9 @@
 
 import { Avaliacoes } from "./jsonf/avaliacoes.mjs";
 import { retornarIdSeLogado } from "./lib/credenciais.mjs";
-import { imageFileToBase64 } from "./lib/tools.mjs"
+import { imageFileToBase64 } from "./lib/tools.mjs";
 
-const crud_avaliacoes = new Avaliacoes();
+const crudAvaliacoes = new Avaliacoes();
 
 const htmlButtonCancelar = document.getElementById("btn-cancelar");
 const htmlButtonPublicar = document.getElementById("btn-publicar");
@@ -49,13 +49,18 @@ function updateStars() {
 function limparFormulario() {
     selectedRating = 0;
     updateStars();
-    document.getElementById("comentario").value = "";
-    document.getElementById("imagem").value = "";
+    const htmlComentario = document.getElementById("comentario");
+    const htmlImagem = document.getElementById("imagem");
+    if (htmlComentario instanceof HTMLTextAreaElement) htmlComentario.value = "";
+    if (htmlImagem instanceof HTMLInputElement) htmlImagem.value = "";
 }
 
 async function publicar() {
-    const comentario = document.getElementById("comentario").value.trim();
+    const htmlComentario = document.getElementById("comentario");
+    if (!(htmlComentario instanceof HTMLTextAreaElement)) return;
+    const comentario = htmlComentario.value.trim();
     const imagemInput = document.getElementById("imagem");
+    if (!(imagemInput instanceof HTMLInputElement)) return;
     if (selectedRating === 0) {
         alert("Por favor, selecione uma avaliação por estrelas.");
         return;
@@ -65,17 +70,19 @@ async function publicar() {
         return;
     }
 
-    const imagemBase64 = await imageFileToBase64(imagemInput.files[0]);
-
     try {
-        await crud_avaliacoes.criarAvaliacao({
+        const avaliacao = {
             usuarioId: retornarIdSeLogado(),
             nota: selectedRating,
             comentario,
-            imagem: imagemBase64,
             data: new Date().toISOString(),
             // TODO: contratoId
-        });
+        };
+
+        if (imagemInput.files?.length)
+            avaliacao.imagem = await imageFileToBase64(imagemInput.files[0]);
+
+        await crudAvaliacoes.criarAvaliacao(avaliacao);
 
         alert("Avaliação enviada com sucesso!");
         limparFormulario();
@@ -88,11 +95,9 @@ async function publicar() {
     // Inicializa as estrelas
     updateStars();
 
-    if (
-        htmlButtonCancelar instanceof HTMLButtonElement &&
-        htmlButtonPublicar instanceof HTMLButtonElement
-    ) {
+    if (htmlButtonCancelar instanceof HTMLButtonElement)
         htmlButtonCancelar.addEventListener("click", limparFormulario);
+
+    if (htmlButtonPublicar instanceof HTMLButtonElement)
         htmlButtonPublicar.addEventListener("click", publicar);
-    }
 })();

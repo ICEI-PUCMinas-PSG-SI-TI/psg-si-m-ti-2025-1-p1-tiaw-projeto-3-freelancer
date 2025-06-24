@@ -25,7 +25,7 @@ export class Contratos {
     /**
      * @returns {Promise<Array>}
      */
-    async lerContratos() {
+    lerContratos() {
         return fetch(API_URL, {
             method: "GET",
         }).then((response) => response.json());
@@ -35,7 +35,7 @@ export class Contratos {
      * @param {string} id
      * @returns {Promise<Object>}
      */
-    async lerContrato(id) {
+    lerContrato(id) {
         assertStringNonEmpty(id);
         return fetch(`${API_URL}/${id}`, {
             method: "GET",
@@ -47,7 +47,7 @@ export class Contratos {
      * @param {string} id ID do contrato a ser atualizado
      * @returns {Promise<string>}
      */
-    async excluirContrato(id) {
+    excluirContrato(id) {
         assertStringNonEmpty(id);
         return fetch(`${API_URL}/${id}`, {
             method: "DELETE",
@@ -60,7 +60,7 @@ export class Contratos {
      * Atualiza as informações de um contrato, retorna uma Promessa com as informações atualizadas
      * @param {Object} contrato
      */
-    async atualizarContrato(contrato) {
+    atualizarContrato(contrato) {
         // TODO: validar as informações de contrato
         // Obs: Retornar erro, caso necessário
         this.assertObjetoContrato(contrato);
@@ -80,7 +80,7 @@ export class Contratos {
      * @param {Object} contrato Informações do contrato a ser cadastrado
      * @returns {Promise<Object>} Retorna o json do contrato se as informações foram cadastradas corretamente
      */
-    async criarContrato(contrato) {
+    criarContrato(contrato) {
         // TODO: Validar as informações do contrato
         // Obs: Retornar erro, caso necessário
         this.assertObjetoContrato(contrato);
@@ -99,7 +99,7 @@ export class Contratos {
      * Limpa todas as informações dos contrato
      */
     // TODO: Verificar melhor forma de excluir todos os dados não recursivamente
-    async limparContratos() {
+    limparContratos() {
         throw new Error("Função não implementada!");
     }
 }

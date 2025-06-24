@@ -6,7 +6,7 @@ const PATH_404 = "/404";
 const PATH_AUTH = "/auth";
 
 // @mock
-const mock_isUserLoggedIn = () => !!localStorage.getItem("LucreM.id");
+const mockIsUserLoggedIn = () => !!localStorage.getItem("LucreM.id");
 
 // Redireciona para um caminho especifico dentro do mesmo host
 function redirectToPath(path) {
@@ -25,7 +25,7 @@ function redirect() {
     // INFO: 3001 = Sinaliza que esta rodando como desenvolvimento e desabilita todos os redirecionamentos
     if (url.port === "3001") return;
     if (urlPathname === PATH_404) return;
-    if (mock_isUserLoggedIn()) {
+    if (mockIsUserLoggedIn()) {
         if (urlPathname === PATH_INDEX || urlPathname === PATH_AUTH) redirectToPath(PATH_HOMEPAGE);
     } else if (urlPathname !== PATH_INDEX && urlPathname !== PATH_AUTH) {
         redirectToPath(PATH_INDEX);

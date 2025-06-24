@@ -195,19 +195,19 @@ async function realizarLogin() {
 
 // INFO: Não otimizado, se algum usuario não tiver a tag informada na query(?),
 // o json-server irá retornar todos os valores
-async function getAllUsers() {
+function getAllUsers() {
     return fetch("/usuarios").then((response) => response.json());
 }
 
 // INFO: Não otimizado, se algum usuario não tiver a tag informada na query(?),
 // o json-server irá retornar todos os valores
-async function getUsersByEmail(email) {
+function getUsersByEmail(email) {
     return fetch(`/usuarios?email=${email}`).then((response) => response.json());
 }
 
 // INFO: Não otimizado, se algum usuario não tiver a tag informada na query(?),
 // o json-server irá retornar todos os valores
-async function getUsersByUsername(username) {
+function getUsersByUsername(username) {
     return fetch(`/usuarios?username=${username}`).then((response) => response.json());
 }
 
@@ -218,12 +218,13 @@ function checkLoginPasswordInJson(jsonArray, login, password) {
     if (jsonArray.length === 0) return false;
     for (const usuario of jsonArray) {
         if (
-            (typeof usuario.email !== "string" && typeof usuario.username !== "string") ||
-            typeof usuario.senha !== "string"
-        )
-            continue;
-        if ((usuario.email === login || usuario.username === login) && usuario.senha === password)
+            (typeof usuario.email === "string" || typeof usuario.username === "string") &&
+            typeof usuario.senha === "string" &&
+            (usuario.email === login || usuario.username === login) &&
+            usuario.senha === password
+        ) {
             return true;
+        }
     }
     return false;
 }
@@ -233,8 +234,7 @@ function checkEmailInJson(jsonArray, email) {
     if (typeof email !== "string") throw new Error("Input inválida");
     if (jsonArray.length === 0) return false;
     for (const usuario of jsonArray) {
-        if (typeof usuario.email !== "string") continue;
-        if (usuario.email === email) return true;
+        if (typeof usuario.email === "string" && usuario.email === email) return true;
     }
     return false;
 }
@@ -244,12 +244,12 @@ function checkUsernameInJson(jsonArray, username) {
     if (typeof username !== "string") throw new Error("Input inválida");
     if (jsonArray.length === 0) return false;
     for (const usuario of jsonArray) {
-        if (typeof usuario.username !== "string") continue;
-        if (usuario.username === username) return true;
+        if (typeof usuario.username !== "string" && usuario.username === username) return true;
     }
+    return false;
 }
 
-async function saveUsuario(usuario) {
+function saveUsuario(usuario) {
     // TODO: Validar se objeto contem as informações necessárias para um usuario
     return fetch("/usuarios", {
         method: "POST",
@@ -366,35 +366,35 @@ function inicializarCampos() {
         return;
     }
 
-    let timeout_signin_username;
-    let timeout_signin_nome;
-    let timeout_signin_email;
-    let timeout_signin_senha;
-    let timeout_signin_senha_2;
+    let timeoutSigninUsername;
+    let timeoutSigninNome;
+    let timeoutSigninEmail;
+    let timeoutSigninSenha;
+    let timeoutSigninSenha2;
 
     function updateTimeoutValidacaoUsername() {
-        if (timeout_signin_username) clearTimeout(timeout_signin_username);
-        timeout_signin_username = setTimeout(() => ValidarUsername(htmlInputSignupUsername), 1000);
+        if (timeoutSigninUsername) clearTimeout(timeoutSigninUsername);
+        timeoutSigninUsername = setTimeout(() => ValidarUsername(htmlInputSignupUsername), 1000);
     }
 
     function updateTimeoutValidacaoNome() {
-        if (timeout_signin_nome) clearTimeout(timeout_signin_nome);
-        timeout_signin_nome = setTimeout(() => ValidarNome(htmlInputSignupNome), 1000);
+        if (timeoutSigninNome) clearTimeout(timeoutSigninNome);
+        timeoutSigninNome = setTimeout(() => ValidarNome(htmlInputSignupNome), 1000);
     }
 
     function updateTimeoutValidacaoEmail() {
-        if (timeout_signin_email) clearTimeout(timeout_signin_email);
-        timeout_signin_email = setTimeout(() => ValidarEmail(htmlInputSignupEmail), 1000);
+        if (timeoutSigninEmail) clearTimeout(timeoutSigninEmail);
+        timeoutSigninEmail = setTimeout(() => ValidarEmail(htmlInputSignupEmail), 1000);
     }
 
     function updateTimeoutValidacaoSenha() {
-        if (timeout_signin_senha) clearTimeout(timeout_signin_senha);
-        timeout_signin_senha = setTimeout(() => ValidarSenha(htmlInputSignupSenha), 1000);
+        if (timeoutSigninSenha) clearTimeout(timeoutSigninSenha);
+        timeoutSigninSenha = setTimeout(() => ValidarSenha(htmlInputSignupSenha), 1000);
     }
 
     function updateTimeoutValidacaoSenha2() {
-        if (timeout_signin_senha_2) clearTimeout(timeout_signin_senha_2);
-        timeout_signin_senha_2 = setTimeout(
+        if (timeoutSigninSenha2) clearTimeout(timeoutSigninSenha2);
+        timeoutSigninSenha2 = setTimeout(
             () => ValidarSenha2(htmlInputSignupSenha, htmlInputSignupSenha2),
             1000,
         );

@@ -3,57 +3,43 @@
 import * as Faker from "./lib/faker.mjs";
 import { ensureInteger, isNonEmptyString } from "./tools.mjs";
 import { assertBase64ConvertableImage, imageFileToBase64 } from "./lib/tools.mjs";
+import { assertBoolean, assertStringNonEmpty } from "./lib/validate.mjs";
 
-import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
-import { Servicos } from "./jsonf/servicos.mjs"; // Serviços
-import { Contratos } from "./jsonf/contratos.mjs"; // Contratos
-import { Avaliacoes } from "./jsonf/avaliacoes.mjs"; // Avaliações
-import { Portfolios } from "./jsonf/portfolios.mjs"; // Portfólios
+import { Usuarios } from "./jsonf/usuarios.mjs";
+import { Servicos } from "./jsonf/servicos.mjs";
+import { Contratos } from "./jsonf/contratos.mjs";
+import { Avaliacoes } from "./jsonf/avaliacoes.mjs";
+import { Portfolios } from "./jsonf/portfolios.mjs";
 
-const crud_usuarios = new Usuarios();
-const crud_servicos = new Servicos();
-const crud_contratos = new Contratos();
-const crud_avaliacoes = new Avaliacoes();
-const crud_portfolios = new Portfolios();
+const crudUsuarios = new Usuarios();
+const crudServicos = new Servicos();
+const crudContratos = new Contratos();
+const crudAvaliacoes = new Avaliacoes();
+const crudPortfolios = new Portfolios();
 
 // TODO: Mover adicionar-imagens para um popup
 // TODO: Criar popups dinamicamente e remove-los do html
 
 class AddSectionContext {
     /**
-     * @param {string} portfolio_id
+     * @param {string} portfolioId
      */
-    constructor(portfolio_id) {
-        this.portfolio_id = portfolio_id;
-    }
-}
-
-class DeleteSectionContext {
-    /**
-     * @param {number} portfolio_id
-     * @param {number} section_id
-     * @param {string} name
-     * @param {string} description
-     */
-    constructor(portfolio_id, section_id, name, description) {
-        this.portfolio_id = portfolio_id;
-        this.section_id = section_id;
-        // TODO: Optional?
-        this.name = name;
-        this.description = description;
+    constructor(portfolioId) {
+        this.portfolioId = portfolioId;
     }
 }
 
 class EditSectionInfoContext {
     /**
-     * @param {number} portfolio_id
-     * @param {number} section_id
+     * @param {string} portfolioId
+     * @param {number} sectionId
      * @param {string} name
      * @param {string} description
      */
-    constructor(portfolio_id, section_id, name, description) {
-        this.portfolio_id = portfolio_id;
-        this.section_id = section_id;
+    constructor(portfolioId, sectionId, name, description) {
+        this.portfolioId = portfolioId;
+        this.sectionId = sectionId;
+        // TODO: Optional? (for delete)
         this.name = name;
         this.description = description;
     }
@@ -61,15 +47,15 @@ class EditSectionInfoContext {
 
 class EditSectionPositionContext {
     /**
-     * @param {number} portfolio_id
-     * @param {number} section_id
+     * @param {string} portfolioId
+     * @param {number} sectionId
      * @param {string} name
      * @param {string} description
      * @param {number} move
      */
-    constructor(portfolio_id, section_id, name, description, move) {
-        this.portfolio_id = portfolio_id;
-        this.section_id = section_id;
+    constructor(portfolioId, sectionId, name, description, move) {
+        this.portfolioId = portfolioId;
+        this.sectionId = sectionId;
         this.name = name;
         this.description = description;
         // down = int(-1), up = int(1)
@@ -90,25 +76,25 @@ class EditSectionPositionContext {
 
 class AddLinkContext {
     /**
-     * @param {number} portfolio_id
-     * @param {number} section_id
+     * @param {string} portfolioId
+     * @param {number} sectionId
      */
-    constructor(portfolio_id, section_id) {
-        this.portfolio_id = portfolio_id;
-        this.section_id = section_id;
+    constructor(portfolioId, sectionId) {
+        this.portfolioId = portfolioId;
+        this.sectionId = sectionId;
     }
 }
 
 class DeleteBlobContext {
     /**
-     * @param {number} portfolio_id
-     * @param {number} section_id
+     * @param {string} portfolioId
+     * @param {number} sectionId
      * @param {any} blob
      * @param {string} description
      */
-    constructor(portfolio_id, section_id, blob, description) {
-        this.portfolio_id = portfolio_id;
-        this.section_id = section_id;
+    constructor(portfolioId, sectionId, blob, description) {
+        this.portfolioId = portfolioId;
+        this.sectionId = sectionId;
         this.blob = blob;
         this.description = description;
     }
@@ -120,12 +106,11 @@ class Context {
     }
 
     /**
-     * @param {AddSectionContext | DeleteSectionContext | EditSectionInfoContext | AddLinkContext | DeleteBlobContext | DeleteBlobContext} context
+     * @param {AddSectionContext | EditSectionInfoContext | AddLinkContext | DeleteBlobContext | DeleteBlobContext} context
      */
     setupContext(context) {
         if (
             context instanceof AddSectionContext ||
-            context instanceof DeleteSectionContext ||
             context instanceof EditSectionInfoContext ||
             context instanceof AddLinkContext ||
             context instanceof DeleteBlobContext
@@ -160,27 +145,25 @@ function triggerAddSection(addSectionContext) {
 
 /**
  *
- * @param {DeleteSectionContext} deleteSectionContext
+ * @param {EditSectionInfoContext} deleteSectionContext
  */
 function triggerDeleteSection(deleteSectionContext) {
-    if (!(deleteSectionContext instanceof DeleteSectionContext)) return;
+    if (!(deleteSectionContext instanceof EditSectionInfoContext)) return;
 
     preparePopup();
     toggleDisplayNoneOnElement("popup-delete", false);
 
-    const popup_delete_name = document.getElementById("popup-delete-name");
-    const popup_delete_description = document.getElementById("popup-delete-description");
+    const popupDeleteName = document.getElementById("popup-delete-name");
+    const popupDeleteDescription = document.getElementById("popup-delete-description");
 
     if (
-        !(popup_delete_name instanceof HTMLParagraphElement) ||
-        !(popup_delete_description instanceof HTMLParagraphElement)
-    ) {
-        console.error(`${this.name}: null check`);
-        return;
-    }
+        !(popupDeleteName instanceof HTMLParagraphElement) ||
+        !(popupDeleteDescription instanceof HTMLParagraphElement)
+    )
+        throw new Error("Algum elemento HTML não pode ser encontrado!");
 
-    popup_delete_name.innerText = deleteSectionContext.name;
-    popup_delete_description.innerText = deleteSectionContext.description;
+    popupDeleteName.innerText = deleteSectionContext.name;
+    popupDeleteDescription.innerText = deleteSectionContext.description;
 
     context.setupContext(deleteSectionContext);
 }
@@ -195,19 +178,17 @@ function triggerEditSectionInfo(editSectionContext) {
     preparePopup();
     toggleDisplayNoneOnElement("popup-edit", false);
 
-    const popup_edit_name = document.getElementById("popup-edit-name");
-    const popup_edit_description = document.getElementById("popup-edit-description");
+    const popupEditName = document.getElementById("popup-edit-name");
+    const popupEditDescription = document.getElementById("popup-edit-description");
 
     if (
-        !(popup_edit_name instanceof HTMLInputElement) ||
-        !(popup_edit_description instanceof HTMLInputElement)
-    ) {
-        console.error(`${this.name}: null check`);
-        return;
-    }
+        !(popupEditName instanceof HTMLInputElement) ||
+        !(popupEditDescription instanceof HTMLInputElement)
+    )
+        throw new Error("Algum elemento HTML não pode ser encontrado!");
 
-    popup_edit_name.value = editSectionContext.name;
-    popup_edit_description.value = editSectionContext.description;
+    popupEditName.value = editSectionContext.name;
+    popupEditDescription.value = editSectionContext.description;
 
     context.setupContext(editSectionContext);
 }
@@ -235,18 +216,18 @@ function triggerDeleteLink(deleteLinkContext) {
     preparePopup();
     toggleDisplayNoneOnElement("popup-delete-link", false);
 
-    const popup_delete_link_url = document.getElementById("popup-delete-link-url");
-    const popup_delete_link_description = document.getElementById("popup-delete-link-description");
+    const popupDeleteLinkUrl = document.getElementById("popup-delete-link-url");
+    const popupDeleteLinkDescription = document.getElementById("popup-delete-link-description");
 
     if (
-        !(popup_delete_link_url instanceof HTMLParagraphElement) ||
-        !(popup_delete_link_description instanceof HTMLParagraphElement)
+        !(popupDeleteLinkUrl instanceof HTMLParagraphElement) ||
+        !(popupDeleteLinkDescription instanceof HTMLParagraphElement)
     ) {
         return;
     }
 
-    popup_delete_link_url.innerText = deleteLinkContext.blob;
-    popup_delete_link_description.innerText = deleteLinkContext.description;
+    popupDeleteLinkUrl.innerText = deleteLinkContext.blob;
+    popupDeleteLinkDescription.innerText = deleteLinkContext.description;
 
     context.setupContext(deleteLinkContext);
 }
@@ -260,14 +241,12 @@ function triggerDeleteImage(deleteImageContext) {
     preparePopup();
     toggleDisplayNoneOnElement("popup-delete-image", false);
 
-    const popup_delete_image_image = document.getElementById("popup-delete-image-image");
+    const popupDeleteImageImage = document.getElementById("popup-delete-image-image");
 
-    if (!(popup_delete_image_image instanceof HTMLImageElement)) {
-        console.error(`${this.name}: null check`);
-        return;
-    }
+    if (!(popupDeleteImageImage instanceof HTMLImageElement))
+        throw new Error("Algum elemento HTML não pode ser encontrado!");
 
-    popup_delete_image_image.src = deleteImageContext.blob;
+    popupDeleteImageImage.src = deleteImageContext.blob;
 
     context.setupContext(deleteImageContext);
 }
@@ -277,98 +256,82 @@ async function commitAddAsection() {
 
     if (!(_context instanceof AddSectionContext)) return;
 
-    const _portfolio_id = _context.portfolio_id;
-    const html_popup_add_name = document.getElementById("popup-add-name");
-    const html_popup_add_description = document.getElementById("popup-add-description");
-    const html_popup_add_categoria = document.getElementById("popup-add-categoria");
+    const { portfolioId } = _context;
+    const htmlPopupAddName = document.getElementById("popup-add-name");
+    const htmlPopupAddDescription = document.getElementById("popup-add-description");
+    const htmlPopupAddCategoria = document.getElementById("popup-add-categoria");
 
     if (
-        !_portfolio_id ||
-        !(html_popup_add_name instanceof HTMLInputElement) ||
-        !(html_popup_add_description instanceof HTMLInputElement) ||
-        !(html_popup_add_categoria instanceof HTMLSelectElement)
-    ) {
-        console.log("add-section: null check");
-        return;
-    }
+        !portfolioId ||
+        !(htmlPopupAddName instanceof HTMLInputElement) ||
+        !(htmlPopupAddDescription instanceof HTMLInputElement) ||
+        !(htmlPopupAddCategoria instanceof HTMLSelectElement)
+    )
+        throw new Error("Algum elemento HTML não pode ser encontrado!");
 
-    const form_section_name = html_popup_add_name.value;
-    const form_section_description = html_popup_add_description.value;
-    const form_section_categoria = html_popup_add_categoria.value;
+    const formSectionName = htmlPopupAddName.value;
+    const formSectionDescription = htmlPopupAddDescription.value;
+    const formSectionCategoria = htmlPopupAddCategoria.value;
 
-    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
-    if (!_portfolio) {
-        console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
-        return;
-    }
+    const _portfolio = await crudPortfolios.lerPortfolio(portfolioId);
+    if (!_portfolio) throw new Error(`Não foi possível encontrar o portfólio de ID ${portfolioId}`);
 
-    if (!form_section_name) {
-        alert("O nome da seção não pode estar vazio!");
-        return;
-    }
+    if (!formSectionName) throw new Error("O nome da seção não pode estar vazio!");
 
-    let maior = 0;
     // Como estamos adicionando uma seção, não é problema se ela esta vazia
-    if (_portfolio.secoes?.length) {
-        // Verificar o maior valor para json.ordem
+    if (!_portfolio.secoes?.length) _portfolio.secoes = [];
 
-        _portfolio.secoes.forEach((element) => {
-            if (parseInt(element.ordem) > maior) maior = element.ordem;
-        });
-    } else {
-        _portfolio.secoes = [];
-    }
-
-    maior++;
+    // Verificar o maior valor para json.ordem
+    let ultimaSecao = _portfolio.secoes.reduce((pV, i) => (i.ordem > pV.ordem ? i : pV));
 
     _portfolio.secoes.push({
-        ordem: maior,
-        nome: form_section_name,
-        descricao: form_section_description || "",
-        categoriaId: parseInt(form_section_categoria),
+        ordem: ultimaSecao?.ordem || 1,
+        nome: formSectionName,
+        descricao: formSectionDescription || "",
+        categoriaId: parseInt(formSectionCategoria, 10),
         contents: [],
     });
 
-    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
-        toggleDisplayNoneOnElement("popup-add", true);
-        notifySectionDataChanged();
-        return;
-    }
-
-    console.log("Ocorreu um erro ao atualizar o objeto!");
+    crudPortfolios
+        .atualizarPortfolio(_portfolio)
+        .then(() => {
+            toggleDisplayNoneOnElement("popup-add", true);
+            notifySectionDataChanged();
+        })
+        .catch(() => console.error("Ocorreu um erro ao atualizar o objeto!"));
 }
 
 async function commitDeleteSection() {
     const _context = context.getContext();
 
-    if (!_context || !(_context instanceof DeleteSectionContext)) return;
+    if (!_context || !(_context instanceof EditSectionInfoContext)) return;
 
-    const _portfolio_id = ensureInteger(_context.portfolio_id);
-    const _section_id = ensureInteger(_context.section_id);
+    const _portfolioId = _context.portfolioId;
+    const _sectionId = ensureInteger(_context.sectionId);
 
-    if (!_portfolio_id || !_section_id) return;
+    if (!_portfolioId || !_sectionId) return;
 
-    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
-    if (!_portfolio || !_portfolio.secoes.length) {
-        console.error(`Erro ao editar o portfólio ${_portfolio_id}.`);
+    const _portfolio = await crudPortfolios.lerPortfolio(_portfolioId);
+    if (!_portfolio?.secoes.length) {
+        console.error(`Erro ao editar o portfólio ${_portfolioId}.`);
         return;
     }
 
     for (let i = 0; i < _portfolio.secoes.length; i++) {
-        if (ensureInteger(_portfolio.secoes[i].ordem) !== _section_id) continue;
-
-        _portfolio.secoes.splice(i, 1);
-        break;
+        if (ensureInteger(_portfolio.secoes[i].ordem) === _sectionId) {
+            _portfolio.secoes.splice(i, 1);
+            break;
+        }
     }
 
-    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
-        toggleDisplayNoneOnElement("popup-delete", true);
-        context.resetContext();
-        notifySectionDataChanged();
-        return;
-    }
-
-    console.log("Ocorreu um erro ao atualizar o objeto!");
+    crudPortfolios
+        .atualizarPortfolio(_portfolio)
+        .then(() => {
+            toggleDisplayNoneOnElement("popup-delete", true);
+            context.resetContext();
+            notifySectionDataChanged();
+        })
+        .catch((err) => console.error(`Ocorreu um erro ao atualizar o objeto: ${err}`));
 }
 
 async function commitEditSectionInfo() {
@@ -376,54 +339,54 @@ async function commitEditSectionInfo() {
 
     if (!_context || !(_context instanceof EditSectionInfoContext)) return;
 
-    const html_popup_edit_name = document.getElementById("popup-edit-name");
-    const html_popup_edit_description = document.getElementById("popup-edit-description");
+    const htmlPopupEditName = document.getElementById("popup-edit-name");
+    const htmlPopupEditDescription = document.getElementById("popup-edit-description");
 
     if (
-        !(html_popup_edit_name instanceof HTMLInputElement) ||
-        !(html_popup_edit_description instanceof HTMLInputElement)
+        !(htmlPopupEditName instanceof HTMLInputElement) ||
+        !(htmlPopupEditDescription instanceof HTMLInputElement)
     ) {
-        console.log(`${this.name} null check`);
+        console.error("Algum elemento HTML não pode ser encontrado!");
         return;
     }
 
-    const new_name = html_popup_edit_name.value;
+    const newName = htmlPopupEditName.value;
     // Pode ser vazio
-    const new_description = html_popup_edit_description.value;
+    const newDescription = htmlPopupEditDescription.value;
 
-    if (!isNonEmptyString(new_name)) {
+    if (!isNonEmptyString(newName)) {
         alert("O campo 'nome' não pode ser vazio!");
         return;
     }
 
-    const _portfolio_id = ensureInteger(_context.portfolio_id);
-    const _section_id = ensureInteger(_context.section_id);
+    const _portfolioId = _context.portfolioId;
+    const _sectionId = ensureInteger(_context.sectionId);
 
-    if (!_portfolio_id || !_section_id) return;
+    if (!_portfolioId || !_sectionId) return;
 
-    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
+    const _portfolio = await crudPortfolios.lerPortfolio(_portfolioId);
 
-    if (!_portfolio || !_portfolio.secoes.length) {
-        console.error(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
+    if (!_portfolio?.secoes.length) {
+        console.error(`ID0: Erro ao editar categoria do portfolio ${_portfolioId}.`);
         return;
     }
 
-    for (let i = 0; i < _portfolio.secoes.length; i++) {
-        if (ensureInteger(_portfolio.secoes[i].ordem) !== _section_id) continue;
-
-        _portfolio.secoes[i].nome = new_name;
-        _portfolio.secoes[i].descricao = new_description;
-        break;
+    for (const element of _portfolio.secoes) {
+        if (ensureInteger(element.ordem) === _sectionId) {
+            element.nome = newName;
+            element.descricao = newDescription;
+            break;
+        }
     }
 
-    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
-        toggleDisplayNoneOnElement("popup-edit", true);
-        context.resetContext();
-        notifySectionDataChanged();
-        return;
-    }
-
-    console.log("Ocorreu um erro ao atualizar o objeto!");
+    crudPortfolios
+        .atualizarPortfolio(_portfolio)
+        .then(() => {
+            toggleDisplayNoneOnElement("popup-edit", true);
+            context.resetContext();
+            notifySectionDataChanged();
+        })
+        .catch((err) => console.error(`Ocorreu um erro ao atualizar o objeto: ${err}`));
 }
 
 /**
@@ -433,49 +396,33 @@ async function commitEditSectionInfo() {
 async function commitEditSectionPosition(editSectionPositionContext) {
     if (!(editSectionPositionContext instanceof EditSectionPositionContext)) return;
 
-    const _portfolio_id = ensureInteger(editSectionPositionContext.portfolio_id);
-    const _section_id = ensureInteger(editSectionPositionContext.section_id);
+    const { portfolioId, sectionId } = editSectionPositionContext;
+    if (!portfolioId || !sectionId) return;
 
-    if (!_portfolio_id || !_section_id) return;
-
-    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
-
-    if (!_portfolio || !_portfolio.secoes.length) {
-        console.error(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
+    const _portfolio = await crudPortfolios.lerPortfolio(portfolioId);
+    if (!_portfolio?.secoes.length) {
+        console.error(`ID0: Erro ao editar categoria do portfolio ${portfolioId}.`);
         return;
     }
 
+    // TODO: Desabilitar botão quando no topo ou no final?
     switch (editSectionPositionContext.direction) {
         case EditSectionPositionContext.MOVE_UP:
             // INFO: Aqui a ordem esta sendo utilizada como id da seção
             // TODO: Por enquanto a ordem no array é mais importante que o valor em json.ordem
-            // TODO: Desabilitar botão quando no topo ou no final?
-
             for (let i = 1; i > 0 && i < _portfolio.secoes.length; i++) {
-                if (ensureInteger(_portfolio.secoes[i].ordem) !== _section_id) continue;
-
-                // Remove do array
-                let secao = _portfolio.secoes.splice(i, 1)[0];
-                // Adiciona uma posição antes
-                _portfolio.secoes.splice(i - 1, 0, secao);
-                break;
+                if (_portfolio.secoes[i].ordem === sectionId) {
+                    // Remove do array
+                    let secao = _portfolio.secoes.splice(i, 1)[0];
+                    // Adiciona uma posição antes
+                    _portfolio.secoes.splice(i - 1, 0, secao);
+                    break;
+                }
             }
-
             break;
         case EditSectionPositionContext.MOVE_DOWN:
-            {
-                // Verificar o maior valor para json.ordem
-                let maior = 0;
-                _portfolio.secoes.forEach((element) => {
-                    if (parseInt(element.ordem) > maior) maior = element.ordem;
-                });
-
-                // TODO: Desabilitar botão quando no topo ou no final?
-                if (_section_id >= maior) return;
-
-                for (let i = 0; i < _portfolio.secoes.length - 1; i++) {
-                    if (ensureInteger(_portfolio.secoes[i].ordem) !== _section_id) continue;
-
+            for (let i = 0; i < _portfolio.secoes.length - 1; i++) {
+                if (_portfolio.secoes[i].ordem === sectionId) {
                     // Remove do array
                     let secao = _portfolio.secoes.splice(i, 1)[0];
                     // Adiciona um posição depois
@@ -488,12 +435,10 @@ async function commitEditSectionPosition(editSectionPositionContext) {
             return;
     }
 
-    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
-        notifySectionDataChanged();
-        return;
-    }
-
-    console.log("Ocorreu um erro ao atualizar o objeto!");
+    crudPortfolios
+        .atualizarPortfolio(_portfolio)
+        .then(() => notifySectionDataChanged())
+        .catch((err) => console.error(`Ocorreu um erro ao atualizar o objeto: ${err.message}`));
 }
 
 async function commitAddLink() {
@@ -501,131 +446,110 @@ async function commitAddLink() {
 
     if (!(_context instanceof AddLinkContext)) return;
 
-    const _portfolio_id = ensureInteger(_context.portfolio_id);
-    const _section_id = ensureInteger(_context.section_id);
+    const { portfolioId, sectionId } = _context;
 
-    if (!_portfolio_id || !_section_id) return;
+    if (!portfolioId || !sectionId) return;
 
-    const popup_add_link_url = document.getElementById("popup-add-link-url");
-    const popup_add_link_description = document.getElementById("popup-add-link-description");
+    const popupAddLinkURL = document.getElementById("popup-add-link-url");
+    const popupAddLinkDescription = document.getElementById("popup-add-link-description");
 
     if (
-        !(popup_add_link_url instanceof HTMLInputElement) ||
-        !(popup_add_link_description instanceof HTMLInputElement)
-    ) {
-        console.error(`${this.name}: null check`);
-        return;
-    }
+        !(popupAddLinkURL instanceof HTMLInputElement) ||
+        !(popupAddLinkDescription instanceof HTMLInputElement)
+    )
+        throw new Error("Algum elemento HTML não pode ser encontrado!");
 
-    let new_url = popup_add_link_url.value;
-    let new_description = popup_add_link_description.value;
+    let newURL = popupAddLinkURL.value;
+    let newDescription = popupAddLinkDescription.value;
 
-    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
-
-    if (!_portfolio || !_portfolio.secoes.length) {
-        console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
-        return;
-    }
+    const _portfolio = await crudPortfolios.lerPortfolio(portfolioId);
+    if (!_portfolio?.secoes.length)
+        throw new Error(`ID0: Erro ao editar categoria do portfolio ${portfolioId}.`);
 
     // TODO: useregex?
-    if (!(new_url.startsWith("https://") || new_url.startsWith("http://"))) {
+    if (!(newURL.startsWith("https://") || newURL.startsWith("http://"))) {
         alert("URL não é valida!\n\nA URL não começa com 'http://' ou 'https://'");
         return;
     } else if (
-        (new_url.startsWith("https://") && new_url.length === 8) ||
-        (new_url.startsWith("http://") && new_url.length === 7)
+        (newURL.startsWith("https://") && newURL.length === 8) ||
+        (newURL.startsWith("http://") && newURL.length === 7)
     ) {
         alert("URL não é valida!\n\nA URL esta vazia!");
         return;
     }
 
-    for (let i = 0; i < _portfolio.secoes.length; i++) {
-        if (parseInt(_portfolio.secoes[i].ordem) != _section_id) continue;
-
-        _portfolio.secoes[i].contents.push({
-            blob: new_url || "",
-            descricao: new_description || "",
-        });
-        break;
+    for (const element of _portfolio.secoes) {
+        if (parseInt(element.ordem, 10) !== sectionId) {
+            element.contents.push({
+                blob: newURL || "",
+                descricao: newDescription || "",
+            });
+            break;
+        }
     }
 
-    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
-        toggleDisplayNoneOnElement("popup-add-link", true);
-        context.resetContext();
-        notifySectionDataChanged();
-        return;
-    }
-
-    console.log("Ocorreu um erro ao atualizar o objeto!");
+    crudPortfolios
+        .atualizarPortfolio(_portfolio)
+        .then(() => {
+            toggleDisplayNoneOnElement("popup-add-link", true);
+            context.resetContext();
+            notifySectionDataChanged();
+        })
+        .catch((err) => console.error(`Ocorreu um erro ao atualizar o objeto: ${err}`));
 }
 
-async function commitDeleteLink() {
+async function commitDeleteBlob() {
     const _context = context.getContext();
+    if (!(_context instanceof DeleteBlobContext)) throw new Error("O contexto é inválido");
 
-    if (!(_context instanceof DeleteBlobContext)) return;
-
-    // TODO: ensurePositiveInteger()
-    const _portfolio_id = ensureInteger(_context.portfolio_id);
-    const _section_id = ensureInteger(_context.section_id);
     // TODO: Expensive, use id or something else
-    const _s_cntnt_blob = _context.blob;
-    const _s_cntnt_description = _context.description;
+    const { portfolioId, sectionId, blob, description } = _context;
 
-    if (!_portfolio_id || !_section_id) return;
+    if (!portfolioId || !sectionId) throw new Error("As informações do contexto são invalidas!");
 
-    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
+    const _portfolio = await crudPortfolios.lerPortfolio(portfolioId);
 
-    if (!_portfolio || !_portfolio.secoes.length) {
-        console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
-        return;
-    }
+    if (!_portfolio?.secoes.length) throw new Error("Nenhuma seção encontrada!");
+
+    let i = _portfolio.secoes.findIndex((element) => element.ordem === sectionId);
+    if (i === -1 || !_portfolio.secoes[i]?.contents.length)
+        throw new Error("Seção não encontrada.");
 
     let procurando = true;
-    for (let i = 0; i < _portfolio.secoes.length && procurando; i++) {
-        if (parseInt(_portfolio.secoes[i].ordem) != _section_id) {
-            continue;
-        }
-
-        if (!_portfolio.secoes[i].contents || !_portfolio.secoes[i].contents.length) {
-            console.log(`Não encontrado: ${_portfolio.secoes[i].contents}`);
-            return;
-        }
-
-        for (let j = 0; j < _portfolio.secoes[i].contents.length && procurando; j++) {
-            console.log(_portfolio.secoes[i].contents[j]);
-            console.log(_portfolio.secoes[i].contents);
-            if (
-                !_portfolio.secoes[i].contents[j].blob ||
-                _portfolio.secoes[i].contents[j].descricao == null
-            )
-                continue;
-
-            if (_portfolio.secoes[i].contents[j].blob != _s_cntnt_blob) continue;
-
-            if (_portfolio.secoes[i].contents[j].descricao != _s_cntnt_description) continue;
-
+    for (let j = 0; j < _portfolio.secoes[i].contents.length && procurando; j++) {
+        if (
+            _portfolio.secoes[i].contents[j].blob === blob &&
+            _portfolio.secoes[i].contents[j].descricao === description
+        ) {
             _portfolio.secoes[i].contents.splice(j, 1);
             procurando = false;
         }
-        procurando = false;
     }
 
-    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
-        toggleDisplayNoneOnElement("popup-delete-link", true);
-        notifySectionDataChanged();
-        return;
-    }
+    if (procurando) throw new Error("Valores não encontrados.");
 
-    console.log("Ocorreu um erro ao atualizar o objeto!");
+    return _portfolio;
+}
+
+async function commitDeleteLink() {
+    try {
+        const portfolio = await commitDeleteBlob();
+        crudPortfolios.atualizarPortfolio(portfolio).then(() => {
+            toggleDisplayNoneOnElement("popup-delete-link", true);
+            notifySectionDataChanged();
+        });
+    } catch (err) {
+        console.error(`Ocorreu um erro ao atualizar o objeto: ${err.message}`);
+    }
 }
 
 // TODO: Rework this
 /**
- * @param {number} p_id
- * @param {number} s_id
+ * @param {string} portfolioId
+ * @param {number} sectionId
  * @param {Blob} blob
  */
-async function commitAddImage(p_id, s_id, blob) {
+async function commitAddImage(portfolioId, sectionId, blob) {
     const base64Image = await imageFileToBase64(blob);
 
     if (!base64Image.startsWith("data:image/")) {
@@ -633,125 +557,73 @@ async function commitAddImage(p_id, s_id, blob) {
         return;
     }
 
-    const _portfolio_id = ensureInteger(p_id);
-    const _section_id = ensureInteger(s_id);
+    if (!portfolioId || !sectionId) return;
 
-    if (!_portfolio_id || !_section_id) return;
+    const _portfolio = await crudPortfolios.lerPortfolio(portfolioId);
 
-    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
+    if (!_portfolio?.secoes.length) throw new Error("Nenhuma seção encontrada!");
 
-    if (!_portfolio || !_portfolio.secoes.length) {
-        console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
-        return;
+    for (const element of _portfolio.secoes) {
+        if (ensureInteger(element.ordem) === sectionId) {
+            element.contents.push({
+                // TODO: Add id
+                blob: base64Image,
+                descricao: "Imagem",
+            });
+        }
     }
 
-    for (let i = 0; i < _portfolio.secoes.length; i++) {
-        if (ensureInteger(_portfolio.secoes[i].ordem) !== _section_id) continue;
-
-        // TODO: Add id
-        _portfolio.secoes[i].contents.push({
-            blob: base64Image,
-            descricao: "Imagem",
-        });
-        break;
-    }
-
-    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
-        notifySectionDataChanged();
-        return;
-    }
-
-    console.log("Ocorreu um erro ao atualizar o objeto!");
+    crudPortfolios
+        .atualizarPortfolio(_portfolio)
+        .then(() => notifySectionDataChanged())
+        .catch((err) => console.error(`Ocorreu um erro ao atualizar o objeto: ${err}`));
 }
 
 async function commitDeleteImage() {
-    const _context = context.getContext();
-
-    if (!(_context instanceof DeleteBlobContext)) return;
-
-    const _portfolio_id = ensureInteger(_context.portfolio_id);
-    const _section_id = ensureInteger(_context.section_id);
-    // TODO: Expensive, use id or something else
-    let _s_cntnt_blob = _context.blob;
-    let _s_cntnt_description = _context.description;
-
-    if (!_portfolio_id || !_section_id) return;
-
-    const _portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
-
-    if (!_portfolio || !_portfolio.secoes.length) {
-        console.log(`ID0: Erro ao editar categoria do portfolio ${_portfolio_id}.`);
-        return;
+    try {
+        const portfolio = await commitDeleteBlob();
+        crudPortfolios.atualizarPortfolio(portfolio).then(() => {
+            toggleDisplayNoneOnElement("popup-delete-image", true);
+            notifySectionDataChanged();
+        });
+    } catch (err) {
+        console.error(`Ocorreu um erro ao atualizar o objeto: ${err}`);
     }
-
-    let procurando = true;
-    for (let i = 0; i < _portfolio.secoes.length && procurando; i++) {
-        if (ensureInteger(_portfolio.secoes[i].ordem) !== _section_id) continue;
-
-        if (!_portfolio.secoes[i].contents || !_portfolio.secoes[i].contents.length) {
-            console.log(`Não encontrado: ${_portfolio.secoes[i].contents}`);
-            return;
-        }
-
-        for (let j = 0; j < _portfolio.secoes[i].contents.length && procurando; j++) {
-            if (
-                !_portfolio.secoes[i].contents[j].blob ||
-                _portfolio.secoes[i].contents[j].descricao == null
-            )
-                continue;
-
-            if (_portfolio.secoes[i].contents[j].blob !== _s_cntnt_blob) continue;
-
-            if (_portfolio.secoes[i].contents[j].descricao !== _s_cntnt_description) continue;
-
-            _portfolio.secoes[i].contents.splice(j, 1);
-            procurando = false;
-        }
-        procurando = false;
-    }
-
-    if (await crud_portfolios.atualizarPortfolio(_portfolio)) {
-        toggleDisplayNoneOnElement("popup-delete-image", true);
-        notifySectionDataChanged();
-        return;
-    }
-
-    console.log("Ocorreu um erro ao atualizar o objeto!");
 }
 
 /**
  * @returns {HTMLDivElement}
  */
 function createSectionContainer() {
-    let content_container = document.createElement("div");
-    content_container.classList.add("card", "w-100", "overflow-hidden", "space-0", "mb-3");
-    return content_container;
+    let sectionContainer = document.createElement("div");
+    sectionContainer.classList.add("card", "w-100", "overflow-hidden", "space-0", "mb-3");
+    return sectionContainer;
 }
 
 /**
  *
  * @param {string} icon
- * @param {string} icon_class
+ * @param {string} iconClass
  * @param {string} title
  * @param {string} subtitle
  * @returns {HTMLDivElement}
  */
-function createSectionHeader(icon, icon_class, title, subtitle) {
-    let content_header = document.createElement("div");
-    content_header.classList.add(
+function createSectionHeader(icon, iconClass, title, subtitle) {
+    let sectionHeader = document.createElement("div");
+    sectionHeader.classList.add(
         "card-header",
         "p-3",
         "d-flex",
         "align-items-center",
         "justify-content-start",
     );
-    content_header.innerHTML = `<div>
-            <img class="icon-32px me-3 ${icon_class}" src="static/icons/${icon}.svg">
+    sectionHeader.innerHTML = `<div>
+            <img class="icon-32px me-3 ${iconClass}" src="static/icons/${icon}.svg">
         </div><div>
             <h5 class="card-title">${title}</h5>
             <h6 class="card-subtitle mb-0 pb-0 text-body-secondary">${subtitle}</h6>
         </div>`;
-    return content_header;
+    return sectionHeader;
 }
 
 /**
@@ -771,26 +643,26 @@ function createActionButton(icon, clickEventListener) {
 
 /**
  * @returns {HTMLDivElement}
- * @param {number} portfolio_id
- * @param {number} section_id
+ * @param {string} portfolioId
+ * @param {number} sectionId
  * @param {string} name
  * @param {string} description
  */
-function createActionMenu(portfolio_id, section_id, name, description) {
-    let content_actions = document.createElement("div");
-    content_actions.classList.add("ms-auto");
+function createActionMenu(portfolioId, sectionId, name, description) {
+    let contentActions = document.createElement("div");
+    contentActions.classList.add("ms-auto");
 
-    let content_button_edit = createActionButton("edit", () =>
+    let contentButtonEdit = createActionButton("edit", () =>
         triggerEditSectionInfo(
-            new EditSectionInfoContext(portfolio_id, section_id, name, description),
+            new EditSectionInfoContext(portfolioId, sectionId, name, description),
         ),
     );
 
-    let content_button_up = createActionButton("up", () =>
+    let contentButtonUp = createActionButton("up", () =>
         commitEditSectionPosition(
             new EditSectionPositionContext(
-                portfolio_id,
-                section_id,
+                portfolioId,
+                sectionId,
                 name,
                 description,
                 EditSectionPositionContext.MOVE_UP,
@@ -798,11 +670,11 @@ function createActionMenu(portfolio_id, section_id, name, description) {
         ),
     );
 
-    let content_button_down = createActionButton("down", () =>
+    let contentButtonDown = createActionButton("down", () =>
         commitEditSectionPosition(
             new EditSectionPositionContext(
-                portfolio_id,
-                section_id,
+                portfolioId,
+                sectionId,
                 name,
                 description,
                 EditSectionPositionContext.MOVE_DOWN,
@@ -810,45 +682,40 @@ function createActionMenu(portfolio_id, section_id, name, description) {
         ),
     );
 
-    let content_button_delete = createActionButton("delete", () =>
-        triggerDeleteSection(new DeleteSectionContext(portfolio_id, section_id, name, description)),
+    let contentButtonDelete = createActionButton("delete", () =>
+        triggerDeleteSection(new EditSectionInfoContext(portfolioId, sectionId, name, description)),
     );
 
-    content_actions.appendChild(content_button_edit);
-    content_actions.appendChild(content_button_up);
-    content_actions.appendChild(content_button_down);
-    content_actions.appendChild(content_button_delete);
+    contentActions.appendChild(contentButtonEdit);
+    contentActions.appendChild(contentButtonUp);
+    contentActions.appendChild(contentButtonDown);
+    contentActions.appendChild(contentButtonDelete);
 
-    return content_actions;
+    return contentActions;
 }
 
 /**
- * @param {number} portfolio_id
- * @param {number} section_id
+ * @param {string} portfolioId
+ * @param {number} sectionId
  */
-function createAddLinkSubSection(portfolio_id, section_id) {
-    let add_new_link = document.createElement("div");
-    add_new_link.classList.add("col-12");
+function createAddLinkSubSection(portfolioId, sectionId) {
+    let addNewLink = document.createElement("div");
+    addNewLink.classList.add("col-12");
 
-    let add_new_link_button = document.createElement("button");
-    add_new_link_button.classList.add(
-        "btn",
-        "btn-outline-primary",
-        "text-decoration-none",
-        "w-100",
-    );
-    add_new_link_button.addEventListener("click", () =>
-        triggerAddLink(new AddLinkContext(portfolio_id, section_id)),
+    let addNewLinkButton = document.createElement("button");
+    addNewLinkButton.classList.add("btn", "btn-outline-primary", "text-decoration-none", "w-100");
+    addNewLinkButton.addEventListener("click", () =>
+        triggerAddLink(new AddLinkContext(portfolioId, sectionId)),
     );
 
-    add_new_link_button.innerHTML = `<div class="d-flex justify-content-center m-2">
+    addNewLinkButton.innerHTML = `<div class="d-flex justify-content-center m-2">
         <img class="icon-24px fixed-filter-invert me-2"
             src="static/action-icons/add.svg">
         <p class="space-0">Adicionar link</p>
     </div>`;
 
-    add_new_link.appendChild(add_new_link_button);
-    return add_new_link;
+    addNewLink.appendChild(addNewLinkButton);
+    return addNewLink;
 }
 
 function createNoLinkSubSection() {
@@ -876,21 +743,21 @@ function createEditPortfolioButton(edit) {
         "p-2",
     );
 
-    let toggle_edit_element_img = document.createElement("img");
-    let toggle_edit_element_p = document.createElement("p");
-    toggle_edit_element_img.classList.add("icon-dark", "icon-24px", "space-0", "me-2");
-    toggle_edit_element_p.classList.add("space-0");
+    let toggleEditElementImg = document.createElement("img");
+    let toggleEditElementP = document.createElement("p");
+    toggleEditElementImg.classList.add("icon-dark", "icon-24px", "space-0", "me-2");
+    toggleEditElementP.classList.add("space-0");
 
     if (_edit) {
-        toggle_edit_element_img.src = "static/action-icons/close.svg";
-        toggle_edit_element_p.innerText = "Finalizar edição";
+        toggleEditElementImg.src = "static/action-icons/close.svg";
+        toggleEditElementP.innerText = "Finalizar edição";
     } else {
-        toggle_edit_element_img.src = "static/action-icons/edit.svg";
-        toggle_edit_element_p.innerText = "Editar portfólio";
+        toggleEditElementImg.src = "static/action-icons/edit.svg";
+        toggleEditElementP.innerText = "Editar portfólio";
     }
 
-    button.appendChild(toggle_edit_element_img);
-    button.appendChild(toggle_edit_element_p);
+    button.appendChild(toggleEditElementImg);
+    button.appendChild(toggleEditElementP);
     button.addEventListener("click", () => toggleEditParam(!_edit));
 
     return button;
@@ -899,25 +766,24 @@ function createEditPortfolioButton(edit) {
 // TODO: Improve this: get only needed contracts
 // TODO: select * where userId = userId
 /**
- * @param {string | number} userId
- * @returns {number | null}
+ * @param {string} userId
+ * @returns {Promise<number | null>}
  */
 async function getMediaAvaliacoes(userId) {
-    const userId_int = ensureInteger(userId);
-    if (typeof userId_int !== "number") return null;
+    assertStringNonEmpty(userId);
 
-    let avaliacoes = (await crud_avaliacoes.lerAvaliacoes()) || [];
+    let avaliacoes = await crudAvaliacoes.lerAvaliacoes();
     // Sem avaliações
-    if (!avaliacoes || !avaliacoes.length) return null;
+    if (!avaliacoes?.length) return null;
 
     let media = 0;
     let quantidade = 0;
-    for (let i = 0; i < avaliacoes.length; i++) {
-        const contratado = await crud_contratos.lerContrato(avaliacoes[i].contratoId);
-        if (!contratado || ensureInteger(contratado) !== userId_int) continue;
-
-        media += avaliacoes[i].nota;
-        quantidade++;
+    for (const element of avaliacoes) {
+        const contratado = await crudContratos.lerContrato(element.contratoId);
+        if (contratado && contratado === userId) {
+            media += element.nota;
+            quantidade++;
+        }
     }
 
     if (quantidade > 0) {
@@ -939,19 +805,18 @@ function notifySectionDataChanged() {
 }
 
 /**
- * @param {string} element_id
- * @param {boolean} set_display_none_status
+ * @param {string} elementId
+ * @param {boolean} enableDisplayNone
  */
-function toggleDisplayNoneOnElement(element_id, set_display_none_status) {
-    if (typeof element_id !== "string") return;
+function toggleDisplayNoneOnElement(elementId, enableDisplayNone) {
+    assertStringNonEmpty(elementId);
+    if (typeof elementId !== "string") return;
 
-    const element = document.getElementById(element_id);
+    const element = document.getElementById(elementId);
     if (!(element instanceof HTMLElement)) return;
 
-    if (typeof set_display_none_status === "boolean") {
-        set_display_none_status
-            ? element.classList.add("d-none")
-            : element.classList.remove("d-none");
+    if (typeof enableDisplayNone === "boolean") {
+        enableDisplayNone ? element.classList.add("d-none") : element.classList.remove("d-none");
 
         return;
     }
@@ -966,8 +831,10 @@ function toggleDisplayNoneOnElement(element_id, set_display_none_status) {
 function toggleEditParam(enable) {
     if (typeof enable !== "boolean") return;
 
-    const url = new URL(window.location.href); // Get the current URL
-    const params = new URLSearchParams(url.search); // Get the search parameters
+    // Get the current URL
+    const url = new URL(window.location.href);
+    // Get the search parameters
+    const params = new URLSearchParams(url.search);
 
     if (enable) {
         // Set a new parameter or modify an existing one
@@ -988,15 +855,12 @@ function toggleEditParam(enable) {
 // @AI-Gemini
 // TODO: Improve this piece of code
 function setIdParam(id) {
-    if (typeof id === "string") id = parseInt(id);
+    if (!id) throw new Error("Nenhuma id informada");
 
-    if (typeof id !== "number") {
-        console.log("?id= Não é número");
-        return;
-    }
-
-    const url = new URL(window.location.href); // Get the current URL
-    const params = new URLSearchParams(url.search); // Get the search parameters
+    // Get the current URL
+    const url = new URL(window.location.href);
+    // Get the search parameters
+    const params = new URLSearchParams(url.search);
     if (id) {
         params.set("id", id.toString());
         window.location.href = `${url.origin}${url.pathname}?${params.toString()}${url.hash}`;
@@ -1007,87 +871,88 @@ function setIdParam(id) {
 }
 
 /**
- * @param {number} portfolio_id
- * @param {number} section_id
- * @param {string} section_name
- * @param {string} section_description
- * @param {boolean} enable_edit
- * @param {string} portfolio_user_id
+ * @param {string} portfolioId
+ * @param {number} sectionId
+ * @param {string} sectionName
+ * @param {string} sectionDescription
+ * @param {boolean} enableEdit
+ * @param {string} portfolioUserId
+ * @returns {Promise<HTMLElement>}
  */
 async function createReviewSection(
-    portfolio_id,
-    section_id,
-    section_name,
-    section_description,
-    enable_edit,
-    portfolio_user_id,
+    portfolioId,
+    sectionId,
+    sectionName,
+    sectionDescription,
+    enableEdit,
+    portfolioUserId,
 ) {
-    const _portfolio_id = ensureInteger(portfolio_id);
-    const _section_id = ensureInteger(section_id);
-    const _portfolio_user_id = portfolio_user_id;
+    assertStringNonEmpty(portfolioId);
+    const _sectionId = ensureInteger(sectionId);
+    const _portfolioUserId = portfolioUserId;
 
-    if (!_portfolio_id || !_section_id || !_portfolio_user_id) return;
+    if (!_sectionId || !_portfolioUserId) throw new Error("Object is null");
 
-    const _section_name = section_name || "Avaliações";
-    const _section_description = section_description || "Clientes satisfeitos!";
+    const _sectionName = sectionName || "Avaliações";
+    const _sectionDescription = sectionDescription || "Clientes satisfeitos!";
 
-    const section_header = createSectionHeader(
+    const sectionHeader = createSectionHeader(
         "star",
         "filter-star",
-        _section_name,
-        _section_description,
+        _sectionName,
+        _sectionDescription,
     );
 
-    let content_container = createSectionContainer();
-    content_container.appendChild(section_header);
+    let contentContainer = createSectionContainer();
+    contentContainer.appendChild(sectionHeader);
 
-    if (enable_edit) {
-        section_header.appendChild(
-            createActionMenu(_portfolio_id, _section_id, _section_name, _section_description),
+    if (enableEdit) {
+        sectionHeader.appendChild(
+            createActionMenu(portfolioId, _sectionId, _sectionName, _sectionDescription),
         );
     }
 
-    let content_blobs = document.createElement("div");
-    content_blobs.classList.add("row", "w-100", "space-0", "py-3", "scrool-container");
+    let contentBlobs = document.createElement("div");
+    contentBlobs.classList.add("row", "w-100", "space-0", "py-3", "scrool-container");
 
-    let content_blobs_scrool = document.createElement("div");
-    content_blobs_scrool.classList.add("px-3");
+    let contentBlobsScrool = document.createElement("div");
+    contentBlobsScrool.classList.add("px-3");
 
-    let avaliacoes = await crud_avaliacoes.lerAvaliacoes();
+    let avaliacoes = await crudAvaliacoes.lerAvaliacoes();
     if (!avaliacoes?.length) {
         let information = document.createElement("p");
         information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
         information.innerHTML = `Não há avaliações para este usuário, você pode utilizar a&nbsp;<a href="/dev">página de desenvolvimento</a>&nbsp;para gerar uma avaliação.`;
-        content_blobs_scrool.appendChild(information);
+        contentBlobsScrool.appendChild(information);
     } else {
         // Lê todas as avaliações
         // TODO: Otimizar > Informações do serviço da avaliação
-        for (const avaliacao_element of avaliacoes) {
-            const comentario = avaliacao_element.comentario.substring(0, 200);
-            const nota = avaliacao_element.nota;
-            const contratanteId = avaliacao_element.contratanteId;
+        avaliacoes.forEach(async (avaliacao) => {
+            const comentario = avaliacao.comentario.substring(0, 200);
+            const nota = avaliacao.nota;
+            const contratanteId = avaliacao.contratanteId;
             // Pega o contratoId da avaliação e filtra
-            const _contract_id = avaliacao_element.contratoId;
-            if (!_contract_id) return;
+            const _contatoId = avaliacao.contratoId;
+            if (!_contatoId) return;
 
-            const contrato = await crud_contratos.lerContrato(_contract_id);
+            const contrato = await crudContratos.lerContrato(_contatoId);
             if (!contrato) return;
 
             const contratadoId = contrato.contratadoId;
-            const _service_id = String(contrato.servicoId);
-            if (!contratadoId || !_service_id) return;
+            const _servicoId = String(contrato.servicoId);
+            if (!contratadoId || !_servicoId) return;
 
             // A partir daqui, continue apenas os contratos que possuem a mesma id que o usuario do portfolio
-            if (contratadoId.toString() !== _portfolio_user_id.toString()) return;
+            if (contratadoId.toString() !== _portfolioUserId.toString()) return;
 
-            const service = await crud_servicos.lerServico(_service_id);
+            const service = await crudServicos.lerServico(_servicoId);
             if (!service) return;
 
-            const user = await crud_usuarios.lerUsuario(contratanteId);
+            const user = await crudUsuarios.lerUsuario(contratanteId);
             if (!user) return;
 
             // TODO: replace 'placeholder_profile'
-            content_blobs_scrool.innerHTML += `<div class="d-inline-block float-none me-3">
+            contentBlobsScrool.innerHTML += `<div class="d-inline-block float-none me-3">
                 <a class="text-decoration-none space-0" href="#">
                     <div class="card">
                         <div class="card-body">
@@ -1110,74 +975,74 @@ async function createReviewSection(
                     </div>
                 </a>
             </div>`;
-        }
+        });
     }
 
-    content_blobs.appendChild(content_blobs_scrool);
-    content_container.appendChild(content_blobs);
+    contentBlobs.appendChild(contentBlobsScrool);
+    contentContainer.appendChild(contentBlobs);
 
-    return content_container;
+    return contentContainer;
 }
 
 /**
- * @param {number} portfolio_id
- * @param {number} section_id
- * @param {string} section_name
- * @param {string} section_description
- * @param {boolean} enable_edit
+ * @param {string} portfolioId
+ * @param {number} sectionId
+ * @param {string} sectionName
+ * @param {string} sectionDescription
+ * @param {boolean} enableEdit
  * @param {any[]} content
+ * @returns {HTMLDivElement|void}
  */
 function createImageSection(
-    portfolio_id,
-    section_id,
-    section_name,
-    section_description,
-    enable_edit,
+    portfolioId,
+    sectionId,
+    sectionName,
+    sectionDescription,
+    enableEdit,
     content,
 ) {
-    const _portfolio_id = ensureInteger(portfolio_id);
-    const _section_id = ensureInteger(section_id);
+    const _sectionId = ensureInteger(sectionId);
 
-    if (!_portfolio_id || !_section_id) return;
+    if (!portfolioId || !_sectionId) throw new Error("Object is null!");
 
-    const _section_name = section_name || "Imagens";
-    const _section_description = section_description || "Seção de imagens";
+    const _sectionName = sectionName || "Imagens";
+    const _sectionDescription = sectionDescription || "Seção de imagens";
 
-    const section_header = createSectionHeader(
+    const sectionHeader = createSectionHeader(
         "images",
         "filter-images",
-        section_name,
-        section_description,
+        sectionName,
+        sectionDescription,
     );
 
-    if (enable_edit) {
-        section_header.appendChild(
-            createActionMenu(_portfolio_id, _section_id, _section_name, _section_description),
+    if (enableEdit) {
+        sectionHeader.appendChild(
+            createActionMenu(portfolioId, _sectionId, _sectionName, _sectionDescription),
         );
     }
 
-    const content_container = createSectionContainer();
-    content_container.appendChild(section_header);
+    const contentContainer = createSectionContainer();
+    contentContainer.appendChild(sectionHeader);
 
-    let content_blobs = document.createElement("div");
-    content_blobs.classList.add("row", "w-100", "space-0", "py-3", "scrool-container");
+    let contentBlobs = document.createElement("div");
+    contentBlobs.classList.add("row", "w-100", "space-0", "py-3", "scrool-container");
 
-    let content_blobs_scrool = document.createElement("div");
-    content_blobs_scrool.classList.add("px-3");
+    let contentBlobsScrool = document.createElement("div");
+    contentBlobsScrool.classList.add("px-3");
 
-    if (content && content.length) {
-        for (let i = 0; i < content.length; i++) {
-            if (!content[i].blob && !content[i].descricao) return;
+    if (content?.length) {
+        content.forEach((element) => {
+            if (!element.blob || !element.descricao) return;
 
-            let image_div = document.createElement("div");
-            image_div.classList.add("me-3", "d-inline-block", "position-relative");
-            image_div.innerHTML += `<img class="img-thumbnail images" src="${content[i].blob}">`;
+            let imageDiv = document.createElement("div");
+            imageDiv.classList.add("me-3", "d-inline-block", "position-relative");
+            imageDiv.innerHTML += `<img class="img-thumbnail images" src="${element.blob}">`;
 
             // edit.remove
-            if (enable_edit) {
-                let remove_button = document.createElement("button");
-                remove_button.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`;
-                remove_button.classList.add(
+            if (enableEdit) {
+                let removeButton = document.createElement("button");
+                removeButton.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`;
+                removeButton.classList.add(
                     "icon-32px",
                     "position-absolute",
                     "top-0",
@@ -1190,432 +1055,432 @@ function createImageSection(
                     "d-flex",
                     "center-xy",
                 );
-                remove_button.addEventListener("click", () =>
+                removeButton.addEventListener("click", () =>
                     triggerDeleteImage(
                         new DeleteBlobContext(
-                            _portfolio_id,
-                            _section_id,
-                            content[i].blob,
-                            content[i].descricao,
+                            portfolioId,
+                            _sectionId,
+                            element.blob,
+                            element.descricao,
                         ),
                     ),
                 );
-                image_div.appendChild(remove_button);
+                imageDiv.appendChild(removeButton);
             }
 
-            content_blobs_scrool.appendChild(image_div);
-        }
+            contentBlobsScrool.appendChild(imageDiv);
+        });
     } else {
         let information = document.createElement("p");
         information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
         information.innerText = "Não há imagens cadastrados, edite o portfólio para adicionar uma!";
-        content_blobs_scrool.appendChild(information);
+        contentBlobsScrool.appendChild(information);
     }
 
-    content_blobs.appendChild(content_blobs_scrool);
-    content_container.appendChild(content_blobs);
+    contentBlobs.appendChild(contentBlobsScrool);
+    contentContainer.appendChild(contentBlobs);
 
     // edit.add
-    if (enable_edit) {
-        let content_add = document.createElement("div");
-        content_add.innerHTML += "<hr>";
-        let content_add_div_1 = document.createElement("div");
-        content_add_div_1.innerHTML = `<label class="form-label">Adicionar imagens</label>`;
-        content_add_div_1.classList.add("col-12", "space-0", "px-4", "w-100", "mb-3");
-        let content_add_div_1_input = document.createElement("input");
-        content_add_div_1_input.classList.add("form-control");
-        content_add_div_1_input.setAttribute("type", "file");
-        content_add_div_1.appendChild(content_add_div_1_input);
-        content_add.appendChild(content_add_div_1);
+    if (enableEdit) {
+        let ContentAdd = document.createElement("div");
+        ContentAdd.innerHTML += "<hr>";
+        let contentAddDiv1 = document.createElement("div");
+        contentAddDiv1.innerHTML = `<label class="form-label">Adicionar imagens</label>`;
+        contentAddDiv1.classList.add("col-12", "space-0", "px-4", "w-100", "mb-3");
+        let contentAddDiv1Input = document.createElement("input");
+        contentAddDiv1Input.classList.add("form-control");
+        contentAddDiv1Input.setAttribute("type", "file");
+        contentAddDiv1.appendChild(contentAddDiv1Input);
+        ContentAdd.appendChild(contentAddDiv1);
 
-        content_add_div_1_input.addEventListener("change", () => {
+        contentAddDiv1Input.addEventListener("change", () => {
             // Watch change in input of files and check if they are valid
             try {
-                assertBase64ConvertableImage(content_add_div_1_input.files);
+                assertBase64ConvertableImage(contentAddDiv1Input.files);
             } catch (error) {
                 alert(error);
-                content_add_div_1_input.value = "";
+                contentAddDiv1Input.value = "";
             }
         });
 
-        let content_add_div_2 = document.createElement("div");
-        content_add_div_2.classList.add("col-12", "space-0", "px-4", "pb-4");
+        let contentAddDiv2 = document.createElement("div");
+        contentAddDiv2.classList.add("col-12", "space-0", "px-4", "pb-4");
 
-        let content_add_div_2_button = document.createElement("button");
-        content_add_div_2_button.classList.add(
+        let contentAddDiv2Button = document.createElement("button");
+        contentAddDiv2Button.classList.add(
             "btn",
             "btn-outline-primary",
             "text-decoration-none",
             "w-100",
         );
-        content_add_div_2_button.role = "button";
-        content_add_div_2_button.innerHTML = `<div class="d-flex justify-content-center m-2">
+        contentAddDiv2Button.role = "button";
+        contentAddDiv2Button.innerHTML = `<div class="d-flex justify-content-center m-2">
             <img class="icon-24px fixed-filter-invert me-2"
                 src="static/action-icons/add.svg">
                 <p class="space-0">Adicionar imagens</p>
         </div>`;
-        content_add_div_2_button.addEventListener("click", async () => {
-            if (!(content_add_div_1_input instanceof HTMLInputElement)) return;
+        contentAddDiv2Button.addEventListener("click", () => {
+            if (!(contentAddDiv1Input instanceof HTMLInputElement)) return;
 
-            if (!content_add_div_1_input.files || !content_add_div_1_input.files.length) {
+            if (!contentAddDiv1Input.files?.length) {
                 alert("Seleciona um arquivo!");
                 return;
             }
 
-            commitAddImage(_portfolio_id, _section_id, content_add_div_1_input.files[0]);
+            commitAddImage(portfolioId, _sectionId, contentAddDiv1Input.files[0]);
         });
-        content_add_div_2.appendChild(content_add_div_2_button);
-        content_add.appendChild(content_add_div_2);
-        content_container.appendChild(content_add);
+        contentAddDiv2.appendChild(contentAddDiv2Button);
+        ContentAdd.appendChild(contentAddDiv2);
+        contentContainer.appendChild(ContentAdd);
     }
 
-    return content_container;
+    return contentContainer;
 }
 /**
- * @param {number} portfolio_id
- * @param {number} section_id
- * @param {string} section_name
- * @param {string} section_description
- * @param {boolean} enable_edit
+ * @param {string} portfolioId
+ * @param {number} sectionId
+ * @param {string} sectionName
+ * @param {string} sectionDescription
+ * @param {boolean} enableEdit
  * @param {any[]} content
+ * @returns {HTMLDivElement|void}
  */
 function createLinkSection(
-    portfolio_id,
-    section_id,
-    section_name,
-    section_description,
-    enable_edit,
+    portfolioId,
+    sectionId,
+    sectionName,
+    sectionDescription,
+    enableEdit,
     content,
 ) {
-    const _portfolio_id = ensureInteger(portfolio_id);
-    const _section_id = ensureInteger(section_id);
+    if (!portfolioId || !sectionId) throw new Error("Object is null");
 
-    if (!_portfolio_id || !_section_id) return;
+    const _sectionName = sectionName || "Redes";
+    const _sectionDescription = sectionDescription || "Links Externos";
 
-    const _section_name = section_name || "Redes";
-    const _section_description = section_description || "Links Externos";
-
-    const section_header = createSectionHeader(
+    const sectionHeader = createSectionHeader(
         "link",
         "filter-link",
-        section_name,
-        section_description,
+        sectionName,
+        sectionDescription,
     );
 
-    if (enable_edit) {
-        section_header.appendChild(
-            createActionMenu(_portfolio_id, _section_id, _section_name, _section_description),
+    if (enableEdit) {
+        sectionHeader.appendChild(
+            createActionMenu(portfolioId, sectionId, _sectionName, _sectionDescription),
         );
     }
 
-    let content_container = createSectionContainer();
-    content_container.appendChild(section_header);
+    let contentContainer = createSectionContainer();
+    contentContainer.appendChild(sectionHeader);
 
-    let content_blobs = document.createElement("div");
-    content_blobs.classList.add("row", "w-100", "m-0", "g-3", "py-2", "px-3", "pb-4");
+    let contentBlobs = document.createElement("div");
+    contentBlobs.classList.add("row", "w-100", "m-0", "g-3", "py-2", "px-3", "pb-4");
 
-    if (content && content.length) {
-        for (let i = 0; i < content.length; i++) {
-            if (!content[i].blob && !content[i].descricao) return;
-
-            let link_div = document.createElement("div");
-            link_div.classList.add("col-12", "col-sm-6", "col-xl-4", "position-relative");
-            link_div.innerHTML += `<a class="btn btn-primary text-decoration-none w-100" href="${content[i].blob}" role="button">
+    if (content?.length) {
+        for (const element of content) {
+            if (element.blob && element.descricao) {
+                let linkDiv = document.createElement("div");
+                linkDiv.classList.add("col-12", "col-sm-6", "col-xl-4", "position-relative");
+                linkDiv.innerHTML += `<a class="btn btn-primary text-decoration-none w-100" href="${element.blob}" role="button">
                     <div class="d-flex justify-content-center m-2">
                         <img class="icon-24px fixed-filter-invert me-2"
                             src="static/action-icons/external.svg">
-                            <p class="space-0">${content[i].descricao}</p>
+                            <p class="space-0">${element.descricao}</p>
                     </div>
                 </a>`;
 
-            if (enable_edit) {
-                let remove_button = document.createElement("button");
-                remove_button.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`;
-                // TODO: Simplify classes
-                remove_button.classList.add(
-                    "icon-32px",
-                    "position-absolute",
-                    "top-0",
-                    "start-100",
-                    "translate-middle",
-                    "p-2",
-                    "border",
-                    "border-light",
-                    "rounded-circle",
-                    "d-flex",
-                    "center-xy",
-                );
-                link_div.appendChild(remove_button);
-                remove_button.addEventListener("click", () =>
-                    triggerDeleteLink(
-                        new DeleteBlobContext(
-                            _portfolio_id,
-                            _section_id,
-                            content[i].blob,
-                            content[i].descricao,
+                if (enableEdit) {
+                    let removeButton = document.createElement("button");
+                    removeButton.innerHTML = `<img class="icon-dark icon-24px" src="static/action-icons/close.svg">`;
+                    // TODO: Simplify classes
+                    removeButton.classList.add(
+                        "icon-32px",
+                        "position-absolute",
+                        "top-0",
+                        "start-100",
+                        "translate-middle",
+                        "p-2",
+                        "border",
+                        "border-light",
+                        "rounded-circle",
+                        "d-flex",
+                        "center-xy",
+                    );
+                    linkDiv.appendChild(removeButton);
+                    removeButton.addEventListener("click", () =>
+                        triggerDeleteLink(
+                            new DeleteBlobContext(
+                                portfolioId,
+                                sectionId,
+                                element.blob,
+                                element.descricao,
+                            ),
                         ),
-                    ),
-                );
-            }
+                    );
+                }
 
-            content_blobs.appendChild(link_div);
+                contentBlobs.appendChild(linkDiv);
+            }
         }
     } else {
-        content_blobs.appendChild(createNoLinkSubSection());
+        contentBlobs.appendChild(createNoLinkSubSection());
     }
 
-    if (enable_edit) {
-        content_blobs.appendChild(createAddLinkSubSection(_portfolio_id, _section_id));
+    if (enableEdit) {
+        contentBlobs.appendChild(createAddLinkSubSection(portfolioId, sectionId));
     }
 
-    content_container.appendChild(content_blobs);
+    contentContainer.appendChild(contentBlobs);
 
-    return content_container;
+    return contentContainer;
 }
 
-/**
- * @param {number} portf_id
- * @param {boolean} enable_edit
- */
-// TODO: Remover async dessa função ou dividir em funcoes menores
-async function setupPortfolioPage(portf_id, enable_edit) {
-    if (!portf_id && typeof portf_id !== "number") return;
+async function renderizarInformacoesUsuario(userId, enableEdit) {
+    assertBoolean(enableEdit);
 
-    if (typeof enable_edit !== "boolean") enable_edit = false;
+    let toggleEditElement = document.getElementById("toggle-edit-div");
+    if (!(toggleEditElement instanceof HTMLDivElement)) return;
+    toggleEditElement.appendChild(createEditPortfolioButton(enableEdit));
 
-    const portfolio = await crud_portfolios.lerPortfolio(_portfolio_id);
-    if (!portfolio) {
-        console.log("setupPortfolioPage: nenhum portfólio cadastrado!");
-        alert("A id informada para o portfólio não existe!");
-        setIdParam(0);
-        return;
-    }
+    const portfolioUser = await crudUsuarios.lerUsuario(userId);
+    if (!portfolioUser) throw new Error("setupPortfolioPage: no user");
 
-    toggleDisplayNoneOnElement("portfolio-display", false);
-
-    let toggle_edit_element = document.getElementById("toggle-edit-div");
-    if (!(toggle_edit_element instanceof HTMLDivElement)) return;
-
-    toggle_edit_element.appendChild(createEditPortfolioButton(enable_edit));
-    if (enable_edit) {
-        toggleDisplayNoneOnElement("add-section", false);
-
-        const popup_edit_section_close = document.getElementById("popup-edit-close");
-        const popup_edit_section_confirm = document.getElementById("popup-edit-confirm");
-
-        popup_edit_section_close?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-edit", true),
-        );
-        popup_edit_section_confirm?.addEventListener("click", commitEditSectionInfo);
-
-        const add_section = document.getElementById("add-section");
-        const popup_add_section_close = document.getElementById("popup-add-close");
-        const popup_add_section_confirm = document.getElementById("popup-add-confirm");
-
-        // Botão de adicionar seção
-        add_section?.addEventListener("click", () =>
-            triggerAddSection(new AddSectionContext(portfolio.id)),
-        );
-        popup_add_section_close?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-add", true),
-        );
-        popup_add_section_confirm?.addEventListener("click", commitAddAsection);
-
-        const popup_add_link_close = document.getElementById("popup-add-link-close");
-        const popup_add_link_confirm = document.getElementById("popup-add-link-confirm");
-        popup_add_link_close?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-add-link", true),
-        );
-        popup_add_link_confirm?.addEventListener("click", commitAddLink);
-
-        const popup_delete_section_close = document.getElementById("popup-delete-close");
-        const popup_delete_section_cancel = document.getElementById("popup-delete-cancel");
-        const popup_delete_section_confirm = document.getElementById("popup-delete-confirm");
-
-        popup_delete_section_close?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-delete", true),
-        );
-        popup_delete_section_cancel?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-delete", true),
-        );
-        popup_delete_section_confirm?.addEventListener("click", commitDeleteSection);
-
-        const popup_delete_image_close = document.getElementById("popup-delete-image-close");
-        const popup_delete_image_cancel = document.getElementById("popup-delete-image-cancel");
-        const popup_delete_image_confirm = document.getElementById("popup-delete-image-confirm");
-
-        popup_delete_image_close?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-delete-image", true),
-        );
-        popup_delete_image_cancel?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-delete-image", true),
-        );
-        popup_delete_image_confirm?.addEventListener("click", () => commitDeleteImage);
-
-        const popup_delete_link_close = document.getElementById("popup-delete-link-close");
-        const popup_delete_link_cancel = document.getElementById("popup-delete-link-cancel");
-        const popup_delete_link_confirm = document.getElementById("popup-delete-link-confirm");
-
-        popup_delete_link_close?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-delete-link", true),
-        );
-        popup_delete_link_cancel?.addEventListener("click", () =>
-            toggleDisplayNoneOnElement("popup-delete-link", true),
-        );
-        popup_delete_link_confirm?.addEventListener("click", () => commitDeleteLink);
-    }
-
-    /** @type {string} */
-    const portfolio_user_id = portfolio.usuarioId;
-    const portfolio_user = await crud_usuarios.lerUsuario(portfolio_user_id);
-    if (!portfolio_user) {
-        console.log("setupPortfolioPage: no user");
-        return;
-    }
-
-    let portfolio_user_name = portfolio_user.nome;
-    let portfolio_user_about = portfolio_user.biografia || "Sem descrição informada";
-    let portfolio_user_picture =
-        portfolio_user.foto || `https://picsum.photos/seed/${portfolio_user_id}/200`;
+    const _usuarioPortfolio = {
+        nome: portfolioUser.nome,
+        biografia: portfolioUser.biografia || "Sem descrição informada",
+        foto: portfolioUser.foto || `https://picsum.photos/seed/${userId}/200`,
+    };
 
     // TODO: adicionar contato e e-mail?
     // TODO: Se não preenchido na hora do cadastro?
-    if (!portfolio_user_name || !portfolio_user_id || !portfolio_user_about) {
-        console.log("setupPortfolioPage: não foi possível verificar alguma informação do usuário");
-        return;
-    }
+    if (Object.hasOwn(_usuarioPortfolio, "nome"))
+        throw new Error(
+            "setupPortfolioPage: não foi possível verificar alguma informação do usuário",
+        );
 
-    const portfolio_name = document.getElementById("portfolio-name");
-    const portfolio_picture = document.getElementById("portfolio-picture");
-    const portfolio_username = document.getElementById("portfolio-username");
-    const portfolio_nota = document.getElementById("portfolio-nota");
-    const portfolio_descricao = document.getElementById("portfolio-descricao");
-    const portfolio_secoes = document.getElementById("portfolio-secoes");
+    const portfolioName = document.getElementById("portfolio-name");
+    const portfolioPicture = document.getElementById("portfolio-picture");
+    const portfolioUsername = document.getElementById("portfolio-username");
+    const portfolioNota = document.getElementById("portfolio-nota");
+    const portfolioDescricao = document.getElementById("portfolio-descricao");
+    const portfolioSecoes = document.getElementById("portfolio-secoes");
 
     if (
-        !(portfolio_name instanceof HTMLHeadingElement) ||
-        !(portfolio_picture instanceof HTMLImageElement) ||
-        !(portfolio_username instanceof HTMLSpanElement) ||
-        !(portfolio_nota instanceof HTMLSpanElement) ||
-        !(portfolio_descricao instanceof HTMLParagraphElement) ||
-        !(portfolio_secoes instanceof HTMLDivElement)
-    ) {
-        console.error(`${this.name}: null check`);
+        !(portfolioName instanceof HTMLHeadingElement) ||
+        !(portfolioPicture instanceof HTMLImageElement) ||
+        !(portfolioUsername instanceof HTMLSpanElement) ||
+        !(portfolioNota instanceof HTMLSpanElement) ||
+        !(portfolioDescricao instanceof HTMLParagraphElement) ||
+        !(portfolioSecoes instanceof HTMLDivElement)
+    )
+        throw new Error("Algum elemento HTML não pode ser encontrado!");
+
+    portfolioName.innerText = _usuarioPortfolio.nome;
+    portfolioUsername.innerText = `@${userId}`;
+    portfolioPicture.src = _usuarioPortfolio.foto;
+    portfolioDescricao.innerText = _usuarioPortfolio.biografia;
+
+    const media = await getMediaAvaliacoes(userId);
+    if (media) {
+        portfolioNota.innerText = media.toString();
+    }
+}
+
+function configurarEditPopups(portfolioId) {
+    toggleDisplayNoneOnElement("add-section", false);
+
+    const popupEditSectionClose = document.getElementById("popup-edit-close");
+    const popupEditSectionConfirm = document.getElementById("popup-edit-confirm");
+
+    popupEditSectionClose?.addEventListener("click", () =>
+        toggleDisplayNoneOnElement("popup-edit", true),
+    );
+    popupEditSectionConfirm?.addEventListener("click", commitEditSectionInfo);
+
+    const addSection = document.getElementById("add-section");
+    const popupAddSectionClose = document.getElementById("popup-add-close");
+    const popupAddSectionConfirm = document.getElementById("popup-add-confirm");
+
+    // Botão de adicionar seção
+    addSection?.addEventListener("click", () =>
+        triggerAddSection(new AddSectionContext(portfolioId)),
+    );
+    popupAddSectionClose?.addEventListener("click", () =>
+        toggleDisplayNoneOnElement("popup-add", true),
+    );
+    popupAddSectionConfirm?.addEventListener("click", commitAddAsection);
+
+    const popupAddLinkClose = document.getElementById("popup-add-link-close");
+    const popupAddLinkConfirm = document.getElementById("popup-add-link-confirm");
+    popupAddLinkClose?.addEventListener("click", () =>
+        toggleDisplayNoneOnElement("popup-add-link", true),
+    );
+    popupAddLinkConfirm?.addEventListener("click", commitAddLink);
+
+    const popupDeleteSectionClose = document.getElementById("popup-delete-close");
+    const popupDeleteSectionCancel = document.getElementById("popup-delete-cancel");
+    const popupDeleteSectionConfirm = document.getElementById("popup-delete-confirm");
+
+    popupDeleteSectionClose?.addEventListener("click", () =>
+        toggleDisplayNoneOnElement("popup-delete", true),
+    );
+    popupDeleteSectionCancel?.addEventListener("click", () =>
+        toggleDisplayNoneOnElement("popup-delete", true),
+    );
+    popupDeleteSectionConfirm?.addEventListener("click", commitDeleteSection);
+
+    const popupDeleteImageClose = document.getElementById("popup-delete-image-close");
+    const popupDeleteImageCancel = document.getElementById("popup-delete-image-cancel");
+    const popupDeleteImageConfirm = document.getElementById("popup-delete-image-confirm");
+
+    popupDeleteImageClose?.addEventListener("click", () =>
+        toggleDisplayNoneOnElement("popup-delete-image", true),
+    );
+    popupDeleteImageCancel?.addEventListener("click", () =>
+        toggleDisplayNoneOnElement("popup-delete-image", true),
+    );
+    popupDeleteImageConfirm?.addEventListener("click", () => commitDeleteImage);
+
+    const popupDeleteLinkClose = document.getElementById("popup-delete-link-close");
+    const popupDeleteLinkCancel = document.getElementById("popup-delete-link-cancel");
+    const popupDeleteLinkConfirm = document.getElementById("popup-delete-link-confirm");
+
+    popupDeleteLinkClose?.addEventListener("click", () =>
+        toggleDisplayNoneOnElement("popup-delete-link", true),
+    );
+    popupDeleteLinkCancel?.addEventListener("click", () =>
+        toggleDisplayNoneOnElement("popup-delete-link", true),
+    );
+    popupDeleteLinkConfirm?.addEventListener("click", () => commitDeleteLink);
+}
+
+/**
+ * @param {string} portfolioId
+ * @param {boolean} enableEdit
+ */
+// TODO: Remover async dessa função ou dividir em funcoes menores
+async function renderizarPortfolio(portfolioId, enableEdit) {
+    assertStringNonEmpty(portfolioId);
+    assertBoolean(enableEdit);
+
+    const portfolioToRender = await crudPortfolios.lerPortfolio(portfolioId);
+    if (!portfolioToRender) {
+        alert("A id informada para o portfólio não existe!");
+        location.assign("/portfolios");
         return;
     }
 
-    portfolio_name.innerText = portfolio_user_name;
-    portfolio_username.innerText = `@${portfolio_user_id}`;
-    portfolio_picture.src = portfolio_user_picture;
-    portfolio_descricao.innerText = portfolio_user_about;
+    // Habilita o container do portfólio
+    toggleDisplayNoneOnElement("portfolio-display", false);
 
-    const media = await getMediaAvaliacoes(portfolio_user_id);
-    if (media) {
-        portfolio_nota.innerText = media.toString();
+    if (enableEdit) {
+        configurarEditPopups(portfolioId);
     }
 
+    const portfolioUserId = portfolioToRender.usuarioId;
+
+    renderizarInformacoesUsuario(enableEdit);
+
+    const portfolioSecoes = document.getElementById("portfolio-secoes");
+
+    if (!(portfolioSecoes instanceof HTMLDivElement))
+        throw new Error("Algum elemento HTML não pode ser encontrado!");
+
     // TODO: O usuário pode não ter cadastrado nenhuma seção ainda
-    if (!portfolio.secoes.length && !enable_edit) {
+    if (!portfolioToRender.secoes.length && !enableEdit) {
         let information = document.createElement("h5");
         information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
         information.innerText = "Portfólio vazio, edite o portfólio para adicionar uma seção!";
-        portfolio_secoes.appendChild(information);
+        portfolioSecoes.appendChild(information);
         return;
     }
 
     // TODO: Permitir apenas 1 seção de avaliações
-    for (const element of portfolio.secoes) {
-        const e_section_name = element.nome;
-        const e_section_description = element.descricao;
-        const e_section_id = element.ordem;
-        const e_section_category_id = element.categoriaId;
+    portfolioToRender.secoes.forEach(async (element) => {
         // For categoriaId(0), content is optional
-        const e_secao_content = element.contents;
+        const { nome, descricao, ordem, categoriaId, contents } = element;
 
         if (
-            !e_section_name ||
-            (!e_section_id && typeof e_section_id !== "number") ||
-            (!e_section_category_id && typeof e_section_category_id !== "number")
-        ) {
-            console.log("setupPortfolioPage: algo na seção não foi encontrado!");
-            return;
-        }
+            !nome ||
+            (!ordem && typeof ordem !== "number") ||
+            (!categoriaId && typeof categoriaId !== "number")
+        )
+            throw new Error("Algum elemento HTML não pode ser encontrado!");
 
-        switch (e_section_category_id) {
+        switch (categoriaId) {
             // categoriaId(1): Avaliações
             case 1:
                 {
                     const child = await createReviewSection(
-                        portfolio.id,
-                        e_section_id,
-                        e_section_name,
-                        e_section_description,
-                        enable_edit,
-                        portfolio_user_id,
+                        portfolioToRender.id,
+                        ordem,
+                        nome,
+                        descricao,
+                        enableEdit,
+                        portfolioUserId,
                     );
-                    if (child) portfolio_secoes.appendChild(child);
+                    if (child) portfolioSecoes.appendChild(child);
                 }
                 break;
             // categoriaId(0): Fotos
             case 0:
                 {
                     const child = createImageSection(
-                        portfolio.id,
-                        e_section_id,
-                        e_section_name,
-                        e_section_description,
-                        enable_edit,
-                        e_secao_content,
+                        portfolioToRender.id,
+                        ordem,
+                        nome,
+                        descricao,
+                        enableEdit,
+                        contents,
                     );
-                    if (child) portfolio_secoes.appendChild(child);
+                    if (child) portfolioSecoes.appendChild(child);
                 }
                 break;
             // categoriaId(2): Links
             case 2:
                 {
                     const child = createLinkSection(
-                        portfolio.id,
-                        e_section_id,
-                        e_section_name,
-                        e_section_description,
-                        enable_edit,
-                        e_secao_content,
+                        portfolioToRender.id,
+                        ordem,
+                        nome,
+                        descricao,
+                        enableEdit,
+                        contents,
                     );
-                    if (child) portfolio_secoes.appendChild(child);
+                    if (child) portfolioSecoes.appendChild(child);
                 }
                 break;
         }
-    }
+    });
 }
 
-async function setupPortfolioSetupUsuarios() {
+async function listarUsuariosNaConfiguracao() {
     // OPTIMIZE: Ler os usuários anteriormente e escolher um número aleatorio
-    const _usuarios = await crud_usuarios.lerUsuarios();
+    const _usuarios = await crudUsuarios.lerUsuarios();
 
-    const portfolio_setup_create_select = document.getElementById("portfolio-setup-create-select");
-    const portfolio_setup_create_btn = document.getElementById("portfolio-setup-create-btn");
+    const portfolioSetupCreateSelect = document.getElementById("portfolio-setup-create-select");
+    const portfolioSetupCreateButton = document.getElementById("portfolio-setup-create-btn");
 
     if (
-        !(portfolio_setup_create_select instanceof HTMLSelectElement) ||
-        !(portfolio_setup_create_btn instanceof HTMLButtonElement)
-    ) {
-        console.error(`${this.name}: null check`);
-        return;
-    }
+        !(portfolioSetupCreateSelect instanceof HTMLSelectElement) ||
+        !(portfolioSetupCreateButton instanceof HTMLButtonElement)
+    )
+        throw new Error("Algum elemento HTML não pode ser encontrado!");
 
     // Se existem usuários, adiciona-os à lista (criar novo portfólio)
-    if (_usuarios && _usuarios.length) {
-        for (let i = 0; i < _usuarios.length; i++) {
+    if (_usuarios?.length) {
+        for (const element of _usuarios) {
             let option = document.createElement("option");
-            option.value = _usuarios[i].id;
-            option.innerText = `Usuário id(${_usuarios[i].id}): ${_usuarios[i].nome}`;
-            portfolio_setup_create_select.appendChild(option);
+            option.value = element.id;
+            option.innerText = `Usuário id(${element.id}): ${element.nome}`;
+            portfolioSetupCreateSelect.appendChild(option);
         }
-        portfolio_setup_create_btn.classList.remove("disabled");
-        portfolio_setup_create_btn.addEventListener("click", async () => {
+        portfolioSetupCreateButton.classList.remove("disabled");
+        portfolioSetupCreateButton.addEventListener("click", async () => {
             // Criar portfólio para o usuário de id $?
-            let portfolioId = await crud_portfolios.criarPortfolio({
-                usuarioId: portfolio_setup_create_select.value,
+            let portfolioId = await crudPortfolios.criarPortfolio({
+                usuarioId: portfolioSetupCreateSelect.value,
                 secoes: [],
             });
 
@@ -1633,51 +1498,49 @@ async function setupPortfolioSetupUsuarios() {
 
     let option = document.createElement("option");
     option.innerText = `Nenhum usuário criado!`;
-    portfolio_setup_create_select.appendChild(option);
+    portfolioSetupCreateSelect.appendChild(option);
 }
 
-async function setupPortfolioSetupPortfolios() {
-    let portfolio_setup_select_select = document.getElementById("portfolio-setup-select-select");
-    let portfolio_setup_select_btn = document.getElementById("portfolio-setup-select-btn");
+async function listarPortfoliosNaConfiguracao() {
+    let portfolioSetupSelectSelect = document.getElementById("portfolio-setup-select-select");
+    let portfolioSetupSelectButton = document.getElementById("portfolio-setup-select-btn");
 
     if (
-        !(portfolio_setup_select_select instanceof HTMLSelectElement) ||
-        !(portfolio_setup_select_btn instanceof HTMLButtonElement)
-    ) {
-        console.error(`${this.name}: null check`);
-        return;
-    }
+        !(portfolioSetupSelectSelect instanceof HTMLSelectElement) ||
+        !(portfolioSetupSelectButton instanceof HTMLButtonElement)
+    )
+        throw new Error("Algum elemento HTML não pode ser encontrado!");
 
     // Lê os portfolios e usuários disponíveis
-    const _portfolios = await crud_portfolios.lerPortfolio(_portfolio_id);
+    const _portfolios = await crudPortfolios.lerPortfolios();
 
     // Se existem portfólios, adiciona-os à lista (abrir portfólio)
-    if (_portfolios && _portfolios.length) {
-        for (let i = 0; i < _portfolios.length; i++) {
+    if (_portfolios?.length) {
+        for (const element of _portfolios) {
             let option = document.createElement("option");
-            option.value = _portfolios[i].id;
-            option.innerText = `Portfólio de id(${_portfolios[i].id})`;
-            portfolio_setup_select_select.appendChild(option);
+            option.value = element.id;
+            option.innerText = `Portfólio de id(${element.id})`;
+            portfolioSetupSelectSelect.appendChild(option);
         }
-        portfolio_setup_select_btn.classList.remove("disabled");
-        portfolio_setup_select_btn.addEventListener("click", () =>
+        portfolioSetupSelectButton.classList.remove("disabled");
+        portfolioSetupSelectButton.addEventListener("click", () =>
             // Abrir o portfólio de id $?
-            setIdParam(parseInt(portfolio_setup_select_select.value)),
+            setIdParam(parseInt(portfolioSetupSelectSelect.value, 10)),
         );
     } else {
         let option = document.createElement("option");
         option.innerText = `Nenhum portfólio criado!`;
-        portfolio_setup_select_select.appendChild(option);
+        portfolioSetupSelectSelect.appendChild(option);
     }
 }
 
-async function setupPortfolioSetupMicroDev() {
-    let portfolio_setup_dev_btn = document.getElementById("portfolio-setup-dev-btn");
+function setupPortfolioSetupMicroDev() {
+    let portfolioSetupDevButton = document.getElementById("portfolio-setup-dev-btn");
 
-    if (!(portfolio_setup_dev_btn instanceof HTMLButtonElement))
-        throw new Error(`${this.name}: null check`);
+    if (!(portfolioSetupDevButton instanceof HTMLButtonElement))
+        throw new Error("Algum elemento HTML não pode ser encontrado!");
 
-    portfolio_setup_dev_btn.addEventListener("click", async () => {
+    portfolioSetupDevButton.addEventListener("click", async () => {
         // Utilizar a página 'dev.js'
         await Faker.criarNUsuarios(30);
         await Faker.criarNServicos(60, true);
@@ -1688,31 +1551,29 @@ async function setupPortfolioSetupMicroDev() {
 }
 
 // Configura a página inicial de visualizar/criar portfólios
-function setupPortfolioSetup() {
+function renderizarConfiguracaoPortfolio() {
     // Mostra os elementos da página de setup do portfólio
     // TODO: Adicionar a pagina dinamicamente
     toggleDisplayNoneOnElement("portfolio-setup", false);
     // Adiciona usuários a página de setup de portfólio
-    setupPortfolioSetupUsuarios();
+    listarUsuariosNaConfiguracao();
     // Adiciona portfólios a página de setup de portfólio
-    setupPortfolioSetupPortfolios();
+    listarPortfoliosNaConfiguracao();
     // Adiciona opções de desenvolvedor a página de setup de portfólio
     setupPortfolioSetupMicroDev();
 }
 
-function validateEntry() {
+function iniciarlizarPortfolio() {
+    // Verificar as informações na id
     let params = new URLSearchParams(location.search);
-    // ?id=:id
-    let id = ensureInteger(params.get("id"));
-    // ?edit=true
+    let id = params.get("id");
     let edit = params.get("edit") === "true";
-
+    // Se tem ?id, carrega as informações do portfolio, caso não haja, renderiza a página de criação e/ou abertura
     if (id) {
-        // Se tem ?id, carrega as informações do portfolio
-        setupPortfolioPage(id, edit);
+        renderizarPortfolio(id, edit);
     } else {
-        setupPortfolioSetup();
+        renderizarConfiguracaoPortfolio();
     }
 }
 
-validateEntry();
+iniciarlizarPortfolio();

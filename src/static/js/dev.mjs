@@ -2,234 +2,239 @@
 
 import * as Faker from "./lib/faker.mjs";
 
-import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
-import { Servicos } from "./jsonf/servicos.mjs"; // Serviços
-import { Contratos } from "./jsonf/contratos.mjs"; // Contratos
-import { Avaliacoes } from "./jsonf/avaliacoes.mjs"; // Avaliações
-import { Portfolios } from "./jsonf/portfolios.mjs"; // Portfólios
+import { Usuarios } from "./jsonf/usuarios.mjs";
+import { Servicos } from "./jsonf/servicos.mjs";
+import { Contratos } from "./jsonf/contratos.mjs";
+import { Avaliacoes } from "./jsonf/avaliacoes.mjs";
+import { Portfolios } from "./jsonf/portfolios.mjs";
 
-const crud_usuarios = new Usuarios();
-const crud_servicos = new Servicos();
-const crud_contratos = new Contratos();
-const crud_avaliacoes = new Avaliacoes();
-const crud_portfolios = new Portfolios();
+const crudUsuarios = new Usuarios();
+const crudServicos = new Servicos();
+const crudContratos = new Contratos();
+const crudAvaliacoes = new Avaliacoes();
+const crudPortfolios = new Portfolios();
 
 /*
  * Esse script adiciona os recursos necessários para o funcionamento da página de dev-tools
  */
 function setupUserCRUD() {
-    let dev_create_usuarios_n = document.getElementById("dev-create-usuarios-n");
-    let dev_create_usuarios = document.getElementById("dev-create-usuarios");
-    let dev_delete_usuarios_all = document.getElementById("dev-delete-usuarios-all");
-    let dev_delete_usuarios_id = document.getElementById("dev-delete-usuarios-id");
-    let dev_delete_usuarios = document.getElementById("dev-delete-usuarios");
-    let dev_read_usuarios = document.getElementById("dev-read-usuarios");
+    let devCreateUsuariosN = document.getElementById("dev-create-usuarios-n");
+    let devCreateUsuarios = document.getElementById("dev-create-usuarios");
+    let devDeleteUsuariosAll = document.getElementById("dev-delete-usuarios-all");
+    let devDeleteUsuariosId = document.getElementById("dev-delete-usuarios-id");
+    let devDeleteUsuarios = document.getElementById("dev-delete-usuarios");
+    let devReadUsuarios = document.getElementById("dev-read-usuarios");
 
     if (
-        !(dev_create_usuarios_n instanceof HTMLInputElement) ||
-        !(dev_create_usuarios instanceof HTMLButtonElement) ||
-        !(dev_delete_usuarios_all instanceof HTMLButtonElement) ||
-        !(dev_delete_usuarios_id instanceof HTMLInputElement) ||
-        !(dev_delete_usuarios instanceof HTMLButtonElement) ||
-        !(dev_read_usuarios instanceof HTMLButtonElement)
+        !(devCreateUsuariosN instanceof HTMLInputElement) ||
+        !(devCreateUsuarios instanceof HTMLButtonElement) ||
+        !(devDeleteUsuariosAll instanceof HTMLButtonElement) ||
+        !(devDeleteUsuariosId instanceof HTMLInputElement) ||
+        !(devDeleteUsuarios instanceof HTMLButtonElement) ||
+        !(devReadUsuarios instanceof HTMLButtonElement)
     )
         return;
 
-    dev_create_usuarios.addEventListener("click", async () => {
-        const quantidade = dev_create_usuarios_n.value || "";
+    devCreateUsuarios.addEventListener("click", () => {
+        const quantidade = devCreateUsuariosN.value || "";
         // TODO: Check if more than $ALERT_QUANTITY
-        Faker.criarNUsuarios(parseInt(quantidade));
+        Faker.criarNUsuarios(parseInt(quantidade, 10));
     });
 
-    dev_delete_usuarios_all.addEventListener("click", crud_usuarios.limparUsuarios);
+    devDeleteUsuariosAll.addEventListener("click", crudUsuarios.limparUsuarios);
 
-    dev_delete_usuarios.addEventListener("click", async () => {
-        const id = dev_delete_usuarios_id.value;
-        if (await crud_usuarios.excluirUsuario(id)) {
-            console.log(`dev_delete_usuarios: usuário ${id} foi deletado!`);
+    devDeleteUsuarios.addEventListener("click", async () => {
+        const id = devDeleteUsuariosId.value;
+        if (await crudUsuarios.excluirUsuario(id)) {
+            console.warn(`dev_delete_usuarios: usuário ${id} foi deletado!`);
         } else {
-            console.log(
+            console.error(
                 `dev_delete_usuarios: Não foi possível encontrar o usuário ou ocorreu um erro.`,
             );
         }
     });
 
-    dev_read_usuarios.addEventListener("click", () =>
-        crud_usuarios.lerUsuarios().then((usuarios) => console.log(usuarios)),
+    devReadUsuarios.addEventListener("click", () =>
+        // eslint-disable-next-line no-restricted-syntax
+        crudUsuarios.lerUsuarios().then((usuarios) => console.log(usuarios)),
     );
 }
 
 function setupServicesCRUD() {
-    let dev_create_servicos_n = document.getElementById("dev-create-servicos-n");
-    let dev_create_servicos = document.getElementById("dev-create-servicos");
-    let dev_delete_servicos_all = document.getElementById("dev-delete-servicos-all");
-    let dev_delete_servicos_id = document.getElementById("dev-delete-servicos-id");
-    let dev_delete_servicos = document.getElementById("dev-delete-servicos");
-    let dev_read_servicos = document.getElementById("dev-read-servicos");
+    let devCreateServicosN = document.getElementById("dev-create-servicos-n");
+    let devCreateServicos = document.getElementById("dev-create-servicos");
+    let devDeleteServicosAll = document.getElementById("dev-delete-servicos-all");
+    let devDeleteServicosId = document.getElementById("dev-delete-servicos-id");
+    let devDeleteServicos = document.getElementById("dev-delete-servicos");
+    let devReadServicos = document.getElementById("dev-read-servicos");
 
     if (
-        !(dev_create_servicos_n instanceof HTMLInputElement) ||
-        !(dev_create_servicos instanceof HTMLButtonElement) ||
-        !(dev_delete_servicos_all instanceof HTMLButtonElement) ||
-        !(dev_delete_servicos_id instanceof HTMLInputElement) ||
-        !(dev_delete_servicos instanceof HTMLButtonElement) ||
-        !(dev_read_servicos instanceof HTMLButtonElement)
+        !(devCreateServicosN instanceof HTMLInputElement) ||
+        !(devCreateServicos instanceof HTMLButtonElement) ||
+        !(devDeleteServicosAll instanceof HTMLButtonElement) ||
+        !(devDeleteServicosId instanceof HTMLInputElement) ||
+        !(devDeleteServicos instanceof HTMLButtonElement) ||
+        !(devReadServicos instanceof HTMLButtonElement)
     )
         return;
 
-    dev_create_servicos.addEventListener("click", async () => {
-        const quantidade = dev_create_servicos_n.value;
+    devCreateServicos.addEventListener("click", () => {
+        const quantidade = devCreateServicosN.value;
         // TODO: Adicionar opção no html (onlyFakeUsers)
-        Faker.criarNServicos(parseInt(quantidade), false);
+        Faker.criarNServicos(parseInt(quantidade, 10), false);
     });
 
-    dev_delete_servicos_all.addEventListener("click", crud_servicos.limparServicos);
+    devDeleteServicosAll.addEventListener("click", crudServicos.limparServicos);
 
-    dev_delete_servicos.addEventListener("click", async () => {
-        const id = dev_delete_servicos_id.value;
-        if (await crud_servicos.excluirServico(id)) {
-            console.log(`dev_delete_servicos: serviço ${id} foi deletado!`);
+    devDeleteServicos.addEventListener("click", async () => {
+        const id = devDeleteServicosId.value;
+        if (await crudServicos.excluirServico(id)) {
+            console.warn(`dev_delete_servicos: serviço ${id} foi deletado!`);
         } else {
-            console.log(
+            console.error(
                 `dev_delete_servicos: Não foi possível encontrar o serviço ou ocorreu um erro.`,
             );
         }
     });
 
-    dev_read_servicos.addEventListener("click", () =>
-        crud_servicos.lerServicos().then((servicos) => console.log(servicos)),
+    devReadServicos.addEventListener("click", () =>
+        // eslint-disable-next-line no-restricted-syntax
+        crudServicos.lerServicos().then((servicos) => console.log(servicos)),
     );
 }
 
 function setupContractsCRUD() {
-    let dev_create_contratos_n = document.getElementById("dev-create-contratos-n");
-    let dev_create_contratos = document.getElementById("dev-create-contratos");
-    let dev_delete_contratos_all = document.getElementById("dev-delete-contratos-all");
-    let dev_delete_contratos_id = document.getElementById("dev-delete-contratos-id");
-    let dev_delete_contratos = document.getElementById("dev-delete-contratos");
-    let dev_read_contratos = document.getElementById("dev-read-contratos");
+    let devCreateContratosN = document.getElementById("dev-create-contratos-n");
+    let devCreateContratos = document.getElementById("dev-create-contratos");
+    let devDeleteContratosAll = document.getElementById("dev-delete-contratos-all");
+    let devDeleteContratosId = document.getElementById("dev-delete-contratos-id");
+    let devDeleteContratos = document.getElementById("dev-delete-contratos");
+    let devReadContratos = document.getElementById("dev-read-contratos");
 
     if (
-        !(dev_create_contratos_n instanceof HTMLInputElement) ||
-        !(dev_create_contratos instanceof HTMLButtonElement) ||
-        !(dev_delete_contratos_all instanceof HTMLButtonElement) ||
-        !(dev_delete_contratos_id instanceof HTMLInputElement) ||
-        !(dev_delete_contratos instanceof HTMLButtonElement) ||
-        !(dev_read_contratos instanceof HTMLButtonElement)
+        !(devCreateContratosN instanceof HTMLInputElement) ||
+        !(devCreateContratos instanceof HTMLButtonElement) ||
+        !(devDeleteContratosAll instanceof HTMLButtonElement) ||
+        !(devDeleteContratosId instanceof HTMLInputElement) ||
+        !(devDeleteContratos instanceof HTMLButtonElement) ||
+        !(devReadContratos instanceof HTMLButtonElement)
     )
         return;
 
-    dev_create_contratos.addEventListener("click", async () => {
-        const quantidade = dev_create_contratos_n.value;
-        Faker.criarNContratos(parseInt(quantidade));
+    devCreateContratos.addEventListener("click", () => {
+        const quantidade = devCreateContratosN.value;
+        Faker.criarNContratos(parseInt(quantidade, 10));
     });
 
-    dev_delete_contratos_all.addEventListener("click", crud_contratos.limparContratos);
+    devDeleteContratosAll.addEventListener("click", crudContratos.limparContratos);
 
-    dev_delete_contratos.addEventListener("click", async () => {
-        const id = dev_delete_contratos_id.value;
-        if (await crud_contratos.excluirContrato(id)) {
-            console.log(`dev_delete_contratos: contrato ${id} foi deletado!`);
+    devDeleteContratos.addEventListener("click", async () => {
+        const id = devDeleteContratosId.value;
+        if (await crudContratos.excluirContrato(id)) {
+            console.warn(`dev_delete_contratos: contrato ${id} foi deletado!`);
         } else {
-            console.log(
+            console.error(
                 `dev_delete_contratos: Não foi possível encontrar o contrato ou ocorreu um erro.`,
             );
         }
     });
 
-    dev_read_contratos.addEventListener("click", () =>
-        crud_contratos.lerContratos().then((contratos) => console.log(contratos)),
+    devReadContratos.addEventListener("click", () =>
+        // eslint-disable-next-line no-restricted-syntax
+        crudContratos.lerContratos().then((contratos) => console.log(contratos)),
     );
 }
 
 function setupReviewsCRUD() {
-    let dev_create_avaliacoes_n = document.getElementById("dev-create-avaliacoes-n");
-    let dev_create_avaliacoes = document.getElementById("dev-create-avaliacoes");
-    let dev_delete_avaliacoes_all = document.getElementById("dev-delete-avaliacoes-all");
-    let dev_delete_avaliacoes_id = document.getElementById("dev-delete-avaliacoes-id");
-    let dev_delete_avaliacoes = document.getElementById("dev-delete-avaliacoes");
-    let dev_read_avaliacoes = document.getElementById("dev-read-avaliacoes");
+    let devCreateAvaliacoesN = document.getElementById("dev-create-avaliacoes-n");
+    let devCreateAvaliacoes = document.getElementById("dev-create-avaliacoes");
+    let devDeleteAvaliacoesAll = document.getElementById("dev-delete-avaliacoes-all");
+    let devDeleteAvaliacoesId = document.getElementById("dev-delete-avaliacoes-id");
+    let devDeleteAvaliacoes = document.getElementById("dev-delete-avaliacoes");
+    let devReadAvaliacoes = document.getElementById("dev-read-avaliacoes");
 
     if (
-        !(dev_create_avaliacoes_n instanceof HTMLInputElement) ||
-        !(dev_create_avaliacoes instanceof HTMLButtonElement) ||
-        !(dev_delete_avaliacoes_all instanceof HTMLButtonElement) ||
-        !(dev_delete_avaliacoes_id instanceof HTMLInputElement) ||
-        !(dev_delete_avaliacoes instanceof HTMLButtonElement) ||
-        !(dev_read_avaliacoes instanceof HTMLButtonElement)
+        !(devCreateAvaliacoesN instanceof HTMLInputElement) ||
+        !(devCreateAvaliacoes instanceof HTMLButtonElement) ||
+        !(devDeleteAvaliacoesAll instanceof HTMLButtonElement) ||
+        !(devDeleteAvaliacoesId instanceof HTMLInputElement) ||
+        !(devDeleteAvaliacoes instanceof HTMLButtonElement) ||
+        !(devReadAvaliacoes instanceof HTMLButtonElement)
     )
         return;
 
-    dev_create_avaliacoes.addEventListener("click", async () => {
-        const quantidade = dev_create_avaliacoes_n.value;
-        Faker.criarNAvaliacoes(parseInt(quantidade));
+    devCreateAvaliacoes.addEventListener("click", () => {
+        const quantidade = devCreateAvaliacoesN.value;
+        Faker.criarNAvaliacoes(parseInt(quantidade, 10));
     });
 
-    dev_delete_avaliacoes_all.addEventListener("click", crud_avaliacoes.limparAvaliacoes);
+    devDeleteAvaliacoesAll.addEventListener("click", crudAvaliacoes.limparAvaliacoes);
 
-    dev_delete_avaliacoes.addEventListener("click", async () => {
-        const id = dev_delete_avaliacoes_id.value;
-        if (await crud_avaliacoes.excluirAvaliacao(id)) {
-            console.log(`dev_delete_avaliacoes: avaliação ${id} foi deletado!`);
+    devDeleteAvaliacoes.addEventListener("click", async () => {
+        const id = devDeleteAvaliacoesId.value;
+        if (await crudAvaliacoes.excluirAvaliacao(id)) {
+            console.warn(`dev_delete_avaliacoes: avaliação ${id} foi deletado!`);
         } else {
-            console.log(
+            console.error(
                 `dev_delete_avaliacoes: Não foi possível encontrar a avaliação ou ocorreu um erro.`,
             );
         }
     });
 
-    dev_read_avaliacoes.addEventListener("click", () =>
-        crud_avaliacoes.lerAvaliacoes().then((avaliacoes) => console.log(avaliacoes)),
+    devReadAvaliacoes.addEventListener("click", () =>
+        // eslint-disable-next-line no-restricted-syntax
+        crudAvaliacoes.lerAvaliacoes().then((avaliacoes) => console.log(avaliacoes)),
     );
 }
 
 function setupPortfolioCRUD() {
-    let dev_create_portfolios_n = document.getElementById("dev-create-portfolios-n");
-    let dev_create_portfolios = document.getElementById("dev-create-portfolios");
-    let dev_delete_portfolios_all = document.getElementById("dev-delete-portfolios-all");
-    let dev_delete_portfolios_id = document.getElementById("dev-delete-portfolios-id");
-    let dev_delete_portfolios = document.getElementById("dev-delete-portfolios");
-    let dev_read_portfolios = document.getElementById("dev-read-portfolios");
+    let devCreatePortfoliosN = document.getElementById("dev-create-portfolios-n");
+    let devCreatePortfolios = document.getElementById("dev-create-portfolios");
+    let devDeletePortfoliosAll = document.getElementById("dev-delete-portfolios-all");
+    let devDeletePortfoliosId = document.getElementById("dev-delete-portfolios-id");
+    let devDeletePortfolios = document.getElementById("dev-delete-portfolios");
+    let devReadPortfolios = document.getElementById("dev-read-portfolios");
 
     if (
-        !(dev_create_portfolios_n instanceof HTMLInputElement) ||
-        !(dev_create_portfolios instanceof HTMLButtonElement) ||
-        !(dev_delete_portfolios_all instanceof HTMLButtonElement) ||
-        !(dev_delete_portfolios_id instanceof HTMLInputElement) ||
-        !(dev_delete_portfolios instanceof HTMLButtonElement) ||
-        !(dev_read_portfolios instanceof HTMLButtonElement)
+        !(devCreatePortfoliosN instanceof HTMLInputElement) ||
+        !(devCreatePortfolios instanceof HTMLButtonElement) ||
+        !(devDeletePortfoliosAll instanceof HTMLButtonElement) ||
+        !(devDeletePortfoliosId instanceof HTMLInputElement) ||
+        !(devDeletePortfolios instanceof HTMLButtonElement) ||
+        !(devReadPortfolios instanceof HTMLButtonElement)
     )
         return;
 
-    dev_create_portfolios.addEventListener("click", async () => {
-        const quantidade = dev_create_portfolios_n.value;
-        Faker.criarNPortfolios(parseInt(quantidade));
+    devCreatePortfolios.addEventListener("click", () => {
+        const quantidade = devCreatePortfoliosN.value;
+        Faker.criarNPortfolios(parseInt(quantidade, 10));
     });
 
-    dev_delete_portfolios_all.addEventListener("click", crud_portfolios.limparPortfólio);
+    devDeletePortfoliosAll.addEventListener("click", crudPortfolios.limparPortfólio);
 
-    dev_delete_portfolios.addEventListener("click", async () => {
-        const id = dev_delete_portfolios_id.value;
-        if (await crud_portfolios.excluirPortfolio(id)) {
-            console.log(`dev_delete_portfolios: portfolio ${id} foi deletado!`);
+    devDeletePortfolios.addEventListener("click", async () => {
+        const id = devDeletePortfoliosId.value;
+        if (await crudPortfolios.excluirPortfolio(id)) {
+            console.warn(`dev_delete_portfolios: portfolio ${id} foi deletado!`);
         } else {
-            console.log(
+            console.error(
                 `dev_delete_portfolios: Não foi possível encontrar o portfolio ou ocorreu um erro.`,
             );
         }
     });
 
-    dev_read_portfolios.addEventListener("click", async () =>
-        crud_portfolios.lerPortfolios().then((portfolios) => console.log(portfolios)),
+    devReadPortfolios.addEventListener("click", () =>
+        // eslint-disable-next-line no-restricted-syntax
+        crudPortfolios.lerPortfolios().then((portfolios) => console.log(portfolios)),
     );
 }
 
 function setupOtherCRUD() {
-    let dev_outros_clear = document.getElementById("dev-outros-clear");
+    let devOutrosClear = document.getElementById("dev-outros-clear");
 
-    if (!(dev_outros_clear instanceof HTMLButtonElement)) return;
+    if (!(devOutrosClear instanceof HTMLButtonElement)) return;
 
-    dev_outros_clear.addEventListener("click", () => {
+    devOutrosClear.addEventListener("click", () => {
         // Limpa todas as informações do localStorage
         localStorage.clear();
         // Recarrega a página

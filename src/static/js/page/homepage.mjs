@@ -1,14 +1,14 @@
 //@ts-check
 
-import { Usuarios } from "../jsonf/usuarios.mjs"; // Usuários
-import { Servicos } from "../jsonf/servicos.mjs"; // Serviços
+import { Usuarios } from "../jsonf/usuarios.mjs";
+import { Servicos } from "../jsonf/servicos.mjs";
 
-const crud_usuarios = new Usuarios();
-const crud_servicos = new Servicos();
+const crudUsuarios = new Usuarios();
+const crudServicos = new Servicos();
 
 // Dados dos profissionais
-const profissionais = await crud_usuarios.lerUsuarios();
-const servicos = await crud_servicos.lerServicos();
+const profissionais = await crudUsuarios.lerUsuarios();
+const servicos = await crudServicos.lerServicos();
 
 // Ícones por categoria
 const categoriaIcons = {
@@ -54,13 +54,13 @@ function createProfileCard(id, index, foto, nome, categoria, path) {
     overlay.innerHTML = `${categoriaIcons[categoria] || ""}<span class="ms-2">${nome}</span>`;
 
     if (typeof index === "number") {
-        const number_div = document.createElement("div");
-        number_div.classList.add("number-div");
+        const numberDiv = document.createElement("div");
+        numberDiv.classList.add("number-div");
         const number = document.createElement("h5");
         number.classList.add("number", "space-0");
         number.textContent = String(index + 1);
-        number_div.appendChild(number);
-        card.appendChild(number_div);
+        numberDiv.appendChild(number);
+        card.appendChild(numberDiv);
     }
 
     card.appendChild(img);
@@ -129,8 +129,8 @@ function renderCategoria(categoriaId) {
     }
 }
 
-let array_categorias = new Set(["Fotográfo", "Designer", "Programador", "Garçom", "Outro"]);
-array_categorias.forEach((value) => {
+let categoriasArray = new Set(["Fotográfo", "Designer", "Programador", "Garçom", "Outro"]);
+categoriasArray.forEach((value) => {
     renderCategoria(value);
 });
 
@@ -144,10 +144,12 @@ function filtrarCategoria(cat, btn) {
 
     // Mostra ou esconde categorias
     document.querySelectorAll(".category").forEach((div) => {
-        if (cat === "todos") {
-            div.style.display = "block";
-        } else {
-            div.style.display = div.id === "cat-" + cat ? "block" : "none";
+        if (div instanceof HTMLElement) {
+            if (cat === "todos") {
+                div.style.display = "block";
+            } else {
+                div.style.display = div.id === "cat-" + cat ? "block" : "none";
+            }
         }
     });
 }
@@ -157,8 +159,7 @@ document.addEventListener("DOMContentLoaded", () =>
     filtrarCategoria("todos", document.querySelector(".category-filter .btn")),
 );
 
-document
-    .querySelectorAll("main.body-content div button.btn.btn-dark")
-    .forEach((_button) =>
-        _button.addEventListener("click", () => filtrarCategoria(_button.value, _button)),
-    );
+document.querySelectorAll("main.body-content div button.btn.btn-dark").forEach((_button) => {
+    if (_button instanceof HTMLButtonElement)
+        _button.addEventListener("click", () => filtrarCategoria(_button.value, _button));
+});
