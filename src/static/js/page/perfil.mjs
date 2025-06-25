@@ -103,7 +103,7 @@ async function inicializarPerfil(id, allowEdit) {
     });
 
     const listaServicosNone = document.getElementById("lista-servicos-none");
-    if (!servicosIdList || !(listaServicosNone instanceof HTMLHeadingElement)) return;
+    if (!servicosIdList.size || !(listaServicosNone instanceof HTMLHeadingElement)) return;
     listaServicosNone.classList.add("d-none");
     listaServicos?.appendChild(listServicosElement);
 
