@@ -337,6 +337,7 @@ export async function criarNServicos(quantidade, onlyForFakeUsers) {
             contato: json.contatos[contatoIndex],
             descricao: json.descricoes[descricaoIndex],
             imagem: `https://picsum.photos/seed/${genRandNumber({ max: 100 })}/200`,
+            preco: genRandNumber({ min: 100, max: 5000, double: true }),
             fake: true,
         });
     }
