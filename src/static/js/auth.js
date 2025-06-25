@@ -174,7 +174,8 @@ async function realizarLogin() {
     }
 
     const credenciais = _users.filter(
-        (_user) => (_user.email === _login || _user.username === _password) && _user.senha,
+        (_user) =>
+            (_user.email === _login || _user.username === _login) && _user.senha === _password,
     )[0];
 
     if (!credenciais) {
