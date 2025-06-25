@@ -210,21 +210,29 @@ export async function criarNAvaliacoes(quantidade) {
 
     for (let i = 0; i < quantidade; i++) {
         const contratoIdIndex = genRandNumber({ max: contratos.length });
-        const contratanteIdIndex = genRandNumber({ max: usuarios.length });
+        const imagemSeed = genRandNumber({ max: contratos.length });
         const comentarioIndex = genRandNumber({ max: json.avaliacoes.length });
+        const contratanteIdIndex = genRandNumber({ max: usuarios.length });
+        
 
         // TODO: Verificar os pós/contras de inserir os valoroes diretamente
         // na base de dados sem necessidade de um vetor
         crudAvaliacoes.criarAvaliacao({
-            // number
-            // TODO: Evitar que contratadoId === contratanteId
+            // string|number
+            servicoId: contratos[contratoIdIndex].servicoId,
+            // string|number
             contratoId: contratos[contratoIdIndex].id,
+            // string|number
+            usuarioId: usuarios[contratanteIdIndex].id,
             // number
-            contratanteId: usuarios[contratanteIdIndex].id,
-            // number
-            nota: genRandNumber({ max: 11 }),
+            nota: genRandNumber({ max: 5 }),
             // string
             comentario: json.avaliacoes[comentarioIndex],
+            // string
+            imagem: `https://picsum.photos/seed/${imagemSeed}/200`,
+            // string
+            data: new Date().toISOString(),
+            // boolean
             fake: true,
         });
     }
