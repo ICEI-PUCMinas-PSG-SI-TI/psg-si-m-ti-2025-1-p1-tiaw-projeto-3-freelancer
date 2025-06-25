@@ -4,6 +4,7 @@ import * as Faker from "./lib/faker.mjs";
 import { ensureInteger, isNonEmptyString } from "./tools.mjs";
 import { assertBase64ConvertableImage, imageFileToBase64 } from "./lib/tools.mjs";
 import { assertBoolean, assertStringNonEmpty } from "./lib/validate.mjs";
+import { retornarIdSeLogado, retornarTipoDeUsuarioSeLogado } from "../js/lib/credenciais.mjs";
 
 import { Usuarios } from "./jsonf/usuarios.mjs";
 import { Servicos } from "./jsonf/servicos.mjs";
@@ -482,7 +483,7 @@ async function commitAddLink() {
     }
 
     for (const element of _portfolio.secoes) {
-        if (element.ordem !== sectionId) {
+        if (element.ordem === sectionId) {
             if (!element.contents) element.contents = [];
             element.contents.push({
                 blob: newURL || "",
@@ -718,10 +719,15 @@ function createAddLinkSubSection(portfolioId, sectionId) {
     return addNewLink;
 }
 
-function createNoLinkSubSection() {
+function createNoLinkSubSection(canEdit) {
     let information = document.createElement("p");
     information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
-    information.innerText = "Não há links cadastrados, edite o portfólio para adicionar um!";
+    if (canEdit) {
+        information.innerText = "Não há links cadastrados, edite o portfólio para adicionar um!";
+    } else {
+        information.innerText = "Não há links cadastrados nesta seção.";
+    }
+
     return information;
 }
 
@@ -729,7 +735,7 @@ function createNoLinkSubSection() {
  * @param {boolean} edit
  */
 function createEditPortfolioButton(edit) {
-    const _edit = edit === true;
+    assertBoolean(edit);
 
     const button = document.createElement("button");
     button.classList.add(
@@ -748,7 +754,7 @@ function createEditPortfolioButton(edit) {
     toggleEditElementImg.classList.add("icon-dark", "icon-24px", "space-0", "me-2");
     toggleEditElementP.classList.add("space-0");
 
-    if (_edit) {
+    if (edit) {
         toggleEditElementImg.src = "static/action-icons/close.svg";
         toggleEditElementP.innerText = "Finalizar edição";
     } else {
@@ -758,7 +764,7 @@ function createEditPortfolioButton(edit) {
 
     button.appendChild(toggleEditElementImg);
     button.appendChild(toggleEditElementP);
-    button.addEventListener("click", () => toggleEditParam(!_edit));
+    button.addEventListener("click", () => toggleEditParam(!edit));
 
     return button;
 }
@@ -894,7 +900,7 @@ async function createReviewSection(
     if (!_sectionId || !_portfolioUserId) throw new Error("Object is null");
 
     const _sectionName = sectionName || "Avaliações";
-    const _sectionDescription = sectionDescription || "Clientes satisfeitos!";
+    const _sectionDescription = sectionDescription || "";
 
     const sectionHeader = createSectionHeader(
         "star",
@@ -922,23 +928,23 @@ async function createReviewSection(
     if (!avaliacoes?.length) {
         let information = document.createElement("p");
         information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
-        information.innerHTML = `Não há avaliações para este usuário, você pode utilizar a&nbsp;<a href="/dev">página de desenvolvimento</a>&nbsp;para gerar uma avaliação.`;
+        information.innerHTML = `Nenhuma avaliação para este usuário.`;
         contentBlobsScrool.appendChild(information);
     } else {
         // Lê todas as avaliações
         // TODO: Otimizar > Informações do serviço da avaliação
         avaliacoes
-            .filter((avaliacao) => avaliacao.usuarioId === _portfolioUserId)
+            .filter((avaliacao) => avaliacao.servico?.usuarioId === _portfolioUserId)
             .forEach((avaliacao) => {
                 const { nota, usuario, servico } = avaliacao;
                 const nomeUsuario = usuario?.nome || "Usuário";
                 const tituloServico = servico?.titulo || "Serviço";
                 const comentario =
                     avaliacao.comentario?.substring(0, 200) || "O usuário não deixou comentários";
+                const servicoUrl = `/detalhes?id=${servico?.id}`;
 
                 // TODO: replace 'placeholder_profile'
                 contentBlobsScrool.innerHTML += `<div class="d-inline-block float-none me-3">
-                <a class="text-decoration-none space-0" href="#">
                     <div class="card">
                         <div class="card-body">
                             <div class="row card-aval-limit">
@@ -948,7 +954,10 @@ async function createReviewSection(
                                     </div>
                                     <div class="max-width-80">
                                         <h6 class="text-truncate">${nomeUsuario}</h6>
-                                        <p class="space-0 text-truncate">⭐ ${nota} - ${tituloServico}</p>
+                                        <p class="space-0 text-truncate center-xy d-flex">
+                                            <span class="badge bg-primary me-1">⭐ ${nota}/5</span>
+                                            <a href="${servicoUrl}">${tituloServico}</a>
+                                        </p>
                                     </div>
                                 </div>
                                 <hr>
@@ -958,7 +967,6 @@ async function createReviewSection(
                             </div>
                         </div>
                     </div>
-                </a>
             </div>`;
             });
     }
@@ -985,6 +993,7 @@ function createImageSection(
     sectionDescription,
     enableEdit,
     content,
+    canEdit,
 ) {
     const _sectionId = ensureInteger(sectionId);
 
@@ -1058,7 +1067,12 @@ function createImageSection(
     } else {
         let information = document.createElement("p");
         information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
-        information.innerText = "Não há imagens cadastrados, edite o portfólio para adicionar uma!";
+        if (canEdit) {
+            information.innerText =
+                "Não há imagens cadastrados, edite o portfólio para adicionar uma!";
+        } else {
+            information.innerText = "Não há imagens cadastradas nesta seção.";
+        }
         contentBlobsScrool.appendChild(information);
     }
 
@@ -1081,7 +1095,7 @@ function createImageSection(
         contentAddDiv1Input.addEventListener("change", () => {
             // Watch change in input of files and check if they are valid
             try {
-                assertBase64ConvertableImage(contentAddDiv1Input.files);
+                assertBase64ConvertableImage(contentAddDiv1Input.files[0]);
             } catch (error) {
                 alert(error);
                 contentAddDiv1Input.value = "";
@@ -1137,6 +1151,7 @@ function createLinkSection(
     sectionDescription,
     enableEdit,
     content,
+    canEdit,
 ) {
     if (!portfolioId || !sectionId) throw new Error("Object is null");
 
@@ -1209,7 +1224,7 @@ function createLinkSection(
             }
         }
     } else {
-        contentBlobs.appendChild(createNoLinkSubSection());
+        contentBlobs.appendChild(createNoLinkSubSection(canEdit));
     }
 
     if (enableEdit) {
@@ -1221,25 +1236,30 @@ function createLinkSection(
     return contentContainer;
 }
 
-async function renderizarInformacoesUsuario(userId, enableEdit) {
+async function renderizarInformacoesUsuario(userId, enableEdit, canEdit) {
     assertBoolean(enableEdit);
 
-    let toggleEditElement = document.getElementById("toggle-edit-div");
-    if (!(toggleEditElement instanceof HTMLDivElement)) return;
-    toggleEditElement.appendChild(createEditPortfolioButton(enableEdit));
+    if (canEdit) {
+        let toggleEditElement = document.getElementById("toggle-edit-div");
+        if (toggleEditElement instanceof HTMLDivElement) {
+            toggleEditElement.appendChild(createEditPortfolioButton(enableEdit));
+            toggleEditElement.classList.remove("d-none");
+        }
+    }
 
     const portfolioUser = await crudUsuarios.lerUsuario(userId);
     if (!portfolioUser) throw new Error("setupPortfolioPage: no user");
 
     const _usuarioPortfolio = {
         nome: portfolioUser.nome,
-        biografia: portfolioUser.biografia || "Sem descrição informada",
+        biografia: portfolioUser.biografia || "Não possui biografia",
         foto: portfolioUser.foto || `https://picsum.photos/seed/${userId}/200`,
+        username: portfolioUser.username,
     };
 
     // TODO: adicionar contato e e-mail?
     // TODO: Se não preenchido na hora do cadastro?
-    if (Object.hasOwn(_usuarioPortfolio, "nome"))
+    if (!Object.hasOwn(_usuarioPortfolio, "nome"))
         throw new Error(
             "setupPortfolioPage: não foi possível verificar alguma informação do usuário",
         );
@@ -1262,7 +1282,7 @@ async function renderizarInformacoesUsuario(userId, enableEdit) {
         throw new Error("Algum elemento HTML não pode ser encontrado!");
 
     portfolioName.innerText = _usuarioPortfolio.nome || "Nome não registrado";
-    portfolioUsername.innerText = `@${userId}`;
+    portfolioUsername.innerText = `@${_usuarioPortfolio.username}`;
     portfolioPicture.src = _usuarioPortfolio.foto;
     portfolioDescricao.innerText = _usuarioPortfolio.biografia;
 
@@ -1325,7 +1345,7 @@ function configurarEditPopups(portfolioId) {
     popupDeleteImageCancel?.addEventListener("click", () =>
         toggleDisplayNoneOnElement("popup-delete-image", true),
     );
-    popupDeleteImageConfirm?.addEventListener("click", () => commitDeleteImage);
+    popupDeleteImageConfirm?.addEventListener("click", commitDeleteImage);
 
     const popupDeleteLinkClose = document.getElementById("popup-delete-link-close");
     const popupDeleteLinkCancel = document.getElementById("popup-delete-link-cancel");
@@ -1337,7 +1357,7 @@ function configurarEditPopups(portfolioId) {
     popupDeleteLinkCancel?.addEventListener("click", () =>
         toggleDisplayNoneOnElement("popup-delete-link", true),
     );
-    popupDeleteLinkConfirm?.addEventListener("click", () => commitDeleteLink);
+    popupDeleteLinkConfirm?.addEventListener("click", commitDeleteLink);
 }
 
 /**
@@ -1345,15 +1365,20 @@ function configurarEditPopups(portfolioId) {
  * @param {boolean} enableEdit
  */
 // TODO: Remover async dessa função ou dividir em funcoes menores
-async function renderizarPortfolio(portfolioId, enableEdit) {
+async function renderizarPortfolio(portfolioId, enableEdit, usuarioLogadoId, ehAdmin) {
     assertStringNonEmpty(portfolioId);
     assertBoolean(enableEdit);
 
     const portfolioToRender = await crudPortfolios.lerPortfolio(portfolioId);
-    if (portfolioToRender?.id) {
+    if (!portfolioToRender?.id) {
         alert("A id informada para o portfólio não existe!");
-        location.assign("/portfolios");
+        location.assign("/portfolio");
         return;
+    }
+
+    let canEdit = ehAdmin || usuarioLogadoId === portfolioToRender.usuarioId;
+    if (!canEdit && enableEdit) {
+        enableEdit = false;
     }
 
     // Habilita o container do portfólio
@@ -1365,7 +1390,7 @@ async function renderizarPortfolio(portfolioId, enableEdit) {
 
     const portfolioUserId = portfolioToRender.usuarioId;
 
-    renderizarInformacoesUsuario(enableEdit);
+    renderizarInformacoesUsuario(portfolioUserId, enableEdit, canEdit);
 
     const portfolioSecoes = document.getElementById("portfolio-secoes");
 
@@ -1376,7 +1401,11 @@ async function renderizarPortfolio(portfolioId, enableEdit) {
     if (!portfolioToRender.secoes?.length && !enableEdit) {
         let information = document.createElement("h5");
         information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
-        information.innerText = "Portfólio vazio, edite o portfólio para adicionar uma seção!";
+        if (canEdit) {
+            information.innerText = "Portfólio vazio, edite o portfólio para adicionar uma seção!";
+        } else {
+            information.innerText = "Portfólio vazio, o usuário não adicionou nenhuma seção!";
+        }
         portfolioSecoes.appendChild(information);
         return;
     }
@@ -1418,6 +1447,7 @@ async function renderizarPortfolio(portfolioId, enableEdit) {
                     descricao,
                     enableEdit,
                     contents,
+                    canEdit,
                 );
                 break;
             // categoriaId(2): Links
@@ -1429,10 +1459,44 @@ async function renderizarPortfolio(portfolioId, enableEdit) {
                     descricao,
                     enableEdit,
                     contents,
+                    canEdit,
                 );
                 break;
         }
         if (child) portfolioSecoes.appendChild(child);
+    });
+}
+
+function setupPortfolioSetupUser(usuarioId) {
+    const portfolioUserCreateButton = document.getElementById("portfolio-user-create-btn");
+    const portfolioUserCreateName = document.getElementById("porfolio-user-nome");
+
+    if (
+        !(portfolioUserCreateButton instanceof HTMLButtonElement) ||
+        !(portfolioUserCreateName instanceof HTMLInputElement)
+    )
+        throw new Error("Algum elemento HTML não pode ser encontrado!");
+
+    portfolioUserCreateButton.addEventListener("click", async () => {
+        const portfolioName = portfolioUserCreateName.value;
+        if (portfolioName.trim() === "") {
+            alert("Digite um nome para o portfólio!");
+            return;
+        }
+        // Criar portfólio para o usuário de id $?
+        let portfolioId = await crudPortfolios.criarPortfolio({
+            nome: portfolioName,
+            usuarioId: usuarioId,
+            secoes: [],
+        });
+
+        if (!portfolioId) {
+            alert("Ocorreu um erro ao criar o portfólio");
+            return;
+        }
+
+        // Abrir o portfólio de id $?
+        setIdParam(portfolioId.id);
     });
 }
 
@@ -1461,6 +1525,7 @@ async function listarUsuariosNaConfiguracao() {
         portfolioSetupCreateButton.addEventListener("click", async () => {
             // Criar portfólio para o usuário de id $?
             let portfolioId = await crudPortfolios.criarPortfolio({
+                nome: "Portfólio",
                 usuarioId: portfolioSetupCreateSelect.value,
                 secoes: [],
             });
@@ -1482,9 +1547,11 @@ async function listarUsuariosNaConfiguracao() {
     portfolioSetupCreateSelect.appendChild(option);
 }
 
-async function listarPortfoliosNaConfiguracao() {
-    let portfolioSetupSelectSelect = document.getElementById("portfolio-setup-select-select");
-    let portfolioSetupSelectButton = document.getElementById("portfolio-setup-select-btn");
+async function listarPortfoliosNaConfiguracao(usuarioId, ehAdmin) {
+    const portfolioSetupSelectSelect = document.getElementById("portfolio-setup-select-select");
+    const portfolioSetupSelectButton = document.getElementById("portfolio-setup-select-btn");
+    const portfolioAdminCreate = document.getElementById("portfolio-admin-create");
+    const portfolioAdminFaker = document.getElementById("portfolio-admin-faker");
 
     if (
         !(portfolioSetupSelectSelect instanceof HTMLSelectElement) ||
@@ -1492,21 +1559,30 @@ async function listarPortfoliosNaConfiguracao() {
     )
         throw new Error("Algum elemento HTML não pode ser encontrado!");
 
-    // Lê os portfolios e usuários disponíveis
-    const _portfolios = await crudPortfolios.lerPortfolios();
+    // === boolean & true
+    let _portfolios = await crudPortfolios.lerPortfolios();
+    if (ehAdmin === true && portfolioAdminCreate && portfolioAdminFaker) {
+        portfolioAdminCreate.classList.remove("d-none");
+        portfolioAdminFaker.classList.remove("d-none");
+    } else {
+        _portfolios = _portfolios.filter((portfolio) => portfolio.usuarioId === usuarioId);
+    }
 
-    // Se existem portfólios, adiciona-os à lista (abrir portfólio)
-    if (_portfolios?.length) {
-        for (const element of _portfolios) {
+    // Lê os portfolios e usuários disponíveis
+    if (_portfolios.length) {
+        _portfolios.forEach((element) => {
             let option = document.createElement("option");
             option.value = String(element.id);
-            option.innerText = `Portfólio de id(${element.id})`;
+            let portfolioName;
+            if (element.nome) portfolioName = element.nome;
+            else portfolioName = `Portfólio de id(${element.id})`;
+            option.innerText = portfolioName;
             portfolioSetupSelectSelect.appendChild(option);
-        }
+        });
         portfolioSetupSelectButton.classList.remove("disabled");
         portfolioSetupSelectButton.addEventListener("click", () =>
             // Abrir o portfólio de id $?
-            setIdParam(parseInt(portfolioSetupSelectSelect.value, 10)),
+            setIdParam(portfolioSetupSelectSelect.value),
         );
     } else {
         let option = document.createElement("option");
@@ -1532,28 +1608,34 @@ function setupPortfolioSetupMicroDev() {
 }
 
 // Configura a página inicial de visualizar/criar portfólios
-function renderizarConfiguracaoPortfolio() {
+function renderizarConfiguracaoPortfolio(idUsuario, ehAdmin) {
     // Mostra os elementos da página de setup do portfólio
     // TODO: Adicionar a pagina dinamicamente
     toggleDisplayNoneOnElement("portfolio-setup", false);
+
     // Adiciona usuários a página de setup de portfólio
-    listarUsuariosNaConfiguracao();
+    if (ehAdmin) listarUsuariosNaConfiguracao();
     // Adiciona portfólios a página de setup de portfólio
-    listarPortfoliosNaConfiguracao();
+    listarPortfoliosNaConfiguracao(idUsuario, ehAdmin);
     // Adiciona opções de desenvolvedor a página de setup de portfólio
-    setupPortfolioSetupMicroDev();
+    if (ehAdmin) setupPortfolioSetupMicroDev();
+    // Adiciona a opção de criar novo portfólio para o usuário logado
+    setupPortfolioSetupUser(idUsuario);
 }
 
 function iniciarlizarPortfolio() {
     // Verificar as informações na id
     let params = new URLSearchParams(location.search);
-    let id = params.get("id");
+    let portfolioId = params.get("id");
     let edit = params.get("edit") === "true";
     // Se tem ?id, carrega as informações do portfolio, caso não haja, renderiza a página de criação e/ou abertura
-    if (id) {
-        renderizarPortfolio(id, edit);
+
+    const ehAdmin = retornarTipoDeUsuarioSeLogado({ naoInvalidar: true }) === "admin";
+    const usuarioId = retornarIdSeLogado();
+    if (portfolioId) {
+        renderizarPortfolio(portfolioId, edit, usuarioId, ehAdmin);
     } else {
-        renderizarConfiguracaoPortfolio();
+        renderizarConfiguracaoPortfolio(usuarioId, ehAdmin);
     }
 }
 

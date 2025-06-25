@@ -130,6 +130,7 @@ export async function criarNPortfolios(quantidade) {
         // na base de dados sem necessidade de um vetor
         crudPortfolios.criarPortfolio({
             // number
+            nome: `Portfólio do ${usuarios[userIdIndex].nome}`,
             usuarioId: usuarios[userIdIndex].id,
             secoes: secoes,
             fake: true,

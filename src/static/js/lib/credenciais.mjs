@@ -37,6 +37,20 @@ export function retornarIdSeLogado(opts = {}) {
 
 /**
  * @param {{naoInvalidar?: boolean}} opts
+ * @returns {string} ID do usuário logado
+ */
+export function retornarTipoDeUsuarioSeLogado(opts = {}) {
+    const userTipo = localStorage.getItem(buildKey("tipo"));
+    if (userTipo) return userTipo.toLowerCase();
+
+    if (opts.naoInvalidar === true) return "";
+    alert("Informações de usuário não encontradas, realizando logout!");
+    realizarLogout();
+    return "";
+}
+
+/**
+ * @param {{naoInvalidar?: boolean}} opts
  * @returns {string} Nome do usuário logado
  */
 export function retornaNomeSeLogado(opts = {}) {

@@ -20,6 +20,8 @@ const API_URL = "/portfolios";
 export class PortfolioObject {
     /** @type {string|number|null} */
     id = null;
+    /** @type {string|null} */
+    nome = null;
     /** @type {string|number|null} */
     usuarioId = null;
     /** @type {PortfolioSecaoObject[]|null} */
@@ -29,6 +31,8 @@ export class PortfolioObject {
 export class PortfolioObjectExpanded {
     /** @type {string|number|null} */
     id = null;
+    /** @type {string|null} */
+    nome = null;
     /** @type {string|number|null} */
     usuarioId = null;
     /** @type {PortfolioSecaoObject[]|null} */
