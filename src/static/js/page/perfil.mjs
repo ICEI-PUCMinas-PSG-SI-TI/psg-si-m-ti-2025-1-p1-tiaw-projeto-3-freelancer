@@ -58,7 +58,7 @@ async function inicializarPerfil(id, allowEdit) {
         htmlProfileParagBiografia.parentElement?.classList.remove("d-none");
         htmlProfileParagBiografia.innerText = _usuarios.biografia;
     }
-    if (_usuarios.contatos?.length) {
+    if (_usuarios.contatos?.length && _usuarios.contatos[0]) {
         const _contato = _usuarios.contatos[0];
         htmlProfileLinkContato.classList.remove("d-none");
         htmlProfileLinkContato.innerText = _contato;
