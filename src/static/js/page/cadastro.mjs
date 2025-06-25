@@ -3,7 +3,7 @@
 import { Usuarios } from "../jsonf/usuarios.mjs";
 import { Templates } from "../jsonf/templates.mjs";
 
-import { retornarIdSeLogado } from "../lib/credenciais.mjs";
+import { retornarIdSeLogado, atualizarInformacoesLocais } from "../lib/credenciais.mjs";
 import { imageFileToBase64 } from "../lib/tools.mjs";
 
 const crudUsuarios = new Usuarios();
@@ -118,7 +118,10 @@ async function atualizarCadastro() {
 
     crudUsuarios
         .atualizarUsuario(informacoesUsuario)
-        .then(() => alert("Informações atualizadas com sucesso!"));
+        .then(() => {
+            alert("Informações atualizadas com sucesso!")
+            atualizarInformacoesLocais();
+    }   );
 }
 
 async function preencherValores() {

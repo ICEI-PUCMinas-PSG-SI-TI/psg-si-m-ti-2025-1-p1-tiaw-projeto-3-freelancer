@@ -8,6 +8,10 @@ const lucreMaisKey = "LucreM";
 
 const buildKey = (key) => `${lucreMaisKey}.${key}`;
 
+function saveCredentials(obj) {
+    Object.keys(obj).forEach((k) => localStorage.setItem(buildKey(k), obj[k]));
+}
+
 function apagarDados() {
     // does this remove and get objectkeys again?
     for (const item of Object.keys(localStorage).filter((key) => key.startsWith(lucreMaisKey))) {
@@ -61,6 +65,15 @@ export function retornaNomeSeLogado(opts = {}) {
     alert("Informações de usuário não encontradas, realizando logout!");
     realizarLogout();
     return "";
+}
+
+export async function atualizarInformacoesLocais(){
+    try {
+        let usuarioRequest = await crudUsuarios.lerUsuario(retornarIdSeLogado());
+        saveCredentials(usuarioRequest);
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 export async function retornarIdSeLoginValido() {
