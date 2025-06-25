@@ -50,7 +50,8 @@ async function inicializarDetalhes(id) {
 
     initializeIfNotNull("servico-contato", servico.contato);
     initializeIfNotNull("servico-prazo", servico.prazo);
-    initializeIfNotNull("servico-preco", servico.preco);
+    if(typeof servico.preco === "number")
+        initializeIfNotNull("servico-preco", `R$ ${servico.preco}`);
 
     // Preenche avaliações
     const avaliacoesDiv = document.getElementById("avaliacoes-lista");
