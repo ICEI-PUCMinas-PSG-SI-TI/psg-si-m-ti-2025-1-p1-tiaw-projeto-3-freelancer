@@ -5,6 +5,8 @@ import { Usuarios } from "../jsonf/usuarios.mjs";
 import { Avaliacoes, AvaliacaoObjectExpanded } from "../jsonf/avaliacoes.mjs";
 // eslint-disable-next-line no-unused-vars
 import { Servicos, ServicoObjectExpanded } from "../jsonf/servicos.mjs";
+// eslint-disable-next-line no-unused-vars
+import { Portfolios, PortfolioObjectExpanded } from "../jsonf/portfolios.mjs";
 
 import { assertStringNonEmpty } from "../lib/validate.mjs";
 import { retornarIdSeLogado } from "../lib/credenciais.mjs";
@@ -12,6 +14,7 @@ import { retornarIdSeLogado } from "../lib/credenciais.mjs";
 const crudUsuarios = new Usuarios();
 const crudAvaliacoes = new Avaliacoes();
 const crudServicos = new Servicos();
+const crudPortfolios = new Portfolios();
 
 const htmlBackgroundImage = document.querySelector("div.body-section.body-content");
 const htmlProfileImgPicture = document.getElementById("profile-picture-perfil");
@@ -77,6 +80,23 @@ async function inicializarPerfil(id, allowEdit) {
     if (allowEdit) {
         htmlProfileButtonEditPerfil?.classList.remove("d-none");
         htmlProfileButtonEditPerfil?.addEventListener("click", () => location.assign("/cadastro"));
+    }
+
+    let portfolios = await crudPortfolios.lerPortfolios();
+    if (portfolios) {
+        const listaPortfolioContainer = document.getElementById("lista-portfolio-container");
+        const listaPortfolio = document.getElementById("lista-portfolios");
+        portfolios = portfolios.filter((portfolio) => portfolio.usuarioId);
+        if (portfolios.length && listaPortfolioContainer && listaPortfolio) {
+            listaPortfolioContainer.classList.remove("d-none");
+            const frag = document.createDocumentFragment();
+            portfolios.forEach((portfolio) =>
+                frag.appendChild(createPortfolioCard(portfolio.id, portfolio.nome)),
+            );
+            listaPortfolioContainer.appendChild(frag);
+        } else {
+            console.error("Null object");
+        }
     }
 
     let servicos = await crudServicos.lerServicos();
@@ -163,6 +183,29 @@ function createAvaliacaoCard(nome, nota, comentario) {
         <p class="card-text mb-0">${comentario}</p>
     </div>`;
     return li;
+}
+
+function createPortfolioCard(id, nome) {
+    const a = document.createElement("a");
+    a.classList.add(
+        "btn",
+        "btn-outline-primary",
+        "center-xy",
+        "d-flex",
+        "d-row",
+        "w-100",
+        "center-xy",
+        "mb-2",
+    );
+    a.href = `/portfolio?id=${id}`;
+    a.innerHTML = `<div class="m-3">
+            <i class="bi bi-briefcase-fill icon-64px"></i>
+        </div>
+        <div class="d-flex flex-column">
+            <h5 class="space-0">Portfólio</h5>
+            <p class="space-0">${nome}</p>
+        </div>`;
+    return a;
 }
 
 function estrelas(nota) {

@@ -69,12 +69,12 @@
                 aria-expanded="false">
                 Serviços
               </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="/serviços">Cadastrar serviços</a></li>
-              </ul>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/portfolio">Portfólios</a>
-              </li>
+            </li>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/serviços">Cadastrar serviços</a></li>
+            </ul>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/portfolio">Portfólios</a>
             </li>
           </ul>
           <!-- id.navbar.darkmode -->
@@ -110,7 +110,9 @@
     <!-- Conteúdo da página -->
     <div class="body-section body-content d-flex flex-column align-items-center space-0 p-3">
       <!-- Perfil -->
-      <div class="profile-section container-fluid text-center mb-3 limit900px position-relative">
+      <div
+        id="first-container"
+        class="profile-section container-fluid text-center mb-3 limit900px position-relative">
         <button
           id="button-edit-perfil"
           class="btn btn-primary position-absolute button-edit-perfil m-2 d-none">
@@ -140,8 +142,15 @@
             email@example.com
           </a>
         </div>
+        <div
+          id="lista-portfolio-container"
+          class="container-fluid limit900px space-0 stats-section mb-3 d-none">
+          <hr />
+          <div class="mb-2 w-100">
+            <ul id="lista-portfolios" class="list-group"></ul>
+          </div>
+        </div>
       </div>
-
       <div
         class="profile-section container-fluid text-center space-0 mb-3 limit900px position-relative p-3 d-none">
         <p id="profile-biografia" class="border rounded space-0 p-2">
