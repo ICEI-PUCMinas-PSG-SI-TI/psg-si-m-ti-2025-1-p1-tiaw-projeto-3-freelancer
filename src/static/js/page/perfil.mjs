@@ -86,7 +86,7 @@ async function inicializarPerfil(id, allowEdit) {
     if (portfolios) {
         const listaPortfolioContainer = document.getElementById("lista-portfolio-container");
         const listaPortfolio = document.getElementById("lista-portfolios");
-        portfolios = portfolios.filter((portfolio) => portfolio.usuarioId);
+        portfolios = portfolios.filter((portfolio) => portfolio.usuarioId === id);
         if (portfolios.length && listaPortfolioContainer && listaPortfolio) {
             listaPortfolioContainer.classList.remove("d-none");
             const frag = document.createDocumentFragment();
