@@ -1,10 +1,13 @@
 // @ts-check
 
 import { Servicos } from "./jsonf/servicos.mjs";
+import { Templates } from "./jsonf/templates.mjs";
+
 import { retornarIdSeLogado } from "./lib/credenciais.mjs";
 import { imageFileToBase64 } from "./lib/tools.mjs";
 
 const crudServicos = new Servicos();
+const crudtemplates = new Templates();
 
 class EditContext {
     constructor(id, foto, fake, prazo, preco) {
@@ -172,13 +175,28 @@ function render() {
     });
 }
 
-function iniciarlizarPaginaServicos() {
+async function iniciarlizarPaginaServicos() {
     setupServicos();
 
     const htmlFormCadastroServico = document.getElementById("form-servico");
     const htmlUlListaServicos = document.getElementById("lista-servicos");
 
     if (!(htmlFormCadastroServico instanceof HTMLFormElement) || !htmlUlListaServicos) return;
+
+    const htmlSelectCategoria = document.getElementById("categoriaId");
+    if (htmlSelectCategoria instanceof HTMLSelectElement) {
+        const templates = await crudtemplates.lerTemplates();
+        if (templates) {
+            const frag = document.createDocumentFragment();
+            templates.categoriasServicos.forEach((categoria) => {
+                const opt = document.createElement("option");
+                opt.value = categoria;
+                opt.innerText = categoria;
+                frag.appendChild(opt);
+            });
+            htmlSelectCategoria.appendChild(frag);
+        }
+    }
 
     htmlFormCadastroServico.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -189,7 +207,6 @@ function iniciarlizarPaginaServicos() {
         const htmlInputImagem = document.getElementById("imagem");
         const htmlInputTitulo = document.getElementById("titulo");
         const htmlInputContato = document.getElementById("contato");
-        const htmlSelectCategoria = document.getElementById("categoriaId");
         const htmlTextAreaDescricao = document.getElementById("descricao");
         const htmlInputPrazo = document.getElementById("prazo");
         const htmlInputPreco = document.getElementById("preco");

@@ -1,10 +1,13 @@
 //@ts-check
 
 import { Usuarios } from "../jsonf/usuarios.mjs";
+import { Templates } from "../jsonf/templates.mjs";
+
 import { retornarIdSeLogado } from "../lib/credenciais.mjs";
 import { imageFileToBase64 } from "../lib/tools.mjs";
 
 const crudUsuarios = new Usuarios();
+const crudtemplates = new Templates();
 
 const htmlCadastroInputNome = document.getElementById("nome");
 const htmlCadastroInputEmail = document.getElementById("email");
@@ -169,12 +172,26 @@ async function preencherValores() {
     if (usuario.foto) htmlCadastroImgPreview.src = usuario.foto;
 }
 
-function inicializarCadastro() {
+async function inicializarCadastro() {
     if (!(htmlCadastroForm instanceof HTMLFormElement)) return;
     htmlCadastroForm.addEventListener("submit", (event) => {
         event.preventDefault();
         atualizarCadastro();
     });
+
+    if (htmlCadastroSelectProfissao instanceof HTMLSelectElement) {
+        const templates = await crudtemplates.lerTemplates();
+        if (templates) {
+            const frag = document.createDocumentFragment();
+            templates.categoriasServicos.forEach((categoria) => {
+                const opt = document.createElement("option");
+                opt.value = categoria;
+                opt.innerText = categoria;
+                frag.appendChild(opt);
+            });
+            htmlCadastroSelectProfissao.appendChild(frag);
+        }
+    }
 
     preencherValores();
 
