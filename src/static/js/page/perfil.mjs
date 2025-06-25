@@ -1,13 +1,17 @@
 //@ts-check
 
 import { Usuarios } from "../jsonf/usuarios.mjs";
+// eslint-disable-next-line no-unused-vars
 import { Avaliacoes, AvaliacaoObjectExpanded } from "../jsonf/avaliacoes.mjs";
+// eslint-disable-next-line no-unused-vars
+import { Servicos, ServicoObjectExpanded } from "../jsonf/servicos.mjs";
 
 import { assertStringNonEmpty } from "../lib/validate.mjs";
 import { retornarIdSeLogado } from "../lib/credenciais.mjs";
 
 const crudUsuarios = new Usuarios();
-const cruAvaliacoes = new Avaliacoes();
+const crudAvaliacoes = new Avaliacoes();
+const crudServicos = new Servicos();
 
 const htmlBackgroundImage = document.querySelector("div.body-section.body-content");
 const htmlProfileImgPicture = document.getElementById("profile-picture-perfil");
@@ -75,9 +79,36 @@ async function inicializarPerfil(id, allowEdit) {
         htmlProfileButtonEditPerfil?.addEventListener("click", () => location.assign("/cadastro"));
     }
 
-    let avaliacoes = await cruAvaliacoes.lerAvaliacoes();
+    let servicos = await crudServicos.lerServicos();
+    if (!servicos.length) return;
+    servicos = servicos.filter((servico) => servico.usuarioId === id);
+    const servicosIdList = new Set();
+
+    const listaServicos = document.getElementById("lista-servicos");
+    const listServicosElement = document.createElement("div");
+    listServicosElement.classList.add("mb-2", "w-100");
+    servicos.forEach((servico) => {
+        servicosIdList.add(servico.id);
+        // Adicionar no html
+        listServicosElement.appendChild(
+            createServicoCard(
+                servico.imagem,
+                servico.titulo,
+                servico.categoria,
+                servico.descricao,
+                servico.contato,
+            ),
+        );
+    });
+
+    const listaServicosNone = document.getElementById("lista-servicos-none");
+    if (!servicosIdList || !(listaServicosNone instanceof HTMLHeadingElement)) return;
+    listaServicosNone.classList.add("d-none");
+    listaServicos?.appendChild(listServicosElement);
+
+    let avaliacoes = await crudAvaliacoes.lerAvaliacoes();
     if (!avaliacoes?.length) return;
-    avaliacoes = avaliacoes.filter((avaliacao) => avaliacao.usuarioId === id);
+    avaliacoes = avaliacoes.filter((avaliacao) => servicosIdList.has(avaliacao.servicoId));
     if (!avaliacoes.length) return;
 
     let total = 0;
@@ -89,6 +120,23 @@ async function inicializarPerfil(id, allowEdit) {
 
     htmlProfileParagNota.innerText = (total / quant).toFixed(2).toString();
     htmlProfileParagAval.innerText = String(quant);
+}
+
+function createServicoCard(imagem, titulo, categoria, descricao, contato) {
+    const a = document.createElement("a");
+    a.className =
+        "list-group-item d-flex justify-content-between align-items-center flex-wrap text-decoration-none";
+
+    a.innerHTML = `<div class="d-flex me-3">
+            <img width="64px" heigth="64px" src="${imagem || "static/icons/images.svg"}" />
+        </div>
+        <div class="d-flex flex-column flex-grow-1 me-3">
+            <strong>${titulo}</strong>
+            <small>${categoria}</small>
+            <p class="mb-1">${descricao}</p>
+            <small>Contato: ${contato}</small>
+        </div>`;
+    return a;
 }
 
 function carregarDadosDaUrl() {

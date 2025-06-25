@@ -91,7 +91,7 @@ async function inicializarDetalhes(id) {
 }
 
 function estrelas(nota){
-    if(!nota) return "Nota não informada";
+    if(!nota) return "Nota não registrada";
     nota = nota.toFixed(2).toString()
     return `${"⭐".repeat(nota)} (${nota}/5)`
 }
