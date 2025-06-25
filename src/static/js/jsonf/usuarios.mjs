@@ -15,6 +15,8 @@ import { assertStringNonEmpty } from "../lib/validate.mjs";
 
 const API_URL = "/usuarios";
 
+export const NotFoundError = new Error("O usuário não existe!");
+
 export class UsuarioObject {
     /** @type string|number|null */
     id = null;
@@ -80,7 +82,14 @@ export class Usuarios {
         assertStringNonEmpty(id);
         return fetch(`${API_URL}/${id}`, {
             method: "GET",
-        }).then((response) => response.json());
+        }).then((response) => {
+            if (response.ok) return response.json();
+            else if (response.status === 404) throw NotFoundError;
+            else
+                throw new Error(
+                    `Request não pode ser completada: ${response.status} - ${response.statusText}`,
+                );
+        });
     }
 
     /**
