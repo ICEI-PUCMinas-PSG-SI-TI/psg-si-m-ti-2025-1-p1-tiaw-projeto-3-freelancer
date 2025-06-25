@@ -74,21 +74,26 @@ async function inicializarDetalhes(id) {
     avaliacoes.forEach((avaliacao) => {
         const { nota, usuario, comentario } = avaliacao;
         const nome = usuario?.nome || "usuário";
-        const estrelas = "⭐".repeat(nota || 1) || "Nota não informada";
 
         total += nota || 0;
         quant++;
 
         avaliacoesDiv.innerHTML += `<div class="card mb-3 bg-dark-subtle detalhes-servico-avaliacao">
                 <div class="card-body">
-                <h6 class="card-title mb-1">${nome} <span class="text-warning">${estrelas}</span></h6>
+                <h6 class="card-title mb-1">${nome} <span class="text-warning">${estrelas(nota)}</span></h6>
                 <p class="card-text mb-0">${comentario}</p>
                 </div>
             </div>`;
     });
 
     // Media
-    initializeIfNotNull("servico-avaliacao", total / quant);
+    initializeIfNotNull("servico-avaliacao", estrelas(total / quant));
+}
+
+function estrelas(nota){
+    if(!nota) return "Nota não informada";
+    nota = nota.toFixed(2).toString()
+    return `${"⭐".repeat(nota)} (${nota}/5)`
 }
 
 function carregarDadosDaUrl() {

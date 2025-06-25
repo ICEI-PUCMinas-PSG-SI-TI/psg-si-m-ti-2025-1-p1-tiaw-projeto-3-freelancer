@@ -1,10 +1,13 @@
 //@ts-check
 
 import { Usuarios } from "../jsonf/usuarios.mjs";
+import { Avaliacoes, AvaliacaoObjectExpanded } from "../jsonf/avaliacoes.mjs";
+
 import { assertStringNonEmpty } from "../lib/validate.mjs";
 import { retornarIdSeLogado } from "../lib/credenciais.mjs";
 
 const crudUsuarios = new Usuarios();
+const cruAvaliacoes = new Avaliacoes();
 
 const htmlBackgroundImage = document.querySelector("div.body-section.body-content");
 const htmlProfileImgPicture = document.getElementById("profile-picture-perfil");
@@ -26,9 +29,6 @@ async function inicializarPerfil(id, allowEdit) {
         alert("Não foi possível ler as informações desse usuário!");
         return;
     }
-
-    const nota = "4.4";
-    const avaliacoes = "152";
 
     if (
         !(htmlProfileImgPicture instanceof HTMLImageElement) ||
@@ -70,13 +70,25 @@ async function inicializarPerfil(id, allowEdit) {
         htmlProfileLinkEmail.href = `mailto:${_usuarios.email}`;
     }
 
-    htmlProfileParagNota.innerText = nota;
-    htmlProfileParagAval.innerText = avaliacoes;
-
     if (allowEdit) {
         htmlProfileButtonEditPerfil?.classList.remove("d-none");
         htmlProfileButtonEditPerfil?.addEventListener("click", () => location.assign("/cadastro"));
     }
+
+    let avaliacoes = await cruAvaliacoes.lerAvaliacoes();
+    if (!avaliacoes?.length) return;
+    avaliacoes = avaliacoes.filter((avaliacao) => avaliacao.usuarioId === id);
+    if (!avaliacoes.length) return;
+
+    let total = 0;
+    let quant = 0;
+    avaliacoes.forEach((avaliacao) => {
+        total += avaliacao.nota || 0;
+        quant++;
+    });
+
+    htmlProfileParagNota.innerText = (total / quant).toFixed(2).toString();
+    htmlProfileParagAval.innerText = String(quant);
 }
 
 function carregarDadosDaUrl() {
