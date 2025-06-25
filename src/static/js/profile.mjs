@@ -32,7 +32,7 @@ function inicializarProfile() {
         // mostrarModalProfile()
         htmlDivModalProfile?.classList.remove("d-none"),
     );
-    htmlLogout.addEventListener("click", () => realizarLogout);
+    htmlLogout.addEventListener("click", realizarLogout);
     htmlDivModalProfile.addEventListener("click", () =>
         // esconderModalProfile()
         htmlDivModalProfile?.classList.add("d-none"),
