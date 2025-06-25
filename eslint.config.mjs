@@ -28,6 +28,13 @@ export default defineConfig([
                     message: "Unexpected property on console object was called",
                 },
             ],
+            "one-var": [
+                "warn",
+                {
+                    initialized: "never",
+                    uninitialized: "consecutive",
+                },
+            ],
         },
     },
 ]);

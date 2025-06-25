@@ -7,9 +7,12 @@ import { imageFileToBase64 } from "./lib/tools.mjs";
 const crudServicos = new Servicos();
 
 class EditContext {
-    constructor(id, foto) {
+    constructor(id, foto, fake, prazo, preco) {
         this.id = id;
         this.foto = foto;
+        this.fake = fake;
+        this.prazo = prazo;
+        this.preco = preco;
     }
 }
 
@@ -64,8 +67,8 @@ function setupServicos() {
 
 function _editarServico(servicoId) {
     if (!servicoId) return;
-    crudServicos.lerServico(servicoId).then((_servico) => {
-        if (!_servico) return;
+    crudServicos.lerServico(servicoId).then((servico) => {
+        if (!servico) return;
 
         // TODO: Re-add image to preview
         const htmlSVGPlaceholder = document.getElementById("image_placeholder");
@@ -87,16 +90,22 @@ function _editarServico(servicoId) {
             return;
         }
 
-        htmlInputTitulo.value = _servico.titulo;
-        htmlInputContato.value = _servico.contato;
-        htmlSelectCategoria.value = _servico.categoriaId.toString();
-        htmlTextAreaDescricao.value = _servico.descricao;
-        if (_servico.imagem) {
+        htmlInputTitulo.value = servico.titulo || "Serviço";
+        htmlInputContato.value = servico.contato || "Contato não informado";
+        htmlSelectCategoria.value = servico.categoria || "Categoria não infomada";
+        htmlTextAreaDescricao.value = servico.descricao || "Nenhuma descrição informada";
+        if (servico.imagem) {
             htmlSVGPlaceholder.classList.add("d-none");
             htmlImagePreview.classList.remove("d-none");
-            htmlImagePreview.src = _servico.imagem;
+            htmlImagePreview.src = servico.imagem;
         }
-        editContext = new EditContext(_servico.id, _servico.imagem);
+        editContext = new EditContext(
+            servico.id,
+            servico.imagem,
+            servico.fake,
+            servico.prazo,
+            servico.preco,
+        );
         document.querySelector(".body-content")?.scrollIntoView();
     });
 }
@@ -154,7 +163,7 @@ function render() {
                 if (!servico.id) return;
                 // TODO: avoid deleting if editing
                 if (servico.id === editContext?.id) return;
-                await crudServicos.excluirServico(servico.id);
+                await crudServicos.excluirServico(String(servico.id));
                 render();
             });
 
@@ -225,6 +234,10 @@ function iniciarlizarPaginaServicos() {
                 contato,
                 descricao,
                 imagem: _bs64img,
+                ativo: true,
+                fake: editContext.fake,
+                prazo: editContext.prazo,
+                preco: editContext.preco,
             });
             editContext = null;
         } else {
@@ -237,6 +250,11 @@ function iniciarlizarPaginaServicos() {
                 contato,
                 descricao,
                 imagem: _bs64img,
+                ativo: true,
+                fake: false,
+                // TODO: Replace fields
+                prazo: "Prazo não informado",
+                preco: "Valores não informados",
             });
         }
 

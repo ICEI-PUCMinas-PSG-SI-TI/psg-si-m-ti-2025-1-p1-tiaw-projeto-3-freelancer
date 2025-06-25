@@ -1,56 +1,249 @@
 {
-    "avaliacoes": [
-        {
-            "comentario": "adadada",
-            "data": "2025-06-10T00:32:26.065Z",
-            "estrelas": 5,
-            "id": "de1a",
-            "imagem": "data:image/jpeg;base64,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OqYB5huwBm/7z7c2kEuxultXH3oHTrcCwYrACQEOknozxigkBMndTSdDkEaRzUgqgaZyYlY6pYYSZwCfDNG4oskzwR/aAtkVwiGZ3q2Q0X/1OxQaOcO/gj+0EAKgtiQpn8V5Darm1pZBbN/bJTA+NuGWlL67mafYCairiAIg+KS+TsTaVfFNrZlCFmbgbVirWa9yJoTuzjioO9l0Fa2mjxsQcDnNBBmH4SghG6S4TxrTGykylCoyqUglb2mrLWNXNeQ2rwe72yfBOOxY6UOazxROJYrn1UkdkcNXTRHQsjal2PVADGVnusXpgfjdnq25DeSPKpk6T+SpGxYScogyOaEnhhIajtvzXkNq8Hu9tQ4tOg1XCSVGXbe3DyNqkqTeoHINhw3rAwqDeNuqTKiXkgP0oQxKaAE/FCbEnhQh8UNWbUbh/VLH6XXKNCJFsvZP+RUElrm/mTWe6m+gFS3dKISiYG57gjVrmVzKz9cf/9oADAMBAAIAAwAAABD3333333333333333333333333333333333333333333333333333333333333H33333k1Pbf7/wB999999vv9slf889999t7y8+8+d99999999999999999999999999999999999999999999999999999999999999999999//EAB0RAQADAAIDAQAAAAAAAAAAAAEAESEgMUFRYGH/2gAIAQMBAT8Q+DC2orzLAQMJ5g7VRLDYXWWxOTLmJ5Na62JKIhhjVL9QlnrmxrSHsTEqLFnI1Leopaz94AqPfwv/xAAkEQACAQIFBAMAAAAAAAAAAAABEQAhMSBBcYHhUWBhsZHR8P/aAAgBAgEBPxDsNgWUqJQeQYq4SyjQmIGM3F9AlJdPcvQNNsQWyOcVEnu5Vo6Iqbv7EusXMEugq+PuCibNfM/PbEACVjCJJVGnMzNp05hsKq8s6zQ0WBi3TWUEFnYv/8QAJhABAQACAgIBAwQDAAAAAAAAAREAITFRQWEwcYHwEHCR8SCx0f/aAAgBAQABPxD98uRPoMRwI9OVtGd/I6lEVCkQFGKb5NfrOnUPkwioKofT4Tx8JGMzwXKVZi7dyBDwIx6BXh+Mm1NEIghSEPhDgu9/BAA4AAYy20ixywU9ms/Mf+YS5Lba1PClPGCk67V88m9s59NON20uFkCpvnHwRcKqlEEmpSbdxjo+psTcPS/U5MsQEWLEAAYQ2IhqgDIJl7Kzk2BtjwCmp1gC9hcPS/Vly1hyxAOYjH085+Y74W+uozCnIg18ejXNbF1FEVstmsWM5Xv4ogdLHyJjYHFwBoANDNcG/MKqAfofcyZPFrIICWuPOfiesX7dcKsh5zWoNbaDBETNAjwVcX+0MntLp0PIVXCd398hE/POazz7sULoEh2u8KSvHTMsUDvggYnz1NH9glttNuM/Md/kUNeDGLXR0GjWgDxlBtHvUqSdMvZzkxU+86Mh0/6zgSstejV0onc5L9G4u0UBqwo3Ws/E9f4gE94qeVa38rkF69uKjUg+NSRYYivJwell0FSIKFaCvAhn5jv8iiNFA2cP3AnpwRdpJTjpAUdjnsP5z1P5wsaHk8mPTEfuYPEt/M0QSGEaXb4RLt0X74Xn1kAoCClY3mF0ECTcWMNzQ8i0EjjXv7hPI+ETSNEYjmjW5U+wZfsejPGapnYxVoipY+pijnxWGDdt4tSaFGgSUG/INAjoc/sM/sMVVVXt/fH/2Q==",
-            "nome": "Nome e Sobrenome"
-        },
-        {
-            "comentario": "vdvdvs",
-            "data": "2025-06-10T00:32:43.463Z",
-            "estrelas": 5,
-            "id": "b3e6",
-            "imagem": "data:image/jpeg;base64,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OqYB5huwBm/7z7c2kEuxultXH3oHTrcCwYrACQEOknozxigkBMndTSdDkEaRzUgqgaZyYlY6pYYSZwCfDNG4oskzwR/aAtkVwiGZ3q2Q0X/1OxQaOcO/gj+0EAKgtiQpn8V5Darm1pZBbN/bJTA+NuGWlL67mafYCairiAIg+KS+TsTaVfFNrZlCFmbgbVirWa9yJoTuzjioO9l0Fa2mjxsQcDnNBBmH4SghG6S4TxrTGykylCoyqUglb2mrLWNXNeQ2rwe72yfBOOxY6UOazxROJYrn1UkdkcNXTRHQsjal2PVADGVnusXpgfjdnq25DeSPKpk6T+SpGxYScogyOaEnhhIajtvzXkNq8Hu9tQ4tOg1XCSVGXbe3DyNqkqTeoHINhw3rAwqDeNuqTKiXkgP0oQxKaAE/FCbEnhQh8UNWbUbh/VLH6XXKNCJFsvZP+RUElrm/mTWe6m+gFS3dKISiYG57gjVrmVzKz9cf/9oADAMBAAIAAwAAABD3333333333333333333333333333333333333333333333333333333333333H33333k1Pbf7/wB999999vv9slf889999t7y8+8+d99999999999999999999999999999999999999999999999999999999999999999999//EAB0RAQADAAIDAQAAAAAAAAAAAAEAESEgMUFRYGH/2gAIAQMBAT8Q+DC2orzLAQMJ5g7VRLDYXWWxOTLmJ5Na62JKIhhjVL9QlnrmxrSHsTEqLFnI1Leopaz94AqPfwv/xAAkEQACAQIFBAMAAAAAAAAAAAABEQAhMSBBcYHhUWBhsZHR8P/aAAgBAgEBPxDsNgWUqJQeQYq4SyjQmIGM3F9AlJdPcvQNNsQWyOcVEnu5Vo6Iqbv7EusXMEugq+PuCibNfM/PbEACVjCJJVGnMzNp05hsKq8s6zQ0WBi3TWUEFnYv/8QAJhABAQACAgIBAwQDAAAAAAAAAREAITFRQWEwcYHwEHCR8SCx0f/aAAgBAQABPxD98uRPoMRwI9OVtGd/I6lEVCkQFGKb5NfrOnUPkwioKofT4Tx8JGMzwXKVZi7dyBDwIx6BXh+Mm1NEIghSEPhDgu9/BAA4AAYy20ixywU9ms/Mf+YS5Lba1PClPGCk67V88m9s59NON20uFkCpvnHwRcKqlEEmpSbdxjo+psTcPS/U5MsQEWLEAAYQ2IhqgDIJl7Kzk2BtjwCmp1gC9hcPS/Vly1hyxAOYjH085+Y74W+uozCnIg18ejXNbF1FEVstmsWM5Xv4ogdLHyJjYHFwBoANDNcG/MKqAfofcyZPFrIICWuPOfiesX7dcKsh5zWoNbaDBETNAjwVcX+0MntLp0PIVXCd398hE/POazz7sULoEh2u8KSvHTMsUDvggYnz1NH9glttNuM/Md/kUNeDGLXR0GjWgDxlBtHvUqSdMvZzkxU+86Mh0/6zgSstejV0onc5L9G4u0UBqwo3Ws/E9f4gE94qeVa38rkF69uKjUg+NSRYYivJwell0FSIKFaCvAhn5jv8iiNFA2cP3AnpwRdpJTjpAUdjnsP5z1P5wsaHk8mPTEfuYPEt/M0QSGEaXb4RLt0X74Xn1kAoCClY3mF0ECTcWMNzQ8i0EjjXv7hPI+ETSNEYjmjW5U+wZfsejPGapnYxVoipY+pijnxWGDdt4tSaFGgSUG/INAjoc/sM/sMVVVXt/fH/2Q==",
-            "nome": "Nome e Sobrenome"
-        }
-    ],
-    "categorias_secoes": [
-        {
-            "id": 0,
-            "nome": "Imagens"
-        },
+    "avaliacoes": [],
+    "categoriasServicos": [
         {
             "id": 1,
-            "nome": "Avaliações"
+            "nome": "Analista de dados"
         },
         {
             "id": 2,
-            "nome": "Links Externos"
-        }
-    ],
-    "categorias_servicos": [
-        {
-            "id": 0,
-            "nome": "Refrigeração"
-        },
-        {
-            "id": 1,
             "nome": "Climatização"
         },
         {
-            "id": 2,
+            "id": 3,
+            "nome": "Coach de produtividade"
+        },
+        {
+            "id": 4,
+            "nome": "Consultor de TI"
+        },
+        {
+            "id": 5,
+            "nome": "Consultor de branding"
+        },
+        {
+            "id": 6,
+            "nome": "Consultor de negócios"
+        },
+        {
+            "id": 7,
+            "nome": "Consultor financeiro"
+        },
+        {
+            "id": 8,
+            "nome": "Copywriter"
+        },
+        {
+            "id": 9,
+            "nome": "Criador de anúncios digitais"
+        },
+        {
+            "id": 10,
+            "nome": "Criador de conteúdo"
+        },
+        {
+            "id": 11,
+            "nome": "Criador de logotipos"
+        },
+        {
+            "id": 12,
+            "nome": "Criador de lojas virtuais"
+        },
+        {
+            "id": 13,
+            "nome": "Desenvolvedor de aplicativos"
+        },
+        {
+            "id": 14,
+            "nome": "Desenvolvedor web"
+        },
+        {
+            "id": 15,
+            "nome": "Designer de UX/UI"
+        },
+        {
+            "id": 16,
+            "nome": "Designer de apresentações"
+        },
+        {
+            "id": 17,
+            "nome": "Designer de embalagens"
+        },
+        {
+            "id": 18,
+            "nome": "Designer de estampas"
+        },
+        {
+            "id": 19,
+            "nome": "Designer de identidade visual"
+        },
+        {
+            "id": 20,
+            "nome": "Designer de materiais impressos"
+        },
+        {
+            "id": 21,
+            "nome": "Designer de redes sociais"
+        },
+        {
+            "id": 22,
+            "nome": "Designer gráfico"
+        },
+        {
+            "id": 23,
+            "nome": "Editor de fotografia"
+        },
+        {
+            "id": 24,
+            "nome": "Editor de vídeos"
+        },
+        {
+            "id": 25,
             "nome": "Eletricista"
         },
         {
-            "id": 3,
+            "id": 26,
+            "nome": "Escritor de e-books"
+        },
+        {
+            "id": 27,
+            "nome": "Especialista em SEO"
+        },
+        {
+            "id": 28,
+            "nome": "Especialista em WordPress"
+        },
+        {
+            "id": 29,
+            "nome": "Especialista em automação"
+        },
+        {
+            "id": 30,
+            "nome": "Especialista em cursos online"
+        },
+        {
+            "id": 31,
+            "nome": "Especialista em e-mail marketing"
+        },
+        {
+            "id": 32,
+            "nome": "Especialista em segurança digital"
+        },
+        {
+            "id": 33,
+            "nome": "Fotografia e Vídeo"
+        },
+        {
+            "id": 34,
+            "nome": "Fotógrafo de eventos"
+        },
+        {
+            "id": 35,
+            "nome": "Fotógrafo de imóveis"
+        },
+        {
+            "id": 36,
+            "nome": "Fotógrafo de moda"
+        },
+        {
+            "id": 37,
+            "nome": "Fotógrafo de natureza"
+        },
+        {
+            "id": 38,
+            "nome": "Fotógrafo de produtos"
+        },
+        {
+            "id": 39,
+            "nome": "Fotógrafo de retratos"
+        },
+        {
+            "id": 40,
+            "nome": "Fotógrafo gastronômico"
+        },
+        {
+            "id": 41,
+            "nome": "Gestor de tráfego pago"
+        },
+        {
+            "id": 42,
+            "nome": "Ilustrador digital"
+        },
+        {
+            "id": 43,
+            "nome": "Marketing e Publicidade"
+        },
+        {
+            "id": 44,
+            "nome": "Mentor de carreira"
+        },
+        {
+            "id": 45,
             "nome": "Outro"
+        },
+        {
+            "id": 46,
+            "nome": "Professor particular"
+        },
+        {
+            "id": 47,
+            "nome": "Programador back-end"
+        },
+        {
+            "id": 48,
+            "nome": "Programador front-end"
+        },
+        {
+            "id": 49,
+            "nome": "Redator publicitário"
+        },
+        {
+            "id": 50,
+            "nome": "Refrigeração"
+        },
+        {
+            "id": 51,
+            "nome": "Revisor de textos"
+        },
+        {
+            "id": 52,
+            "nome": "Roteirista de vídeos"
+        },
+        {
+            "id": 53,
+            "nome": "Social media"
+        },
+        {
+            "id": 54,
+            "nome": "Tradutor"
+        },
+        {
+            "id": 55,
+            "nome": "Videomaker"
         }
     ],
     "contratos": [],
-    "exemplos": {
+    "portfolios": [],
+    "servicos": [],
+    "statusContrato": [
+        {
+            "id": 0,
+            "nome": "Aguardando pagamento"
+        },
+        {
+            "id": 1,
+            "nome": "Pendente (Pagamento realizado)"
+        },
+        {
+            "id": 2,
+            "nome": "Em andamento"
+        },
+        {
+            "id": 3,
+            "nome": "Concluído"
+        }
+    ],
+    "templates": {
         "avaliacoes": [
             "O atendimento foi excelente! Muito prestativo e ágil.",
             "Serviço rápido e eficaz. Super recomendo!",
@@ -155,8 +348,9 @@
             "Criação de soluções descentralizadas e seguras com tecnologia blockchain.",
             "Estratégias de crescimento acelerado para startups e empresas que buscam expansão rápida."
         ],
-        "categorias_servicos": [
+        "categoriasServicos": [
             "Analista de dados",
+            "Climatização",
             "Coach de produtividade",
             "Consultor de TI",
             "Consultor de branding",
@@ -179,6 +373,7 @@
             "Designer gráfico",
             "Editor de fotografia",
             "Editor de vídeos",
+            "Eletricista",
             "Escritor de e-books",
             "Especialista em SEO",
             "Especialista em WordPress",
@@ -186,6 +381,7 @@
             "Especialista em cursos online",
             "Especialista em e-mail marketing",
             "Especialista em segurança digital",
+            "Fotografia e Vídeo",
             "Fotógrafo de eventos",
             "Fotógrafo de imóveis",
             "Fotógrafo de moda",
@@ -195,18 +391,19 @@
             "Fotógrafo gastronômico",
             "Gestor de tráfego pago",
             "Ilustrador digital",
+            "Marketing e Publicidade",
             "Mentor de carreira",
+            "Outro",
             "Professor particular",
             "Programador back-end",
             "Programador front-end",
             "Redator publicitário",
+            "Refrigeração",
             "Revisor de textos",
             "Roteirista de vídeos",
             "Social media",
             "Tradutor",
-            "Videomaker",
-            "Fotografia e Vídeo",
-            "Marketing e Publicidade"
+            "Videomaker"
         ],
         "cidades": [
             "Ibicuitinga (CE)",
@@ -668,7 +865,7 @@
             "davilucca.soares@example.com",
             "pedrohenrique.carvalho@example.com"
         ],
-        "links_externos": [
+        "linksExternos": [
             "https://www.instagram.com/cristiano",
             "https://www.instagram.com/leomessi",
             "https://www.instagram.com/selenagomez",
@@ -881,45 +1078,5 @@
             "freelancer"
         ]
     },
-    "portfolios": [],
-    "servicos": [
-        {
-            "avaliacao": "⭐⭐⭐⭐⭐ (4.9/5)",
-            "avaliacoes": [
-                {
-                    "comentario": "Ótimo trabalho, entregou antes do prazo e superou as expectativas!",
-                    "estrelas": "⭐⭐⭐⭐⭐",
-                    "nome": "Maria Oliveira"
-                },
-                {
-                    "comentario": "Serviço de qualidade, recomendo!",
-                    "estrelas": "⭐⭐⭐⭐",
-                    "nome": "Carlos Souza"
-                }
-            ],
-            "categoria": "Design Gráfico",
-            "descricao": "Criação de um logotipo moderno e profissional para sua empresa.",
-            "freelancer": "João Silva",
-            "id": "detaserv",
-            "imagem": "static/img/background.jpg",
-            "prazo": "7 dias úteis",
-            "preco": "R$ 500,00",
-            "titulo": "Criação de Logotipo Profissional"
-        }
-    ],
-    "status_contrato": [
-        {
-            "id": 0,
-            "nome": "Aguardando Pagamento"
-        },
-        {
-            "id": 1,
-            "nome": "Pendente"
-        },
-        {
-            "id": 2,
-            "nome": "Concluído"
-        }
-    ],
     "usuarios": []
 }

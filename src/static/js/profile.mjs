@@ -13,8 +13,6 @@ function inicializarProfile() {
     const userId = retornarIdSeLogado();
     if (!userId) return;
 
-    const userInfo = crudUsuarios.lerUsuario(userId);
-
     const htmlImageProfileBig = document.getElementById("profile-picture-big");
     const htmlImageProfile = document.getElementById("profile-picture-tiny");
     const htmlParProfile = document.getElementById("profile-name");
@@ -42,9 +40,11 @@ function inicializarProfile() {
     htmlImageProfile.classList.remove("d-none");
     htmlButtonShowPerfil?.addEventListener("click", () => location.assign("/perfil"));
 
-    userInfo.then((response) => {
-        htmlImageProfileBig.src = response.foto;
-        htmlImageProfile.src = response.foto;
+    crudUsuarios.lerUsuario(userId).then((response) => {
+        if (response.foto) {
+            htmlImageProfileBig.src = response.foto;
+            htmlImageProfile.src = response.foto;
+        }
     });
 }
 

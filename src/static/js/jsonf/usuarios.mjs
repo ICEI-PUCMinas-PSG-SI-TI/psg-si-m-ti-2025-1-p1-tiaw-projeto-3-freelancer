@@ -15,6 +15,47 @@ import { assertStringNonEmpty } from "../lib/validate.mjs";
 
 const API_URL = "/usuarios";
 
+export class UsuarioObject {
+    /** @type string|number|null */
+    id = null;
+    /** @type boolean? */
+    ativo = null;
+    /** @type string? */
+    foto = null;
+    /** @type string? */
+    nome = null;
+    /** @type string? */
+    dataNascimento = null;
+    /** @type string? */
+    email = null;
+    /** @type string? */
+    senha = null;
+    /** @type string? */
+    tipo = null;
+    /** @type string? */
+    username = null;
+    /** @type string? */
+    cpfCnpj = null;
+    /** @type string? */
+    cidade = null;
+    /** @type string? */
+    biografia = null;
+    /** @type string[]? */
+    contatos = null;
+    /** @type boolean? */
+    formularioConcluido = null;
+    /** @type string? */
+    profissao = null;
+    /** @type string? */
+    sexo = null;
+    /** @type string? */
+    escolaridade = null;
+    /** @type string? */
+    dataCadastro = null;
+    /** @type boolean? */
+    fake = null;
+}
+
 export class Usuarios {
     // https://tenor.com/view/lazy-pat-down-gif-24710885
     assertObjetoUsuario(usuario) {
@@ -23,7 +64,7 @@ export class Usuarios {
 
     // TODO: paginate (_page) (_per_page)
     /**
-     * @returns {Promise<Array>}
+     * @returns {Promise<UsuarioObject[]>}
      */
     lerUsuarios() {
         return fetch(API_URL, {
@@ -33,7 +74,7 @@ export class Usuarios {
 
     /**
      * @param {string} id
-     * @returns {Promise<Object>}
+     * @returns {Promise<UsuarioObject>}
      */
     lerUsuario(id) {
         assertStringNonEmpty(id);
@@ -49,16 +90,14 @@ export class Usuarios {
      */
     excluirUsuario(id) {
         assertStringNonEmpty(id);
-        return fetch(`${API_URL}/${id}`, {
-            method: "DELETE",
-        })
+        return fetch(`${API_URL}/${id}`, { method: "DELETE" })
             .then((response) => response.json())
             .then((response) => response.id);
     }
 
     /**
      * Atualiza as informações de um usuário, retorna uma Promessa com as informações atualizadas
-     * @param {Object} usuario
+     * @param {UsuarioObject} usuario
      */
     atualizarUsuario(usuario) {
         // TODO: validar as informações de usuário

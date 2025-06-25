@@ -51,7 +51,7 @@ async function inicializarPerfil(id, allowEdit) {
     }
 
     htmlProfileImgPicture.src = _usuarios.foto || "static/img/placeholder_profile.png";
-    htmlProfileH2ProfileName.innerText = _usuarios.nome;
+    htmlProfileH2ProfileName.innerText = _usuarios.nome || "Nome não registrado";
     htmlProfileParagTitle.innerText = _usuarios.profissao || "Profissão não informada";
     htmlProfileParagCidade.innerText = _usuarios.cidade || "Região não informada";
     if (_usuarios.biografia) {
@@ -65,8 +65,10 @@ async function inicializarPerfil(id, allowEdit) {
         const contatoParsed = _contato.replace(/[^0-9+]/gm, "");
         htmlProfileLinkContato.href = `tel:${contatoParsed}`;
     }
-    htmlProfileLinkEmail.innerText = _usuarios.email;
-    htmlProfileLinkEmail.href = `mailto:${_usuarios.email}`;
+    if (_usuarios.email) {
+        htmlProfileLinkEmail.innerText = _usuarios.email;
+        htmlProfileLinkEmail.href = `mailto:${_usuarios.email}`;
+    }
 
     htmlProfileParagNota.innerText = nota;
     htmlProfileParagAval.innerText = avaliacoes;

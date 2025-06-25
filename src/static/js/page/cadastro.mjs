@@ -22,13 +22,14 @@ const htmlCadastroSelectSexo = document.getElementById("sexo");
 const htmlCadastroInputEscolaridade = document.getElementById("escolaridade");
 
 class EditContext {
-    constructor(json, id, foto, username, dataCadastro, formularioConcluido) {
+    constructor(json, id, foto, username, dataCadastro, formularioConcluido, fake) {
         this.json = json;
         this.id = id;
         this.foto = foto;
         this.username = username;
         this.dataCadastro = dataCadastro;
         this.formularioConcluido = formularioConcluido;
+        this.fake = fake;
     }
 }
 
@@ -94,24 +95,24 @@ async function atualizarCadastro() {
         escolaridade,
         dataCadastro: editContext.dataCadastro,
         formularioConcluido: editContext.formularioConcluido,
+        foto: null,
+        fake: editContext.fake,
     };
 
     // TODO: Tornar foto opcional?
-    let base64Image;
     if (fotoInputFiles?.length) {
         try {
-            base64Image = await imageFileToBase64(fotoInputFiles[0]);
+            informacoesUsuario.foto = await imageFileToBase64(fotoInputFiles[0]);
         } catch (err) {
             alert(err);
         }
     } else if (editContext.foto) {
-        base64Image = editContext.foto;
+        informacoesUsuario.foto = editContext.foto;
     } else {
         alert("Por favor, selecione uma foto.");
         return;
     }
 
-    informacoesUsuario.foto = base64Image;
     crudUsuarios
         .atualizarUsuario(informacoesUsuario)
         .then(() => alert("Informações atualizadas com sucesso!"));
@@ -146,6 +147,7 @@ async function preencherValores() {
         usuario.username,
         usuario.dataCadastro,
         usuario.formularioConcluido,
+        usuario.fake,
     );
 
     if (usuario.nome) htmlCadastroInputNome.value = usuario.nome;
@@ -155,9 +157,7 @@ async function preencherValores() {
     if (usuario.cidade) htmlCadastroInputCidade.value = usuario.cidade;
     if (usuario.biografia) htmlCadastroTextAreaBiografia.value = usuario.biografia;
     if (usuario.escolaridade) htmlCadastroInputEscolaridade.value = usuario.escolaridade;
-
     if (usuario.contatos?.length) htmlCadastroInputContato.value = usuario.contatos[0];
-
     if (usuario.profissao) htmlCadastroSelectProfissao.value = usuario.profissao;
     if (usuario.tipo) htmlCadastroSelectTipo.value = usuario.tipo;
     if (usuario.sexo) htmlCadastroSelectSexo.value = usuario.sexo;

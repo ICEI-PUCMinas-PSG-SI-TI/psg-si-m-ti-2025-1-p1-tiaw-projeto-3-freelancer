@@ -15,6 +15,12 @@
 # secao.contents = Lista de conteúdos da seção
 # secao.contents.blob = Conteúdo da seção (ID da imagem, URL do site, ...)
 # secao.contents.descricao = Descrição sobre o conteúdo
+# fake = Informações foram criadas utilizando ferramentas de desenvolvimento
+
+# portfolios.secoes.portfolioCategoriaId
+# 0 = Imagens
+# 1 = Avaliações
+# 2 = Links Externos
 
 [[portfolios]]
 id = 0
@@ -24,13 +30,13 @@ usuarioId = 0
 nome = "Avaliações"
 descricao = "Cliente satisfeitos!"
 ordem = 0
-categoriaId = 1
+portfolioCategoriaId = 1
 
 [[portfolios.secoes]]
 nome = "Fotos de trabalhos anteriores"
 descricao = "Imagens de serviços realizados"
 ordem = 1
-categoriaId = 0
+portfolioCategoriaId = 0
 contents = [
     {blob = "imagemId", descricao = "Foto" }, 
     {blob = "imagemId", descricao = "Foto" }, 
@@ -41,7 +47,7 @@ contents = [
 nome = "Links Importantes"
 descricao = "Segue lá"
 ordem = 2
-categoriaId = 2
+portfolioCategoriaId = 2
 contents = [
     {blob = "https://example.com", descricao = "GitLab" }, 
     {blob = "https://example.com", descricao = "GitHub" }, 

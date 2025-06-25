@@ -12,7 +12,9 @@ import { Avaliacoes } from "./jsonf/avaliacoes.mjs";
 import { Portfolios } from "./jsonf/portfolios.mjs";
 
 const crudUsuarios = new Usuarios();
+// eslint-disable-next-line no-unused-vars
 const crudServicos = new Servicos();
+// eslint-disable-next-line no-unused-vars
 const crudContratos = new Contratos();
 const crudAvaliacoes = new Avaliacoes();
 const crudPortfolios = new Portfolios();
@@ -199,8 +201,6 @@ function triggerEditSectionInfo(editSectionContext) {
 function triggerAddLink(addLinkContext) {
     if (!(addLinkContext instanceof AddLinkContext)) return;
 
-    context.setupContext(addLinkContext);
-
     preparePopup();
     toggleDisplayNoneOnElement("popup-add-link", false);
 
@@ -282,13 +282,16 @@ async function commitAddAsection() {
     if (!_portfolio.secoes?.length) _portfolio.secoes = [];
 
     // Verificar o maior valor para json.ordem
-    let ultimaSecao = _portfolio.secoes.reduce((pV, i) => (i.ordem > pV.ordem ? i : pV));
+    let ultimaSecao = _portfolio.secoes.reduce((pV, i) => {
+        if (typeof i.ordem === "number" && i.ordem > pV) return i.ordem;
+        else return pV;
+    }, 0);
 
     _portfolio.secoes.push({
-        ordem: ultimaSecao?.ordem || 1,
+        ordem: ultimaSecao + 1,
         nome: formSectionName,
         descricao: formSectionDescription || "",
-        categoriaId: parseInt(formSectionCategoria, 10),
+        portfolioCategoriaId: parseInt(formSectionCategoria, 10),
         contents: [],
     });
 
@@ -312,12 +315,12 @@ async function commitDeleteSection() {
     if (!_portfolioId || !_sectionId) return;
 
     const _portfolio = await crudPortfolios.lerPortfolio(_portfolioId);
-    if (!_portfolio?.secoes.length) {
+    if (!_portfolio.secoes?.length) {
         console.error(`Erro ao editar o portfólio ${_portfolioId}.`);
         return;
     }
 
-    for (let i = 0; i < _portfolio.secoes.length; i++) {
+    for (let i = 0; i < _portfolio.secoes?.length; i++) {
         if (ensureInteger(_portfolio.secoes[i].ordem) === _sectionId) {
             _portfolio.secoes.splice(i, 1);
             break;
@@ -366,7 +369,7 @@ async function commitEditSectionInfo() {
 
     const _portfolio = await crudPortfolios.lerPortfolio(_portfolioId);
 
-    if (!_portfolio?.secoes.length) {
+    if (!_portfolio?.secoes?.length) {
         console.error(`ID0: Erro ao editar categoria do portfolio ${_portfolioId}.`);
         return;
     }
@@ -400,7 +403,7 @@ async function commitEditSectionPosition(editSectionPositionContext) {
     if (!portfolioId || !sectionId) return;
 
     const _portfolio = await crudPortfolios.lerPortfolio(portfolioId);
-    if (!_portfolio?.secoes.length) {
+    if (!_portfolio?.secoes?.length) {
         console.error(`ID0: Erro ao editar categoria do portfolio ${portfolioId}.`);
         return;
     }
@@ -463,7 +466,7 @@ async function commitAddLink() {
     let newDescription = popupAddLinkDescription.value;
 
     const _portfolio = await crudPortfolios.lerPortfolio(portfolioId);
-    if (!_portfolio?.secoes.length)
+    if (!_portfolio?.secoes?.length)
         throw new Error(`ID0: Erro ao editar categoria do portfolio ${portfolioId}.`);
 
     // TODO: useregex?
@@ -479,7 +482,8 @@ async function commitAddLink() {
     }
 
     for (const element of _portfolio.secoes) {
-        if (parseInt(element.ordem, 10) !== sectionId) {
+        if (element.ordem !== sectionId) {
+            if (!element.contents) element.contents = [];
             element.contents.push({
                 blob: newURL || "",
                 descricao: newDescription || "",
@@ -509,10 +513,10 @@ async function commitDeleteBlob() {
 
     const _portfolio = await crudPortfolios.lerPortfolio(portfolioId);
 
-    if (!_portfolio?.secoes.length) throw new Error("Nenhuma seção encontrada!");
+    if (!_portfolio?.secoes?.length) throw new Error("Nenhuma seção encontrada!");
 
     let i = _portfolio.secoes.findIndex((element) => element.ordem === sectionId);
-    if (i === -1 || !_portfolio.secoes[i]?.contents.length)
+    if (i === -1 || !_portfolio.secoes[i]?.contents?.length)
         throw new Error("Seção não encontrada.");
 
     let procurando = true;
@@ -552,19 +556,15 @@ async function commitDeleteLink() {
 async function commitAddImage(portfolioId, sectionId, blob) {
     const base64Image = await imageFileToBase64(blob);
 
-    if (!base64Image.startsWith("data:image/")) {
-        alert("Não é um arquivo de imagem!");
-        return;
-    }
-
     if (!portfolioId || !sectionId) return;
 
     const _portfolio = await crudPortfolios.lerPortfolio(portfolioId);
 
-    if (!_portfolio?.secoes.length) throw new Error("Nenhuma seção encontrada!");
+    if (!_portfolio?.secoes?.length) throw new Error("Nenhuma seção encontrada!");
 
     for (const element of _portfolio.secoes) {
         if (ensureInteger(element.ordem) === sectionId) {
+            if (!element.contents) element.contents = [];
             element.contents.push({
                 // TODO: Add id
                 blob: base64Image,
@@ -775,21 +775,21 @@ async function getMediaAvaliacoes(userId) {
     let avaliacoes = await crudAvaliacoes.lerAvaliacoes();
     // Sem avaliações
     if (!avaliacoes?.length) return null;
-
-    let media = 0;
+    let total = 0;
     let quantidade = 0;
-    for (const element of avaliacoes) {
-        const contratado = await crudContratos.lerContrato(element.contratoId);
-        if (contratado && contratado === userId) {
-            media += element.nota;
-            quantidade++;
-        }
-    }
+    avaliacoes
+        .filter((avaliacao) => avaliacao?.servico?.usuarioId === userId)
+        .forEach((avaliacao) => {
+            if (typeof avaliacao.nota === "number") {
+                total += avaliacao.nota;
+                quantidade++;
+            }
+        });
 
     if (quantidade > 0) {
-        media /= quantidade;
+        total /= quantidade;
         // Arredonda para 2 casas
-        return Math.round(media * 100) / 100;
+        return Math.round(total * 100) / 100;
     }
 
     return null;
@@ -927,32 +927,17 @@ async function createReviewSection(
     } else {
         // Lê todas as avaliações
         // TODO: Otimizar > Informações do serviço da avaliação
-        avaliacoes.forEach(async (avaliacao) => {
-            const comentario = avaliacao.comentario.substring(0, 200);
-            const nota = avaliacao.nota;
-            const contratanteId = avaliacao.contratanteId;
-            // Pega o contratoId da avaliação e filtra
-            const _contatoId = avaliacao.contratoId;
-            if (!_contatoId) return;
+        avaliacoes
+            .filter((avaliacao) => avaliacao.usuarioId === _portfolioUserId)
+            .forEach((avaliacao) => {
+                const { nota, usuario, servico } = avaliacao;
+                const nomeUsuario = usuario?.nome || "Usuário";
+                const tituloServico = servico?.titulo || "Serviço";
+                const comentario =
+                    avaliacao.comentario?.substring(0, 200) || "O usuário não deixou comentários";
 
-            const contrato = await crudContratos.lerContrato(_contatoId);
-            if (!contrato) return;
-
-            const contratadoId = contrato.contratadoId;
-            const _servicoId = String(contrato.servicoId);
-            if (!contratadoId || !_servicoId) return;
-
-            // A partir daqui, continue apenas os contratos que possuem a mesma id que o usuario do portfolio
-            if (contratadoId.toString() !== _portfolioUserId.toString()) return;
-
-            const service = await crudServicos.lerServico(_servicoId);
-            if (!service) return;
-
-            const user = await crudUsuarios.lerUsuario(contratanteId);
-            if (!user) return;
-
-            // TODO: replace 'placeholder_profile'
-            contentBlobsScrool.innerHTML += `<div class="d-inline-block float-none me-3">
+                // TODO: replace 'placeholder_profile'
+                contentBlobsScrool.innerHTML += `<div class="d-inline-block float-none me-3">
                 <a class="text-decoration-none space-0" href="#">
                     <div class="card">
                         <div class="card-body">
@@ -962,8 +947,8 @@ async function createReviewSection(
                                         <img class="icon-32px" src="static/img/placeholder_profile.png"> 
                                     </div>
                                     <div class="max-width-80">
-                                        <h6 class="text-truncate">${user.nome}</h6>
-                                        <p class="space-0 text-truncate">⭐ ${nota} - ${service.titulo}</p>
+                                        <h6 class="text-truncate">${nomeUsuario}</h6>
+                                        <p class="space-0 text-truncate">⭐ ${nota} - ${tituloServico}</p>
                                     </div>
                                 </div>
                                 <hr>
@@ -975,7 +960,7 @@ async function createReviewSection(
                     </div>
                 </a>
             </div>`;
-        });
+            });
     }
 
     contentBlobs.appendChild(contentBlobsScrool);
@@ -990,7 +975,7 @@ async function createReviewSection(
  * @param {string} sectionName
  * @param {string} sectionDescription
  * @param {boolean} enableEdit
- * @param {any[]} content
+ * @param {any[]|null} content
  * @returns {HTMLDivElement|void}
  */
 function createImageSection(
@@ -1142,7 +1127,7 @@ function createImageSection(
  * @param {string} sectionName
  * @param {string} sectionDescription
  * @param {boolean} enableEdit
- * @param {any[]} content
+ * @param {any[]|null} content
  * @returns {HTMLDivElement|void}
  */
 function createLinkSection(
@@ -1276,7 +1261,7 @@ async function renderizarInformacoesUsuario(userId, enableEdit) {
     )
         throw new Error("Algum elemento HTML não pode ser encontrado!");
 
-    portfolioName.innerText = _usuarioPortfolio.nome;
+    portfolioName.innerText = _usuarioPortfolio.nome || "Nome não registrado";
     portfolioUsername.innerText = `@${userId}`;
     portfolioPicture.src = _usuarioPortfolio.foto;
     portfolioDescricao.innerText = _usuarioPortfolio.biografia;
@@ -1365,7 +1350,7 @@ async function renderizarPortfolio(portfolioId, enableEdit) {
     assertBoolean(enableEdit);
 
     const portfolioToRender = await crudPortfolios.lerPortfolio(portfolioId);
-    if (!portfolioToRender) {
+    if (portfolioToRender?.id) {
         alert("A id informada para o portfólio não existe!");
         location.assign("/portfolios");
         return;
@@ -1388,7 +1373,7 @@ async function renderizarPortfolio(portfolioId, enableEdit) {
         throw new Error("Algum elemento HTML não pode ser encontrado!");
 
     // TODO: O usuário pode não ter cadastrado nenhuma seção ainda
-    if (!portfolioToRender.secoes.length && !enableEdit) {
+    if (!portfolioToRender.secoes?.length && !enableEdit) {
         let information = document.createElement("h5");
         information.classList.add("d-flex", "w-100", "space-0", "p-4", "center-xy");
         information.innerText = "Portfólio vazio, edite o portfólio para adicionar uma seção!";
@@ -1397,61 +1382,57 @@ async function renderizarPortfolio(portfolioId, enableEdit) {
     }
 
     // TODO: Permitir apenas 1 seção de avaliações
-    portfolioToRender.secoes.forEach(async (element) => {
+    portfolioToRender.secoes?.forEach(async (element) => {
         // For categoriaId(0), content is optional
-        const { nome, descricao, ordem, categoriaId, contents } = element;
+        const { nome, ordem, portfolioCategoriaId, contents } = element;
 
         if (
             !nome ||
             (!ordem && typeof ordem !== "number") ||
-            (!categoriaId && typeof categoriaId !== "number")
+            typeof portfolioCategoriaId !== "number"
         )
             throw new Error("Algum elemento HTML não pode ser encontrado!");
 
-        switch (categoriaId) {
+        // TODO: temp
+        const portfolioToRenderId = String(portfolioToRender.id);
+        const descricao = element.descricao || "";
+        let child;
+        switch (portfolioCategoriaId) {
             // categoriaId(1): Avaliações
             case 1:
-                {
-                    const child = await createReviewSection(
-                        portfolioToRender.id,
-                        ordem,
-                        nome,
-                        descricao,
-                        enableEdit,
-                        portfolioUserId,
-                    );
-                    if (child) portfolioSecoes.appendChild(child);
-                }
+                child = await createReviewSection(
+                    portfolioToRenderId,
+                    ordem,
+                    nome,
+                    descricao,
+                    enableEdit,
+                    String(portfolioUserId),
+                );
                 break;
             // categoriaId(0): Fotos
             case 0:
-                {
-                    const child = createImageSection(
-                        portfolioToRender.id,
-                        ordem,
-                        nome,
-                        descricao,
-                        enableEdit,
-                        contents,
-                    );
-                    if (child) portfolioSecoes.appendChild(child);
-                }
+                child = createImageSection(
+                    portfolioToRenderId,
+                    ordem,
+                    nome,
+                    descricao,
+                    enableEdit,
+                    contents,
+                );
                 break;
             // categoriaId(2): Links
             case 2:
-                {
-                    const child = createLinkSection(
-                        portfolioToRender.id,
-                        ordem,
-                        nome,
-                        descricao,
-                        enableEdit,
-                        contents,
-                    );
-                    if (child) portfolioSecoes.appendChild(child);
-                }
+                child = createLinkSection(
+                    portfolioToRenderId,
+                    ordem,
+                    nome,
+                    descricao,
+                    enableEdit,
+                    contents,
+                );
                 break;
         }
+        if (child) portfolioSecoes.appendChild(child);
     });
 }
 
@@ -1471,8 +1452,8 @@ async function listarUsuariosNaConfiguracao() {
     // Se existem usuários, adiciona-os à lista (criar novo portfólio)
     if (_usuarios?.length) {
         for (const element of _usuarios) {
-            let option = document.createElement("option");
-            option.value = element.id;
+            const option = document.createElement("option");
+            option.value = String(element.id);
             option.innerText = `Usuário id(${element.id}): ${element.nome}`;
             portfolioSetupCreateSelect.appendChild(option);
         }
@@ -1518,7 +1499,7 @@ async function listarPortfoliosNaConfiguracao() {
     if (_portfolios?.length) {
         for (const element of _portfolios) {
             let option = document.createElement("option");
-            option.value = element.id;
+            option.value = String(element.id);
             option.innerText = `Portfólio de id(${element.id})`;
             portfolioSetupSelectSelect.appendChild(option);
         }

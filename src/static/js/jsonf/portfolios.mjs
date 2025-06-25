@@ -1,6 +1,8 @@
 //@ts-check
 
 import { assertStringNonEmpty } from "../lib/validate.mjs";
+// eslint-disable-next-line no-unused-vars
+import { UsuarioObject } from "./usuarios.mjs";
 
 /*
  * Esse script adiciona os recursos necessários para o CRUD de portfólio
@@ -15,6 +17,46 @@ import { assertStringNonEmpty } from "../lib/validate.mjs";
 
 const API_URL = "/portfolios";
 
+export class PortfolioObject {
+    /** @type {string|number|null} */
+    id = null;
+    /** @type {string|number|null} */
+    usuarioId = null;
+    /** @type {PortfolioSecaoObject[]|null} */
+    secoes = null;
+}
+
+export class PortfolioObjectExpanded {
+    /** @type {string|number|null} */
+    id = null;
+    /** @type {string|number|null} */
+    usuarioId = null;
+    /** @type {PortfolioSecaoObject[]|null} */
+    secoes = null;
+    /** @type {UsuarioObject|null} */
+    usuario = null;
+}
+
+export class PortfolioSecaoObject {
+    /** @type {number|null} */
+    ordem = null;
+    /** @type {string|number|null} */
+    portfolioCategoriaId = null;
+    /** @type {string|null} */
+    nome = null;
+    /** @type {string|null} */
+    descricao = null;
+    /** @type {PortfolioSecaoContentsObject[]|null} */
+    contents = null;
+}
+
+export class PortfolioSecaoContentsObject {
+    /** @type {string|null} */
+    blob = null;
+    /** @type {string|null} */
+    descricao = null;
+}
+
 export class Portfolios {
     // https://tenor.com/view/lazy-pat-down-gif-24710885
     assertObjetoPortfolio(portfolio) {
@@ -23,7 +65,7 @@ export class Portfolios {
 
     // TODO: paginate (_page) (_per_page)
     /**
-     * @returns {Promise<Array>}
+     * @returns {Promise<PortfolioObjectExpanded[]>}
      */
     lerPortfolios() {
         return fetch(API_URL, {
@@ -33,7 +75,7 @@ export class Portfolios {
 
     /**
      * @param {string} id
-     * @returns {Promise<Object>}
+     * @returns {Promise<PortfolioObjectExpanded>}
      */
     lerPortfolio(id) {
         assertStringNonEmpty(id);
@@ -49,16 +91,14 @@ export class Portfolios {
      */
     excluirPortfolio(id) {
         assertStringNonEmpty(id);
-        return fetch(`${API_URL}/${id}`, {
-            method: "DELETE",
-        })
+        return fetch(`${API_URL}/${id}`, { method: "DELETE" })
             .then((response) => response.json())
             .then((response) => response.id);
     }
 
     /**
      * Atualiza as informações de um portfólio, retorna uma Promessa com as informações atualizadas
-     * @param {Object} portfolio
+     * @param {PortfolioObject} portfolio
      */
     atualizarPortfolio(portfolio) {
         // TODO: validar as informações de portfólio

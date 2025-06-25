@@ -23,7 +23,7 @@ function redirect() {
     const urlPathname = url.pathname;
 
     // INFO: 3001 = Sinaliza que esta rodando como desenvolvimento e desabilita todos os redirecionamentos
-    if (url.port === "3001") return;
+    // if (url.port === "3001") return;
     if (urlPathname === PATH_404) return;
     if (mockIsUserLoggedIn()) {
         if (urlPathname === PATH_INDEX || urlPathname === PATH_AUTH) redirectToPath(PATH_HOMEPAGE);

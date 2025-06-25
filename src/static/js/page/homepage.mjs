@@ -79,7 +79,7 @@ function renderizarTop10Profissionais() {
                 index,
                 _profissional.foto,
                 _profissional.nome,
-                _profissional.categoria,
+                null,
                 "perfil",
             ),
         );
@@ -121,7 +121,7 @@ function renderCategoria(categoriaId) {
             null,
             _profissional.foto,
             _profissional.nome,
-            _profissional.categoria,
+            null,
             "perfil",
         );
 

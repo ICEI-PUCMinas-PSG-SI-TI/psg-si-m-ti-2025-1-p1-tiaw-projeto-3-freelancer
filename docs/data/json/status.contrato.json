@@ -1,15 +1,19 @@
 {
-    "status_contrato": [
+    "statusContrato": [
         {
             "id": 0,
-            "nome": "Aguardando Pagamento"
+            "nome": "Aguardando pagamento"
         },
         {
             "id": 1,
-            "nome": "Pendente"
+            "nome": "Pendente (Pagamento realizado)"
         },
         {
             "id": 2,
+            "nome": "Em andamento"
+        },
+        {
+            "id": 3,
             "nome": "Concluído"
         }
     ]

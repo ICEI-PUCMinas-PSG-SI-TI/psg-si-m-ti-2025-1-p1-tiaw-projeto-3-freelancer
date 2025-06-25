@@ -1,4 +1,4 @@
-[exemplos]
+[templates]
 nomes = [
     "Miguel",
     "Arthur",
@@ -256,8 +256,10 @@ contatos = [
     "(31) 99905-6732",
 ]
 
-categorias_servicos = [
+# Importado de categorias.servicos.toml
+categoriasServicos = [
     "Analista de dados",
+    "Climatização",
     "Coach de produtividade",
     "Consultor de TI",
     "Consultor de branding",
@@ -280,6 +282,7 @@ categorias_servicos = [
     "Designer gráfico",
     "Editor de fotografia",
     "Editor de vídeos",
+    "Eletricista",
     "Escritor de e-books",
     "Especialista em SEO",
     "Especialista em WordPress",
@@ -287,6 +290,7 @@ categorias_servicos = [
     "Especialista em cursos online",
     "Especialista em e-mail marketing",
     "Especialista em segurança digital",
+    "Fotografia e Vídeo",
     "Fotógrafo de eventos",
     "Fotógrafo de imóveis",
     "Fotógrafo de moda",
@@ -296,18 +300,19 @@ categorias_servicos = [
     "Fotógrafo gastronômico",
     "Gestor de tráfego pago",
     "Ilustrador digital",
+    "Marketing e Publicidade",
     "Mentor de carreira",
+    "Outro",
     "Professor particular",
     "Programador back-end",
     "Programador front-end",
     "Redator publicitário",
+    "Refrigeração",
     "Revisor de textos",
     "Roteirista de vídeos",
     "Social media",
     "Tradutor",
     "Videomaker",
-    "Fotografia e Vídeo",
-    "Marketing e Publicidade",
 ]
 
 avaliacoes = [
@@ -780,7 +785,7 @@ biografia = [
     "Estratégias de crescimento acelerado para startups e empresas que buscam expansão rápida.",
 ]
 
-links_externos = [
+linksExternos = [
     "https://www.instagram.com/cristiano",
     "https://www.instagram.com/leomessi",
     "https://www.instagram.com/selenagomez",

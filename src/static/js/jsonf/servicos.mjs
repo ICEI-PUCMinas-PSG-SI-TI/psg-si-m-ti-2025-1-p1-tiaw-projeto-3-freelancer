@@ -1,6 +1,8 @@
 //@ts-check
 
 import { assertStringNonEmpty } from "../lib/validate.mjs";
+// eslint-disable-next-line no-unused-vars
+import { UsuarioObject } from "./usuarios.mjs";
 
 /*
  * Esse script adiciona os recursos necessários para o CRUD de serviços
@@ -15,6 +17,62 @@ import { assertStringNonEmpty } from "../lib/validate.mjs";
 
 const API_URL = "/servicos";
 
+export class ServicoObject {
+    /** @type {string|number|null} */
+    id = null;
+    /** @type {boolean|null} */
+    ativo = null;
+    /** @type {string|null} */
+    titulo = null;
+    /** @type {string|null} */
+    categoria = null;
+    /** @type {string|number|null} */
+    categoriaId = null;
+    /** @type {string|null} */
+    contato = null;
+    /** @type {string|null} */
+    descricao = null;
+    /** @type {string|null} */
+    imagem = null;
+    /** @type {number|null} */
+    preco = null;
+    /** @type {string|null} */
+    prazo = null;
+    /** @type {boolean|null} */
+    fake = null;
+    /** @type {string|number|null} */
+    usuarioId = null;
+}
+
+export class ServicoObjectExpanded {
+    /** @type {string|number|null} */
+    id = null;
+    /** @type {boolean|null} */
+    ativo = null;
+    /** @type {string|null} */
+    titulo = null;
+    /** @type {string|null} */
+    categoria = null;
+    /** @type {string|number|null} */
+    categoriaId = null;
+    /** @type {string|null} */
+    contato = null;
+    /** @type {string|null} */
+    descricao = null;
+    /** @type {string|null} */
+    imagem = null;
+    /** @type {number|null} */
+    preco = null;
+    /** @type {string|null} */
+    prazo = null;
+    /** @type {boolean|null} */
+    fake = null;
+    /** @type {string|number|null} */
+    usuarioId = null;
+    /** @type {UsuarioObject|null?} */
+    usuario = null;
+}
+
 export class Servicos {
     // https://tenor.com/view/lazy-pat-down-gif-24710885
     assertObjetoServico(servico) {
@@ -23,21 +81,21 @@ export class Servicos {
 
     // TODO: paginate (_page) (_per_page)
     /**
-     * @returns {Promise<Array>}
+     * @returns {Promise<ServicoObjectExpanded[]>}
      */
     lerServicos() {
-        return fetch(API_URL, {
+        return fetch(`${API_URL}?_embed=usuario`, {
             method: "GET",
         }).then((response) => response.json());
     }
 
     /**
      * @param {string} id
-     * @returns {Promise<Object>}
+     * @returns {Promise<ServicoObjectExpanded>}
      */
     lerServico(id) {
         assertStringNonEmpty(id);
-        return fetch(`${API_URL}/${id}`, {
+        return fetch(`${API_URL}/${id}?_embed=usuario`, {
             method: "GET",
         }).then((response) => response.json());
     }
@@ -49,16 +107,14 @@ export class Servicos {
      */
     excluirServico(id) {
         assertStringNonEmpty(id);
-        return fetch(`${API_URL}/${id}`, {
-            method: "DELETE",
-        })
+        return fetch(`${API_URL}/${id}`, { method: "DELETE" })
             .then((response) => response.json())
             .then((response) => response.id);
     }
 
     /**
      * Atualiza as informações de um serviço, retorna uma Promessa com as informações atualizadas
-     * @param {Object} servico
+     * @param {ServicoObject} servico
      */
     atualizarServico(servico) {
         // TODO: validar as informações de servico

@@ -366,11 +366,11 @@ function inicializarCampos() {
         return;
     }
 
-    let timeoutSigninUsername;
-    let timeoutSigninNome;
-    let timeoutSigninEmail;
-    let timeoutSigninSenha;
-    let timeoutSigninSenha2;
+    let timeoutSigninUsername,
+        timeoutSigninNome,
+        timeoutSigninEmail,
+        timeoutSigninSenha,
+        timeoutSigninSenha2;
 
     function updateTimeoutValidacaoUsername() {
         if (timeoutSigninUsername) clearTimeout(timeoutSigninUsername);

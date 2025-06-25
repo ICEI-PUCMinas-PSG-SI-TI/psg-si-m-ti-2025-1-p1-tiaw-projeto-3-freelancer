@@ -1,5 +1,5 @@
 {
-    "exemplos": {
+    "templates": {
         "avaliacoes": [
             "O atendimento foi excelente! Muito prestativo e ágil.",
             "Serviço rápido e eficaz. Super recomendo!",
@@ -104,8 +104,9 @@
             "Criação de soluções descentralizadas e seguras com tecnologia blockchain.",
             "Estratégias de crescimento acelerado para startups e empresas que buscam expansão rápida."
         ],
-        "categorias_servicos": [
+        "categoriasServicos": [
             "Analista de dados",
+            "Climatização",
             "Coach de produtividade",
             "Consultor de TI",
             "Consultor de branding",
@@ -128,6 +129,7 @@
             "Designer gráfico",
             "Editor de fotografia",
             "Editor de vídeos",
+            "Eletricista",
             "Escritor de e-books",
             "Especialista em SEO",
             "Especialista em WordPress",
@@ -135,6 +137,7 @@
             "Especialista em cursos online",
             "Especialista em e-mail marketing",
             "Especialista em segurança digital",
+            "Fotografia e Vídeo",
             "Fotógrafo de eventos",
             "Fotógrafo de imóveis",
             "Fotógrafo de moda",
@@ -144,18 +147,19 @@
             "Fotógrafo gastronômico",
             "Gestor de tráfego pago",
             "Ilustrador digital",
+            "Marketing e Publicidade",
             "Mentor de carreira",
+            "Outro",
             "Professor particular",
             "Programador back-end",
             "Programador front-end",
             "Redator publicitário",
+            "Refrigeração",
             "Revisor de textos",
             "Roteirista de vídeos",
             "Social media",
             "Tradutor",
-            "Videomaker",
-            "Fotografia e Vídeo",
-            "Marketing e Publicidade"
+            "Videomaker"
         ],
         "cidades": [
             "Ibicuitinga (CE)",
@@ -617,7 +621,7 @@
             "davilucca.soares@example.com",
             "pedrohenrique.carvalho@example.com"
         ],
-        "links_externos": [
+        "linksExternos": [
             "https://www.instagram.com/cristiano",
             "https://www.instagram.com/leomessi",
             "https://www.instagram.com/selenagomez",
