@@ -26,7 +26,8 @@
     "scripts": {
         "start": "json-server --static ./src --watch db/db.json -p 3000",
         "dev": "json-server --static ./src --watch db/dev.json -p 3001",
-        "p": "prettier --write './src/**/*.{html,js,mjs,css}' --config ./.prettierrc.toml"
+        "p": "prettier --write './src/**/*.{html,js,mjs,css}' --config ./.prettierrc.toml",
+        "lint": "eslint src/"
     },
     "version": "1.0.0"
 }

@@ -1,10 +1,13 @@
 //@ts-check
 
 import { Usuarios } from "../jsonf/usuarios.mjs";
-import { retornarIdSeLogado } from "../lib/credenciais.mjs";
+import { Templates } from "../jsonf/templates.mjs";
+
+import { retornarIdSeLogado, atualizarInformacoesLocais } from "../lib/credenciais.mjs";
 import { imageFileToBase64 } from "../lib/tools.mjs";
 
-const crud_usuarios = new Usuarios();
+const crudUsuarios = new Usuarios();
+const crudtemplates = new Templates();
 
 const htmlCadastroInputNome = document.getElementById("nome");
 const htmlCadastroInputEmail = document.getElementById("email");
@@ -22,13 +25,14 @@ const htmlCadastroSelectSexo = document.getElementById("sexo");
 const htmlCadastroInputEscolaridade = document.getElementById("escolaridade");
 
 class EditContext {
-    constructor(json, id, foto, username, dataCadastro, formularioConcluido) {
+    constructor(json, id, foto, username, dataCadastro, formularioConcluido, fake) {
         this.json = json;
         this.id = id;
         this.foto = foto;
         this.username = username;
         this.dataCadastro = dataCadastro;
         this.formularioConcluido = formularioConcluido;
+        this.fake = fake;
     }
 }
 
@@ -66,7 +70,7 @@ async function atualizarCadastro() {
     const dataNascimento = htmlCadastroInputDataNascimento.value;
     const cidade = htmlCadastroInputCidade.value;
     const biografia = htmlCadastroTextAreaBiografia.value;
-    const fotoInput_files = htmlCadastroInputFoto.files;
+    const fotoInputFiles = htmlCadastroInputFoto.files;
     const profissao = htmlCadastroSelectProfissao.value;
     const sexo = htmlCadastroSelectSexo.value;
     const escolaridade = htmlCadastroInputEscolaridade.value;
@@ -94,27 +98,30 @@ async function atualizarCadastro() {
         escolaridade,
         dataCadastro: editContext.dataCadastro,
         formularioConcluido: editContext.formularioConcluido,
+        foto: null,
+        fake: editContext.fake,
     };
 
     // TODO: Tornar foto opcional?
-    let base64Image;
-    if (fotoInput_files?.length) {
+    if (fotoInputFiles?.length) {
         try {
-            base64Image = await imageFileToBase64(fotoInput_files[0]);
+            informacoesUsuario.foto = await imageFileToBase64(fotoInputFiles[0]);
         } catch (err) {
             alert(err);
         }
     } else if (editContext.foto) {
-        base64Image = editContext.foto;
+        informacoesUsuario.foto = editContext.foto;
     } else {
         alert("Por favor, selecione uma foto.");
         return;
     }
 
-    informacoesUsuario.foto = base64Image;
-    crud_usuarios
+    crudUsuarios
         .atualizarUsuario(informacoesUsuario)
-        .then(() => alert("Informações atualizadas com sucesso!"));
+        .then(() => {
+            alert("Informações atualizadas com sucesso!")
+            atualizarInformacoesLocais();
+    }   );
 }
 
 async function preencherValores() {
@@ -136,7 +143,7 @@ async function preencherValores() {
     )
         throw new Error("Null checking");
 
-    const usuario = await crud_usuarios.lerUsuario(retornarIdSeLogado());
+    const usuario = await crudUsuarios.lerUsuario(retornarIdSeLogado());
     if (!usuario) return;
 
     editContext = new EditContext(
@@ -146,6 +153,7 @@ async function preencherValores() {
         usuario.username,
         usuario.dataCadastro,
         usuario.formularioConcluido,
+        usuario.fake,
     );
 
     if (usuario.nome) htmlCadastroInputNome.value = usuario.nome;
@@ -155,9 +163,7 @@ async function preencherValores() {
     if (usuario.cidade) htmlCadastroInputCidade.value = usuario.cidade;
     if (usuario.biografia) htmlCadastroTextAreaBiografia.value = usuario.biografia;
     if (usuario.escolaridade) htmlCadastroInputEscolaridade.value = usuario.escolaridade;
-
     if (usuario.contatos?.length) htmlCadastroInputContato.value = usuario.contatos[0];
-
     if (usuario.profissao) htmlCadastroSelectProfissao.value = usuario.profissao;
     if (usuario.tipo) htmlCadastroSelectTipo.value = usuario.tipo;
     if (usuario.sexo) htmlCadastroSelectSexo.value = usuario.sexo;
@@ -169,16 +175,30 @@ async function preencherValores() {
     if (usuario.foto) htmlCadastroImgPreview.src = usuario.foto;
 }
 
-function inicializarCadastro() {
+async function inicializarCadastro() {
     if (!(htmlCadastroForm instanceof HTMLFormElement)) return;
     htmlCadastroForm.addEventListener("submit", (event) => {
         event.preventDefault();
         atualizarCadastro();
     });
 
+    if (htmlCadastroSelectProfissao instanceof HTMLSelectElement) {
+        const templates = await crudtemplates.lerTemplates();
+        if (templates) {
+            const frag = document.createDocumentFragment();
+            templates.categoriasServicos.forEach((categoria) => {
+                const opt = document.createElement("option");
+                opt.value = categoria;
+                opt.innerText = categoria;
+                frag.appendChild(opt);
+            });
+            htmlCadastroSelectProfissao.appendChild(frag);
+        }
+    }
+
     preencherValores();
 
-    htmlCadastroInputFoto?.addEventListener("change", async () => {
+    htmlCadastroInputFoto?.addEventListener("change", () => {
         if (
             !(htmlCadastroInputFoto instanceof HTMLInputElement) ||
             !(htmlCadastroImgPreview instanceof HTMLImageElement)
@@ -186,7 +206,7 @@ function inicializarCadastro() {
             return;
 
         if (!htmlCadastroInputFoto.files?.length) return;
-        fileToBase64(htmlCadastroInputFoto.files[0]).then((result) => {
+        imageFileToBase64(htmlCadastroInputFoto.files[0]).then((result) => {
             htmlCadastroImgPreview.src = result;
         });
     });

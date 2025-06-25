@@ -8,14 +8,18 @@
 # id = ID da categoria
 # nome = Nome da categoria
 
-[[status_contrato]]
+[[statusContrato]]
 id = 0
-nome = "Aguardando Pagamento"
+nome = "Aguardando pagamento"
 
-[[status_contrato]]
+[[statusContrato]]
 id = 1
-nome = "Pendente"
+nome = "Pendente (Pagamento realizado)"
 
-[[status_contrato]]
+[[statusContrato]]
 id = 2
+nome = "Em andamento"
+
+[[statusContrato]]
+id = 3
 nome = "Concluído"

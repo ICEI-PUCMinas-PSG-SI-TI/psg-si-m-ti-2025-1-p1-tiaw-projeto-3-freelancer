@@ -2,15 +2,15 @@
     "portfolios": [
         {
             "id": 0,
+            "nome": "Portfólio do João",
             "secoes": [
                 {
-                    "categoriaId": 1,
                     "descricao": "Cliente satisfeitos!",
                     "nome": "Avaliações",
-                    "ordem": 0
+                    "ordem": 0,
+                    "portfolioCategoriaId": 1
                 },
                 {
-                    "categoriaId": 0,
                     "contents": [
                         {
                             "blob": "imagemId",
@@ -27,10 +27,10 @@
                     ],
                     "descricao": "Imagens de serviços realizados",
                     "nome": "Fotos de trabalhos anteriores",
-                    "ordem": 1
+                    "ordem": 1,
+                    "portfolioCategoriaId": 0
                 },
                 {
-                    "categoriaId": 2,
                     "contents": [
                         {
                             "blob": "https://example.com",
@@ -47,7 +47,8 @@
                     ],
                     "descricao": "Segue lá",
                     "nome": "Links Importantes",
-                    "ordem": 2
+                    "ordem": 2,
+                    "portfolioCategoriaId": 2
                 }
             ],
             "usuarioId": 0

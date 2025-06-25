@@ -1,6 +1,12 @@
 //@ts-check
 
 import { assertStringNonEmpty } from "../lib/validate.mjs";
+// eslint-disable-next-line no-unused-vars
+import { UsuarioObject } from "./usuarios.mjs";
+// eslint-disable-next-line no-unused-vars
+import { ContratoObject } from "./contratos.mjs";
+// eslint-disable-next-line no-unused-vars
+import { ServicoObject } from "./servicos.mjs";
 
 /*
  * Esse script adiciona os recursos necessários para o CRUD de avaliações
@@ -15,6 +21,48 @@ import { assertStringNonEmpty } from "../lib/validate.mjs";
 
 const API_URL = "/avaliacoes";
 
+export class AvaliacaoObject {
+    /** @type {string|number|null} */
+    id = null;
+    /** @type {string|number|null} */
+    contratoId = null;
+    /** @type {string|number|null} */
+    usuarioId = null;
+    /** @type {number|null} */
+    nota = null;
+    /** @type {string|null} */
+    comentario = null;
+    /** @type {string|null} */
+    imagem = null;
+    /** @type {string|null} */
+    data = null;
+}
+
+export class AvaliacaoObjectExpanded {
+    /** @type {string|number|null} */
+    id = null;
+    /** @type {string|number|null} */
+    servicoId = null;
+    /** @type {string|number|null} */
+    contratoId = null;
+    /** @type {string|number|null} */
+    usuarioId = null;
+    /** @type {number|null} */
+    nota = null;
+    /** @type {string|null} */
+    comentario = null;
+    /** @type {string|null} */
+    imagem = null;
+    /** @type {string|null} */
+    data = null;
+    /** @type {UsuarioObject|null} */
+    usuario = null;
+    /** @type {ContratoObject|null} */
+    contrato = null;
+    /** @type {ServicoObject|null} */
+    servico = null;
+}
+
 export class Avaliacoes {
     // https://tenor.com/view/lazy-pat-down-gif-24710885
     assertObjetoAvaliacao(avaliacao) {
@@ -23,21 +71,21 @@ export class Avaliacoes {
 
     // TODO: paginate (_page) (_per_page)
     /**
-     * @returns {Promise<Array>}
+     * @returns {Promise<AvaliacaoObjectExpanded[]>}
      */
-    async lerAvaliacoes() {
-        return fetch(API_URL, {
+    lerAvaliacoes() {
+        return fetch(`${API_URL}?_embed=usuario&_embed=contrato&_embed=servico`, {
             method: "GET",
         }).then((response) => response.json());
     }
 
     /**
      * @param {string} id
-     * @returns {Promise<Object>}
+     * @returns {Promise<AvaliacaoObjectExpanded>}
      */
-    async lerAvaliacao(id) {
+    lerAvaliacao(id) {
         assertStringNonEmpty(id);
-        return fetch(`${API_URL}/${id}`, {
+        return fetch(`${API_URL}/${id}?_embed=usuario&_embed=contrato&_embed=servico`, {
             method: "GET",
         }).then((response) => response.json());
     }
@@ -47,20 +95,18 @@ export class Avaliacoes {
      * @param {string} id ID do avaliacao a ser atualizado
      * @returns {Promise<string>}
      */
-    async excluirAvaliacao(id) {
+    excluirAvaliacao(id) {
         assertStringNonEmpty(id);
-        return fetch(`${API_URL}/${id}`, {
-            method: "DELETE",
-        })
+        return fetch(`${API_URL}/${id}`, { method: "DELETE" })
             .then((response) => response.json())
             .then((response) => response.id);
     }
 
     /**
      * Atualiza as informações de um avaliacao, retorna uma Promessa com as informações atualizadas
-     * @param {Object} avaliacao
+     * @param {AvaliacaoObject} avaliacao
      */
-    async atualizarAvaliacao(avaliacao) {
+    atualizarAvaliacao(avaliacao) {
         // TODO: validar as informações de avaliacao
         // Obs: Retornar erro, caso necessário
         this.assertObjetoAvaliacao(avaliacao);
@@ -80,7 +126,7 @@ export class Avaliacoes {
      * @param {Object} avaliacao Informações do avaliacao a ser cadastrado
      * @returns {Promise<Object>} Retorna o json do avaliacao se as informações foram cadastradas corretamente
      */
-    async criarAvaliacao(avaliacao) {
+    criarAvaliacao(avaliacao) {
         // TODO: Validar as informações do avaliacao
         // Obs: Retornar erro, caso necessário
         this.assertObjetoAvaliacao(avaliacao);
@@ -99,7 +145,7 @@ export class Avaliacoes {
      * Limpa todas as informações dos avaliacoes
      */
     // TODO: Verificar melhor forma de excluir todos os dados não recursivamente
-    async limparAvaliacoes() {
+    limparAvaliacoes() {
         throw new Error("Função não implementada!");
     }
 }

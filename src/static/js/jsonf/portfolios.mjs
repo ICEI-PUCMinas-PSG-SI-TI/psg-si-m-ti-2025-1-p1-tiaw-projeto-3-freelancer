@@ -1,6 +1,8 @@
 //@ts-check
 
 import { assertStringNonEmpty } from "../lib/validate.mjs";
+// eslint-disable-next-line no-unused-vars
+import { UsuarioObject } from "./usuarios.mjs";
 
 /*
  * Esse script adiciona os recursos necessários para o CRUD de portfólio
@@ -15,6 +17,50 @@ import { assertStringNonEmpty } from "../lib/validate.mjs";
 
 const API_URL = "/portfolios";
 
+export class PortfolioObject {
+    /** @type {string|number|null} */
+    id = null;
+    /** @type {string|null} */
+    nome = null;
+    /** @type {string|number|null} */
+    usuarioId = null;
+    /** @type {PortfolioSecaoObject[]|null} */
+    secoes = null;
+}
+
+export class PortfolioObjectExpanded {
+    /** @type {string|number|null} */
+    id = null;
+    /** @type {string|null} */
+    nome = null;
+    /** @type {string|number|null} */
+    usuarioId = null;
+    /** @type {PortfolioSecaoObject[]|null} */
+    secoes = null;
+    /** @type {UsuarioObject|null} */
+    usuario = null;
+}
+
+export class PortfolioSecaoObject {
+    /** @type {number|null} */
+    ordem = null;
+    /** @type {string|number|null} */
+    portfolioCategoriaId = null;
+    /** @type {string|null} */
+    nome = null;
+    /** @type {string|null} */
+    descricao = null;
+    /** @type {PortfolioSecaoContentsObject[]|null} */
+    contents = null;
+}
+
+export class PortfolioSecaoContentsObject {
+    /** @type {string|null} */
+    blob = null;
+    /** @type {string|null} */
+    descricao = null;
+}
+
 export class Portfolios {
     // https://tenor.com/view/lazy-pat-down-gif-24710885
     assertObjetoPortfolio(portfolio) {
@@ -23,9 +69,9 @@ export class Portfolios {
 
     // TODO: paginate (_page) (_per_page)
     /**
-     * @returns {Promise<Array>}
+     * @returns {Promise<PortfolioObjectExpanded[]>}
      */
-    async lerPortfolios() {
+    lerPortfolios() {
         return fetch(API_URL, {
             method: "GET",
         }).then((response) => response.json());
@@ -33,9 +79,9 @@ export class Portfolios {
 
     /**
      * @param {string} id
-     * @returns {Promise<Object>}
+     * @returns {Promise<PortfolioObjectExpanded>}
      */
-    async lerPortfolio(id) {
+    lerPortfolio(id) {
         assertStringNonEmpty(id);
         return fetch(`${API_URL}/${id}`, {
             method: "GET",
@@ -47,20 +93,18 @@ export class Portfolios {
      * @param {string} id ID do portfólio a ser atualizado
      * @returns {Promise<string>}
      */
-    async excluirPortfolio(id) {
+    excluirPortfolio(id) {
         assertStringNonEmpty(id);
-        return fetch(`${API_URL}/${id}`, {
-            method: "DELETE",
-        })
+        return fetch(`${API_URL}/${id}`, { method: "DELETE" })
             .then((response) => response.json())
             .then((response) => response.id);
     }
 
     /**
      * Atualiza as informações de um portfólio, retorna uma Promessa com as informações atualizadas
-     * @param {Object} portfolio
+     * @param {PortfolioObject} portfolio
      */
-    async atualizarPortfolio(portfolio) {
+    atualizarPortfolio(portfolio) {
         // TODO: validar as informações de portfólio
         // Obs: Retornar erro, caso necessário
         this.assertObjetoPortfolio(portfolio);
@@ -80,7 +124,7 @@ export class Portfolios {
      * @param {Object} portfolio Informações do portfólio a ser cadastrado
      * @returns {Promise<Object>} Retorna o json do portfólio se as informações foram cadastradas corretamente
      */
-    async criarPortfolio(portfolio) {
+    criarPortfolio(portfolio) {
         // TODO: Validar as informações do portfólio
         // Obs: Retornar erro, caso necessário
         this.assertObjetoPortfolio(portfolio);
@@ -99,7 +143,7 @@ export class Portfolios {
      * Limpa todas as informações dos portfólios
      */
     // TODO: Verificar melhor forma de excluir todos os dados não recursivamente
-    async limparPortfólio() {
+    limparPortfólio() {
         throw new Error("Função não implementada!");
     }
 }

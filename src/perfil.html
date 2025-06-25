@@ -30,7 +30,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Source+Sans+3&display=swap"
       rel="stylesheet" />
     <!-- Project Scripts -->
-    <script src="static/js/redirect.js"></script>
+    <script defer type="module" src="static/js/lib/redirect.mjs"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
     <script defer type="module" src="static/js/profile.mjs"></script>
@@ -69,9 +69,12 @@
                 aria-expanded="false">
                 Serviços
               </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="/serviços">Cadastrar serviços</a></li>
-              </ul>
+            </li>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/serviços">Cadastrar serviços</a></li>
+            </ul>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/portfolio">Portfólios</a>
             </li>
           </ul>
           <!-- id.navbar.darkmode -->
@@ -107,7 +110,9 @@
     <!-- Conteúdo da página -->
     <div class="body-section body-content d-flex flex-column align-items-center space-0 p-3">
       <!-- Perfil -->
-      <div class="profile-section container-fluid text-center mb-3 limit900px position-relative">
+      <div
+        id="first-container"
+        class="profile-section container-fluid text-center mb-3 limit900px position-relative">
         <button
           id="button-edit-perfil"
           class="btn btn-primary position-absolute button-edit-perfil m-2 d-none">
@@ -137,8 +142,15 @@
             email@example.com
           </a>
         </div>
+        <div
+          id="lista-portfolio-container"
+          class="container-fluid limit900px space-0 stats-section mb-3 d-none">
+          <hr />
+          <div class="mb-2 w-100">
+            <ul id="lista-portfolios" class="list-group"></ul>
+          </div>
+        </div>
       </div>
-
       <div
         class="profile-section container-fluid text-center space-0 mb-3 limit900px position-relative p-3 d-none">
         <p id="profile-biografia" class="border rounded space-0 p-2">
@@ -151,13 +163,13 @@
         <div class="row">
           <div class="col-12 col-md-4 space-0">
             <div class="stat-box h-100 mb-2 me-0 me-md-3">
-              <h4 id="profile-nota">4.5</h4>
+              <h4 id="profile-nota">Sem avaliações</h4>
               <p class="space-0">Nota</p>
             </div>
           </div>
           <div class="col-12 col-md-4 space-0">
             <div class="stat-box h-100 mb-2 me-0 me-md-3">
-              <h4 id="profile-aval">153</h4>
+              <h4 id="profile-aval">Sem avaliações</h4>
               <p class="space-0">Avaliações</p>
             </div>
           </div>
@@ -165,6 +177,30 @@
             <div class="stat-box h-100 mb-2">
               <a class="btn btn-primary" href="/404">Chat</a>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid limit900px space-0 stats-section mb-3">
+        <div class="stat-box">
+          <div class="mb-2">
+            <h1>Serviços Prestados</h1>
+          </div>
+          <h6 id="lista-servicos-none">Nenhum serviço cadastrado por este usuário</h6>
+          <div class="mb-2 w-100">
+            <ul id="lista-servicos" class="list-group"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid limit900px space-0 stats-section mb-3">
+        <div class="stat-box">
+          <div class="mb-2">
+            <h1>Avaliações</h1>
+          </div>
+          <h6 id="lista-avaliacoes-none">Nenhum avaliação para este usuário</h6>
+          <div class="mb-2 w-100">
+            <ul id="lista-avaliacoes" class="list-group"></ul>
           </div>
         </div>
       </div>

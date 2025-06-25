@@ -151,3 +151,9 @@
 .limit300px {
     max-width: 300px;
 }
+
+.icon-64px {
+    height: 64px;
+    width: 64px;
+    font-size: xx-large;
+}

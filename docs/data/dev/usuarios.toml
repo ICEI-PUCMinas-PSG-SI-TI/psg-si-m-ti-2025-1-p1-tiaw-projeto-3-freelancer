@@ -46,11 +46,7 @@ username = "admin"
 cpfCnpj = "00.000.000/0001-00"
 cidade = "Belo Horizonte, MG"
 biografia = "Informações sobre o usuário"
-contatos = [
-    "(31) 970707070",
-    "(31) 970707071",
-    "(31) 970707072"
-]
+contatos = ["(31) 970707070", "(31) 970707071", "(31) 970707072"]
 formularioConcluido = true
 profissao = "Não informado"
 sexo = "Masculino"
@@ -58,9 +54,8 @@ escolaridade = "Curstando Sistemas de Informação"
 dataCadastro = "1970-01-01T00:00:00.000Z-03:00"
 fake = false
 
-
 [[usuarios]]
-id = 1
+id = "efgh"
 ativo = true
 foto = "base64|url"
 nome = "Empresa do João Silva"
@@ -72,11 +67,7 @@ username = "joaos"
 cpfCnpj = "12.345.678/0001-00"
 cidade = "Belo Horizonte, MG"
 biografia = "Informações sobre o usuário"
-contatos = [
-    "(31) 970707073",
-    "(31) 970707074",
-    "(31) 970707075"
-]
+contatos = ["(31) 970707073", "(31) 970707074", "(31) 970707075"]
 formularioConcluido = true
 profissao = "Não informado"
 sexo = "Masculino"
@@ -86,7 +77,7 @@ fake = false
 
 
 [[usuarios]]
-id = 0
+id = "ijkl"
 ativo = false
 foto = "base64|url"
 nome = "Maria Oliveira"
@@ -98,11 +89,7 @@ username = "mariaoliv"
 cpfCnpj = "123.456.789-10"
 cidade = "São Paulo, SP"
 biografia = "Informações sobre o usuário"
-contatos = [
-    "(31) 970707076",
-    "(31) 970707077",
-    "(31) 970707078"
-]
+contatos = ["(31) 970707076", "(31) 970707077", "(31) 970707078"]
 formularioConcluido = true
 profissao = "Não informado"
 sexo = "Feminino"

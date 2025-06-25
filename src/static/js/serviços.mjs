@@ -1,122 +1,134 @@
 // @ts-check
 
 import { Servicos } from "./jsonf/servicos.mjs";
+import { Templates } from "./jsonf/templates.mjs";
+
 import { retornarIdSeLogado } from "./lib/credenciais.mjs";
 import { imageFileToBase64 } from "./lib/tools.mjs";
 
-const crud_servicos = new Servicos();
+const crudServicos = new Servicos();
+const crudtemplates = new Templates();
 
 class EditContext {
-    constructor(id, foto) {
+    constructor(id, foto, fake, prazo, preco) {
         this.id = id;
         this.foto = foto;
+        this.fake = fake;
+        this.prazo = prazo;
+        this.preco = preco;
     }
 }
 
 /** @type {EditContext|null} */
 let editContext = null;
 
-function previewPicture() {
-    const html_input_picture = document.getElementById("imagem");
-    const html_img_preview = document.getElementById("image_preview");
-    const html_svg_placeholder = document.getElementById("image_placeholder");
+async function previewPicture() {
+    const htmlInputImagem = document.getElementById("imagem");
+    const htmlImagePreview = document.getElementById("image_preview");
+    const htmlSVGPlaceholder = document.getElementById("image_placeholder");
 
     if (
-        !(html_input_picture instanceof HTMLInputElement) ||
-        !(html_img_preview instanceof HTMLImageElement) ||
-        !(html_svg_placeholder instanceof SVGElement)
+        !(htmlInputImagem instanceof HTMLInputElement) ||
+        !(htmlImagePreview instanceof HTMLImageElement) ||
+        !(htmlSVGPlaceholder instanceof SVGElement)
     ) {
-        console.log("Null check");
+        console.error("Some html elements are null!");
         return;
     }
 
-    if (!html_input_picture.files?.length) return;
+    if (!htmlInputImagem.files?.length) return;
 
-    imageFileToBase64(html_input_picture.files[0])
-        .then((/** @type {string} */ result) => {
-            if (result.startsWith("data:image/")) {
-                html_img_preview.src = result;
-                html_img_preview.classList.remove("d-none");
-                html_svg_placeholder.classList.add("d-none");
-            } else {
-                alert("Arquivo inválido!");
-                html_img_preview.src = "";
-                html_img_preview.classList.add("d-none");
-                html_svg_placeholder.classList.remove("d-none");
-            }
-        })
-        .catch((error) => {
-            html_img_preview.src = "";
-            html_img_preview.classList.add("d-none");
-            html_svg_placeholder.classList.remove("d-none");
+    try {
+        const result = await imageFileToBase64(htmlInputImagem.files[0]);
 
-            alert(error);
-            // Limpa arquivos
-            setTimeout(() => (html_input_picture.value = ""), 1);
-        });
+        if (result.startsWith("data:image/")) {
+            htmlImagePreview.src = result;
+            htmlImagePreview.classList.remove("d-none");
+            htmlSVGPlaceholder.classList.add("d-none");
+        } else {
+            alert("Arquivo inválido!");
+            htmlImagePreview.src = "";
+            htmlImagePreview.classList.add("d-none");
+            htmlSVGPlaceholder.classList.remove("d-none");
+        }
+    } catch (error) {
+        htmlImagePreview.src = "";
+        htmlImagePreview.classList.add("d-none");
+        htmlSVGPlaceholder.classList.remove("d-none");
+
+        alert(error);
+        // Limpa arquivos
+        setTimeout(() => (htmlInputImagem.value = ""), 1);
+    }
 }
 
 function setupServicos() {
-    const html_imagem = document.getElementById("imagem");
-    if (!(html_imagem instanceof HTMLInputElement)) return;
-    html_imagem.addEventListener("change", previewPicture);
+    const htmlInputImagem = document.getElementById("imagem");
+    if (!(htmlInputImagem instanceof HTMLInputElement)) return;
+    htmlInputImagem.addEventListener("change", previewPicture);
 }
 
-function _editarServico(servico_id) {
-    if (!servico_id) return;
-    crud_servicos.lerServico(servico_id).then((_servico) => {
-        if (!_servico) return;
+function _editarServico(servicoId) {
+    if (!servicoId) return;
+    crudServicos.lerServico(servicoId).then((servico) => {
+        if (!servico) return;
 
         // TODO: Re-add image to preview
-        const html_svg_placeholder = document.getElementById("image_placeholder");
-        const html_image_preview = document.getElementById("image_preview");
-        const html_titulo = document.getElementById("titulo");
-        const html_contato = document.getElementById("contato");
-        const html_categoria = document.getElementById("categoriaId");
-        const html_descricao = document.getElementById("descricao");
+        const htmlSVGPlaceholder = document.getElementById("image_placeholder");
+        const htmlImagePreview = document.getElementById("image_preview");
+        const htmlInputTitulo = document.getElementById("titulo");
+        const htmlInputContato = document.getElementById("contato");
+        const htmlSelectCategoria = document.getElementById("categoriaId");
+        const htmlTextAreaDescricao = document.getElementById("descricao");
+        const htmlInputPrazo = document.getElementById("prazo");
+        const htmlInputPreco = document.getElementById("preco");
 
         if (
-            !(html_image_preview instanceof HTMLImageElement) ||
-            !(html_svg_placeholder instanceof SVGElement) ||
-            !(html_titulo instanceof HTMLInputElement) ||
-            !(html_contato instanceof HTMLInputElement) ||
-            !(html_categoria instanceof HTMLSelectElement) ||
-            !(html_descricao instanceof HTMLTextAreaElement)
+            !(htmlImagePreview instanceof HTMLImageElement) ||
+            !(htmlSVGPlaceholder instanceof SVGElement) ||
+            !(htmlInputTitulo instanceof HTMLInputElement) ||
+            !(htmlInputContato instanceof HTMLInputElement) ||
+            !(htmlSelectCategoria instanceof HTMLSelectElement) ||
+            !(htmlTextAreaDescricao instanceof HTMLTextAreaElement) ||
+            !(htmlInputPrazo instanceof HTMLInputElement) ||
+            !(htmlInputPreco instanceof HTMLInputElement)
         ) {
-            console.log("null check");
+            console.error("Some html elements are null!");
             return;
         }
 
-        html_titulo.value = _servico.titulo;
-        html_contato.value = _servico.contato;
-        html_categoria.value = _servico.categoriaId.toString();
-        html_descricao.value = _servico.descricao;
-        if (_servico.imagem) {
-            html_svg_placeholder.classList.add("d-none");
-            html_image_preview.classList.remove("d-none");
-            html_image_preview.src = _servico.imagem;
+        htmlInputTitulo.value = servico.titulo || "Serviço";
+        htmlInputContato.value = servico.contato || "Contato não informado";
+        htmlSelectCategoria.value = String(servico.categoriaId);
+        htmlTextAreaDescricao.value = servico.descricao || "Nenhuma descrição informada";
+        htmlInputPrazo.value = servico.prazo || "Prazo não informado";
+        htmlInputPreco.value = String(servico.preco);
+        if (servico.imagem) {
+            htmlSVGPlaceholder.classList.add("d-none");
+            htmlImagePreview.classList.remove("d-none");
+            htmlImagePreview.src = servico.imagem;
         }
-        editContext = new EditContext(_servico.id, _servico.imagem);
+        editContext = new EditContext(servico.id, servico.imagem, servico.fake);
         document.querySelector(".body-content")?.scrollIntoView();
     });
 }
 
 function render() {
-    /** @type {HTMLFormElement} */
-    // @ts-ignore Casting HTMLElement as HTMLFormElement
-    const html_form = document.getElementById("form-servico");
-    const html_ul_lista = document.getElementById("lista-servicos");
+    const htmlFormCadastroServico = document.getElementById("form-servico");
+    const htmlUlListaServicos = document.getElementById("lista-servicos");
 
-    if (!html_form || !html_ul_lista) return;
+    if (!htmlFormCadastroServico || !htmlUlListaServicos) return;
 
-    html_ul_lista.innerHTML = "";
-    crud_servicos.lerServicos().then((res) => {
+    htmlUlListaServicos.innerHTML = "";
+    crudServicos.lerServicos().then((res) => {
         if (!res?.length) return;
 
-        const logged_id = retornarIdSeLogado();
-        if (!logged_id) return;
-        for (const servico of res) {
-            if (servico.usuarioId !== logged_id) continue;
+        const usuarioCorrenteId = retornarIdSeLogado();
+        if (!usuarioCorrenteId) return;
+
+        // TODO: Filtrar via fetch
+        const servicosFiltrados = res.filter((v) => v.usuarioId === usuarioCorrenteId);
+        servicosFiltrados.forEach((servico) => {
             const li = document.createElement("li");
             li.className =
                 "list-group-item d-flex justify-content-between align-items-center flex-wrap";
@@ -137,72 +149,88 @@ function render() {
                     <button class="btn btn-sm btn-danger">Excluir</button>
                 </div>`;
 
-            const html_edit = li.getElementsByTagName("button")[0];
-            const html_delete = li.getElementsByTagName("button")[1];
+            const htmlButtonEdit = li.getElementsByTagName("button")[0];
+            const htmlButtonDelete = li.getElementsByTagName("button")[1];
 
             if (
-                !(html_edit instanceof HTMLButtonElement) ||
-                !(html_delete instanceof HTMLButtonElement)
+                !(htmlButtonEdit instanceof HTMLButtonElement) ||
+                !(htmlButtonDelete instanceof HTMLButtonElement)
             ) {
-                console.log("null check");
+                console.error("Some html elements are null!");
                 return;
             }
 
-            html_edit.addEventListener("click", () => _editarServico(servico.id));
+            htmlButtonEdit.addEventListener("click", () => _editarServico(servico.id));
 
-            html_delete.addEventListener("click", async () => {
+            htmlButtonDelete.addEventListener("click", async () => {
                 if (!servico.id) return;
                 // TODO: avoid deleting if editing
                 if (servico.id === editContext?.id) return;
-                await crud_servicos.excluirServico(servico.id);
+                await crudServicos.excluirServico(String(servico.id));
                 render();
             });
 
-            html_ul_lista.appendChild(li);
-        }
+            htmlUlListaServicos.appendChild(li);
+        });
     });
 }
 
-function iniciarlizarPaginaServicos() {
+async function iniciarlizarPaginaServicos() {
     setupServicos();
 
-    /** @type {HTMLFormElement} */
-    // @ts-ignore Casting HTMLElement as HTMLFormElement
-    const html_form = document.getElementById("form-servico");
-    const html_ul_lista = document.getElementById("lista-servicos");
+    const htmlFormCadastroServico = document.getElementById("form-servico");
+    const htmlUlListaServicos = document.getElementById("lista-servicos");
 
-    if (!html_form || !html_ul_lista) return;
+    if (!(htmlFormCadastroServico instanceof HTMLFormElement) || !htmlUlListaServicos) return;
 
-    html_form.addEventListener("submit", async (event) => {
+    const htmlSelectCategoria = document.getElementById("categoriaId");
+    if (htmlSelectCategoria instanceof HTMLSelectElement) {
+        const templates = await crudtemplates.lerTemplates();
+        if (templates) {
+            const frag = document.createDocumentFragment();
+            templates.categoriasServicos.forEach((categoria) => {
+                const opt = document.createElement("option");
+                opt.value = categoria;
+                opt.innerText = categoria;
+                frag.appendChild(opt);
+            });
+            htmlSelectCategoria.appendChild(frag);
+        }
+    }
+
+    htmlFormCadastroServico.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const usuarioId = retornarIdSeLogado();
 
         // TODO: declare 1 time
-        const html_input_picture = document.getElementById("imagem");
-        const html_titulo = document.getElementById("titulo");
-        const html_contato = document.getElementById("contato");
-        const html_categoriaId = document.getElementById("categoriaId");
-        const html_descricao = document.getElementById("descricao");
+        const htmlInputImagem = document.getElementById("imagem");
+        const htmlInputTitulo = document.getElementById("titulo");
+        const htmlInputContato = document.getElementById("contato");
+        const htmlTextAreaDescricao = document.getElementById("descricao");
+        const htmlInputPrazo = document.getElementById("prazo");
+        const htmlInputPreco = document.getElementById("preco");
 
         if (
-            !(html_input_picture instanceof HTMLInputElement) ||
-            !(html_titulo instanceof HTMLInputElement) ||
-            !(html_contato instanceof HTMLInputElement) ||
-            !(html_categoriaId instanceof HTMLSelectElement) ||
-            !(html_descricao instanceof HTMLTextAreaElement)
+            !(htmlInputImagem instanceof HTMLInputElement) ||
+            !(htmlInputTitulo instanceof HTMLInputElement) ||
+            !(htmlInputContato instanceof HTMLInputElement) ||
+            !(htmlSelectCategoria instanceof HTMLSelectElement) ||
+            !(htmlTextAreaDescricao instanceof HTMLTextAreaElement) ||
+            !(htmlInputPrazo instanceof HTMLInputElement) ||
+            !(htmlInputPreco instanceof HTMLInputElement)
         ) {
-            console.log("null check");
+            console.error("Some html elements are null!");
             return;
         }
 
-        if (!html_input_picture.files?.length && !editContext?.foto) {
+        if (!htmlInputImagem.files?.length && !editContext?.foto) {
             alert("Selecione uma imagem!");
             return;
         }
         let _bs64img;
-        if (html_input_picture.files?.length && !editContext?.foto)
-            _bs64img = await fileToBase64(html_input_picture.files[0]);
+        if (htmlInputImagem.files?.length)
+            _bs64img = await imageFileToBase64(htmlInputImagem.files[0]);
         else _bs64img = editContext?.foto;
 
         if (!_bs64img.startsWith("data:image/")) {
@@ -210,15 +238,17 @@ function iniciarlizarPaginaServicos() {
             return;
         }
 
-        const titulo = html_titulo.value.trim();
-        const contato = html_contato.value.trim();
-        const categoriaId = html_categoriaId.value;
-        const descricao = html_descricao.value.trim();
-        const categoria = html_categoriaId.selectedOptions[0].text;
+        const titulo = htmlInputTitulo.value.trim();
+        const contato = htmlInputContato.value.trim();
+        const categoriaId = htmlSelectCategoria.value;
+        const descricao = htmlTextAreaDescricao.value.trim();
+        const categoria = htmlSelectCategoria.selectedOptions[0].text;
+        const prazo = htmlInputPrazo.value.trim();
+        const preco = parseFloat(htmlInputPreco.value.trim());
 
         if (editContext !== null) {
             // ATUALIZAR
-            await crud_servicos.atualizarServico({
+            await crudServicos.atualizarServico({
                 usuarioId,
                 id: editContext.id,
                 titulo,
@@ -227,11 +257,15 @@ function iniciarlizarPaginaServicos() {
                 contato,
                 descricao,
                 imagem: _bs64img,
+                ativo: true,
+                fake: editContext.fake,
+                prazo,
+                preco,
             });
             editContext = null;
         } else {
             // CADASTRAR
-            await crud_servicos.criarServico({
+            await crudServicos.criarServico({
                 usuarioId,
                 titulo,
                 categoria,
@@ -239,10 +273,14 @@ function iniciarlizarPaginaServicos() {
                 contato,
                 descricao,
                 imagem: _bs64img,
+                ativo: true,
+                fake: false,
+                prazo,
+                preco,
             });
         }
 
-        html_form.reset();
+        htmlFormCadastroServico.reset();
         render();
     });
 

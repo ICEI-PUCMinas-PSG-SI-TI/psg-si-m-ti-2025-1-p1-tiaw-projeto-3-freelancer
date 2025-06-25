@@ -30,7 +30,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Source+Sans+3&display=swap"
       rel="stylesheet" />
     <!-- Project Scripts -->
-    <script src="static/js/redirect.js"></script>
+    <script defer type="module" src="static/js/lib/redirect.mjs"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
     <script defer type="module" src="static/js/profile.mjs"></script>
@@ -119,9 +119,9 @@
               <!-- Informações do serviço -->
               <div class="col-12 col-md-8 align-items-center space-0 ps-md-4">
                 <h2 class="mb-3" id="servico-titulo">Título do Serviço</h2>
-                <span class="badge bg-primary mb-2" id="servico-categoria">
-                  Categoria do Serviço
-                </span>
+                <p class="badge bg-primary mb-2">
+                  Categoria: <span id="servico-categoria">Não informado</span>
+                </p>
                 <p class="lead mb-4" id="servico-descricao">
                   Descrição detalhada do serviço oferecido. Explique aqui o que está incluso,
                   prazos, diferenciais e qualquer informação relevante para o cliente.
@@ -135,15 +135,15 @@
                   </li>
                   <li class="list-group-item bg-transparent text-light">
                     <strong>Prazo:</strong>
-                    <span id="prazo-servico">Não informado</span>
+                    <span id="servico-prazo">Não informado</span>
                   </li>
                   <li class="list-group-item bg-transparent text-light">
                     <strong>Preço:</strong>
-                    <span id="preco-servico">Não informado</span>
+                    <span id="servico-preco">Não informado</span>
                   </li>
                   <li class="list-group-item bg-transparent text-light">
                     <strong>Avaliação:</strong>
-                    <span id="avaliacao-servico">⭐⭐⭐⭐⭐ (4.9/5)</span>
+                    <span id="servico-avaliacao">Sem avaliações</span>
                   </li>
                   <li class="list-group-item bg-transparent text-light">
                     <strong>Contato:</strong>

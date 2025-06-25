@@ -1,10 +1,20 @@
 //@ts-check
 
 import { Usuarios } from "../jsonf/usuarios.mjs";
+// eslint-disable-next-line no-unused-vars
+import { Avaliacoes, AvaliacaoObjectExpanded } from "../jsonf/avaliacoes.mjs";
+// eslint-disable-next-line no-unused-vars
+import { Servicos, ServicoObjectExpanded } from "../jsonf/servicos.mjs";
+// eslint-disable-next-line no-unused-vars
+import { Portfolios, PortfolioObjectExpanded } from "../jsonf/portfolios.mjs";
+
 import { assertStringNonEmpty } from "../lib/validate.mjs";
 import { retornarIdSeLogado } from "../lib/credenciais.mjs";
 
-const crud_usuarios = new Usuarios();
+const crudUsuarios = new Usuarios();
+const crudAvaliacoes = new Avaliacoes();
+const crudServicos = new Servicos();
+const crudPortfolios = new Portfolios();
 
 const htmlBackgroundImage = document.querySelector("div.body-section.body-content");
 const htmlProfileImgPicture = document.getElementById("profile-picture-perfil");
@@ -21,14 +31,11 @@ const htmlProfileButtonEditPerfil = document.getElementById("button-edit-perfil"
 async function inicializarPerfil(id, allowEdit) {
     assertStringNonEmpty(id);
 
-    const _usuarios = await crud_usuarios.lerUsuario(id);
+    const _usuarios = await crudUsuarios.lerUsuario(id);
     if (!_usuarios) {
         alert("Não foi possível ler as informações desse usuário!");
         return;
     }
-
-    const nota = "4.4";
-    const avaliacoes = "152";
 
     if (
         !(htmlProfileImgPicture instanceof HTMLImageElement) ||
@@ -41,7 +48,7 @@ async function inicializarPerfil(id, allowEdit) {
         !htmlProfileParagBiografia ||
         !htmlProfileParagAval
     ) {
-        console.log("Null check2");
+        console.error("Some html elements are null!");
         return;
     }
 
@@ -51,30 +58,159 @@ async function inicializarPerfil(id, allowEdit) {
     }
 
     htmlProfileImgPicture.src = _usuarios.foto || "static/img/placeholder_profile.png";
-    htmlProfileH2ProfileName.innerText = _usuarios.nome;
+    htmlProfileH2ProfileName.innerText = _usuarios.nome || "Nome não registrado";
     htmlProfileParagTitle.innerText = _usuarios.profissao || "Profissão não informada";
     htmlProfileParagCidade.innerText = _usuarios.cidade || "Região não informada";
     if (_usuarios.biografia) {
         htmlProfileParagBiografia.parentElement?.classList.remove("d-none");
         htmlProfileParagBiografia.innerText = _usuarios.biografia;
     }
-    if (_usuarios.contatos?.length) {
+    if (_usuarios.contatos?.length && _usuarios.contatos[0]) {
         const _contato = _usuarios.contatos[0];
         htmlProfileLinkContato.classList.remove("d-none");
         htmlProfileLinkContato.innerText = _contato;
-        const _strip_contato = _contato.replace(/[^0-9+]/gm, "");
-        htmlProfileLinkContato.href = `tel:${_strip_contato}`;
+        const contatoParsed = _contato.replace(/[^0-9+]/gm, "");
+        htmlProfileLinkContato.href = `tel:${contatoParsed}`;
     }
-    htmlProfileLinkEmail.innerText = _usuarios.email;
-    htmlProfileLinkEmail.href = `mailto:${_usuarios.email}`;
-
-    htmlProfileParagNota.innerText = nota;
-    htmlProfileParagAval.innerText = avaliacoes;
+    if (_usuarios.email) {
+        htmlProfileLinkEmail.innerText = _usuarios.email;
+        htmlProfileLinkEmail.href = `mailto:${_usuarios.email}`;
+    }
 
     if (allowEdit) {
         htmlProfileButtonEditPerfil?.classList.remove("d-none");
         htmlProfileButtonEditPerfil?.addEventListener("click", () => location.assign("/cadastro"));
     }
+
+    let portfolios = await crudPortfolios.lerPortfolios();
+    if (portfolios) {
+        const listaPortfolioContainer = document.getElementById("lista-portfolio-container");
+        const listaPortfolio = document.getElementById("lista-portfolios");
+        portfolios = portfolios.filter((portfolio) => portfolio.usuarioId);
+        if (portfolios.length && listaPortfolioContainer && listaPortfolio) {
+            listaPortfolioContainer.classList.remove("d-none");
+            const frag = document.createDocumentFragment();
+            portfolios.forEach((portfolio) =>
+                frag.appendChild(createPortfolioCard(portfolio.id, portfolio.nome)),
+            );
+            listaPortfolioContainer.appendChild(frag);
+        } else {
+            console.error("Null object");
+        }
+    }
+
+    let servicos = await crudServicos.lerServicos();
+    if (!servicos.length) return;
+    servicos = servicos.filter((servico) => servico.usuarioId === id);
+    const servicosIdList = new Set();
+
+    const listaServicos = document.getElementById("lista-servicos");
+    const listServicosElement = document.createElement("div");
+    listServicosElement.classList.add("mb-2", "w-100", "rounded");
+    servicos.forEach((servico) => {
+        servicosIdList.add(servico.id);
+        // Adicionar no html
+        listServicosElement.appendChild(
+            createServicoCard(
+                servico.id,
+                servico.imagem,
+                servico.titulo,
+                servico.categoria,
+                servico.descricao,
+                servico.contato,
+            ),
+        );
+    });
+
+    const listaServicosNone = document.getElementById("lista-servicos-none");
+    if (!servicosIdList.size || !(listaServicosNone instanceof HTMLHeadingElement)) return;
+    listaServicosNone.classList.add("d-none");
+    listaServicos?.appendChild(listServicosElement);
+
+    let avaliacoes = await crudAvaliacoes.lerAvaliacoes();
+    if (!avaliacoes?.length) return;
+    avaliacoes = avaliacoes.filter((avaliacao) => servicosIdList.has(avaliacao.servicoId));
+    if (!avaliacoes.length) return;
+
+    const listaAvaliacoes = document.getElementById("lista-avaliacoes");
+    const listAvaliacoesElement = document.createElement("div");
+    listAvaliacoesElement.classList.add("mb-2", "w-100", "rounded");
+
+    let total = 0;
+    let quant = 0;
+    avaliacoes.forEach((avaliacao) => {
+        total += avaliacao.nota || 0;
+        quant++;
+
+        listAvaliacoesElement.appendChild(
+            createAvaliacaoCard(avaliacao?.usuario?.nome, avaliacao?.nota, avaliacao?.comentario),
+        );
+    });
+
+    htmlProfileParagNota.innerText = (total / quant).toFixed(2).toString();
+    htmlProfileParagAval.innerText = String(quant);
+
+    const listaAvaliacoesNone = document.getElementById("lista-avaliacoes-none");
+    if (!(listaAvaliacoesNone instanceof HTMLHeadingElement)) return;
+    listaAvaliacoesNone.classList.add("d-none");
+    listaAvaliacoes?.appendChild(listAvaliacoesElement);
+}
+
+function createServicoCard(id, imagem, titulo, categoria, descricao, contato) {
+    const a = document.createElement("a");
+    a.className =
+        "list-group-item d-flex justify-content-between align-items-center flex-wrap text-decoration-none";
+
+    a.innerHTML = `<div class="d-flex me-3">
+            <img width="64px" heigth="64px" class="rounded" src="${imagem || "static/icons/images.svg"}" />
+        </div>
+        <div class="d-flex flex-column flex-grow-1 me-3">
+            <strong>${titulo}</strong>
+            <small>${categoria}</small>
+            <p class="mb-1">${descricao}</p>
+            <small>Contato: ${contato}</small>
+        </div>`;
+    a.href = `/detalhes.html?id=${id}`;
+    return a;
+}
+
+function createAvaliacaoCard(nome, nota, comentario) {
+    const li = document.createElement("li");
+    li.className =
+        "list-group-item d-flex justify-content-between align-items-center flex-wrap text-decoration-none";
+    li.innerHTML = `<div class="card-body p-3">
+        <h6 class="card-title mb-1">${nome} <span class="text-warning">${estrelas(nota)}</span></h6>
+        <p class="card-text mb-0">${comentario}</p>
+    </div>`;
+    return li;
+}
+
+function createPortfolioCard(id, nome) {
+    const a = document.createElement("a");
+    a.classList.add(
+        "btn",
+        "btn-outline-primary",
+        "center-xy",
+        "d-flex",
+        "d-row",
+        "w-100",
+        "center-xy",
+        "mb-2",
+    );
+    a.href = `/portfolio?id=${id}`;
+    a.innerHTML = `<div class="m-3">
+            <i class="bi bi-briefcase-fill icon-64px"></i>
+        </div>
+        <div class="d-flex flex-column">
+            <h5 class="space-0">Portfólio</h5>
+            <p class="space-0">${nome}</p>
+        </div>`;
+    return a;
+}
+
+function estrelas(nota) {
+    if (!nota) return "Nota não registrada";
+    return `${"⭐".repeat(nota)} (${String(nota)}/5)`;
 }
 
 function carregarDadosDaUrl() {

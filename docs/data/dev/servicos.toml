@@ -12,25 +12,28 @@
 # id = ID do serviço
 # ativo = Serviço está disponivel?
 # titulo = Título do serviço
-# TODO: @Deprecate categoria for categoriaId
-# categoria = Descrição da categoria
 # categoriaId = ID da categoria do serviço
 # contato = Contato do freelancer do serviço
 # descricao = Descrição do serviço
 # imagem = Imagem sobre o serviço
-# imagemId = Lista de IDs das imagens relacionadas ao serviço
 # preco = Preço sugerido pelo serviço
-# TODO: @Deprecate freelancer for usuarioId
-# freelancer = Nome do usuário que publicou o serviço
+# prazo = Tempo médio necessário para completar o serviço
+# fake = Informações foram criadas utilizando ferramentas de desenvolvimento
+# usuarioId = ID do usuário que publicou o serviço
 
-# TODO: Used fields but not reccommended
+# DEPRECATE
+# @Deprecate freelancer for usuarioId
+# freelancer = Nome do usuário que publicou o serviço
+# @Deprecate categoria for categoriaId
+# categoria = Descrição da categoria
+
+# TODO: Used fields but not recommended
 # avaliacao (feat/detalhes-servicos)
 # avaliacoes (feat/detalhes-servicos): [{comentario, estrelas, nome}]
 
 # TODO: Armazenar novos parametros (não importantes no momento):
 # valor = Valor do orçamento para um tipo de serviço
-# prazo = Tempo médio necessário para completar o serviço
-# usuarioId = ID do usuário que publicou o serviço
+# imagemId = Lista de IDs das imagens relacionadas ao serviço
 
 [[servicos]]
 id = 0

@@ -19,7 +19,7 @@ export function generateRandomNumber(opts = {}) {
     // opts.max(number): Limite máximo do valor gerado (default: 10 000)
     let _max = opts.max || 10000;
     // opts.double(boolean): Retorna double como argumento
-    const _double = opts.double || true;
+    const _double = opts.double || false;
 
     if (!_double) {
         _min = Math.floor(_min);
@@ -68,7 +68,7 @@ export function ensureType(value, type) {
     if (typeof type !== "string") return false;
 
     if (typeof value === "string" && type === "number") {
-        let parse = parseInt(value);
+        let parse = parseInt(value, 10);
         if (typeof parse === "number") value = parse;
     }
 

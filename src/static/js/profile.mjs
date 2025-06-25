@@ -1,9 +1,10 @@
 //@ts-check
 
-import { Usuarios } from "./jsonf/usuarios.mjs"; // Usuários
+// Usuários
+import { Usuarios } from "./jsonf/usuarios.mjs";
 import { retornaNomeSeLogado, retornarIdSeLogado, realizarLogout } from "./lib/credenciais.mjs";
 
-const crud_usuarios = new Usuarios();
+const crudUsuarios = new Usuarios();
 
 const htmlDivModalProfile = document.getElementById("profile-modal");
 const htmlButtonShowPerfil = document.getElementById("profile-show-perfil");
@@ -11,8 +12,6 @@ const htmlButtonShowPerfil = document.getElementById("profile-show-perfil");
 function inicializarProfile() {
     const userId = retornarIdSeLogado();
     if (!userId) return;
-
-    const userInfo = crud_usuarios.lerUsuario(userId);
 
     const htmlImageProfileBig = document.getElementById("profile-picture-big");
     const htmlImageProfile = document.getElementById("profile-picture-tiny");
@@ -33,7 +32,7 @@ function inicializarProfile() {
         // mostrarModalProfile()
         htmlDivModalProfile?.classList.remove("d-none"),
     );
-    htmlLogout.addEventListener("click", () => realizarLogout);
+    htmlLogout.addEventListener("click", realizarLogout);
     htmlDivModalProfile.addEventListener("click", () =>
         // esconderModalProfile()
         htmlDivModalProfile?.classList.add("d-none"),
@@ -41,9 +40,11 @@ function inicializarProfile() {
     htmlImageProfile.classList.remove("d-none");
     htmlButtonShowPerfil?.addEventListener("click", () => location.assign("/perfil"));
 
-    userInfo.then((response) => {
-        htmlImageProfileBig.src = response.foto;
-        htmlImageProfile.src = response.foto;
+    crudUsuarios.lerUsuario(userId).then((response) => {
+        if (response.foto) {
+            htmlImageProfileBig.src = response.foto;
+            htmlImageProfile.src = response.foto;
+        }
     });
 }
 

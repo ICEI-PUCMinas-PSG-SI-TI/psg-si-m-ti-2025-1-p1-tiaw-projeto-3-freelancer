@@ -3,14 +3,22 @@
 import { Usuarios } from "../jsonf/usuarios.mjs";
 import { Servicos } from "../jsonf/servicos.mjs";
 import { assertStringNonEmpty } from "../lib/validate.mjs";
+import { Avaliacoes } from "../jsonf/avaliacoes.mjs";
 
-const crud_usuarios = new Usuarios();
-const crud_servicos = new Servicos();
+// eslint-disable-next-line no-unused-vars
+const crudUsuarios = new Usuarios();
+const crudServicos = new Servicos();
+const crudAvaliacoes = new Avaliacoes();
+
+function initializeIfNotNull(elementId, textContent) {
+    const element = document.getElementById(elementId);
+    if (element instanceof HTMLElement && textContent) element.textContent = textContent;
+}
 
 async function inicializarDetalhes(id) {
     assertStringNonEmpty(id);
 
-    const servico = await crud_servicos.lerServico(id);
+    const servico = await crudServicos.lerServico(id);
     if (!servico) {
         alert("Serviço não encontrado!");
         return;
@@ -21,43 +29,72 @@ async function inicializarDetalhes(id) {
     if (htmlBackgroundImage instanceof HTMLDivElement)
         htmlBackgroundImage.style.backgroundImage = `url(https://picsum.photos/seed/${id}/1080)`;
 
-    if (servico.imagem) document.getElementById("servico-img").src = servico.imagem;
-    document.getElementById("servico-titulo").textContent = servico.titulo;
-    document.getElementById("servico-categoria").textContent = "Categoria: " + servico.categoria;
-    document.getElementById("servico-descricao").textContent = servico.descricao;
-    try {
-        const _userId = servico.usuarioId;
-        const _user = await crud_usuarios.lerUsuario(_userId);
-        if (_user) {
+    const htmlServicoImagem = document.getElementById("servico-img");
+    if (servico.imagem && htmlServicoImagem instanceof HTMLImageElement)
+        htmlServicoImagem.src = servico.imagem;
+
+    initializeIfNotNull("servico-img", servico.imagem);
+    initializeIfNotNull("servico-titulo", servico.titulo);
+    initializeIfNotNull("servico-categoria", servico.categoria);
+    initializeIfNotNull("servico-descricao", servico.descricao);
+
+    if (servico.usuario) {
+        const { nome, id } = servico.usuario;
+        const freelancerNome = document.getElementById("freelancer-nome");
+        if (nome && id && freelancerNome instanceof HTMLAnchorElement) {
             // TODO: Adicionar link ao perfil
-            document.getElementById("freelancer-nome").textContent = _user.nome;
-            document.getElementById("freelancer-nome").href = `/perfil?id=${_userId}`;
+            freelancerNome.textContent = nome;
+            freelancerNome.href = `/perfil?id=${id}`;
         }
-    } catch (err) {
-        console.error(err.message);
     }
-    if (servico.contato) document.getElementById("servico-contato").textContent = servico.contato;
-    // document.getElementById("prazo-servico").textContent = servico.prazo;
-    // document.getElementById("preco-servico").textContent = servico.preco;
-    // document.getElementById("avaliacao-servico").textContent = servico.avaliacao;
+
+    initializeIfNotNull("servico-contato", servico.contato);
+    initializeIfNotNull("servico-prazo", servico.prazo);
+    if(typeof servico.preco === "number")
+        initializeIfNotNull("servico-preco", `R$ ${servico.preco}`);
 
     // Preenche avaliações
     const avaliacoesDiv = document.getElementById("avaliacoes-lista");
     if (!avaliacoesDiv) return;
     avaliacoesDiv.innerHTML = "";
-    if (!servico.avaliacoes?.length) {
+
+    let avaliacoes = await crudAvaliacoes.lerAvaliacoes();
+    if (!avaliacoes) {
         avaliacoesDiv.innerHTML = "<p class='text-light'>Nenhuma avaliação ainda.</p>";
         return;
     }
 
-    for (const _avaliacao of servico.avaliacoes) {
+    let total = 0;
+    let quant = 0;
+    avaliacoes = avaliacoes.filter((avaliacao) => avaliacao.servicoId === id);
+    if (!avaliacoes.length) {
+        avaliacoesDiv.innerHTML = "<p class='text-light'>Nenhuma avaliação ainda.</p>";
+        return;
+    }
+
+    avaliacoes.forEach((avaliacao) => {
+        const { nota, usuario, comentario } = avaliacao;
+        const nome = usuario?.nome || "usuário";
+
+        total += nota || 0;
+        quant++;
+
         avaliacoesDiv.innerHTML += `<div class="card mb-3 bg-dark-subtle detalhes-servico-avaliacao">
                 <div class="card-body">
-                <h6 class="card-title mb-1">${_avaliacao.nome} <span class="text-warning">${_avaliacao.estrelas}</span></h6>
-                <p class="card-text mb-0">${_avaliacao.comentario}</p>
+                <h6 class="card-title mb-1">${nome} <span class="text-warning">${estrelas(nota)}</span></h6>
+                <p class="card-text mb-0">${comentario}</p>
                 </div>
             </div>`;
-    }
+    });
+
+    // Media
+    initializeIfNotNull("servico-avaliacao", estrelas(total / quant));
+}
+
+function estrelas(nota) {
+    if (!nota) return "Nota não informada";
+    nota = nota.toFixed(2).toString();
+    return `${"⭐".repeat(nota)} (${nota}/5)`;
 }
 
 function carregarDadosDaUrl() {

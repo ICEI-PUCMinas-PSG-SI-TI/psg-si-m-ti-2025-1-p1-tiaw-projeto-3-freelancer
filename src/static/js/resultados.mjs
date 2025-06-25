@@ -3,8 +3,8 @@
 import { Usuarios } from "./jsonf/usuarios.mjs";
 import { Servicos } from "./jsonf/servicos.mjs";
 
-const crud_usuarios = new Usuarios();
-const crud_servicos = new Servicos();
+const crudUsuarios = new Usuarios();
+const crudServicos = new Servicos();
 
 const prepareString = (str) => {
     return (
@@ -41,12 +41,12 @@ let filtros = null;
 
 function createServiceCard(
     id,
-    foto_src,
+    fotoSrc,
     titulo,
-    nome_usuario,
+    nomeUsuario,
     descricao,
-    quantidade_avaliacoes,
-    nota_avaliacoes,
+    quantAvaliacoes,
+    notaMedAvaliacoes,
 ) {
     const card = document.createElement("a");
     card.classList.add("col-12", "col-md-6", "col-xl-4", "text-decoration-none");
@@ -56,17 +56,17 @@ function createServiceCard(
         <div class="card-body d-flex flex-column">
         <div class="d-flex flex-row mb-2 align-items-center">
             <img class="card-image me-2 rounded border" src="${
-                foto_src || "static/img/placeholder_profile.png"
+                fotoSrc || "static/img/placeholder_profile.png"
             }" />
             <div class="flex-column">
             <h4 class="space-0">${titulo}</h4>
-            <p class="space-0">💼 ${nome_usuario}</p>
+            <p class="space-0">💼 ${nomeUsuario}</p>
             </div>
         </div>
         <p>${descricao}</p>
         <div class="d-flex flex-row justify-content-between mt-auto">
-            <p class="space-0">📝 ${quantidade_avaliacoes}</p>
-            <p class="space-0">⭐ ${nota_avaliacoes}/10</p>
+            <p class="space-0">📝 ${quantAvaliacoes}</p>
+            <p class="space-0">⭐ ${notaMedAvaliacoes}/10</p>
         </div>
         </div>
     </div>`;
@@ -76,11 +76,11 @@ function createServiceCard(
 
 function createUserCard(
     id,
-    foto_src,
-    nome_usuario,
+    fotoSrc,
+    nomeUsuario,
     localizacao,
-    quantidade_avaliacoes,
-    nota_avaliacoes,
+    quantAvaliacoes,
+    notaMedAvaliacoes,
     biografia,
 ) {
     const card = document.createElement("a");
@@ -91,18 +91,18 @@ function createUserCard(
         <div class="card-body d-flex flex-column">
         <div class="d-flex flex-row mb-2 align-items-center">
             <img class="card-image me-2 rounded border" src="${
-                foto_src || "static/img/placeholder_profile.png"
+                fotoSrc || "static/img/placeholder_profile.png"
             }" />
             <div class="flex-column">
-            <h4 class="space-0">${nome_usuario}</h4>
+            <h4 class="space-0">${nomeUsuario}</h4>
             <p class="space-0">🗺️ ${localizacao}</p>
             </div>
         </div>
         <p>${biografia}</p>
         <div class="d-flex flex-row justify-content-between mt-auto">
-            <p class="space-0">📝 ${quantidade_avaliacoes}</p>
+            <p class="space-0">📝 ${quantAvaliacoes}</p>
             
-            <p class="space-0">⭐ ${nota_avaliacoes}/10</p>
+            <p class="space-0">⭐ ${notaMedAvaliacoes}/10</p>
         </div>
         </div>
     </div>`;
@@ -111,87 +111,89 @@ function createUserCard(
 }
 
 async function getData() {
-    servicos = await crud_servicos.lerServicos();
+    servicos = await crudServicos.lerServicos();
     if (!servicos) return;
 
-    usuarios = await crud_usuarios.lerUsuarios();
+    usuarios = await crudUsuarios.lerUsuarios();
     if (!usuarios) return;
 }
 
+const PLACEHOLDER_QUANT_AVAL_SERV = 12;
+const PLACEHOLDER_NOTA_MED_AVAL_SERV = 6;
+const PLACEHOLDER_QUANT_AVAL_USUA = 1923;
+const PLACEHOLDER_NOTA_MED_AVAL_USUA = 8;
+
 function showResultsServices() {
-    const html_row_service = document.getElementById("row-service");
-    if (!(html_row_service instanceof HTMLDivElement)) {
-        console.log("not a html service");
+    const htmlDivServicos = document.getElementById("row-service");
+    if (!(htmlDivServicos instanceof HTMLDivElement)) {
+        console.error("Can't find the html element 'row-service'");
         return;
     }
-    html_row_service.innerHTML = "";
+    htmlDivServicos.innerHTML = "";
 
     if (!servicos) return;
 
-    let service_filtered = servicos;
+    let servicosFiltrados = servicos;
     if (filtros?.query)
-        service_filtered = service_filtered.filter((_servico) => {
+        servicosFiltrados = servicosFiltrados.filter((_servico) => {
             const indexer = prepareString(`${_servico.id}${_servico.titulo}${_servico.descricao}`);
             return indexer.includes(prepareString(filtros?.query));
         });
 
     if (filtros?.localizacao)
-        service_filtered = service_filtered.filter((_servico) => {
+        servicosFiltrados = servicosFiltrados.filter((_servico) => {
             // INFO: Desabilitado por agora devido ao CRUD de serviços não incluir a informação de localização
             // TODO: Add a filter to all elements of filtering
             const cidade = _servico.cidade || "";
             return cidade.toLowerCase().includes(filtros?.localizacao);
         });
 
-    const _service_avaliacoes_quantidade = 12;
-    const _service_avaliacoes_nota_media = 6;
-
     if (filtros?.review)
-        service_filtered = service_filtered.filter(
-            () => _service_avaliacoes_nota_media >= parseInt(filtros?.review),
+        servicosFiltrados = servicosFiltrados.filter(
+            () => PLACEHOLDER_NOTA_MED_AVAL_SERV >= parseInt(filtros?.review, 10),
         );
 
-    const search_text_service = document.getElementById("search_text_se");
-    const no_found_service = document.getElementById("no_found_service");
-    if (service_filtered.length === 0) {
-        no_found_service?.classList.remove("d-none");
-        if (filtros?.query?.trim() && search_text_service instanceof HTMLSpanElement) {
-            search_text_service.innerText = ` com a pesquisa "${filtros?.query}"`;
+    const htmlSpanServico404Query = document.getElementById("search_text_se");
+    const htmlSpanUsuario404Container = document.getElementById("no_found_service");
+    if (servicosFiltrados.length === 0) {
+        htmlSpanUsuario404Container?.classList.remove("d-none");
+        if (filtros?.query?.trim() && htmlSpanServico404Query instanceof HTMLSpanElement) {
+            htmlSpanServico404Query.innerText = ` com a pesquisa "${filtros?.query}"`;
         }
     } else {
-        no_found_service?.classList.add("d-none");
-        if (search_text_service instanceof HTMLSpanElement) search_text_service.innerText = "";
+        htmlSpanUsuario404Container?.classList.add("d-none");
+        if (htmlSpanServico404Query instanceof HTMLSpanElement)
+            htmlSpanServico404Query.innerText = "";
     }
 
-    for (const _servico of service_filtered) {
-        // TODO: Criar relação do usuario com o serviço
-        const _servico_user_id = "Fulano";
-        // TODO: Ler dinamicamente
-        html_row_service.appendChild(
+    for (const _servico of servicosFiltrados) {
+        htmlDivServicos.appendChild(
             createServiceCard(
                 _servico.id,
                 _servico.imagem,
                 _servico.titulo,
-                _servico_user_id,
+                // _servico_user_id,
+                // TODO: Ler dinamicamente e criar relação do usuario com o serviço
+                "Fulano",
                 _servico.descricao,
-                _service_avaliacoes_quantidade,
-                _service_avaliacoes_nota_media,
+                PLACEHOLDER_QUANT_AVAL_SERV,
+                PLACEHOLDER_NOTA_MED_AVAL_SERV,
             ),
         );
     }
 }
 
 function showResultsUsers() {
-    const html_row_users = document.getElementById("row-users");
-    if (!(html_row_users instanceof HTMLDivElement)) return;
-    html_row_users.innerHTML = "";
+    const htmlDivUsuarios = document.getElementById("row-users");
+    if (!(htmlDivUsuarios instanceof HTMLDivElement)) return;
+    htmlDivUsuarios.innerHTML = "";
 
     if (!usuarios) return;
 
-    let user_filtered = usuarios;
+    let usuariosFiltrados = usuarios;
 
     if (filtros?.query)
-        user_filtered = user_filtered.filter((_user) => {
+        usuariosFiltrados = usuariosFiltrados.filter((_user) => {
             const indexer = prepareString(
                 `${_user.id}${_user.nome}${_user.cidade}${_user.biografia}`,
             );
@@ -199,39 +201,37 @@ function showResultsUsers() {
         });
 
     if (filtros?.localizacao)
-        user_filtered = user_filtered.filter((_user) => {
+        usuariosFiltrados = usuariosFiltrados.filter((_user) => {
             return _user.cidade?.toLowerCase().includes(filtros?.localizacao.trim().toLowerCase());
         });
 
-    const _user_avaliacoes_quantidade = 1923;
-    const _user_avaliacoes_nota_media = 8;
-
     if (filtros?.review)
-        user_filtered = user_filtered.filter(
-            () => _user_avaliacoes_nota_media >= parseInt(filtros?.review),
+        usuariosFiltrados = usuariosFiltrados.filter(
+            () => PLACEHOLDER_NOTA_MED_AVAL_USUA >= parseInt(filtros?.review, 10),
         );
 
-    const search_text_user = document.getElementById("search_text_us");
-    const no_found_user = document.getElementById("no_found_user");
-    if (user_filtered.length === 0) {
-        no_found_user?.classList.remove("d-none");
-        if (filtros?.query.trim() !== "" && search_text_user instanceof HTMLSpanElement) {
-            search_text_user.innerText = ` com a pesquisa "${filtros?.query}"`;
+    const htmlSpanUsuario404Query = document.getElementById("search_text_us");
+    const htmlSpanUsuario404Container = document.getElementById("no_found_user");
+    if (usuariosFiltrados.length === 0) {
+        htmlSpanUsuario404Container?.classList.remove("d-none");
+        if (filtros?.query.trim() !== "" && htmlSpanUsuario404Query instanceof HTMLSpanElement) {
+            htmlSpanUsuario404Query.innerText = ` com a pesquisa "${filtros?.query}"`;
         }
     } else {
-        no_found_user?.classList.add("d-none");
-        if (search_text_user instanceof HTMLSpanElement) search_text_user.innerText = "";
+        htmlSpanUsuario404Container?.classList.add("d-none");
+        if (htmlSpanUsuario404Query instanceof HTMLSpanElement)
+            htmlSpanUsuario404Query.innerText = "";
     }
-    for (const _user of user_filtered) {
+    for (const _user of usuariosFiltrados) {
         // TODO: Ler dinamicamente
-        html_row_users.appendChild(
+        htmlDivUsuarios.appendChild(
             createUserCard(
                 _user.id,
                 _user.foto,
                 _user.nome,
                 _user.cidade,
-                _user_avaliacoes_quantidade,
-                _user_avaliacoes_nota_media,
+                PLACEHOLDER_QUANT_AVAL_USUA,
+                PLACEHOLDER_NOTA_MED_AVAL_USUA,
                 _user.biografia,
             ),
         );
@@ -250,63 +250,64 @@ function createOption(value) {
 }
 
 function setupFiltersElement() {
-    const html_review_range = document.getElementById("review_range");
-    const html_select_localizacao = document.getElementById("localizacao_select");
-    const html_range_info = document.getElementById("review_range_info");
+    const htmlInputRangeNota = document.getElementById("review_range");
+    const htmlSelectLocalizacao = document.getElementById("localizacao_select");
+    const htmlSpanRangeInfo = document.getElementById("review_range_info");
 
-    let option_map = new Map();
+    let opcoesLocalizacao = new Map();
 
     if (usuarios) {
         usuarios.forEach((_user, i) => {
-            if (!_user.cidade) return;
-            option_map.set(_user.cidade, i);
+            if (_user.cidade) {
+                opcoesLocalizacao.set(_user.cidade, i);
+            }
         });
     }
 
-    option_map.forEach((_, k) => {
-        html_select_localizacao?.appendChild(createOption(k));
+    opcoesLocalizacao.forEach((_, k) => {
+        htmlSelectLocalizacao?.appendChild(createOption(k));
     });
 
     if (
-        !(html_review_range instanceof HTMLInputElement) ||
-        !(html_range_info instanceof HTMLSpanElement) ||
-        !(html_select_localizacao instanceof HTMLSelectElement)
+        !(htmlInputRangeNota instanceof HTMLInputElement) ||
+        !(htmlSpanRangeInfo instanceof HTMLSpanElement) ||
+        !(htmlSelectLocalizacao instanceof HTMLSelectElement)
     )
         return;
 
-    html_review_range.addEventListener("input", () => {
-        const val = html_review_range.value;
+    htmlInputRangeNota.addEventListener("input", () => {
+        const val = htmlInputRangeNota.value;
         filtros.review = val;
-        html_range_info.innerText = val;
+        htmlSpanRangeInfo.innerText = val;
         setParamNoReload();
         showResults();
     });
 
-    html_select_localizacao.addEventListener("input", () => {
-        if (!(html_select_localizacao instanceof HTMLSelectElement)) return;
-        if (html_select_localizacao.value === "0") {
+    htmlSelectLocalizacao.addEventListener("input", () => {
+        if (!(htmlSelectLocalizacao instanceof HTMLSelectElement)) return;
+        if (htmlSelectLocalizacao.value === "0") {
             filtros.localizacao = null;
-        } else filtros.localizacao = html_select_localizacao.selectedOptions[0].text.trim();
+        } else filtros.localizacao = htmlSelectLocalizacao.selectedOptions[0].text.trim();
         setParamNoReload();
         showResults();
     });
 
     if (filtros?.query && filtros?.query.trim() !== "") {
-        const search_bar = document.getElementById("search-bar");
-        if (search_bar instanceof HTMLInputElement) {
-            search_bar.value = filtros?.query;
+        const htmlInputSearchQuery = document.getElementById("search-bar");
+        if (htmlInputSearchQuery instanceof HTMLInputElement) {
+            htmlInputSearchQuery.value = filtros?.query;
         }
     }
 
     if (filtros?.review && filtros?.review !== "0") {
-        html_review_range.value = filtros?.review;
-        html_range_info.innerText = filtros?.review;
+        htmlInputRangeNota.value = filtros?.review;
+        htmlSpanRangeInfo.innerText = filtros?.review;
     }
 
-    if (filtros?.localizacao && option_map.has(filtros?.localizacao)) {
-        let tt = option_map.get(filtros?.localizacao);
-        html_select_localizacao.selectedIndex = tt + 1;
-        html_select_localizacao.value = filtros?.localizacao;
+    if (filtros?.localizacao && opcoesLocalizacao.has(filtros?.localizacao)) {
+        let tt = opcoesLocalizacao.get(filtros?.localizacao);
+        htmlSelectLocalizacao.selectedIndex = tt + 1;
+        htmlSelectLocalizacao.value = filtros?.localizacao;
     }
 }
 
@@ -328,8 +329,8 @@ function setParamNoReload() {
     else params.set("review", filtros?.review);
 
     const url = new URL(window.location.href);
-    const params_string = params.size === 0 ? `` : `?${params.toString()}`;
-    const newUrl = `${url.origin}${url.pathname}${params_string}`;
+    const newParams = params.size === 0 ? `` : `?${params.toString()}`;
+    const newUrl = `${url.origin}${url.pathname}${newParams}`;
 
     window.history.replaceState(null, document.title, newUrl);
 }
@@ -342,35 +343,35 @@ function limparFiltros() {
 }
 
 function setupClearButton() {
-    const html_clear_bnt = document.getElementById("clear-btn");
+    const htmlButtonLimpar = document.getElementById("clear-btn");
 
-    if (!(html_clear_bnt instanceof HTMLButtonElement)) return;
+    if (!(htmlButtonLimpar instanceof HTMLButtonElement)) return;
 
-    html_clear_bnt.classList.remove("d-none");
-    html_clear_bnt.addEventListener("click", (e) => {
+    htmlButtonLimpar.classList.remove("d-none");
+    htmlButtonLimpar.addEventListener("click", (e) => {
         e.preventDefault();
         limparFiltros();
         setParamNoReload();
 
         // Move to a function
-        const html_review_range = document.getElementById("review_range");
-        const html_select_localizacao = document.getElementById("localizacao_select");
-        const html_range_info = document.getElementById("review_range_info");
-        const html_search_bar = document.getElementById("search-bar");
+        const htmlInputRangeNota = document.getElementById("review_range");
+        const htmlSelectLocalizacao = document.getElementById("localizacao_select");
+        const htmlSpanRangeInfo = document.getElementById("review_range_info");
+        const htmlInputSearchQuery = document.getElementById("search-bar");
 
         if (
-            !(html_review_range instanceof HTMLInputElement) ||
-            !(html_range_info instanceof HTMLSpanElement) ||
-            !(html_select_localizacao instanceof HTMLSelectElement) ||
-            !(html_search_bar instanceof HTMLInputElement)
+            !(htmlInputRangeNota instanceof HTMLInputElement) ||
+            !(htmlSpanRangeInfo instanceof HTMLSpanElement) ||
+            !(htmlSelectLocalizacao instanceof HTMLSelectElement) ||
+            !(htmlInputSearchQuery instanceof HTMLInputElement)
         )
-            return null;
+            return;
 
-        html_select_localizacao.selectedIndex = 0;
-        html_select_localizacao.value = "0";
-        html_review_range.value = "0";
-        html_range_info.innerText = "0";
-        html_search_bar.value = "";
+        htmlSelectLocalizacao.selectedIndex = 0;
+        htmlSelectLocalizacao.value = "0";
+        htmlInputRangeNota.value = "0";
+        htmlSpanRangeInfo.innerText = "0";
+        htmlInputSearchQuery.value = "";
     });
 }
 

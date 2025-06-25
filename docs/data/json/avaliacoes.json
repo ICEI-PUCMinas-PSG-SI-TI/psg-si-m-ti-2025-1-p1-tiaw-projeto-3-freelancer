@@ -7,6 +7,7 @@
             "id": 0,
             "imagem": "base64|url",
             "nota": 5,
+            "servicoId": 0,
             "usuarioId": 5
         },
         {
@@ -16,6 +17,7 @@
             "id": 1,
             "imagem": "base64|url",
             "nota": 1,
+            "servicoId": 1,
             "usuarioId": 4
         },
         {
@@ -25,6 +27,7 @@
             "id": 2,
             "imagem": "base64|url",
             "nota": 2,
+            "servicoId": 2,
             "usuarioId": 3
         },
         {
@@ -34,6 +37,7 @@
             "id": 3,
             "imagem": "base64|url",
             "nota": 8,
+            "servicoId": 3,
             "usuarioId": 2
         },
         {
@@ -43,6 +47,7 @@
             "id": 4,
             "imagem": "base64|url",
             "nota": 10,
+            "servicoId": 4,
             "usuarioId": 2
         }
     ]

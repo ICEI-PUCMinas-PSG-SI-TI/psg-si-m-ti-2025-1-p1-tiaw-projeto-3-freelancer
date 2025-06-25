@@ -1,6 +1,10 @@
 //@ts-check
 
 import { assertStringNonEmpty } from "../lib/validate.mjs";
+// eslint-disable-next-line no-unused-vars
+import { ServicoObject } from "./servicos.mjs";
+// eslint-disable-next-line no-unused-vars
+import { UsuarioObject } from "./usuarios.mjs";
 
 /*
  * Esse script adiciona os recursos necessários para o CRUD de contratos
@@ -15,6 +19,40 @@ import { assertStringNonEmpty } from "../lib/validate.mjs";
 
 const API_URL = "/contratos";
 
+export class ContratoObject {
+    /** @type {string|number|null} */
+    id = null;
+    /** @type {string|number|null} */
+    servicoId = null;
+    /** @type {string|number|null} */
+    usuarioId = null;
+    /** @type {string|null} */
+    data = null;
+    /** @type {number|null} */
+    valor = null;
+    /** @type {string|number|null} */
+    status = null;
+}
+
+export class ContratoObjectExpanded {
+    /** @type {string|number|null} */
+    id = null;
+    /** @type {string|number|null} */
+    servicoId = null;
+    /** @type {string|number|null} */
+    usuarioId = null;
+    /** @type {string|null} */
+    data = null;
+    /** @type {number|null} */
+    valor = null;
+    /** @type {string|number|null} */
+    status = null;
+    /** @type {ServicoObject|null} */
+    servico = null;
+    /** @type {UsuarioObject|null} */
+    usuario = null;
+}
+
 export class Contratos {
     // https://tenor.com/view/lazy-pat-down-gif-24710885
     assertObjetoContrato(contrato) {
@@ -23,21 +61,21 @@ export class Contratos {
 
     // TODO: paginate (_page) (_per_page)
     /**
-     * @returns {Promise<Array>}
+     * @returns {Promise<ContratoObjectExpanded[]>}
      */
-    async lerContratos() {
-        return fetch(API_URL, {
+    lerContratos() {
+        return fetch(`${API_URL}?_embed=usuario&_embed=servico`, {
             method: "GET",
         }).then((response) => response.json());
     }
 
     /**
      * @param {string} id
-     * @returns {Promise<Object>}
+     * @returns {Promise<ContratoObjectExpanded>}
      */
-    async lerContrato(id) {
+    lerContrato(id) {
         assertStringNonEmpty(id);
-        return fetch(`${API_URL}/${id}`, {
+        return fetch(`${API_URL}/${id}?_embed=usuario&_embed=servico`, {
             method: "GET",
         }).then((response) => response.json());
     }
@@ -47,20 +85,18 @@ export class Contratos {
      * @param {string} id ID do contrato a ser atualizado
      * @returns {Promise<string>}
      */
-    async excluirContrato(id) {
+    excluirContrato(id) {
         assertStringNonEmpty(id);
-        return fetch(`${API_URL}/${id}`, {
-            method: "DELETE",
-        })
+        return fetch(`${API_URL}/${id}`, { method: "DELETE" })
             .then((response) => response.json())
             .then((response) => response.id);
     }
 
     /**
      * Atualiza as informações de um contrato, retorna uma Promessa com as informações atualizadas
-     * @param {Object} contrato
+     * @param {ContratoObject} contrato
      */
-    async atualizarContrato(contrato) {
+    atualizarContrato(contrato) {
         // TODO: validar as informações de contrato
         // Obs: Retornar erro, caso necessário
         this.assertObjetoContrato(contrato);
@@ -80,7 +116,7 @@ export class Contratos {
      * @param {Object} contrato Informações do contrato a ser cadastrado
      * @returns {Promise<Object>} Retorna o json do contrato se as informações foram cadastradas corretamente
      */
-    async criarContrato(contrato) {
+    criarContrato(contrato) {
         // TODO: Validar as informações do contrato
         // Obs: Retornar erro, caso necessário
         this.assertObjetoContrato(contrato);
@@ -99,7 +135,7 @@ export class Contratos {
      * Limpa todas as informações dos contrato
      */
     // TODO: Verificar melhor forma de excluir todos os dados não recursivamente
-    async limparContratos() {
+    limparContratos() {
         throw new Error("Função não implementada!");
     }
 }

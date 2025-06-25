@@ -30,7 +30,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Source+Sans+3&display=swap"
       rel="stylesheet" />
     <!-- Project Scripts -->
-    <script src="static/js/redirect.js"></script>
+    <script defer type="module" src="static/js/lib/redirect.mjs"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
     <script defer type="module" src="static/js/profile.mjs"></script>
@@ -117,7 +117,8 @@
       <form
         id="form-servico"
         enctype="multipart/form-data"
-        class="form-cadastro-servico border rounded mb-3">
+        class="form-cadastro-servico border rounded mb-3"
+        onsubmit="(e)=>{e.preventDefault()}">
         <div class="col-md-3 d-flex flex-column align-items-center w-100">
           <img
             id="image_preview"
@@ -154,10 +155,7 @@
         <div class="mb-3">
           <label for="categoriaId" class="form-label">Categoria</label>
           <select class="form-select" id="categoriaId" required>
-            <option value="0">Refrigeração</option>
-            <option value="1">Climatização</option>
-            <option value="2">Eletricista</option>
-            <option value="3">Outro</option>
+            <option value="" selected>Selecione a categoria</option>
           </select>
         </div>
 
@@ -165,6 +163,19 @@
           <label for="descricao" class="form-label">Descrição</label>
           <textarea class="form-control" id="descricao" rows="3" required></textarea>
         </div>
+
+        <div class="mb-3">
+          <label for="prazo" class="form-label">Prazo Estimado</label>
+          <input type="text" class="form-control" id="prazo" required />
+          <div class="form-text m-1">Prazo estimado para conclusão do serviço. (Exemplo: 7 dias úteis)</div>
+        </div>
+
+        <label for="preco" class="form-label">Preço Sugerido</label>
+        <div class="input-group">
+          <span class="input-group-text">R$</span>
+          <input type="number" class="form-control" id="preco" required />
+        </div>
+        <div class="form-text m-1 mb-3">Preço estimado para conclusão do serviço.</div>
 
         <button type="submit" class="btn btn-primary">Cadastrar Serviço</button>
       </form>
