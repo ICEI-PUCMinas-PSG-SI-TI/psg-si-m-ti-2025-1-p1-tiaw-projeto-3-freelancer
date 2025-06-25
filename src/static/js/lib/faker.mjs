@@ -213,7 +213,6 @@ export async function criarNAvaliacoes(quantidade) {
         const imagemSeed = genRandNumber({ max: contratos.length });
         const comentarioIndex = genRandNumber({ max: json.avaliacoes.length });
         const contratanteIdIndex = genRandNumber({ max: usuarios.length });
-        
 
         // TODO: Verificar os pós/contras de inserir os valoroes diretamente
         // na base de dados sem necessidade de um vetor
@@ -225,7 +224,7 @@ export async function criarNAvaliacoes(quantidade) {
             // string|number
             usuarioId: usuarios[contratanteIdIndex].id,
             // number
-            nota: genRandNumber({ max: 5 }),
+            nota: genRandNumber({ min: 2, max: 6 }),
             // string
             comentario: json.avaliacoes[comentarioIndex],
             // string

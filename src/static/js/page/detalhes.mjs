@@ -90,10 +90,10 @@ async function inicializarDetalhes(id) {
     initializeIfNotNull("servico-avaliacao", estrelas(total / quant));
 }
 
-function estrelas(nota){
-    if(!nota) return "Nota não registrada";
-    nota = nota.toFixed(2).toString()
-    return `${"⭐".repeat(nota)} (${nota}/5)`
+function estrelas(nota) {
+    if (!nota) return "Nota não informada";
+    nota = nota.toFixed(2).toString();
+    return `${"⭐".repeat(nota)} (${nota}/5)`;
 }
 
 function carregarDadosDaUrl() {

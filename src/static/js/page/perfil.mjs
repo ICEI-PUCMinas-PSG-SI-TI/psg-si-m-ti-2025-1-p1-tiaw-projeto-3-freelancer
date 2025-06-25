@@ -86,12 +86,13 @@ async function inicializarPerfil(id, allowEdit) {
 
     const listaServicos = document.getElementById("lista-servicos");
     const listServicosElement = document.createElement("div");
-    listServicosElement.classList.add("mb-2", "w-100");
+    listServicosElement.classList.add("mb-2", "w-100", "rounded");
     servicos.forEach((servico) => {
         servicosIdList.add(servico.id);
         // Adicionar no html
         listServicosElement.appendChild(
             createServicoCard(
+                servico.id,
                 servico.imagem,
                 servico.titulo,
                 servico.categoria,
@@ -111,24 +112,37 @@ async function inicializarPerfil(id, allowEdit) {
     avaliacoes = avaliacoes.filter((avaliacao) => servicosIdList.has(avaliacao.servicoId));
     if (!avaliacoes.length) return;
 
+    const listaAvaliacoes = document.getElementById("lista-avaliacoes");
+    const listAvaliacoesElement = document.createElement("div");
+    listAvaliacoesElement.classList.add("mb-2", "w-100", "rounded");
+
     let total = 0;
     let quant = 0;
     avaliacoes.forEach((avaliacao) => {
         total += avaliacao.nota || 0;
         quant++;
+
+        listAvaliacoesElement.appendChild(
+            createAvaliacaoCard(avaliacao?.usuario?.nome, avaliacao?.nota, avaliacao?.comentario),
+        );
     });
 
     htmlProfileParagNota.innerText = (total / quant).toFixed(2).toString();
     htmlProfileParagAval.innerText = String(quant);
+
+    const listaAvaliacoesNone = document.getElementById("lista-avaliacoes-none");
+    if (!(listaAvaliacoesNone instanceof HTMLHeadingElement)) return;
+    listaAvaliacoesNone.classList.add("d-none");
+    listaAvaliacoes?.appendChild(listAvaliacoesElement);
 }
 
-function createServicoCard(imagem, titulo, categoria, descricao, contato) {
+function createServicoCard(id, imagem, titulo, categoria, descricao, contato) {
     const a = document.createElement("a");
     a.className =
         "list-group-item d-flex justify-content-between align-items-center flex-wrap text-decoration-none";
 
     a.innerHTML = `<div class="d-flex me-3">
-            <img width="64px" heigth="64px" src="${imagem || "static/icons/images.svg"}" />
+            <img width="64px" heigth="64px" class="rounded" src="${imagem || "static/icons/images.svg"}" />
         </div>
         <div class="d-flex flex-column flex-grow-1 me-3">
             <strong>${titulo}</strong>
@@ -136,7 +150,24 @@ function createServicoCard(imagem, titulo, categoria, descricao, contato) {
             <p class="mb-1">${descricao}</p>
             <small>Contato: ${contato}</small>
         </div>`;
+    a.href = `/detalhes.html?id=${id}`;
     return a;
+}
+
+function createAvaliacaoCard(nome, nota, comentario) {
+    const li = document.createElement("li");
+    li.className =
+        "list-group-item d-flex justify-content-between align-items-center flex-wrap text-decoration-none";
+    li.innerHTML = `<div class="card-body p-3">
+        <h6 class="card-title mb-1">${nome} <span class="text-warning">${estrelas(nota)}</span></h6>
+        <p class="card-text mb-0">${comentario}</p>
+    </div>`;
+    return li;
+}
+
+function estrelas(nota) {
+    if (!nota) return "Nota não registrada";
+    return `${"⭐".repeat(nota)} (${String(nota)}/5)`;
 }
 
 function carregarDadosDaUrl() {
