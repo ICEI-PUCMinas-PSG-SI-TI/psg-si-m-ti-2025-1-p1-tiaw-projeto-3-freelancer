@@ -77,6 +77,8 @@ function _editarServico(servicoId) {
         const htmlInputContato = document.getElementById("contato");
         const htmlSelectCategoria = document.getElementById("categoriaId");
         const htmlTextAreaDescricao = document.getElementById("descricao");
+        const htmlInputPrazo = document.getElementById("prazo");
+        const htmlInputPreco = document.getElementById("preco");
 
         if (
             !(htmlImagePreview instanceof HTMLImageElement) ||
@@ -84,7 +86,9 @@ function _editarServico(servicoId) {
             !(htmlInputTitulo instanceof HTMLInputElement) ||
             !(htmlInputContato instanceof HTMLInputElement) ||
             !(htmlSelectCategoria instanceof HTMLSelectElement) ||
-            !(htmlTextAreaDescricao instanceof HTMLTextAreaElement)
+            !(htmlTextAreaDescricao instanceof HTMLTextAreaElement) ||
+            !(htmlInputPrazo instanceof HTMLInputElement) ||
+            !(htmlInputPreco instanceof HTMLInputElement)
         ) {
             console.error("Some html elements are null!");
             return;
@@ -92,20 +96,16 @@ function _editarServico(servicoId) {
 
         htmlInputTitulo.value = servico.titulo || "Serviço";
         htmlInputContato.value = servico.contato || "Contato não informado";
-        htmlSelectCategoria.value = servico.categoria || "Categoria não infomada";
+        htmlSelectCategoria.value = String(servico.categoriaId);
         htmlTextAreaDescricao.value = servico.descricao || "Nenhuma descrição informada";
+        htmlInputPrazo.value = servico.prazo || "Prazo não informado";
+        htmlInputPreco.value = String(servico.preco);
         if (servico.imagem) {
             htmlSVGPlaceholder.classList.add("d-none");
             htmlImagePreview.classList.remove("d-none");
             htmlImagePreview.src = servico.imagem;
         }
-        editContext = new EditContext(
-            servico.id,
-            servico.imagem,
-            servico.fake,
-            servico.prazo,
-            servico.preco,
-        );
+        editContext = new EditContext(servico.id, servico.imagem, servico.fake);
         document.querySelector(".body-content")?.scrollIntoView();
     });
 }
@@ -191,13 +191,17 @@ function iniciarlizarPaginaServicos() {
         const htmlInputContato = document.getElementById("contato");
         const htmlSelectCategoria = document.getElementById("categoriaId");
         const htmlTextAreaDescricao = document.getElementById("descricao");
+        const htmlInputPrazo = document.getElementById("prazo");
+        const htmlInputPreco = document.getElementById("preco");
 
         if (
             !(htmlInputImagem instanceof HTMLInputElement) ||
             !(htmlInputTitulo instanceof HTMLInputElement) ||
             !(htmlInputContato instanceof HTMLInputElement) ||
             !(htmlSelectCategoria instanceof HTMLSelectElement) ||
-            !(htmlTextAreaDescricao instanceof HTMLTextAreaElement)
+            !(htmlTextAreaDescricao instanceof HTMLTextAreaElement) ||
+            !(htmlInputPrazo instanceof HTMLInputElement) ||
+            !(htmlInputPreco instanceof HTMLInputElement)
         ) {
             console.error("Some html elements are null!");
             return;
@@ -208,7 +212,7 @@ function iniciarlizarPaginaServicos() {
             return;
         }
         let _bs64img;
-        if (htmlInputImagem.files?.length && !editContext?.foto)
+        if (htmlInputImagem.files?.length)
             _bs64img = await imageFileToBase64(htmlInputImagem.files[0]);
         else _bs64img = editContext?.foto;
 
@@ -222,6 +226,8 @@ function iniciarlizarPaginaServicos() {
         const categoriaId = htmlSelectCategoria.value;
         const descricao = htmlTextAreaDescricao.value.trim();
         const categoria = htmlSelectCategoria.selectedOptions[0].text;
+        const prazo = htmlInputPrazo.value.trim();
+        const preco = parseFloat(htmlInputPreco.value.trim());
 
         if (editContext !== null) {
             // ATUALIZAR
@@ -236,8 +242,8 @@ function iniciarlizarPaginaServicos() {
                 imagem: _bs64img,
                 ativo: true,
                 fake: editContext.fake,
-                prazo: editContext.prazo,
-                preco: editContext.preco,
+                prazo,
+                preco,
             });
             editContext = null;
         } else {
@@ -252,9 +258,8 @@ function iniciarlizarPaginaServicos() {
                 imagem: _bs64img,
                 ativo: true,
                 fake: false,
-                // TODO: Replace fields
-                prazo: "Prazo não informado",
-                preco: "Valores não informados",
+                prazo,
+                preco,
             });
         }
 

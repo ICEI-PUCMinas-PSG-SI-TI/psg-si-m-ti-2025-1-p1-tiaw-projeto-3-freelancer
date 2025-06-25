@@ -117,7 +117,8 @@
       <form
         id="form-servico"
         enctype="multipart/form-data"
-        class="form-cadastro-servico border rounded mb-3">
+        class="form-cadastro-servico border rounded mb-3"
+        onsubmit="(e)=>{e.preventDefault()}">
         <div class="col-md-3 d-flex flex-column align-items-center w-100">
           <img
             id="image_preview"
@@ -164,6 +165,18 @@
         <div class="mb-3">
           <label for="descricao" class="form-label">Descrição</label>
           <textarea class="form-control" id="descricao" rows="3" required></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="prazo" class="form-label">Prazo Estimado</label>
+          <input type="text" class="form-control" id="prazo" required />
+          <div class="form-text m-1">Prazo estimado para conclusão do serviço. (Exemplo: 7 dias úteis)</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="preco" class="form-label">Preço Sugerido</label>
+          <input type="number" class="form-control" id="preco" required />
+          <div class="form-text m-1">Preço estimado para conclusão do serviço.</div>
         </div>
 
         <button type="submit" class="btn btn-primary">Cadastrar Serviço</button>
