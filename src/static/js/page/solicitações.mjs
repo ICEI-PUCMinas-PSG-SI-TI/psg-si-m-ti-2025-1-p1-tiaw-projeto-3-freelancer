@@ -44,6 +44,7 @@ function createCard(
 
     if (listaSolicitacoes && contratos.length) {
         const frag = document.createDocumentFragment();
+        contratos.reverse()
         contratos.forEach((contrato) => {
             const { servico } = contrato;
             let data = "";
