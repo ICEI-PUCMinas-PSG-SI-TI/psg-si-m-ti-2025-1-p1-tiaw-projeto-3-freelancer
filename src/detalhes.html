@@ -71,6 +71,8 @@
               </a>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="/serviços">Cadastrar serviços</a></li>
+                <li><a class="dropdown-item" href="/solicitacoes">Minhas solicitados</a></li>
+                <li><a class="dropdown-item" href="/trabalhos">Trabalhos disponíveis</a></li>
               </ul>
             </li>
           </ul>
@@ -155,7 +157,7 @@
             <hr />
             <div class="row w-100 center-xy">
               <div class="d-flex flex-wrap gap-2 flex-row center-xy">
-                <a href="/404" id="contratar-btn" class="btn btn-success">Contratar Serviço</a>
+                <a id="contratar-btn" class="btn btn-success">Contratar Serviço</a>
                 <a href="/404" id="mensagem-btn" class="btn btn-outline-secondary">
                   Enviar Mensagem
                 </a>
@@ -200,6 +202,21 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-contratar" class="container-fluid d-flex body-modal center-xy d-none">
+      <div class="card center-xy limit500px">
+        <div class="d-flex flex-column card-body center-xy">
+          <div class="space-0 m-3 w-100">
+            <h3>Solicitar serviço?</h3>
+            <p id="contratar-nome"></p>
+          </div>
+          <div class="d-flex w-100 flex-column">
+            <button id="contratar-ok" class="btn btn-success mb-2 w-100">Contratar</button>
+            <button id="contratar-canc" class="btn btn-danger w-100">Cancelar</button>
           </div>
         </div>
       </div>
