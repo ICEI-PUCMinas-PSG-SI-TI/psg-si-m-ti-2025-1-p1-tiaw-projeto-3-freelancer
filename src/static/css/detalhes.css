@@ -61,3 +61,7 @@
     background-image: url("../img/background.jpg");
     background-size: cover;
 }
+
+.limit500px{
+    max-width: 500px;
+}

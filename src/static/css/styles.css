@@ -152,3 +152,12 @@ h6 {
     --bs-gutter-x: 0;
     --bs-gutter-y: 0;
 }
+
+.body-modal {
+    z-index: 100;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(10px);
+    inset: 0 0 0 0;
+}

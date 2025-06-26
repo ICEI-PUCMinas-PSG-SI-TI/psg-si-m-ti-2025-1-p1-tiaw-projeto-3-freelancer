@@ -2,11 +2,15 @@
 
 import { Usuarios } from "../jsonf/usuarios.mjs";
 import { Servicos } from "../jsonf/servicos.mjs";
+import { Contratos } from "../jsonf/contratos.mjs";
+
 import { assertStringNonEmpty } from "../lib/validate.mjs";
 import { Avaliacoes } from "../jsonf/avaliacoes.mjs";
+import { retornarIdSeLogado } from "../lib/credenciais.mjs";
 
 // eslint-disable-next-line no-unused-vars
 const crudUsuarios = new Usuarios();
+const crudContratos = new Contratos();
 const crudServicos = new Servicos();
 const crudAvaliacoes = new Avaliacoes();
 
@@ -35,6 +39,7 @@ async function inicializarDetalhes(id) {
 
     initializeIfNotNull("servico-img", servico.imagem);
     initializeIfNotNull("servico-titulo", servico.titulo);
+    initializeIfNotNull("contratar-nome", servico.titulo);
     initializeIfNotNull("servico-categoria", servico.categoria);
     initializeIfNotNull("servico-descricao", servico.descricao);
 
@@ -48,9 +53,32 @@ async function inicializarDetalhes(id) {
         }
     }
 
+    const modalContratar = document.getElementById("modal-contratar");
+    const buttonSolicitarContrato = document.getElementById("contratar-ok");
+    const buttonCancelarContrato = document.getElementById("contratar-canc");
+    const contratarBtn = document.getElementById("contratar-btn");
+    contratarBtn?.addEventListener("click", () => {
+        if (modalContratar) modalContratar.classList.remove("d-none");
+    });
+    if (buttonCancelarContrato)
+        buttonCancelarContrato.addEventListener("click", () => {
+            if (modalContratar) modalContratar.classList.add("d-none");
+        });
+    if (buttonSolicitarContrato)
+        buttonSolicitarContrato.addEventListener("click", () => {
+            crudContratos.criarContrato({
+                servicoId: id,
+                usuarioId: retornarIdSeLogado(),
+                data: new Date().toISOString(),
+                status: "Aguardando pagamento",
+                statusId: 0,
+            });
+            alert("Serviço solicitado!");
+            if (modalContratar) modalContratar.classList.add("d-none");
+        });
     initializeIfNotNull("servico-contato", servico.contato);
     initializeIfNotNull("servico-prazo", servico.prazo);
-    if(typeof servico.preco === "number")
+    if (typeof servico.preco === "number")
         initializeIfNotNull("servico-preco", `R$ ${servico.preco}`);
 
     // Preenche avaliações
