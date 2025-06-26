@@ -1,13 +1,17 @@
 {
     "servicos": [
         {
+            "categoria": "Categoria em Texto",
             "categoriaId": 0,
             "contato": "(31) 97070-7070",
             "descricao": "Nenhuma informação por enquanto",
             "id": 0,
-            "titulo": "Refrigeração"
+            "imagem": "base64 or link",
+            "titulo": "Refrigeração",
+            "usuarioId": 0
         },
         {
+            "categoria": "Categoria em Texto",
             "categoriaId": 0,
             "contato": "(31) 97070-7070",
             "descricao": "Nenhuma informação por enquanto",
@@ -15,6 +19,7 @@
             "titulo": "Fotografia"
         },
         {
+            "categoria": "Categoria em Texto",
             "categoriaId": 0,
             "contato": "(31) 97070-7070",
             "descricao": "Nenhuma informação por enquanto",

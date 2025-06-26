@@ -1,9 +1,9 @@
 // @ts-check
 
 function inflateBarraPesquisa() {
-    const html_search_bar = document.getElementById("inflate_pesquisa");
-    if (!(html_search_bar instanceof HTMLDivElement)) return;
-    html_search_bar.classList.remove("d-none");
+    const htmlInputSearchContainer = document.getElementById("inflate_pesquisa");
+    if (!(htmlInputSearchContainer instanceof HTMLDivElement)) return false;
+    htmlInputSearchContainer.classList.remove("d-none");
     return true;
 }
 
@@ -15,9 +15,7 @@ function navigateToResultados(query) {
     if (query.length === 0) throw new Error("Pesquisa sem parâmetros!");
 
     const url = new URL(window.location.href);
-    let pathname = ""
-    if(url.pathname.includes("src")) pathname = "/src/resultados.html";
-    else pathname = "/resultados.html"
+    let pathname = "/resultados";
     const params = new URLSearchParams();
     params.set("q", query);
     const newUrl = `${url.origin}${pathname}?${params.toString()}`;
@@ -28,17 +26,17 @@ function navigateToResultados(query) {
 (() => {
     if (!inflateBarraPesquisa()) return;
 
-    const html_search_bar = document.getElementById("search-bar");
-    const html_search_btn = document.getElementById("search-btn");
+    const htmlInputSearchQuery = document.getElementById("search-bar");
+    const htmlButtonSearch = document.getElementById("search-btn");
     if (
-        !(html_search_bar instanceof HTMLInputElement) ||
-        !(html_search_btn instanceof HTMLButtonElement)
+        !(htmlInputSearchQuery instanceof HTMLInputElement) ||
+        !(htmlButtonSearch instanceof HTMLButtonElement)
     )
         return;
 
-    html_search_btn.addEventListener("click", (e) => {
+    htmlButtonSearch.addEventListener("click", (e) => {
         e.preventDefault();
-        const query = html_search_bar.value;
+        const query = htmlInputSearchQuery.value;
         try {
             navigateToResultados(query);
         } catch (err) {

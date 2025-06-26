@@ -1,4 +1,6 @@
-[*.{js,mjs,css}]
+end_of_line = crlf
+
+[*.{js,mjs,css,json}]
 indent_size = 4
 
 [*.html]

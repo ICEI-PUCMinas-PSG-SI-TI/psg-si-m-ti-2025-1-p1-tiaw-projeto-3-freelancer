@@ -7,35 +7,35 @@
 # [[contratos]]
 # id = ID do contrato
 # servicoId = ID do serviço que foi contratado
-# contratadoId = ID do usuário que ofereceu o serviço
-# contratanteId = ID do usuário que contratou o serviço
+# usuarioId = ID do usuário que contratou o serviço
 # data = Data do contrato do serviço
 # valor = Valor combinado (int)
 # status = Status do contrato (Concluído, Pendente, Aguardando Pagamento)
+# fake = Informações foram criadas utilizando ferramentas de desenvolvimento
 
 [[contratos]]
 id = 0
 servicoId = 0
-contratadoId = 0
-contratanteId = 1
+usuarioId = 1
 data = "1970-01-01T00:00:00.000Z-03:00"
 valor = 300
 status = 0
+statusId = "Aguardando pagamento"
 
 [[contratos]]
 id = 1
-servicoId = 2
-contratadoId = 0
-contratanteId = 2
+servicoId = 0
+usuarioId = 1
 data = "1970-01-01T00:00:00.000Z-03:00"
 valor = 552
-status = 1
+status = "Pendente (Pagamento realizado)"
+statusId = 1
 
 [[contratos]]
 id = 2
-servicoId = 1
-contratadoId = 0
-contratanteId = 3
+servicoId = 0
+usuarioId = 1
 data = "1970-01-01T00:00:00.000Z-03:00"
 valor = 4896
 status = 1
+statusId = "Em andamento"

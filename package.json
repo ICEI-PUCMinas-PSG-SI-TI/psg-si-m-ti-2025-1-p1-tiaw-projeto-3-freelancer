@@ -1,29 +1,33 @@
 {
-  "author": "",
-  "bugs": {
-    "url": "https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer/issues"
-  },
-  "dependencies": {
-    "json-server": "^1.0.0-beta.3"
-  },
-  "description": "`TÍTULO DO PROJETO:` **Lucre+**",
-  "devDependencies": {
-    "@eslint/js": "^9.28.0",
-    "eslint": "^9.28.0",
-    "globals": "^16.2.0"
-  },
-  "directories": {
-    "doc": "docs"
-  },
-  "homepage": "https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer#readme",
-  "license": "CC-BY-4.0",
-  "name": "lucre-mais",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer.git"
-  },
-  "scripts": {
-    "start": "json-server --static ./src --watch db/db.json -p 3000"
-  },
-  "version": "1.0.0"
+    "author": "",
+    "bugs": {
+        "url": "https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer/issues"
+    },
+    "dependencies": {
+        "json-server": "^1.0.0-beta.3"
+    },
+    "description": "`TÍTULO DO PROJETO:` **Lucre+**",
+    "devDependencies": {
+        "@eslint/js": "^9.28.0",
+        "eslint": "^9.28.0",
+        "globals": "^16.2.0",
+        "prettier": "3.5.3"
+    },
+    "directories": {
+        "doc": "docs"
+    },
+    "homepage": "https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer#readme",
+    "license": "CC-BY-4.0",
+    "name": "lucre-mais",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer.git"
+    },
+    "scripts": {
+        "start": "json-server --static ./src --watch db/db.json -p 3000",
+        "dev": "json-server --static ./src --watch db/dev.json -p 3001",
+        "p": "prettier --write './src/**/*.{html,js,mjs,css}' --config ./.prettierrc.toml",
+        "lint": "eslint src/"
+    },
+    "version": "1.0.0"
 }

@@ -43,23 +43,13 @@ h6 {
     width: 100%;
 }
 
-/* Seção: Cabeçalho
-    Disabled for now
-    This setting causes expanded statusbar to not have a background
-.body-header {
-    max-height: var(--nav-bar-size);
-}
-*/
-
 /* Seção: Conteúdo */
 .body-content {
+    position: relative;
     /* Flexbox */
     flex: 1;
     min-height: calc(100vh - var(--nav-bar-size));
 }
-
-/* Seção: Rodapé */
-/* .body-footer {} */
 
 /* Inverte a cor dos ícones no modo escuro */
 [data-bs-theme="dark"] .icon-dark,
@@ -119,4 +109,55 @@ h6 {
 .popup div.card {
     max-width: 500px;
     max-height: 500px;
+}
+
+.profile-modal {
+    z-index: 100;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(10px);
+    inset: 0 0 0 0;
+}
+
+.inner-profile-modal {
+    min-height: 200px;
+    width: 200px;
+    right: 0;
+    top: 0;
+}
+
+.inner-profile-modal img {
+    max-width: 100px;
+    max-height: 100px;
+    height: 100px;
+    width: 100px;
+    background-color: darkslateblue;
+}
+
+.center-xy {
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.justify-text-align-center {
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+}
+
+.space-0 {
+    margin: 0 !important;
+    padding: 0 !important;
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
+}
+
+.body-modal {
+    z-index: 100;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(10px);
+    inset: 0 0 0 0;
 }

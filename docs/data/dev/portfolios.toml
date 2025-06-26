@@ -1,0 +1,57 @@
+#
+# Cadastro de informações da página de portfólio
+# Esse valor será utilizado nos seguintes artefatos:
+# 1. Escrita: Criação do portfólio
+# 2. Leitura: Visualização do portfólio
+#
+
+# [[portfolios]]
+# id = ID do portfólio
+# nome = Nome do portfólio
+# usuarioId = ID do usuário do portfólio
+# secao.nome = Nome da seção
+# secao.descricao = Descrição/Subtítulo da seção
+# secao.ordem = Posição que a seção aparece (e id)
+# secao.categoriaId = Tipo de categoria da seção (categorias.secao.toml)
+# secao.contents = Lista de conteúdos da seção
+# secao.contents.blob = Conteúdo da seção (ID da imagem, URL do site, ...)
+# secao.contents.descricao = Descrição sobre o conteúdo
+# fake = Informações foram criadas utilizando ferramentas de desenvolvimento
+
+# portfolios.secoes.portfolioCategoriaId
+# 0 = Imagens
+# 1 = Avaliações
+# 2 = Links Externos
+
+[[portfolios]]
+id = 0
+nome = "Portfólio do João"
+usuarioId = 0
+
+[[portfolios.secoes]]
+nome = "Avaliações"
+descricao = "Cliente satisfeitos!"
+ordem = 0
+portfolioCategoriaId = 1
+
+[[portfolios.secoes]]
+nome = "Fotos de trabalhos anteriores"
+descricao = "Imagens de serviços realizados"
+ordem = 1
+portfolioCategoriaId = 0
+contents = [
+    {blob = "imagemId", descricao = "Foto" }, 
+    {blob = "imagemId", descricao = "Foto" }, 
+    {blob = "imagemId", descricao = "Foto" }, 
+]
+
+[[portfolios.secoes]]
+nome = "Links Importantes"
+descricao = "Segue lá"
+ordem = 2
+portfolioCategoriaId = 2
+contents = [
+    {blob = "https://example.com", descricao = "GitLab" }, 
+    {blob = "https://example.com", descricao = "GitHub" }, 
+    {blob = "https://example.com", descricao = "LinkedIn" }
+]

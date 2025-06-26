@@ -7,22 +7,64 @@
 
 # TODO: Cadastro de categorias via UI (admin)
 
-# [[categorias_servicos]]
+# [[categoriasServicos]]
 # id = ID da categoria
 # nome = Nome da categoria
 
-[[categorias_servicos]]
-id = 0
-nome = "Refrigeração"
-
-[[categorias_servicos]]
-id = 1
-nome = "Climatização"
-
-[[categorias_servicos]]
-id = 2
-nome = "Eletricista"
-
-[[categorias_servicos]]
-id = 3
-nome = "Outro"
+categoriasServicos = [
+    { id = 1, nome = "Analista de dados" },
+    { id = 2, nome = "Climatização" },
+    { id = 3, nome = "Coach de produtividade" },
+    { id = 4, nome = "Consultor de TI" },
+    { id = 5, nome = "Consultor de branding" },
+    { id = 6, nome = "Consultor de negócios" },
+    { id = 7, nome = "Consultor financeiro" },
+    { id = 8, nome = "Copywriter" },
+    { id = 9, nome = "Criador de anúncios digitais" },
+    { id = 10, nome = "Criador de conteúdo" },
+    { id = 11, nome = "Criador de logotipos" },
+    { id = 12, nome = "Criador de lojas virtuais" },
+    { id = 13, nome = "Desenvolvedor de aplicativos" },
+    { id = 14, nome = "Desenvolvedor web" },
+    { id = 15, nome = "Designer de UX/UI" },
+    { id = 16, nome = "Designer de apresentações" },
+    { id = 17, nome = "Designer de embalagens" },
+    { id = 18, nome = "Designer de estampas" },
+    { id = 19, nome = "Designer de identidade visual" },
+    { id = 20, nome = "Designer de materiais impressos" },
+    { id = 21, nome = "Designer de redes sociais" },
+    { id = 22, nome = "Designer gráfico" },
+    { id = 23, nome = "Editor de fotografia" },
+    { id = 24, nome = "Editor de vídeos" },
+    { id = 25, nome = "Eletricista" },
+    { id = 26, nome = "Escritor de e-books" },
+    { id = 27, nome = "Especialista em SEO" },
+    { id = 28, nome = "Especialista em WordPress" },
+    { id = 29, nome = "Especialista em automação" },
+    { id = 30, nome = "Especialista em cursos online" },
+    { id = 31, nome = "Especialista em e-mail marketing" },
+    { id = 32, nome = "Especialista em segurança digital" },
+    { id = 33, nome = "Fotografia e Vídeo" },
+    { id = 34, nome = "Fotógrafo de eventos" },
+    { id = 35, nome = "Fotógrafo de imóveis" },
+    { id = 36, nome = "Fotógrafo de moda" },
+    { id = 37, nome = "Fotógrafo de natureza" },
+    { id = 38, nome = "Fotógrafo de produtos" },
+    { id = 39, nome = "Fotógrafo de retratos" },
+    { id = 40, nome = "Fotógrafo gastronômico" },
+    { id = 41, nome = "Gestor de tráfego pago" },
+    { id = 42, nome = "Ilustrador digital" },
+    { id = 43, nome = "Marketing e Publicidade" },
+    { id = 44, nome = "Mentor de carreira" },
+    { id = 45, nome = "Outro" },
+    { id = 46, nome = "Professor particular" },
+    { id = 47, nome = "Programador back-end" },
+    { id = 48, nome = "Programador front-end" },
+    { id = 49, nome = "Redator publicitário" },
+    { id = 50, nome = "Refrigeração" },
+    { id = 51, nome = "Revisor de textos" },
+    { id = 52, nome = "Roteirista de vídeos" },
+    { id = 53, nome = "Social media" },
+    { id = 54, nome = "Tradutor" },
+    { id = 55, nome = "Videomaker" },
+]

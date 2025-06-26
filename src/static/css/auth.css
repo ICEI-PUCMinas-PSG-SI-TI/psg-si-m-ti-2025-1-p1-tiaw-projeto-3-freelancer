@@ -1,0 +1,9 @@
+.limit_login_form {
+    max-width: 400px;
+}
+
+#content-div {
+    background-image: url("../img/background.jpg");
+    background-position: center;
+    background-size: cover;
+}

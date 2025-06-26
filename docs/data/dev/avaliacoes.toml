@@ -15,47 +15,58 @@
 # usuarioId = ID do usuário que fez a avaliação
 # nota = Nota que o usuário deu para o serviço
 # comentario = Comentário realizado pelo usuário
+# data = Data da avaliação
+# fake = Informações foram criadas utilizando ferramentas de desenvolvimento 
 
 # TODO: Armazenar novos parametros (não importantes no momento):
 # imagemId = Lista de IDs das imagens quer o usuário deixou na avaliação
-# data = Data da avaliação
 
 [[avaliacoes]]
 id = 0
+servicoId = 0
 contratoId = 0
-contratanteId = 5
+usuarioId = 5
 nota = 5
 comentario = "Um comentário simples sobre o serviço de id {id}"
-# imagemId = [ 0, 1]
+imagem = "base64|url"
+data = "1970-01-01T00:00:00.000Z-03:00"
 
 [[avaliacoes]]
 id = 1
+servicoId = 1
 contratoId = 0
-contratanteId = 4
+usuarioId = 4
 nota = 1
 comentario = "Um comentário simples sobre o serviço de id {id}"
-# imagemId = [ 0, 1]
+imagem = "base64|url"
+data = "1970-01-01T00:00:00.000Z-03:00"
 
 [[avaliacoes]]
 id = 2
+servicoId = 2
 contratoId = 1
-contratanteId = 3
+usuarioId = 3
 nota = 2
 comentario = "Um comentário simples sobre o serviço de id {id}"
-# imagemId = [ 0, 1]
+imagem = "base64|url"
+data = "1970-01-01T00:00:00.000Z-03:00"
 
 [[avaliacoes]]
 id = 3
+servicoId = 3
 contratoId = 1
-contratanteId = 2
+usuarioId = 2
 nota = 8
 comentario = "Um comentário simples sobre o serviço de id {id}"
-# imagemId = [ 0, 1]
+imagem = "base64|url"
+data = "1970-01-01T00:00:00.000Z-03:00"
 
 [[avaliacoes]]
 id = 4
+servicoId = 4
 contratoId = 1
-contratanteId = 2
+usuarioId = 2
 nota = 10
 comentario = "Um comentário simples sobre o serviço de id {id}"
-# imagemId = [ 0, 1]
+imagem = "base64|url"
+data = "1970-01-01T00:00:00.000Z-03:00"

@@ -1,72 +1,37 @@
 //@ts-check
 
+import { assertBoolean, assertNumber } from "./lib/validate.mjs";
+
 /**
- * Retorna um número aleatório entre 0 e max, o min é opcional
- * Valor máximo
- * @param {number} max Valor máximo
- * @param {number} [min] Valor mínimo (opcional = 0)
+ * Retorna um número aleatório, default: {min(0), max(10000)}
  *
- * @returns {number | null} Retorna um número aleatório
+ * O valor máximo não é inclusivo
+ * @param {{min?: number, max?: number, double?: boolean}} [opts={}]
+ * @returns {number} Retorna um número aleatório
  */
-// TODO: check types
-export function generateRandomNumber(max, min) {
-    if (min) {
-        let val = Math.random() * (max - min) + min;
-        // TODO: why convert to string? avoid IDE warning
-        // Avoid double values
-        return parseInt(val.toString(), 10);
+export function generateRandomNumber(opts = {}) {
+    if (Object.hasOwn(opts, "min")) assertNumber(opts.min);
+    if (Object.hasOwn(opts, "max")) assertNumber(opts.max);
+    if (Object.hasOwn(opts, "double")) assertBoolean(opts.double);
+
+    // opts.min(number): Limite mínimo do valor gerado (default: 0)
+    let _min = opts.min || 0;
+    // opts.max(number): Limite máximo do valor gerado (default: 10 000)
+    let _max = opts.max || 10000;
+    // opts.double(boolean): Retorna double como argumento
+    const _double = opts.double || false;
+
+    if (!_double) {
+        _min = Math.floor(_min);
+        _max = Math.floor(_max);
     }
 
-    if (!max) return 0;
+    // TODO: Should this function return error?
+    if (_min > _max) throw new Error("MIN is greatter than MAX!");
 
-    return Math.floor(Math.random() * max);
-}
+    const ret = Math.random() * (_max - _min) + _min;
 
-/**
- * Retorna um número aleatório entre 0 e max, o min é opcional
- * Valor máximo
- * @param {{min?, max?, double?, convert_string?, invalid?}} [opts={}] 
- * @returns {number | any} Retorna um número aleatório
- */
-export function generateRandomNumberOpts(opts = {}) {
-    // opts.min(number): Limite mínimo do valor gerado (default: 0)
-    // opts.max(number): Limite máximo do valor gerado (default: 10 000)
-    // opts.double(boolean): Retorna double como argumento
-    // opts.convert_string(boolean): Aceita string como argumento
-    // opts.invalid
-    const _min = opts.min || 0;
-    const _max = opts.max || 10000;
-    const double = typeof opts.double === "boolean" ? opts.double : false;
-    const convert_string = typeof opts.convert_string === "boolean" ? opts.convert_string : true;
-    const invalid = opts.invalid || null;
-
-    let min =
-        typeof _min === "number"
-            ? double
-                ? _min
-                : Math.floor(_min)
-            : typeof _min === "string" && convert_string
-            ? double
-                ? parseFloat(_min)
-                : parseInt(_min)
-            : null;
-
-    let max =
-        typeof _max === "number"
-            ? double
-                ? _max
-                : Math.floor(_max)
-            : typeof _max === "string" && convert_string
-            ? double
-                ? parseFloat(_max)
-                : parseInt(_max)
-            : null;
-
-    if (typeof min !== "number" || typeof max !== "number" || max < min) return invalid;
-
-    const ret = Math.random() * (max - min) + min;
-
-    if (!double) return Math.floor(ret);
+    if (!_double) return Math.floor(ret);
 
     return ret;
 }
@@ -103,33 +68,46 @@ export function ensureType(value, type) {
     if (typeof type !== "string") return false;
 
     if (typeof value === "string" && type === "number") {
-        let parse = parseInt(value);
+        let parse = parseInt(value, 10);
         if (typeof parse === "number") value = parse;
     }
 
     return typeof value === type;
 }
 
-export const MAX_ALLOWED_SIZE = 5 * 1024 * 1024; // 5 MB in bytes
-
-/**
- * @param {Blob} file
- */
-export async function imageFileToBase64(file) {
-    const reader = new FileReader();
-
-    if (file.size > MAX_ALLOWED_SIZE)
-        throw new Error("O tamanho do arquivo deve ser menor que 5MB!");
-
-    if (!file.type.match("image.*")) throw new Error("O arquivo não é uma imagem!");
-
-    return new Promise((resolve, reject) => {
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-}
-
 export function isNonEmptyString(value) {
     return typeof value === "string" && value.length > 0;
+}
+
+/**
+ * @param {any} value
+ */
+export function isNonNegativeInt(value) {
+    return Number.isInteger(value) && value >= 0;
+}
+
+export function assertNonEmptyString(value) {
+    if (typeof value !== "string") throw new Error("Value is not a string!");
+    if (value.trim().length === 0) throw new Error("String is empty.");
+}
+
+// O json-server aceita ids númericas, mas caso não informado,
+// a ID criada é composta por 4 digitos alfanúmericos (ex: "a1b2")
+/**
+ * @param {any} value
+ * @param {{opcional?: boolean}} opts
+ */
+export function assertJSONServerID(value, opts = {}) {
+    const opcional = typeof opts.opcional === "boolean" ? opts.opcional : false;
+    if (!value) {
+        if (!opcional) throw new Error("O valor da ID é nulo!");
+        return;
+    }
+    if (typeof value !== "string" && typeof value !== "number")
+        throw new Error("O ID não é uma string ou número!");
+
+    if (typeof value === "string" && value.trim().length === 0)
+        throw new Error("O valor da ID é nulo!");
+
+    if (typeof value === "number" && value < 0) throw new Error("O valor da ID é inválido!");
 }

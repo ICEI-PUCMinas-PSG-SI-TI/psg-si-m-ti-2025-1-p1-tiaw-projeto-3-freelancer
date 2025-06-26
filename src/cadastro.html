@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<!doctype html>
+<html lang="pt-BR">
   <head>
     <!-- Metadata -->
     <meta charset="UTF-8" />
@@ -12,35 +12,38 @@
     <link rel="stylesheet" href="static/css/cadastro.css" type="text/css" />
     <!-- Bootstrap -->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
       crossorigin="anonymous" />
     <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
       crossorigin="anonymous"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Source+Sans+3&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Source+Sans+3&display=swap"
       rel="stylesheet" />
     <!-- Project Scripts -->
-    <script defer src="static/js/cadastro.js"></script>
+    <script defer type="module" src="static/js/lib/redirect.mjs"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
+    <script defer type="module" src="static/js/profile.mjs"></script>
+    <!-- Page Scripts -->
+    <script defer type="module" src="static/js/page/cadastro.mjs"></script>
   </head>
 
-  <body data-bs-theme="dark">
+  <body>
     <!-- Cabeçalho -->
     <nav class="body-section body-header navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <!-- id.navbar.logo -->
-        <a
-          class="d-flex justify-content-center text-center align-items-center text-decoration-none me-3"
-          href="./">
+        <a class="d-flex center-xy text-center center-xy text-decoration-none me-3" href="./">
           <img class="m-2 icon-32px" src="static/icon.png" />
           <p class="navbar-brand p-0 m-0 g-0">Lucre+</p>
         </a>
@@ -57,46 +60,58 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <!-- id.navbar.navigation.pares -->
+            <!-- id.navbar.navigation -->
             <li class="nav-item dropdown">
               <a
                 class="nav-link dropdown-toggle"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false">
-                Revisão por Pares
+                Serviços
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="serviços.html">Cadastro de Serviços</a></li>
-                <li><a class="dropdown-item" href="cadastro.html">Cadastro de Usuários</a></li>
+                <li><a class="dropdown-item" href="/serviços">Cadastrar serviços</a></li>
+                <li><a class="dropdown-item" href="/solicitacoes">Minhas solicitados</a></li>
+                <li><a class="dropdown-item" href="/trabalhos">Trabalhos disponíveis</a></li>
               </ul>
             </li>
           </ul>
           <!-- id.navbar.darkmode -->
           <!-- Layout será modificado por js/darkmode.js -->
           <div class="d-none" id="toggleDarkDiv"></div>
+          <!-- id.navbar.search -->
+          <script defer type="module" src="static/js/pesquisa.js"></script>
+          <div id="inflate_pesquisa" class="d-none">
+            <form
+              class="d-flex flex-column flex-sm-row"
+              role="search"
+              onsubmit="(e)=>e.preventDefault()">
+              <input
+                id="search-bar"
+                class="form-control me-sm-2 mb-2 mb-sm-0"
+                type="search"
+                placeholder="Pesquisar"
+                aria-label="Search" />
+              <button id="search-btn" class="btn btn-outline-primary">Pesquisar</button>
+            </form>
+          </div>
           <!-- id.navbar.profile -->
           <div class="m-2 me-0 rounded d-flex justify-content-center">
-            <img class="rounded profile-picture" src="static/img/placeholder_profile.png" />
+            <img
+              id="profile-picture-tiny"
+              class="rounded profile-picture d-none"
+              src="static/img/placeholder_profile.png" />
           </div>
         </div>
       </div>
     </nav>
     <!-- Conteúdo da página -->
-    <div
-      id="content-div"
-      class="body-section body-content d-flex flex-column align-items-center justify-content-center p-3">
+    <div id="content-div" class="body-section body-content d-flex flex-column center-xy p-3">
       <!-- Formulário -->
       <form id="formCadastro" class="row g-4">
         <div class="col-md-3 d-flex flex-column align-items-center">
           <label for="foto" class="form-label">Foto de Perfil</label>
-          <input
-            type="file"
-            class="form-control mb-2"
-            id="foto"
-            name="foto"
-            accept="image/*"
-            onchange="previewFoto()" />
+          <input type="file" class="form-control mb-2" id="foto" name="foto" accept="image/*" />
           <img
             id="preview"
             src="https://www.w3schools.com/howto/img_avatar.png"
@@ -105,66 +120,62 @@
         </div>
         <div class="col-md-9 row g-3">
           <div class="col-md-6">
-            <label class="form-label">Nome e sobrenome</label>
+            <label class="form-label" for="nome">Nome e sobrenome</label>
             <input type="text" class="form-control" id="nome" name="nome" required />
           </div>
           <div class="col-md-6">
-            <label class="form-label">Profissão</label>
+            <label class="form-label" for="profissao">Profissão</label>
             <select class="form-select" id="profissao" name="profissao">
-              <option>Fotográfo</option>
-              <option>Designer</option>
-              <option>Programador</option>
-              <option>Garçom</option>
-              <option>Outro</option>
+              <option selected value="">Selecione o principal cargo</option>
             </select>
           </div>
           <div class="col-md-6">
-            <label class="form-label">Contato</label>
+            <label class="form-label" for="contato">Contato</label>
             <input type="tel" class="form-control" id="contato" name="contato" />
           </div>
           <div class="col-md-6">
-            <label class="form-label">Escolaridade</label>
+            <label class="form-label" for="escolaridade">Escolaridade</label>
             <input type="text" class="form-control" id="escolaridade" name="escolaridade" />
           </div>
           <div class="col-md-6">
-            <label class="form-label">Email</label>
+            <label class="form-label" for="email">Email</label>
             <input type="email" class="form-control" id="email" name="email" required />
           </div>
           <div class="col-md-6">
-            <label class="form-label">CPF</label>
+            <label class="form-label" for="cpf">CPF</label>
             <input type="text" class="form-control" id="cpf" name="cpf_cnpj" required />
           </div>
           <div class="col-md-6">
-            <label class="form-label">Endereço</label>
+            <label class="form-label" for="cidade">Endereço</label>
             <input type="text" class="form-control" id="cidade" name="cidade" />
           </div>
           <div class="col-md-6">
-            <label class="form-label">Sexo</label>
+            <label class="form-label" for="sexo">Sexo</label>
             <select class="form-select" id="sexo" name="sexo">
-              <option selected>Selecionar</option>
+              <option selected value="">Selecionar</option>
               <option>Feminino</option>
               <option>Masculino</option>
               <option>Outro</option>
             </select>
           </div>
           <div class="col-md-6">
-            <label class="form-label">Data de Nascimento</label>
-            <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" />
+            <label class="form-label" for="data-nascimento">Data de Nascimento</label>
+            <input type="date" class="form-control" id="data-nascimento" name="data_nascimento" />
           </div>
           <div class="form-group">
             <label for="tipo">Tipo de Usuário</label>
             <select id="tipo" name="tipo" required class="form-select">
-              <option value="">Selecione</option>
-              <option value="profissional">Profissional</option>
-              <option value="cliente">Cliente</option>
+              <option selected value="">Selecione</option>
+              <option>Profissional</option>
+              <option>Cliente</option>
             </select>
           </div>
           <div class="col-md-12">
-            <label class="form-label">Biografia</label>
+            <label class="form-label" for="biografia">Biografia</label>
             <textarea class="form-control" id="biografia" name="biografia" rows="3"></textarea>
           </div>
           <div class="col-md-12">
-            <label class="form-label">Senha</label>
+            <label class="form-label" for="senha">Senha</label>
             <input type="password" class="form-control" id="senha" name="senha" required />
           </div>
           <div class="col-md-12 d-flex justify-content-between">
@@ -177,6 +188,29 @@
           </div>
         </div>
       </form>
+
+      <div
+        id="profile-modal"
+        class="d-flex profile-modal justify-content-end align-items-top d-none">
+        <div class="m-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex center-xy inner-profile-modal flex-column">
+                <img
+                  id="profile-picture-big"
+                  class="rounded border-2 mb-3"
+                  src="static/img/placeholder_profile.png"
+                  alt="Profile" />
+                <p id="profile-name">Nome do Usuário</p>
+                <button id="profile-show-perfil" class="btn btn-primary w-100 mb-3">
+                  Ver Perfil
+                </button>
+                <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Rodapé -->
@@ -202,13 +236,13 @@
             href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer">
             Projeto
           </a>
-          <a class="mb-1" href="404.html">Sobre o site</a>
-          <a class="mb-1" href="404.html">Suporte</a>
-          <a class="mb-1" href="404.html">FAQ</a>
+          <a class="mb-1" href="/404">Sobre o site</a>
+          <a class="mb-1" href="/404">Suporte</a>
+          <a class="mb-1" href="/404">FAQ</a>
         </div>
       </div>
       <div class="row">
-        <div class="col-12 d-flex justify-content-center align-items-center">
+        <div class="col-12 d-flex center-xy">
           <p class="p-3 m-0 g-0">Copyright (c) Lucre+ 2025</p>
         </div>
       </div>

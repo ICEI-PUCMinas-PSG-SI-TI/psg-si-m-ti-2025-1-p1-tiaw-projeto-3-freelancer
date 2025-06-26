@@ -13,22 +13,20 @@ function setupDarkMode() {
         "p-2",
         "flex-row",
         "justify-content-center",
-        "align-items-center"
+        "align-items-center",
     );
     toggleDarkDiv.innerHTML += `<img class="dark-toggle" src="static/dark.svg">
         <div class="form-check form-switch form-check-reverse">
             <input id="toggleDark" class="form-check-input" type="checkbox">
         </div>`;
 
-    /** @type { HTMLInputElement | null } */
-    // @ts-ignore: HTMLInputElement é derivado de HTMLElement
     const input = document.getElementById("toggleDark");
-    if (!input) return;
+    if (!(input instanceof HTMLInputElement)) return;
 
-    const theme_key = "data-bs-theme";
+    const THEME_KEY = "data-bs-theme";
 
     function isDarkTheme() {
-        return localStorage.getItem(theme_key) === "dark";
+        return localStorage.getItem(THEME_KEY) === "dark";
     }
 
     /**
@@ -38,11 +36,11 @@ function setupDarkMode() {
     function setDarkTheme(darkEnabled, storeConfig) {
         let themeCfg = darkEnabled ? "dark" : "light";
 
-        if (storeConfig) localStorage.setItem(theme_key, themeCfg);
+        if (storeConfig) localStorage.setItem(THEME_KEY, themeCfg);
 
-        if (input) {
+        if (input instanceof HTMLInputElement) {
             input.checked = darkEnabled;
-            document.body.setAttribute(theme_key, themeCfg);
+            document.body.setAttribute(THEME_KEY, themeCfg);
         }
     }
 

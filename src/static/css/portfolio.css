@@ -66,22 +66,10 @@
 }
 
 #portfolio-setup div {
-    max-width: 600px;
+    max-width: 500px;
 }
 
 #portfolio-picture {
     max-width: 200px;
     max-height: 200px;
-}
-
-.space-0 {
-    margin: 0 !important;
-    padding: 0 !important;
-    --bs-gutter-x: 0;
-    --bs-gutter-y: 0;
-}
-
-.center-xy {
-    justify-content: center;
-    align-items: center;
 }

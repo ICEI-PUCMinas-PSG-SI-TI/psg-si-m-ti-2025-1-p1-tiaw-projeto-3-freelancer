@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="pt-BR">
   <head>
     <!-- Metadata -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- TODO: Atualizar sempre com o título da pagina -->
     <title>Portfólios</title>
     <!-- Favicon -->
     <link rel="icon" href="static/favicon.ico" />
@@ -13,35 +12,38 @@
     <link rel="stylesheet" href="static/css/portfolio.css" type="text/css" />
     <!-- Bootstrap -->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
       crossorigin="anonymous" />
     <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
       crossorigin="anonymous"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Source+Sans+3&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Source+Sans+3&display=swap"
       rel="stylesheet" />
     <!-- Project Scripts -->
+    <script defer type="module" src="static/js/lib/redirect.mjs"></script>
     <script defer src="static/js/darkmode.js"></script>
     <script defer src="static/js/404.js"></script>
-    <script defer type="module" src="static/js/portfolio.js"></script>
+    <script defer type="module" src="static/js/profile.mjs"></script>
+    <!-- Page Scripts -->
+    <script defer type="module" src="static/js/portfolio.mjs"></script>
   </head>
 
-  <body data-bs-theme="dark">
+  <body>
     <!-- Cabeçalho -->
     <nav class="body-section body-header navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <!-- id.navbar.logo -->
-        <a
-          class="d-flex justify-content-center text-center align-items-center text-decoration-none me-3"
-          href="./">
+        <a class="d-flex justify-text-align-center text-decoration-none me-3" href="./">
           <img class="m-2 icon-32px" src="static/icon.png" />
           <p class="navbar-brand space-0">Lucre+</p>
         </a>
@@ -68,20 +70,9 @@
                 Serviços
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="404.html">Em andamento</a></li>
-              </ul>
-            </li>
-            <!-- id.navbar.navigation.pares -->
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false">
-                Revisão por Pares
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="serviços.html">Cadastro de Serviços</a></li>
+                <li><a class="dropdown-item" href="/serviços">Cadastrar serviços</a></li>
+                <li><a class="dropdown-item" href="/solicitacoes">Minhas solicitados</a></li>
+                <li><a class="dropdown-item" href="/trabalhos">Trabalhos disponíveis</a></li>
               </ul>
             </li>
           </ul>
@@ -108,110 +99,163 @@
           </div>
           <!-- id.navbar.profile -->
           <div class="m-2 me-0 rounded d-flex justify-content-center">
-            <img class="rounded profile-picture" src="static/img/placeholder_profile.png" />
+            <img
+              id="profile-picture-tiny"
+              class="rounded profile-picture d-none"
+              src="static/img/placeholder_profile.png" />
           </div>
         </div>
       </div>
     </nav>
 
     <!-- Conteúdo da página -->
-    <div
-      id="content-div"
-      class="body-section body-content d-flex flex-column align-items-center px-2 px-md-3 pt-2 pt-md-3 pt-xl-4">
-      <!-- CONTEÚDO -->
-      <div id="portfolio-display" class="container-fluid d-none">
-        <div class="row row-xl-0 col-xl">
-          <!-- TODO: Imagem de fundo customizavel -->
-          <div class="col-12 col-xl-3 mb-3">
-            <div class="card rounded-end w-100">
-              <div class="card-body rounded-end d-flex align-items-center flex-column">
-                <div class="container-fluid">
-                  <div class="row">
-                    <div
-                      class="row-lg col-md-4 col-xl-12 p-2 space-0 d-flex align-items-center flex-column">
-                      <img id="portfolio-picture" class="rounded-circle space-0 w-100" />
+    <div class="w-100 space-0 position-relative">
+      <div
+        id="content-div"
+        class="body-section body-content d-flex flex-column align-items-center px-2 px-md-3 pt-2 pt-md-3 pt-xl-4">
+        <!-- CONTEÚDO -->
+        <div id="portfolio-display" class="container-fluid d-none">
+          <div class="row row-xl-0 col-xl">
+            <!-- TODO: Imagem de fundo customizavel -->
+            <div class="col-12 col-xl-3 mb-3">
+              <div class="card rounded-end w-100">
+                <div class="card-body rounded-end d-flex align-items-center flex-column">
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div
+                        class="row-lg col-md-4 col-xl-12 p-2 space-0 d-flex align-items-center flex-column">
+                        <img id="portfolio-picture" class="rounded-circle space-0 w-100" />
+                      </div>
+                      <div
+                        class="row-lg col-md-8 col-xl-12 space-0 p-2 avoid-wide rounded-end d-flex align-items-center align-items-md-start flex-column justify-content-center">
+                        <!-- id.portfolio.name -->
+                        <h5 id="portfolio-name">Nome do Usuário da Silva</h5>
+                        <!-- id.portfolio.nota -->
+                        <p class="mb-2">⭐ <span id="portfolio-nota">Sem Avaliações</span></p>
+                        <!-- id.portfolio.descricao -->
+                        <p id="portfolio-descricao" class="mb-2">
+                          Informações sobre o perfil profissional do usuário, incluindo métodos de
+                          trabalho e outras particularidades relevantes.
+                        </p>
+                        <!-- id.portfolio.username -->
+                        <p class="p-0 m-0">
+                          Username: <span id="portfolio-username">@username</span>
+                        </p>
+                      </div>
                     </div>
                     <div
-                      class="row-lg col-md-8 col-xl-12 space-0 p-2 avoid-wide rounded-end d-flex align-items-center align-items-md-start flex-column justify-content-center">
-                      <!-- id.portfolio.name -->
-                      <h5 id="portfolio-name">Nome do Usuário da Silva</h5>
-                      <!-- id.portfolio.nota -->
-                      <p class="mb-2">⭐ <span id="portfolio-nota">Sem Avaliações</span></p>
-                      <!-- id.portfolio.descricao -->
-                      <p id="portfolio-descricao" class="mb-2">
-                        Informações sobre o perfil profissional do usuário, incluindo métodos de
-                        trabalho e outras particularidades relevantes.
-                      </p>
-                      <!-- id.portfolio.username -->
-                      <p class="p-0 m-0">
-                        Username: <span id="portfolio-username">@username</span>
-                      </p>
+                      id="toggle-edit-div"
+                      class="col d-flex w-100 center-xy space-0 flex-column d-none">
+                      <hr class="w-100" />
                     </div>
                   </div>
-                  <hr />
-                  <div id="toggle-edit-div" class="col d-flex w-100 center-xy space-0"></div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- TODO: adicionar apenas se ?edit=true -->
-          <div id="portfolio-secoes" class="col-12 col-xl-9">
-            <button
-              id="add-section"
-              type="button"
-              class="btn btn-outline-secondary mb-3 w-100 d-none">
-              <div class="d-flex d-row center-xy">
-                <img class="icon-24px m-2 icon-dark" src="static/action-icons/add.svg" />
-                <p class="space-0">Adicionar Seção</p>
+            <!-- TODO: adicionar apenas se ?edit=true -->
+            <div id="portfolio-secoes" class="col-12 col-xl-9">
+              <button
+                id="add-section"
+                type="button"
+                class="btn btn-outline-secondary mb-3 w-100 d-none">
+                <div class="d-flex d-row center-xy">
+                  <img class="icon-24px m-2 icon-dark" src="static/action-icons/add.svg" />
+                  <p class="space-0">Adicionar Seção</p>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="portfolio-setup"
+          class="container-fluid d-flex d-none w-100 justify-content-center space-0">
+          <div class="d-flex flex-column justify-content-start space-0 w-100">
+            <div class="w-100">
+              <h1>// Portfólios</h1>
+              <p>O que deseja fazer?</p>
+              <hr />
+              <div class="w-100">
+                <p><strong>Visualizar um porfólio já criado</strong></p>
+                <div class="mb-3">
+                  <label for="portfolio-setup-select-select" class="form-label">
+                    Selecionar um portfólio
+                  </label>
+                  <select class="form-select" id="portfolio-setup-select-select" required></select>
+                </div>
+                <button id="portfolio-setup-select-btn" class="btn btn-primary disabled w-100">
+                  Abrir portfólio selecionado
+                </button>
               </div>
-            </button>
+              <div id="portfolio-user-create" class="w-100">
+                <hr />
+                <p class="mb-1"><strong>Criar um novo porfólio</strong></p>
+                <div class="mb-3">
+                  <label for="porfolio-user-nome" class="form-label m-1">Nome do portfólio</label>
+                  <input
+                    id="porfolio-user-nome"
+                    type="text"
+                    class="form-control"
+                    placeholder="Nome do portfólio"
+                    aria-label="Nome do portfólio" />
+                </div>
+                <button id="portfolio-user-create-btn" class="btn btn-primary w-100 mb-3">
+                  Criar um novo portfólio
+                </button>
+              </div>
+              <div id="portfolio-admin-create" class="w-100 d-none">
+                <hr />
+                <p><strong>Criar um novo porfólio</strong></p>
+                <div class="mb-3">
+                  <label for="portfolio-setup-create-select" class="form-label">
+                    Selecionar usuário
+                  </label>
+                  <select class="form-select" id="portfolio-setup-create-select" required></select>
+                </div>
+                <button id="portfolio-setup-create-btn" class="btn btn-primary disabled w-100 mb-3">
+                  Criar portfólio para o usuário selecionado
+                </button>
+              </div>
+              <div id="portfolio-admin-faker" class="w-100 d-none">
+                <p>
+                  Observação: Para criar um portfolio é necessário que haja informações de algum
+                  usuário.
+                </p>
+                <p>
+                  Para a seção de avaliações no portfólio, também é recomendado que haja algum
+                  serviço e avaliação cadastrados, como a avaliação é individual, essas paginas
+                  ainda não foram criadas, portanto é recomendado utilizar
+                  <a href="dev.html">essa pagina</a> para criar usuários aleatórios, ou você pode
+                  fazer isso automaticamente clicando no botão abaixo:
+                </p>
+                <button id="portfolio-setup-dev-btn" class="btn btn-warning w-100">
+                  Criar informações aleatórias de usuários, portfolios e avaliações
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
       <div
-        id="portfolio-setup"
-        class="container-fluid d-flex d-none w-100 justify-content-center space-0">
-        <div class="d-flex flex-column justify-content-start space-0">
-          <div class="w-100">
-            <h1>// Portfólios</h1>
-            <p>O que deseja fazer?</p>
-            <hr />
-            <p><strong>Visualizar um porfólio já criado</strong></p>
-            <div class="mb-3">
-              <label for="portfolio-setup-select-select" class="form-label">
-                Selecionar um portfólio
-              </label>
-              <select class="form-select" id="portfolio-setup-select-select" required></select>
+        id="profile-modal"
+        class="d-flex profile-modal justify-content-end align-items-top d-none">
+        <div class="m-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex center-xy inner-profile-modal flex-column">
+                <img
+                  id="profile-picture-big"
+                  class="rounded border-2 mb-3"
+                  src="static/img/placeholder_profile.png"
+                  alt="Profile" />
+                <p id="profile-name">Nome do Usuário</p>
+                <button id="profile-show-perfil" class="btn btn-primary w-100 mb-3">
+                  Ver Perfil
+                </button>
+                <button id="profile-logout" class="btn btn-primary w-100">Logout</button>
+              </div>
             </div>
-            <button id="portfolio-setup-select-btn" class="btn btn-primary disabled w-100">
-              Abrir portfólio selecionado
-            </button>
-            <hr />
-            <p><strong>Criar um novo porfólio</strong></p>
-            <div class="mb-3">
-              <label for="portfolio-setup-create-select" class="form-label">
-                Selecionar usuário
-              </label>
-              <select class="form-select" id="portfolio-setup-create-select" required></select>
-            </div>
-            <button id="portfolio-setup-create-btn" class="btn btn-primary disabled w-100 mb-3">
-              Criar portfólio para o usuário selecionado
-            </button>
-            <p>
-              Observação: Para criar um portfolio é necessário que haja informações de algum
-              usuário.
-            </p>
-            <p>
-              Para a seção de avaliações no portfólio, também é recomendado que haja algum serviço e
-              avaliação cadastrados, como a avaliação é individual, essas paginas ainda não foram
-              criadas, portanto é recomendado utilizar <a href="dev.html">essa pagina</a> para criar
-              usuários aleatórios, ou você pode fazer isso automaticamente clicando no botão abaixo:
-            </p>
-            <button id="portfolio-setup-dev-btn" class="btn btn-warning w-100">
-              Criar informações aleatórias de usuários, portfolios e avaliações
-            </button>
           </div>
         </div>
       </div>
@@ -537,9 +581,9 @@
             href="https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer">
             Projeto
           </a>
-          <a class="mb-1" href="404.html">Sobre o site</a>
-          <a class="mb-1" href="404.html">Suporte</a>
-          <a class="mb-1" href="404.html">FAQ</a>
+          <a class="mb-1" href="/404">Sobre o site</a>
+          <a class="mb-1" href="/404">Suporte</a>
+          <a class="mb-1" href="/404">FAQ</a>
         </div>
       </div>
       <div class="row">
