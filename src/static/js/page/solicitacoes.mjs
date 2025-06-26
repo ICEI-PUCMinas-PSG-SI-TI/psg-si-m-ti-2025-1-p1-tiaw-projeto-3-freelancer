@@ -14,6 +14,7 @@ function createCard(
     servicoTitulo,
     servicoDescricao,
     contratoStatus,
+    contratoStatusId,
     contratoData,
 ) {
     const card = document.createElement("li");
@@ -26,10 +27,29 @@ function createCard(
             <small>${servicoDescricao}</small>
             <p class="mb-1"><span class="badge bg-primary">Status: ${contratoStatus}</span></p>
             <small>Data da solicitação: ${contratoData}</small>
-        </div>
-        <div class="d-flex gap-2 ms-auto">
+        </div>`;
+    if (contratoStatusId <= 2) {
+        card.innerHTML += `<div class="d-flex gap-2 ms-auto">
             <button class="btn btn-sm btn-danger">Cancelar Solicitação</button>
         </div>`;
+        const button = card.querySelector("button");
+        if (button instanceof HTMLButtonElement) {
+            // TODO: Mostrar modal
+            button.addEventListener("click", () => {
+                alert("Solicitação cancelada");
+            });
+        }
+    } else {
+        card.innerHTML += `<div class="d-flex gap-2 ms-auto">
+            <button class="btn btn-sm btn-warning">Avaliar serviço</button>
+        </div>`;
+        const button = card.querySelector("button");
+        if (button instanceof HTMLButtonElement) {
+            button.addEventListener("click", () => {
+                location.assign(`/avaliacao?id=${contratoId}`);
+            });
+        }
+    }
     return card;
 }
 
@@ -45,7 +65,7 @@ function createCard(
 
     if (listaSolicitacoes && contratos.length) {
         const frag = document.createDocumentFragment();
-        contratos.reverse()
+        contratos.reverse();
         contratos.forEach((contrato) => {
             const { servico } = contrato;
             let data = "";
@@ -60,6 +80,7 @@ function createCard(
                     servico?.titulo || "Serviço",
                     servico?.descricao || "Descrição não informada",
                     contrato.status,
+                    contrato.statusId,
                     data,
                 ),
             );
