@@ -175,7 +175,7 @@ export async function criarNContratos(quantidade) {
             // number
             usuarioid: usuarios[usuarioIdIndex].id,
             // string
-            data: `${dataDia}/${dataMes}/${dataAno}`,
+            data: `${dataAno}/${dataMes}/${dataDia}`,
             // number
             valor: genRandNumber({ min: 1518, max: 8000 }),
             // number
@@ -275,7 +275,7 @@ export async function criarNUsuarios(quantidade) {
             // foto(string)
             foto: `https://picsum.photos/seed/${fotoSeed}/200`,
             // dataNascimento(string)
-            dataNascimento: `${dataNascimentoDia}/${dataNascimentoMes}/${dataNascimentoAno}`,
+            dataNascimento: `${dataNascimentoAno}/${dataNascimentoMes}/${dataNascimentoDia}`,
             // email(string)
             email: json.email[emailIndex],
             // senha(string)
