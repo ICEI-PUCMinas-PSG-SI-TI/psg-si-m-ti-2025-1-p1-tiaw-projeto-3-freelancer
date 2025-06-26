@@ -30,8 +30,10 @@ export class ContratoObject {
     data = null;
     /** @type {number|null} */
     valor = null;
-    /** @type {string|number|null} */
+    /** @type {string|null} */
     status = null;
+    /** @type {string|number|null} */
+    statusId = null;
 }
 
 export class ContratoObjectExpanded {
@@ -45,8 +47,10 @@ export class ContratoObjectExpanded {
     data = null;
     /** @type {number|null} */
     valor = null;
-    /** @type {string|number|null} */
+    /** @type {string|null} */
     status = null;
+    /** @type {string|number|null} */
+    statusId = null;
     /** @type {ServicoObject|null} */
     servico = null;
     /** @type {UsuarioObject|null} */
