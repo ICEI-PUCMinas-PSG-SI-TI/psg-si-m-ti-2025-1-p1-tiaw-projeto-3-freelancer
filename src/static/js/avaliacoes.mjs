@@ -1,17 +1,23 @@
 // @ts-check
 
 import { Avaliacoes } from "./jsonf/avaliacoes.mjs";
+import { Contratos } from "./jsonf/contratos.mjs";
+
 import { retornarIdSeLogado } from "./lib/credenciais.mjs";
 import { imageFileToBase64 } from "./lib/tools.mjs";
 
 const crudAvaliacoes = new Avaliacoes();
+const crudContratos = new Contratos();
 
 const htmlButtonCancelar = document.getElementById("btn-cancelar");
 const htmlButtonPublicar = document.getElementById("btn-publicar");
+const htmlComentario = document.getElementById("comentario");
 
 // Script para interação das estrelas
 const stars = document.querySelectorAll(".stars span");
 let selectedRating = 0;
+let avaliacaoId = null;
+let stateContratoId = null;
 
 stars.forEach((star, index) => {
     star.addEventListener("click", () => {
@@ -56,7 +62,6 @@ function limparFormulario() {
 }
 
 async function publicar() {
-    const htmlComentario = document.getElementById("comentario");
     if (!(htmlComentario instanceof HTMLTextAreaElement)) return;
     const comentario = htmlComentario.value.trim();
     const imagemInput = document.getElementById("imagem");
@@ -76,8 +81,10 @@ async function publicar() {
             nota: selectedRating,
             comentario,
             data: new Date().toISOString(),
-            // TODO: contratoId
+            contratoId: stateContratoId,
         };
+
+        if(avaliacaoId) avaliacao.id = avaliacaoId
 
         if (imagemInput.files?.length)
             avaliacao.imagem = await imageFileToBase64(imagemInput.files[0]);
@@ -91,9 +98,38 @@ async function publicar() {
     }
 }
 
-(() => {
+(async () => {
     // Inicializa as estrelas
     updateStars();
+
+    let usuarioLogadoId = retornarIdSeLogado();
+    let params = new URLSearchParams(location.search);
+    let contratoId = params.get("contrato");
+    if (!contratoId) errQuit("Ocorreu um erro ao ler o contrato!");
+
+    let contrato;
+    try {
+        contrato = await crudContratos.lerContrato(contratoId);
+    } catch (err) {
+        errQuit(err.message);
+    }
+    if (!contrato) errQuit("Ocorreu um erro ao ler o contrato!");
+    stateContratoId = contratoId;
+    document.getElementById("form-title").innerText = `Avaliação do serviço de ${contrato?.servico?.titulo}`;
+    document.getElementById("form-image").src = contrato?.servico?.imagem;
+
+    let avaliacoes = await crudAvaliacoes.lerAvaliacoes();
+    avaliacoes = avaliacoes.filter(
+        (avaliacao) =>
+            avaliacao.contratoId === contrato.id && usuarioLogadoId === contrato.usuarioId,
+    );
+    if (avaliacoes.length) {
+        const avaliacao = avaliacoes[0];
+        if (htmlComentario instanceof HTMLTextAreaElement)
+            htmlComentario.value = avaliacao.comentario || "";
+        selectedRating = avaliacao.nota || 0;
+        avaliacaoId = avaliacao.id
+    }
 
     if (htmlButtonCancelar instanceof HTMLButtonElement)
         htmlButtonCancelar.addEventListener("click", limparFormulario);
@@ -101,3 +137,8 @@ async function publicar() {
     if (htmlButtonPublicar instanceof HTMLButtonElement)
         htmlButtonPublicar.addEventListener("click", publicar);
 })();
+
+function errQuit(message) {
+    alert(message);
+    location.assign("/");
+}

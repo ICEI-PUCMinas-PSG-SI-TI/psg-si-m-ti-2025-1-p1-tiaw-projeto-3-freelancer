@@ -46,7 +46,7 @@ function createCard(
         const button = card.querySelector("button");
         if (button instanceof HTMLButtonElement) {
             button.addEventListener("click", () => {
-                location.assign(`/avaliacao?id=${contratoId}`);
+                location.assign(`/avaliacao?contrato=${contratoId}`);
             });
         }
     }
