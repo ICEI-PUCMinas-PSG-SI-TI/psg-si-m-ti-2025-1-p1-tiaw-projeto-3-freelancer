@@ -1,26 +1,26 @@
 cff-version: 1.0.1
-message: Please cite this software using these metadata.
-title: 
+title: Lucre+
 authors:
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
-  - family-names: 
-    given-names: 
+  - family-names: Andrade
+    given-names: Arthur Melo
+  - family-names: Soares Juscelino
+    given-names: Marcelo Antonino
+  - family-names: Silva Santana
+    given-names: Mateus Junior
+  - family-names: Silva Correa
+    given-names: Ramon Jorge
 
   - name-suffix: Professor
     affiliation: PUC Minas
-    family-names: 
-    given-names: 
+    family-names: Alves de Oliveira
+    given-names: Pedro Felipe
 
     keywords:
-    - 
-repository-code: 
+    - freelancer
+    - trabalho
+    - emprego
+
+repository-code: https://github.com/ICEI-PUCMinas-PSG-SI-TI/psg-si-m-ti-2025-1-p1-tiaw-projeto-3-freelancer
 license: CC-BY-4.0
 version: 1.0.0
-date-released:
+date-released: 2025-06-25
